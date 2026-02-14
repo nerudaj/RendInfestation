@@ -54,11 +54,6 @@ GameScene GameSceneBuilder::createScene(
     auto inventories = dgm::DynamicBuffer<Inventory>();
     inventories.emplaceBack(PlayerInventory {
         .health = 100,
-        .weapon =
-            Weapon {
-                .cooldown = sf::seconds(0.5f),
-                .kickback = 150.f,
-            },
     });
 
     return GameScene {

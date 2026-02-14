@@ -18,11 +18,20 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
     inventory.weapon.timeTillFire = inventory.weapon.cooldown;
 
     auto&& player = scene.actors[0];
-    scene.actors.emplaceBack(ActorBuilder::createProjectile(
-        player.body.getPosition(),
-        player.lookDirection,
-        atlas,
-        scene.inventories.emplaceBack(ProjectileInventory {})));
+
+    for (auto&& _ : std::views::iota(0, inventory.weapon.numShots))
+    {
+        auto spread =
+            rand() % (inventory.weapon.spread * 2) - inventory.weapon.spread;
+
+        scene.actors.emplaceBack(ActorBuilder::createProjectile(
+            player.body.getPosition(),
+            player.lookDirection.rotatedBy(
+                sf::degrees(static_cast<float>(spread))),
+            atlas,
+            scene.inventories.emplaceBack(ProjectileInventory {})));
+    }
+
     player.body.forward += -player.lookDirection * inventory.weapon.kickback;
 }
 
