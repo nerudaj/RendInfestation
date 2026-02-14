@@ -24,6 +24,22 @@ struct [[nodiscard]] BindingsSettings final
           Binding {
               sf::Keyboard::Key::S,
               std::pair { sf::Joystick::Axis::Y, dgm::AxisHalf::Positive } } },
+        { InputKind::AimLeft,
+          Binding {
+              sf::Keyboard::Key::Left,
+              std::pair { sf::Joystick::Axis::Z, dgm::AxisHalf::Negative } } },
+        { InputKind::AimRight,
+          Binding {
+              sf::Keyboard::Key::Right,
+              std::pair { sf::Joystick::Axis::Z, dgm::AxisHalf::Positive } } },
+        { InputKind::AimUp,
+          Binding {
+              sf::Keyboard::Key::Up,
+              std::pair { sf::Joystick::Axis::R, dgm::AxisHalf::Negative } } },
+        { InputKind::AimDown,
+          Binding {
+              sf::Keyboard::Key::Down,
+              std::pair { sf::Joystick::Axis::R, dgm::AxisHalf::Positive } } },
         { InputKind::Shoot,
           Binding { sf::Keyboard::Key::Space, GamepadButton { 0 } } },
     };

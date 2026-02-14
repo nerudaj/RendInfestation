@@ -2,7 +2,7 @@
 
 void PhysicsEngine::update(const dgm::Time& time)
 {
-    for (auto&& [actor, _] : scene.actors)
+    for (auto&& [actor, idx] : scene.actors)
     {
         auto&& body = actor.body;
         auto moment = body.forward * time.getDeltaTime();
@@ -18,8 +18,11 @@ void PhysicsEngine::update(const dgm::Time& time)
                 body.shape)
             && actor.kind == ActorKind::Projectile)
         {
-            body.forward *= -body.bounciness;
-            moment = body.forward * time.getDeltaTime();
+            eventQueue.pushEvent<event::ObjectDestroyed>(idx);
+
+            // bounce code
+            // body.forward *= -body.bounciness;
+            // moment = body.forward * time.getDeltaTime();
         }
 
         body.move(moment);

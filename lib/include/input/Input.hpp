@@ -30,6 +30,8 @@ public:
 
     [[nodiscard]] sf::Vector2f getForward() const;
 
+    [[nodiscard]] sf::Vector2f getAimDirection() const;
+
     [[nodiscard]] bool isShootPressed() const;
 
     [[nodiscard]] bool isMenuCycleLeftPressed() const;

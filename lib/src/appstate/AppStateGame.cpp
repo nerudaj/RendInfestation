@@ -32,7 +32,8 @@ void AppStateGame::update()
     physicsEngine.update(app.time);
     renderingEngine.update(app.time);
 
-    gameEvents.processEvents(gameRulesEngine, physicsEngine);
+    gameEvents.processEvents(gameRulesEngine, physicsEngine, janitor);
+    janitor.cleanScene(scene);
 }
 
 void AppStateGame::draw()

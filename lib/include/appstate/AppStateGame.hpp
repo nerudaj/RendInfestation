@@ -1,5 +1,6 @@
 #pragma once
 
+#include "game/Janitor.hpp"
 #include "game/builders/GameSceneBuilder.hpp"
 #include "game/builders/GameTextureAtlasBuilder.hpp"
 #include "game/definitions/GameScene.hpp"
@@ -52,4 +53,5 @@ private:
     GameRulesEngine gameRulesEngine;
     PhysicsEngine physicsEngine;
     RenderingEngine renderingEngine;
+    Janitor janitor;
 };

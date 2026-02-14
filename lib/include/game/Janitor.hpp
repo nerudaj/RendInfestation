@@ -1,12 +1,13 @@
 #pragma once
 
+#include "game/definitions/GameEvents.hpp"
 #include "game/definitions/GameScene.hpp"
 #include <set>
 
 class [[nodiscard]] Janitor final
 {
 public:
-    void operator()(const ObjectDestroyed& e)
+    void operator()(const event::ObjectDestroyed& e)
     {
         objectsToClean.insert(e.idx);
     }

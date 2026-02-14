@@ -1,13 +1,36 @@
 #include "game/engine/GameRulesEngine.hpp"
+#include "game/builders/ActorBuilder.hpp"
 #include <algorithm>
 #include <limits>
 
 const float SPEED = 192.f;
 
+void GameRulesEngine::operator()(const event::PlayerWantsToFire&)
+{
+    assert(scene.actors.isIndexValid(0));
+    assert(scene.actors[0].kind == ActorKind::Player);
+    assert(scene.inventories.isIndexValid(0));
+    assert(std::holds_alternative<PlayerInventory>(scene.inventories[0]));
+    auto&& inventory = std::get<PlayerInventory>(scene.inventories[0]);
+
+    if (inventory.weapon.timeTillFire > sf::Time::Zero) return;
+
+    inventory.weapon.timeTillFire = inventory.weapon.cooldown;
+
+    auto& player = scene.actors[0];
+    auto&& actorIdx = scene.actors.emplaceBack(ActorBuilder::createProjectile(
+        player.body.getPosition(),
+        player.lookDirection,
+        atlas,
+        scene.inventories.emplaceBack(ProjectileInventory {})));
+}
+
 void GameRulesEngine::update(const dgm::Time& time)
 {
     for (auto&& [actor, _] : scene.actors)
     {
+        assert(actor.kind != ActorKind::None);
+
         if (actor.kind == ActorKind::Player)
         {
             assert(actor.inventoryIdx);
@@ -38,30 +61,20 @@ void GameRulesEngine::updatePlayer(
     if (forwardImpulse.length() > 0.f)
         actor.body.forward = forwardImpulse * SPEED;
 
+    auto&& direction = input.getAimDirection();
+    if (direction.length() > 0.f) actor.lookDirection = direction;
+
     scene.cameraPosition = actor.body.getPosition();
 
     if (input.isShootPressed())
     {
-        auto idx = scene.actors.emplaceBack(Actor {
-            .kind = ActorKind::Projectile,
-            .body =
-                PhysicsBody {
-                    .shape = dgm::Circle(actor.body.getPosition(), 3.f),
-                    .bounciness = 0.f,
-                    .friction = 0.f,
-                    .forward = sf::Vector2f(SPEED, actor.orientation),
-                },
-            .orientation = actor.orientation,
-            .animation = dgm::Animation(
-                atlas.atlas.getAnimationStates(atlas.bulletLocation)),
-        });
-
-        scene.actors[idx].animation.setState("idle", "looping"_true);
+        eventQueue.pushEvent<event::PlayerWantsToFire>();
     }
+
+    inventory.weapon.timeTillFire -= time.getElapsed();
 }
 
 void GameRulesEngine::updateProjectile(
-    Actor& actor, ProjectileInventory& inventory, const dgm::Time& time)
+    Actor&, ProjectileInventory&, const dgm::Time&)
 {
-    inventory.lifetime -= time.getElapsed();
 }

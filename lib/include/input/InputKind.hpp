@@ -15,5 +15,9 @@ enum class [[nodiscard]] InputKind
     Right,
     Up,
     Down,
+    AimLeft,
+    AimRight,
+    AimUp,
+    AimDown,
     Shoot,
 };

@@ -11,7 +11,7 @@ struct [[nodiscard]] Actor final
 {
     ActorKind kind = ActorKind::None;
     PhysicsBody body;
-    sf::Angle orientation = sf::degrees(0);
+    sf::Vector2f lookDirection;
     dgm::Animation animation;
     int health = 100;
     std::optional<size_t> inventoryIdx = std::nullopt;

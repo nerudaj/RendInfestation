@@ -20,6 +20,15 @@ sf::Vector2f Input::getForward() const
            + touchController.getForward();
 }
 
+sf::Vector2f Input::getAimDirection() const
+{
+    return sf::Vector2f { -controller.readAnalog(InputKind::AimLeft)
+                              + controller.readAnalog(InputKind::AimRight),
+                          -controller.readAnalog(InputKind::AimUp)
+                              + controller.readAnalog(InputKind::AimDown) }
+           + touchController.getAimDirection();
+};
+
 bool Input::isShootPressed() const
 {
     return controller.readDigital(InputKind::Shoot)

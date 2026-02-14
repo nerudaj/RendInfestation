@@ -10,14 +10,11 @@ class [[nodiscard]] GameRulesEngine final
 {
 public:
     GameRulesEngine(
-        EventQueue<GameEvent>& gameEventQueue,
+        EventQueue<GameEvent>& eventQueue,
         GameScene& scene,
         const GameTextureAtlas& atlas,
         Input& input) noexcept
-        : gameEventQueue(gameEventQueue)
-        , scene(scene)
-        , atlas(atlas)
-        , input(input)
+        : eventQueue(eventQueue), scene(scene), atlas(atlas), input(input)
     {
     }
 
@@ -25,7 +22,9 @@ public:
     GameRulesEngine(const GameRulesEngine&) = delete;
 
 public:
-    void operator()(const DummyGameEvent&) {}
+    void operator()(const event::PlayerWantsToFire& e);
+
+    void operator()(const auto&) {}
 
 public:
     void update(const dgm::Time& time);
@@ -37,7 +36,7 @@ public:
         Actor& actor, ProjectileInventory& inventory, const dgm::Time& time);
 
 private:
-    EventQueue<GameEvent>& gameEventQueue;
+    EventQueue<GameEvent>& eventQueue;
     GameScene& scene;
     const GameTextureAtlas& atlas;
     Input& input;

@@ -8,4 +8,6 @@ void Janitor::cleanScene(GameScene& scene)
             scene.inventories.eraseAtIndex(*scene.actors[idx].inventoryIdx);
         scene.actors.eraseAtIndex(idx);
     }
+
+    objectsToClean.clear();
 }

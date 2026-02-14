@@ -1,11 +1,10 @@
 #pragma once
 
-#include <SFML/System.hpp>
 #include "game/enums/ProjectileTraits.hpp"
+#include <SFML/System.hpp>
 
 struct [[nodiscard]] ProjectileInventory final
 {
-    sf::Time lifetime;
     int damage = 0;
-    ProjectileTraits = ProjectileTraits::None;
+    ProjectileTraits traits = ProjectileTraits::None;
 };
