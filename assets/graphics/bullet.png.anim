@@ -21,7 +21,7 @@
             "nframes": 3
         },
         {
-            "name": "idle0",
+            "name": "idle",
             "bounds": {
                 "left": 2,
                 "top": 11,

@@ -2,6 +2,7 @@
 
 #include "game/definitions/GameEvents.hpp"
 #include "game/definitions/GameScene.hpp"
+#include "game/definitions/GameTextureAtlas.hpp"
 #include "input/Input.hpp"
 #include "misc/EventQueue.hpp"
 
@@ -11,8 +12,12 @@ public:
     GameRulesEngine(
         EventQueue<GameEvent>& gameEventQueue,
         GameScene& scene,
+        const GameTextureAtlas& atlas,
         Input& input) noexcept
-        : gameEventQueue(gameEventQueue), scene(scene), input(input)
+        : gameEventQueue(gameEventQueue)
+        , scene(scene)
+        , atlas(atlas)
+        , input(input)
     {
     }
 
@@ -28,5 +33,6 @@ public:
 private:
     EventQueue<GameEvent>& gameEventQueue;
     GameScene& scene;
+    const GameTextureAtlas& atlas;
     Input& input;
 };

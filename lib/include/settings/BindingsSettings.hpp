@@ -24,7 +24,7 @@ struct [[nodiscard]] BindingsSettings final
           Binding {
               sf::Keyboard::Key::S,
               std::pair { sf::Joystick::Axis::Y, dgm::AxisHalf::Positive } } },
-        { InputKind::Jump,
+        { InputKind::Shoot,
           Binding { sf::Keyboard::Key::Space, GamepadButton { 0 } } },
     };
 

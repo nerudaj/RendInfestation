@@ -1,4 +1,5 @@
 #include "game/engine/RenderingEngine.hpp"
+#include "game/definitions/Face.hpp"
 
 RenderingEngine::RenderingEngine(
     dgm::ResourceManager& resmgr,
@@ -99,27 +100,36 @@ void RenderingEngine::renderWorld(dgm::Window& window)
         }
     }
 
+    std::vector<Face> faces;
+
     for (auto&& [actor, _] : scene.actors)
     {
         std::visit(
             overloads {
                 [&](const dgm::Circle& c)
                 {
-                    pipeline.addFace(
+                    if (!worldCamera.isObjectVisible(c)) return;
+
+                    faces.push_back(Face {
                         c.getPosition(),
-                        sf::FloatRect(actor.animation.getCurrentFrame()));
+                        sf::FloatRect(actor.animation.getCurrentFrame()) });
                     c.debugRender(window);
                 },
                 [&](const dgm::Rect& r)
                 {
-                    pipeline.addFace(
+                    if (!worldCamera.isObjectVisible(r)) return;
+                    faces.push_back(Face {
                         r.getCenter(),
-                        sf::FloatRect(actor.animation.getCurrentFrame()));
+                        sf::FloatRect(actor.animation.getCurrentFrame()) });
                     r.debugRender(window);
                 },
             },
             actor.body);
     }
+
+    std::ranges::sort(faces, std::less<Face> {});
+    for (auto&& face : faces)
+        pipeline.addFace(face.origin, face.texUvs, sf::degrees(0), face.scale);
 
     pipeline.renderTo(window);
 

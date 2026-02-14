@@ -72,7 +72,7 @@ public:
                                   ///< input
 
     TouchInput& leftJoystick = objects[0];
-    TouchInput& jumpButton = objects[1];
+    TouchInput& rightJoystick = objects[1];
     TouchInput& pauseButton = objects[2];
 };
 
@@ -90,6 +90,8 @@ public:
     }
 
     [[nodiscard]] sf::Vector2f getForward() const;
+
+    [[nodiscard]] sf::Vector2f getAimDirection() const;
 
     [[nodiscard]] bool isBackPressed() const;
 

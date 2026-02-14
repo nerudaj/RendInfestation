@@ -39,7 +39,7 @@ public:
             return strings.getString(StringId::InputKind_Left);
         case InputKind::Right:
             return strings.getString(StringId::InputKind_Right);
-        case InputKind::Jump:
+        case InputKind::Shoot:
             return strings.getString(StringId::InputKind_Jump);
         default:
             return "--error--";

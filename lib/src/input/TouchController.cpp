@@ -21,7 +21,7 @@ TouchModel::TouchModel(const sf::Vector2u& windowSize)
               { 150.f, windowSize.y - 150.f },
               150.f),
           TouchInput(
-              TouchObjectKind::Button,
+              TouchObjectKind::Joystick,
               { windowSize.x - 150.f, windowSize.y - 150.f },
               150.f),
           TouchInput(TouchObjectKind::Button, { 100.f, 100.f }, 100.f),
@@ -42,6 +42,11 @@ void TouchController::processEvent(const std::optional<sf::Event>& e)
 [[nodiscard]] sf::Vector2f TouchController::getForward() const
 {
     return model.leftJoystick.readJoystick();
+}
+
+sf::Vector2f TouchController::getAimDirection() const
+{
+    return model.rightJoystick.readJoystick();
 }
 
 [[nodiscard]] bool TouchController::isBackPressed() const

@@ -15,5 +15,5 @@ enum class [[nodiscard]] InputKind
     Right,
     Up,
     Down,
-    Jump,
+    Shoot,
 };

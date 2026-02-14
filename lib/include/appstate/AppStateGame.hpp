@@ -26,7 +26,7 @@ public:
         , atlas(GameTextureAtlasBuilder::createTextureAtlas(
               dic.resmgr, { 1024, 1024 }))
         , scene(GameSceneBuilder::createScene(atlas, dic.resmgr))
-        , gameRulesEngine(gameEvents, scene, dic.input)
+        , gameRulesEngine(gameEvents, scene, atlas, dic.input)
         , renderingEngine(
               dic.resmgr, scene, atlas, dic.settings, dic.touchController)
     {

@@ -20,6 +20,12 @@ sf::Vector2f Input::getForward() const
            + touchController.getForward();
 }
 
+bool Input::isShootPressed() const
+{
+    return controller.readDigital(InputKind::Shoot)
+           || touchController.getAimDirection().length() >= 1.f;
+}
+
 [[nodiscard]] bool Input::isMenuCycleLeftPressed() const
 {
     return readAndRelease(InputKind::MenuCycleLeft);

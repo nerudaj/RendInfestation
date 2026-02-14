@@ -20,5 +20,19 @@ void GameRulesEngine::update(const dgm::Time& time)
         dgm::Collision::advanced(scene.levelMesh, body, moment);
         body.move(moment);
         scene.cameraPosition = body.getPosition();
+
+        if (input.isShootPressed())
+        {
+            auto idx = scene.actors.emplaceBack(Actor {
+                .kind = ActorKind::Npc,
+                .body = dgm::Circle(body.getPosition(), 4.f),
+                .forward = sf::Vector2f(SPEED, actor.orientation),
+                .orientation = actor.orientation,
+                .animation = dgm::Animation(
+                    atlas.atlas.getAnimationStates(atlas.bulletLocation)),
+            });
+
+            scene.actors[idx].animation.setState("idle", "looping"_true);
+        }
     }
 }
