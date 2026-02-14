@@ -1,0 +1,1 @@
+THIS IS A PLACEHOLDER FOR A LICENSE. PLEASE UPDATE FILE assets-private/nsis-license.txt

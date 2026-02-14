@@ -1,0 +1,46 @@
+name: CI-Windows-Ninja-Clang
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 1 * *' # Run at 1AM every first day in month
+  workflow_dispatch:
+
+env:
+  BUILD_DIR: ${{ github.workspace }}/_build
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        tags: true
+
+    - name: Check version
+      run: cmake --version
+
+    - name: Configure CMake
+      run: |
+        mkdir "${{ env.BUILD_DIR }}"
+        cd "${{ env.BUILD_DIR }}"
+        cmake -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+      shell: cmd
+
+    - name: Build
+      working-directory: ${{env.BUILD_DIR}}
+      run: |
+        cmake --build .
+      shell: cmd
+
+    - name: Test
+      working-directory: ${{env.BUILD_DIR}}
+      run: |
+        ctest --output-on-failure
+      shell: cmd
+

@@ -1,0 +1,16 @@
+{
+    "frame": {
+        "width": 32,
+        "height": 32
+    },
+    "spacing": {
+        "horizontal": 4,
+        "vertical": 4
+    },
+    "bounds": {
+        "left": 0,
+        "top": 0,
+        "width": 212,
+        "height": 248
+    }
+}
