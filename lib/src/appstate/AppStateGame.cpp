@@ -29,10 +29,12 @@ void AppStateGame::input()
 void AppStateGame::update()
 {
     gameRulesEngine.update(app.time);
+    animationEngine.update(app.time);
     physicsEngine.update(app.time);
     renderingEngine.update(app.time);
 
-    gameEvents.processEvents(gameRulesEngine, physicsEngine, janitor);
+    gameEvents.processEvents(
+        gameRulesEngine, animationEngine, physicsEngine, janitor);
     janitor.cleanScene(scene);
 }
 

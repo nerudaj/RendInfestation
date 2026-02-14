@@ -10,7 +10,7 @@ Actor ActorBuilder::createProjectile(
     size_t inventoryIdx)
 {
     auto animation =
-        dgm::Animation(atlas.atlas.getAnimationStates(atlas.bulletLocation));
+        dgm::Animation(atlas.atlas.getAnimationStates(atlas.bulletLocation), 8);
     animation.setState("idle", "looping"_true);
 
     return Actor {

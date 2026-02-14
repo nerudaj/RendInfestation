@@ -18,7 +18,7 @@ void PhysicsEngine::update(const dgm::Time& time)
                 body.shape)
             && actor.kind == ActorKind::Projectile)
         {
-            eventQueue.pushEvent<event::ObjectDestroyed>(idx);
+            eventQueue.pushEvent<event::ProjectileHitSomething>(idx);
 
             // bounce code
             // body.forward *= -body.bounciness;

@@ -110,9 +110,20 @@ void RenderingEngine::renderWorld(dgm::Window& window)
                 {
                     if (!worldCamera.isObjectVisible(c)) return;
 
+                    // looking right
+                    const bool flipX =
+                        actor.lookDirection.dot(sf::Vector2f(1.f, 0.f)) >= 0.f;
+
                     faces.push_back(Face {
-                        c.getPosition(),
-                        sf::FloatRect(actor.animation.getCurrentFrame()) });
+                        .origin = c.getPosition(),
+                        .texUvs =
+                            sf::FloatRect(actor.animation.getCurrentFrame()),
+                        .scale =
+                            sf::Vector2f {
+                                flipX ? -1.f : 1.f,
+                                1.f,
+                            },
+                    });
                     c.debugRender(window);
                 },
                 [&](const dgm::Rect& r)

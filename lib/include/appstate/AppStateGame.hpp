@@ -5,6 +5,7 @@
 #include "game/builders/GameTextureAtlasBuilder.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
+#include "game/engine/AnimationEngine.hpp"
 #include "game/engine/GameRulesEngine.hpp"
 #include "game/engine/PhysicsEngine.hpp"
 #include "game/engine/RenderingEngine.hpp"
@@ -29,6 +30,7 @@ public:
               dic.resmgr, { 1024, 1024 }))
         , scene(GameSceneBuilder::createScene(atlas, dic.resmgr))
         , gameRulesEngine(gameEvents, scene, atlas, dic.input)
+        , animationEngine(scene, gameEvents)
         , physicsEngine(scene, gameEvents)
         , renderingEngine(
               dic.resmgr, scene, atlas, dic.settings, dic.touchController)
@@ -51,6 +53,7 @@ private:
     GameScene scene;
     EventQueue<GameEvent> gameEvents;
     GameRulesEngine gameRulesEngine;
+    AnimationEngine animationEngine;
     PhysicsEngine physicsEngine;
     RenderingEngine renderingEngine;
     Janitor janitor;

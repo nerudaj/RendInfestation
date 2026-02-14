@@ -5,24 +5,25 @@
 
 const float SPEED = 192.f;
 
-void GameRulesEngine::operator()(const event::PlayerWantsToFire&)
+void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 {
     assert(scene.actors.isIndexValid(0));
     assert(scene.actors[0].kind == ActorKind::Player);
     assert(scene.inventories.isIndexValid(0));
     assert(std::holds_alternative<PlayerInventory>(scene.inventories[0]));
+
     auto&& inventory = std::get<PlayerInventory>(scene.inventories[0]);
 
-    if (inventory.weapon.timeTillFire > sf::Time::Zero) return;
-
+    assert(inventory.weapon.timeTillFire <= sf::Time::Zero);
     inventory.weapon.timeTillFire = inventory.weapon.cooldown;
 
-    auto& player = scene.actors[0];
-    auto&& actorIdx = scene.actors.emplaceBack(ActorBuilder::createProjectile(
+    auto&& player = scene.actors[0];
+    scene.actors.emplaceBack(ActorBuilder::createProjectile(
         player.body.getPosition(),
         player.lookDirection,
         atlas,
         scene.inventories.emplaceBack(ProjectileInventory {})));
+    player.body.forward += -player.lookDirection * inventory.weapon.kickback;
 }
 
 void GameRulesEngine::update(const dgm::Time& time)
@@ -59,16 +60,17 @@ void GameRulesEngine::updatePlayer(
 {
     auto&& forwardImpulse = input.getForward();
     if (forwardImpulse.length() > 0.f)
-        actor.body.forward = forwardImpulse * SPEED;
+        actor.body.forward += forwardImpulse * SPEED;
 
     auto&& direction = input.getAimDirection();
     if (direction.length() > 0.f) actor.lookDirection = direction;
 
     scene.cameraPosition = actor.body.getPosition();
 
-    if (input.isShootPressed())
+    if (input.isShootPressed()
+        && inventory.weapon.timeTillFire <= sf::Time::Zero)
     {
-        eventQueue.pushEvent<event::PlayerWantsToFire>();
+        eventQueue.pushEvent<event::PlayerFiredWeapon>();
     }
 
     inventory.weapon.timeTillFire -= time.getElapsed();

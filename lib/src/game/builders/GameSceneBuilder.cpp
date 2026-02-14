@@ -24,9 +24,13 @@ GameScene GameSceneBuilder::createScene(
     {
         auto idx = actors.emplaceBack(Actor {
             .kind = ActorKind::Player,
-            .body = dgm::Circle({ 100.f, 100.f }, 8.f),
+            .body =
+                PhysicsBody {
+                    .shape = dgm::Circle({ 100.f, 100.f }, 8.f),
+                    .friction = 0.8f,
+                },
             .animation = dgm::Animation(
-                atlas.atlas.getAnimationStates(atlas.playerLocation)),
+                atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
             .inventoryIdx = 0,
         });
         actors[idx].animation.setState("idle-front", "looping"_true);
@@ -53,7 +57,7 @@ GameScene GameSceneBuilder::createScene(
         .weapon =
             Weapon {
                 .cooldown = sf::seconds(0.5f),
-                .kickback = 5.f,
+                .kickback = 150.f,
             },
     });
 

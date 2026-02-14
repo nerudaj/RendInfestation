@@ -22,7 +22,7 @@ public:
     GameRulesEngine(const GameRulesEngine&) = delete;
 
 public:
-    void operator()(const event::PlayerWantsToFire& e);
+    void operator()(const event::PlayerFiredWeapon& e);
 
     void operator()(const auto&) {}
 

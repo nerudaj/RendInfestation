@@ -4,8 +4,15 @@
 
 namespace event
 {
-    struct PlayerWantsToFire
+    struct PlayerFiredWeapon
     {
+    };
+
+    struct ProjectileHitSomething
+    {
+        size_t idx;
+
+        explicit ProjectileHitSomething(size_t idx) : idx(idx) {}
     };
 
     struct ObjectDestroyed
@@ -16,5 +23,7 @@ namespace event
     };
 } // namespace event
 
-using GameEvent =
-    std::variant<event::PlayerWantsToFire, event::ObjectDestroyed>;
+using GameEvent = std::variant<
+    event::PlayerFiredWeapon,
+    event::ProjectileHitSomething,
+    event::ObjectDestroyed>;
