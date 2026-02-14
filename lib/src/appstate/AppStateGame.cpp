@@ -29,13 +29,10 @@ void AppStateGame::input()
 void AppStateGame::update()
 {
     gameRulesEngine.update(app.time);
+    physicsEngine.update(app.time);
     renderingEngine.update(app.time);
 
-    // Any number of visitors can be passed down for event processing
-    gameEvents.processEvents(
-        gameRulesEngine,
-        [&](const DummyGameEvent&)
-        { dic.soundPlayer.playPovSound(SoundId::Land); });
+    gameEvents.processEvents(gameRulesEngine, physicsEngine);
 }
 
 void AppStateGame::draw()

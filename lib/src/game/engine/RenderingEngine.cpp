@@ -124,7 +124,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
                     r.debugRender(window);
                 },
             },
-            actor.body);
+            actor.body.shape);
     }
 
     std::ranges::sort(faces, std::less<Face> {});

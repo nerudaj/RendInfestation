@@ -1,23 +1,18 @@
 #pragma once
 
+#include "game/definitions/PhysicsBody.hpp"
+#include "game/enums/ActorKind.hpp"
 #include <DGM/classes/Animation.hpp>
-#include <DGM/classes/Objects.hpp>
+#include <optional>
 
 using Collider = std::variant<dgm::Circle, dgm::Rect>;
-
-enum class [[nodiscard]] ActorKind
-{
-    None,
-    Prop,
-    Player,
-    Npc
-};
 
 struct [[nodiscard]] Actor final
 {
     ActorKind kind = ActorKind::None;
-    Collider body;
-    sf::Vector2f forward = { 0.f, 0.f };
+    PhysicsBody body;
     sf::Angle orientation = sf::degrees(0);
     dgm::Animation animation;
+    int health = 100;
+    std::optional<size_t> inventoryIdx = std::nullopt;
 };

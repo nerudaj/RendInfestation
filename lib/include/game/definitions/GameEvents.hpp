@@ -2,9 +2,14 @@
 
 #include <variant>
 
-struct DummyGameEvent
+namespace event
 {
-    std::string soundName = "";
-};
+    struct ObjectDestroyed
+    {
+        size_t idx;
 
-using GameEvent = std::variant<DummyGameEvent>;
+        explicit ObjectDestroyed(size_t idx) : idx(idx) {}
+    };
+}
+
+using GameEvent = std::variant<event::ObjectDestroyed>;
