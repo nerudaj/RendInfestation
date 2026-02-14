@@ -38,10 +38,10 @@ int main(int, char*[])
         catch (const std::exception& ex)
         {
             std::cerr << ex.what() << std::endl;
-            return 1;
+            throw;
         }
     }
-    catch (const std::exception& ex)
+    catch (const std::exception&)
     {
         // streams are too botched at this point for logging
         throw;

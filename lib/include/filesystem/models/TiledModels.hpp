@@ -138,6 +138,7 @@ namespace tiled
 
     struct ObjectModel
     {
+        int gid = 0;
         int id = 0;
         float x = 0;
         float y = 0;
@@ -148,21 +149,29 @@ namespace tiled
         int rotation = 0;
         bool point = true;
         bool visible = true;
+
+        friend void to_json(nlohmann::json&, const ObjectModel&) {}
+
+        friend void from_json(const nlohmann::json& j, ObjectModel& model)
+        {
+            if (j.contains("gid")) j["gid"].get_to(model.gid);
+            if (j.contains("id")) j["id"].get_to(model.id);
+            if (j.contains("x")) j["x"].get_to(model.x);
+            if (j.contains("y")) j["y"].get_to(model.y);
+            if (j.contains("width")) j["width"].get_to(model.width);
+            if (j.contains("height")) j["height"].get_to(model.height);
+            if (j.contains("name")) j["name"].get_to(model.name);
+            if (j.contains("type")) j["type"].get_to(model.type);
+            if (j.contains("rotation")) j["rotation"].get_to(model.rotation);
+            if (j.contains("point")) j["point"].get_to(model.point);
+            if (j.contains("visible")) j["visible"].get_to(model.visible);
+        }
     };
 
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-        ObjectModel,
-        id,
-        x,
-        y,
-        width,
-        height,
-        name,
-        type,
-        rotation,
-        point,
-        visible);
+} // namespace tiled
 
+namespace tiled
+{
     struct ObjectGroupModel
     {
         int id = 0;

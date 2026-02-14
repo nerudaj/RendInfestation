@@ -13,5 +13,7 @@ enum class [[nodiscard]] InputKind
     MenuCycleRight,
     Left,
     Right,
+    Up,
+    Down,
     Jump,
 };

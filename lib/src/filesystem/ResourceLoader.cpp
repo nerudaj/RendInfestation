@@ -60,23 +60,6 @@ loadSong(const std::filesystem::path& path)
     }
 }
 
-static inline std::expected<sf::Shader, dgm::Error>
-loadShader(const std::filesystem::path& path)
-{
-    try
-    {
-        auto&& path1 = path.string() + ".vert";
-        auto&& path2 = path.string() + ".frag";
-
-        auto shader = sf::Shader(std::filesystem::path(path1), path2);
-        return shader;
-    }
-    catch (const std::exception& ex)
-    {
-        return std::unexpected(dgm::Error(ex.what()));
-    }
-}
-
 dgm::ResourceManager
 ResourceLoader::loadResources(const std::filesystem::path& assetDir)
 {
@@ -156,17 +139,6 @@ ResourceLoader::loadResources(const std::filesystem::path& assetDir)
         throw std::runtime_error(uni::format(
             "Could not load level: {}", result.error().getMessage()));
     }
-
-#ifndef ANDROID
-    // Shaders are not supported on Android with SFML
-    if (auto result = resmgr.loadResource<sf::Shader>(
-            assetDir / "shaders" / "wave", loadShader);
-        !result)
-    {
-        throw std::runtime_error(uni::format(
-            "Could not load shader: {}", result.error().getMessage()));
-    }
-#endif
 
     return resmgr;
 }

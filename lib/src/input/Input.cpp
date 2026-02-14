@@ -11,17 +11,13 @@ void Input::forceRelease(InputKind action)
     controller.forceRelease(action);
 }
 
-float Input::getHorizontalVelocity() const
+sf::Vector2f Input::getForward() const
 {
-    return -controller.readAnalog(InputKind::Left)
-           + controller.readAnalog(InputKind::Right)
-           + touchController.getHorizontalVelocity();
-}
-
-bool Input::isJumpPressed() const
-{
-    return controller.readDigital(InputKind::Jump)
-           || touchController.isJumpPressed();
+    return sf::Vector2f { -controller.readAnalog(InputKind::Left)
+                              + controller.readAnalog(InputKind::Right),
+                          -controller.readAnalog(InputKind::Up)
+                              + controller.readAnalog(InputKind::Down) }
+           + touchController.getForward();
 }
 
 [[nodiscard]] bool Input::isMenuCycleLeftPressed() const

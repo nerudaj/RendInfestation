@@ -28,11 +28,7 @@ public:
     /// </summary>
     void forceRelease(InputKind action);
 
-#pragma region For dummy entity, can be removed
-    float getHorizontalVelocity() const;
-
-    [[nodiscard]] bool isJumpPressed() const;
-#pragma endregion
+    [[nodiscard]] sf::Vector2f getForward() const;
 
     [[nodiscard]] bool isMenuCycleLeftPressed() const;
 

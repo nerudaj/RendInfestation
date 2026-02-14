@@ -26,14 +26,6 @@ public:
     void update(const dgm::Time& time);
 
 private:
-    void updateDummyAnimation(
-        dgm::Animation& animation,
-        const sf::Vector2f& forward,
-        const dgm::Time& time);
-
-    void updateDummy(DummyEntity& dummy, const float deltaTime);
-
-private:
     EventQueue<GameEvent>& gameEventQueue;
     GameScene& scene;
     Input& input;

@@ -10,22 +10,13 @@ RenderingEngine::RenderingEngine(
     , atlas(atlas)
     , settings(settings)
     , touchController(touchController)
-#ifndef ANDROID
-    , shader(resmgr.getMutable<sf::Shader>("wave"))
-#endif
     , worldCamera(createFullscreenCamera(
           sf::Vector2f(settings.video.resolution), INTERNAL_GAME_RESOLUTION))
     , hudCamera(
           sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
           sf::Vector2f(settings.video.resolution))
     , text(resmgr.get<sf::Font>("ChunkFive-Regular.ttf"))
-    , pipeline(
-          atlas.atlas.getTexture()
-#ifndef ANDROID
-              ,
-          shader
-#endif
-          )
+    , pipeline(atlas.atlas.getTexture())
     , tilesClip(atlas.atlas.getClip(atlas.tilesLocation))
 {
 }
@@ -34,6 +25,7 @@ void RenderingEngine::update(const dgm::Time& time)
 {
     fpsCounter.update(time.getDeltaTime());
     timeElapsed += time.getDeltaTime();
+    worldCamera.setPosition(scene.cameraPosition);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
@@ -89,34 +81,58 @@ dgm::Camera RenderingEngine::createFullscreenCamera(
 
 void RenderingEngine::renderWorld(dgm::Window& window)
 {
-#ifndef ANDROID
-    shader.setUniform("time", timeElapsed);
-#endif
-
     pipeline.clear();
-
-    pipeline.addFace(
-        scene.dummy.body.getCenter(),
-        sf::FloatRect(scene.dummy.animation.getCurrentFrame()),
-        sf::degrees(0),
-        { scene.dummy.facingLeft ? -1.f : 1.f, 1.f });
 
     for (auto y = 0, idx = 0; y < scene.levelMesh.getDataSize().y; ++y)
     {
         for (auto x = 0; x < scene.levelMesh.getDataSize().x; ++x, ++idx)
         {
-            if (scene.levelMesh[idx] == -1) continue;
+            auto pos = sf::Vector2f(scene.levelMesh.getVoxelSize()) / 2.f
+                       + sf::Vector2f(x, y).componentWiseMul(
+                           sf::Vector2f(scene.levelMesh.getVoxelSize()));
+            if (!worldCamera.isObjectVisible(dgm::Circle(pos, 16.f))) continue;
 
             pipeline.addFace(
-                sf::Vector2f(scene.levelMesh.getVoxelSize()) / 2.f
-                    + sf::Vector2f(x, y).componentWiseMul(
-                        sf::Vector2f(scene.levelMesh.getVoxelSize())),
-                sf::FloatRect(tilesClip.getFrame(scene.levelMesh[idx])));
+                pos,
+                sf::FloatRect(
+                    tilesClip.getFrame(std::abs(scene.levelMesh[idx]))));
         }
     }
 
+    for (auto&& [actor, _] : scene.actors)
+    {
+        std::visit(
+            overloads {
+                [&](const dgm::Circle& c)
+                {
+                    pipeline.addFace(
+                        c.getPosition(),
+                        sf::FloatRect(actor.animation.getCurrentFrame()));
+                    c.debugRender(window);
+                },
+                [&](const dgm::Rect& r)
+                {
+                    pipeline.addFace(
+                        r.getCenter(),
+                        sf::FloatRect(actor.animation.getCurrentFrame()));
+                    r.debugRender(window);
+                },
+            },
+            actor.body);
+    }
+
     pipeline.renderTo(window);
-    // scene.dummy.body.debugRender(window); // rendering hitbox
+
+    /*
+    for (auto&& [actor, _] : scene.actors)
+    {
+        std::visit(
+            overloads {
+                [&](const dgm::Circle& c) { c.debugRender(window); },
+                [&](const dgm::Rect& r) { r.debugRender(window); },
+            },
+            actor.body);
+    }*/
 }
 
 void RenderingEngine::renderHud(dgm::Window& window)

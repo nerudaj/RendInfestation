@@ -1,0 +1,114 @@
+{
+    "defaults": {
+        "frame": {
+            "width": 32,
+            "height": 32
+        },
+        "spacing": {
+            "horizontal": 32,
+            "vertical": 32
+        }
+    },
+    "states": [
+        {
+            "name": "walk-front",
+            "bounds": {
+                "left": 2,
+                "top": 2,
+                "width": 134,
+                "height": 32
+            },
+            "nframes": 4
+        },
+        {
+            "name": "walk-back",
+            "bounds": {
+                "left": 2,
+                "top": 36,
+                "width": 134,
+                "height": 32
+            },
+            "nframes": 4
+        },
+        {
+            "name": "attack-punch-front",
+            "bounds": {
+                "left": 2,
+                "top": 70,
+                "width": 66,
+                "height": 32
+            },
+            "nframes": 2
+        },
+        {
+            "name": "attack-windup-front",
+            "bounds": {
+                "left": 70,
+                "top": 70,
+                "width": 66,
+                "height": 32
+            },
+            "nframes": 2
+        },
+        {
+            "name": "attack-punch-back",
+            "bounds": {
+                "left": 2,
+                "top": 104,
+                "width": 66,
+                "height": 32
+            },
+            "nframes": 2
+        },
+        {
+            "name": "attack-windup-back",
+            "bounds": {
+                "left": 70,
+                "top": 104,
+                "width": 66,
+                "height": 32
+            },
+            "nframes": 2
+        },
+        {
+            "name": "idle-front",
+            "bounds": {
+                "left": 2,
+                "top": 138,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        },
+        {
+            "name": "attack-recovery-front",
+            "bounds": {
+                "left": 36,
+                "top": 138,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        },
+        {
+            "name": "idle-back",
+            "bounds": {
+                "left": 70,
+                "top": 138,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        },
+        {
+            "name": "attack-recovery-back",
+            "bounds": {
+                "left": 104,
+                "top": 138,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        }
+    ]
+}

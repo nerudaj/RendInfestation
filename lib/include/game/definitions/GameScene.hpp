@@ -1,18 +1,11 @@
 #pragma once
 
+#include "game/definitions/Actor.hpp"
 #include <DGM/dgm.hpp>
-
-// You can delete this one
-struct DummyEntity
-{
-    dgm::Rect body;
-    dgm::Animation animation;
-    bool facingLeft = false;
-    sf::Vector2f forward = { 0.f, 0.f };
-};
 
 struct [[nodiscard]] GameScene final
 {
-    DummyEntity dummy;
+    dgm::DynamicBuffer<Actor> actors;
     dgm::Mesh levelMesh;
+    sf::Vector2f cameraPosition = { 0.f, 0.f };
 };

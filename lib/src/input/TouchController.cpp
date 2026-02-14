@@ -39,14 +39,9 @@ void TouchController::processEvent(const std::optional<sf::Event>& e)
         processEvent(*e->getIf<sf::Event::TouchMoved>());
 }
 
-[[nodiscard]] float TouchController::getHorizontalVelocity() const
+[[nodiscard]] sf::Vector2f TouchController::getForward() const
 {
-    return model.leftJoystick.readJoystick().x;
-}
-
-[[nodiscard]] bool TouchController::isJumpPressed() const
-{
-    return model.jumpButton.readButton();
+    return model.leftJoystick.readJoystick();
 }
 
 [[nodiscard]] bool TouchController::isBackPressed() const

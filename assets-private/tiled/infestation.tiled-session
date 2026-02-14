@@ -1,0 +1,52 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "demo-01.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "Core Tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Props.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "demo-01.tmx": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 34.5,
+                "y": -93
+            }
+        }
+    },
+    "last.exportedFilePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/levels",
+    "last.imagePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/graphics",
+    "map.height": 40,
+    "map.lastUsedExportFilter": "Všechny soubory (*)",
+    "map.lastUsedFormat": "tmx",
+    "map.width": 60,
+    "openFiles": [
+        "Core Tiles.tsx",
+        "demo-01.tmx",
+        "Props.tsx"
+    ],
+    "project": "infestation.tiled-project",
+    "recentFiles": [
+        "Core Tiles.tsx",
+        "Props.tsx",
+        "demo-01.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 2,
+    "tileset.spacing": 2,
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}

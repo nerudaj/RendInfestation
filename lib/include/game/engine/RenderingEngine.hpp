@@ -48,15 +48,12 @@ private:
 
 private:
     const static inline auto INTERNAL_GAME_RESOLUTION =
-        sf::Vector2f { 1280.f, 720.f };
+        sf::Vector2f { 640.f, 360.f };
 
     GameScene& scene;
     const GameTextureAtlas& atlas;
     const AppSettings& settings;
     const TouchController& touchController;
-#ifndef ANDROID
-    sf::Shader& shader;
-#endif
     dgm::Camera worldCamera;
     dgm::Camera hudCamera;
 

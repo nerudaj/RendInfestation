@@ -89,13 +89,7 @@ public:
         return model;
     }
 
-#pragma region For dummy entity, can be removed
-
-    [[nodiscard]] float getHorizontalVelocity() const;
-
-    [[nodiscard]] bool isJumpPressed() const;
-
-#pragma endregion
+    [[nodiscard]] sf::Vector2f getForward() const;
 
     [[nodiscard]] bool isBackPressed() const;
 
