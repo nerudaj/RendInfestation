@@ -67,19 +67,6 @@ GameScene GameSceneBuilder::createScene(
         actors.insert(std::move(actor), std::get<dgm::Rect>(actor.body.shape));
     }
 
-    auto spawnPositions = std::vector<sf::Vector2f> { { 1006.f, 109.f },
-                                                      { 1808.f, 170.f },
-                                                      { 80.f, 681.f },
-                                                      { 1846, 703.f },
-                                                      { 1471.f, 1116.f } };
-
-    for (auto& pos : spawnPositions)
-    {
-        auto npc = ActorBuilder::createNpc(
-            pos, atlas, inventories.emplaceBack(createNpcInventory()));
-        actors.insert(std::move(npc), std::get<dgm::Circle>(npc.body.shape));
-    }
-
     return GameScene {
         .actors = std::move(actors),
         .inventories = std::move(inventories),
@@ -94,5 +81,13 @@ GameScene GameSceneBuilder::createScene(
                 | uniranges::to<std::vector>(),
             levelDataSize,
             levelVoxelSize),
+        .enemySpawns =
+            std::vector<sf::Vector2f> {
+                { 1006.f, 109.f },
+                { 1808.f, 170.f },
+                { 80.f, 681.f },
+                { 1846, 703.f },
+                { 1471.f, 1116.f },
+            },
     };
 }

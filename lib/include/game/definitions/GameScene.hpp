@@ -17,4 +17,7 @@ struct [[nodiscard]] GameScene final
     dgm::Mesh levelMesh;
     sf::Vector2f cameraPosition = { 0.f, 0.f };
     size_t tick = 0;
+    std::vector<sf::Vector2f> enemySpawns;
+    sf::Time spawnTicker;
+    const sf::Time spawnDelay = sf::seconds(1.f);
 };

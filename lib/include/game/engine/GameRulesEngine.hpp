@@ -32,6 +32,8 @@ public:
 
     void operator()(const event::ProjectileHitSomething& e);
 
+    void operator()(const event::EnemyAttackLands& e);
+
     void operator()(const auto&) {}
 
 public:

@@ -77,8 +77,36 @@ void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
     eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileIdx);
 }
 
+void GameRulesEngine::operator()(const event::EnemyAttackLands& e)
+{
+    const auto& actor = scene.actors[e.enemyIdx];
+    auto&& attackArea = dgm::Circle(actor.body.getPosition(), 3.f);
+    attackArea.move(
+        actor.lookDirection
+        * (3.f + std::get<dgm::Circle>(actor.body.shape).getRadius()));
+
+    if (scene.actors[0].body.collidesWith(attackArea))
+    {
+        // TODO: damage player
+    }
+}
+
 void GameRulesEngine::update(const dgm::Time& time)
 {
+    scene.spawnTicker += time.getElapsed();
+    if (scene.spawnTicker > scene.spawnDelay)
+    {
+        scene.spawnTicker = sf::Time::Zero;
+        auto npc = ActorBuilder::createNpc(
+            scene.enemySpawns[rand() % scene.enemySpawns.size()],
+            atlas,
+            scene.inventories.emplaceBack(
+                GameSceneBuilder::createNpcInventory()));
+
+        scene.actors.insert(
+            std::move(npc), std::get<dgm::Circle>(npc.body.shape));
+    }
+
     for (auto&& [actor, idx] : scene.actors)
     {
         assert(actor.kind != ActorKind::None);
@@ -157,10 +185,11 @@ void GameRulesEngine::updateNpc(
     {
         actor.body.forward =
             dgm::Math::toUnit(directionToPlayer) * SPEED * 0.75f;
+        actor.lookDirection = dgm::Math::toUnit(directionToPlayer);
     }
-    else
+    else if (actor.animation.getStateName() == "walk-front")
     {
-        // TODO: attack
+        eventQueue.pushEvent<event::EnemyStartedAttack>(actorIdx);
     }
 }
 

@@ -19,6 +19,12 @@ void AnimationEngine::operator()(const event::ProjectileHitSomething& e)
         dgm::Circle({ 0.f, 0.f }, 1.f));
 }
 
+void AnimationEngine::operator()(const event::EnemyStartedAttack& e)
+{
+    auto&& npc = scene.actors[e.enemyIdx];
+    npc.animation.setState("attack-windup-front", "looping"_false);
+}
+
 void AnimationEngine::update(const dgm::Time& time)
 {
     for (auto&& [actor, idx] : scene.actors)
@@ -35,6 +41,21 @@ void AnimationEngine::update(const dgm::Time& time)
         else if (actor.kind == ActorKind::Player)
         {
             actor.animation.setState("idle-front", "looping"_true);
+        }
+        else if (actor.kind == ActorKind::Npc)
+        {
+            if (actor.animation.getStateName() == "attack-windup-front")
+            {
+                eventQueue.pushEvent<event::EnemyAttackLands>(idx);
+                actor.animation.setState("attack-punch-front", "looping"_false);
+            }
+            else if (actor.animation.getStateName() == "attack-punch-front")
+            {
+                actor.animation.setState(
+                    "attack-recovery-front", "looping"_false);
+            }
+            else
+                actor.animation.setState("walk-front", "looping"_true);
         }
         else if (actor.kind == ActorKind::Effect)
         {

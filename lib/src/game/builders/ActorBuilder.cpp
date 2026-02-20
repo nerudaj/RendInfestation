@@ -44,7 +44,7 @@ Actor ActorBuilder::createNpc(
         .inventoryIdx = inventoryIdx,
     };
 
-    actor.animation.setState("idle-front", "looping"_true);
+    actor.animation.setState("walk-front", "looping"_true);
 
     return actor;
 }

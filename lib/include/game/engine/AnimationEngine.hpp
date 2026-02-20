@@ -21,6 +21,8 @@ public:
 
     void operator()(const event::ProjectileHitSomething& e);
 
+    void operator()(const event::EnemyStartedAttack& e);
+
     void operator()(const auto&) {}
 
 public:
