@@ -1,5 +1,6 @@
 #pragma once
 
+#include "audio/SoundPlayer.hpp"
 #include "game/definitions/GameEvents.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
@@ -13,8 +14,13 @@ public:
         EventQueue<GameEvent>& eventQueue,
         GameScene& scene,
         const GameTextureAtlas& atlas,
-        Input& input) noexcept
-        : eventQueue(eventQueue), scene(scene), atlas(atlas), input(input)
+        Input& input,
+        SoundPlayer& player) noexcept
+        : eventQueue(eventQueue)
+        , scene(scene)
+        , atlas(atlas)
+        , input(input)
+        , soundPlayer(player)
     {
     }
 
@@ -42,4 +48,5 @@ private:
     GameScene& scene;
     const GameTextureAtlas& atlas;
     Input& input;
+    SoundPlayer& soundPlayer;
 };

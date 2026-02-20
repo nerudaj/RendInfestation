@@ -29,7 +29,7 @@ public:
         , atlas(GameTextureAtlasBuilder::createTextureAtlas(
               dic.resmgr, { 1024, 1024 }))
         , scene(GameSceneBuilder::createScene(atlas, dic.resmgr))
-        , gameRulesEngine(gameEvents, scene, atlas, dic.input)
+        , gameRulesEngine(gameEvents, scene, atlas, dic.input, dic.soundPlayer)
         , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
         , renderingEngine(

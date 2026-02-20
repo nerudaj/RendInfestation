@@ -7,4 +7,5 @@ namespace SoundId
     const IdType Error = "error.wav";
     const IdType Click = "click.wav";
     const IdType Land = "land.wav";
+    const IdType Bullet = "bullet.wav";
 } // namespace SoundId

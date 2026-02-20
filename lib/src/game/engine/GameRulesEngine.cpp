@@ -18,6 +18,8 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
     assert(inventory.weapon.timeTillFire <= sf::Time::Zero);
     inventory.weapon.timeTillFire = inventory.weapon.cooldown;
 
+    soundPlayer.playPovSound(SoundId::Bullet);
+
     auto&& player = scene.actors[0];
 
     for (auto&& _ : std::views::iota(0, inventory.weapon.numShots))
@@ -30,7 +32,7 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 
         auto actor = ActorBuilder::createProjectile(
             player.body.getPosition(),
-            direction,
+            dgm::Math::toUnit(direction),
             atlas,
             scene.inventories.emplaceBack(
                 GameSceneBuilder::createProjectileInventory()));
