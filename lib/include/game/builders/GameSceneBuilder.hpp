@@ -12,8 +12,6 @@ public:
 
     static NpcInventory createNpcInventory();
 
-    static ProjectileInventory createProjectileInventory();
-
     static GameScene createScene(
         const GameTextureAtlas& atlas, const dgm::ResourceManager& resmgr);
 };

@@ -12,6 +12,8 @@ PlayerInventory GameSceneBuilder::createPlayerInventory()
 {
     return PlayerInventory {
         .health = 100,
+        .weapon = WeaponBuilder::createWeapon(
+            BarrelType::CadenceBarrel, AmmoType::BouncyAmmo),
     };
 }
 
@@ -19,13 +21,6 @@ NpcInventory GameSceneBuilder::createNpcInventory()
 {
     return NpcInventory {
         .health = 100,
-    };
-}
-
-ProjectileInventory GameSceneBuilder::createProjectileInventory()
-{
-    return ProjectileInventory {
-        .damage = 20,
     };
 }
 

@@ -35,7 +35,7 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
             dgm::Math::toUnit(direction),
             atlas,
             scene.inventories.emplaceBack(
-                GameSceneBuilder::createProjectileInventory()));
+                inventory.weapon.defaultProjectileInventory));
 
         const auto spawnOffset =
             dgm::Math::toUnit(direction)
@@ -53,6 +53,8 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 
 void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
 {
+    // TODO: explosion hitbox
+
     if (e.hitActorIdx)
     {
         auto&& projectile = scene.actors[e.projectileIdx];

@@ -64,7 +64,7 @@ Actor ActorBuilder::createProjectile(
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(origin, 3.f),
-                .bounciness = 0.f,
+                .bounciness = 0.8f,
                 .friction = 0.f,
                 .forward = direction * PROJECTILE_SPEED,
             },
@@ -79,7 +79,24 @@ Actor ActorBuilder::createEffect(
     const EffectType type,
     const GameTextureAtlas& atlas)
 {
-    assert(type == EffectType::BulletDeath);
+    if (type == EffectType::BulletDeath)
+    {
+        auto actor = Actor {
+            .kind = ActorKind::Effect,
+            .body =
+                PhysicsBody {
+                    .shape = dgm::Circle(origin, 1.f),
+                },
+            .animation = dgm::Animation(
+                atlas.atlas.getAnimationStates(atlas.bulletLocation), 8),
+        };
+
+        actor.animation.setState("death", "looping"_false);
+
+        return actor;
+    }
+
+    assert(type == EffectType::Explosion);
 
     auto actor = Actor {
         .kind = ActorKind::Effect,
@@ -88,7 +105,7 @@ Actor ActorBuilder::createEffect(
                 .shape = dgm::Circle(origin, 1.f),
             },
         .animation = dgm::Animation(
-            atlas.atlas.getAnimationStates(atlas.bulletLocation), 8),
+            atlas.atlas.getAnimationStates(atlas.explosionLocation), 8),
     };
 
     actor.animation.setState("death", "looping"_false);

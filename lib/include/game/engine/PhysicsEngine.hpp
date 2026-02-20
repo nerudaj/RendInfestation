@@ -30,7 +30,7 @@ public:
         if (dgm::Collision::advanced(scene.levelMesh, collider, moment))
         {
             if (actor.kind == ActorKind::Projectile)
-                handleProjectileHit(actorIdx, std::nullopt);
+                handleProjectileEnvironmentHit(actorIdx, actor.body, moment);
         }
 
         scene.actors.removeFromLookup(actorIdx, collider);
@@ -40,10 +40,15 @@ public:
         for (auto&& candidateIdx : scene.actors.getOverlapCandidates(collider))
         {
             auto&& candidate = scene.actors[candidateIdx];
+            if (candidate.kind == ActorKind::Projectile
+                && actor.kind == candidate.kind)
+                continue;
+
             if (candidate.body.collidesWith(collider))
             {
                 if (actor.kind == ActorKind::Projectile)
-                    handleProjectileHit(actorIdx, candidateIdx);
+                    eventQueue.pushEvent<event::ProjectileHitSomething>(
+                        actorIdx, candidateIdx);
                 else
                     actor.body.move(-moment);
             }
@@ -54,7 +59,10 @@ public:
         actor.body.forward -= actor.body.forward * actor.body.friction;
     }
 
-    void handleProjectileHit(
+    void handleProjectileEnvironmentHit(
+        size_t projectileIdx, PhysicsBody& body, const sf::Vector2f& moment);
+
+    void handleProjectileActorHit(
         size_t projectileIdx, std::optional<size_t> hitActorIdx);
 
 private:

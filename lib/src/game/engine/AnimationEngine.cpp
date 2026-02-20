@@ -10,11 +10,19 @@ void AnimationEngine::operator()(const event::PlayerFiredWeapon&)
 
 void AnimationEngine::operator()(const event::ProjectileHitSomething& e)
 {
+    auto& projectile = scene.actors[e.projectileIdx];
+    assert(projectile.inventoryIdx);
+
+    auto& inventory = std::get<ProjectileInventory>(
+        scene.inventories[*projectile.inventoryIdx]);
+
     // Spawn projectile death effect
     scene.actors.insert(
         ActorBuilder::createEffect(
             scene.actors[e.projectileIdx].body.getPosition(),
-            EffectType::BulletDeath,
+            inventory.traits == ProjectileTraits::Explosive
+                ? EffectType::Explosion
+                : EffectType::BulletDeath,
             atlas),
         dgm::Circle({ 0.f, 0.f }, 1.f));
 }
