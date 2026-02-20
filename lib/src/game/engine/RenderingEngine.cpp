@@ -161,6 +161,12 @@ void RenderingEngine::renderHud(dgm::Window& window)
     text.setPosition({ 10.f, 10.f });
     text.setString(fpsCounter.getText());
     window.draw(text);
+
+    text.setPosition({ 10.f, 20.f });
+    text.setString(std::format(
+        "Player pos: {}",
+        dgm::Utility::to_string(scene.actors[0].body.getPosition())));
+    window.draw(text);
 }
 
 void RenderingEngine::renderTouchControls(dgm::Window& window)
