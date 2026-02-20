@@ -5,8 +5,8 @@
             "height": 32
         },
         "spacing": {
-            "horizontal": 32,
-            "vertical": 32
+            "horizontal": 2,
+            "vertical": 2
         }
     },
     "states": [
