@@ -10,9 +10,12 @@ namespace event
 
     struct ProjectileHitSomething
     {
-        size_t idx;
+        size_t projectileIdx;
 
-        explicit ProjectileHitSomething(size_t idx) : idx(idx) {}
+        explicit ProjectileHitSomething(size_t projectileIdx)
+            : projectileIdx(projectileIdx)
+        {
+        }
     };
 
     struct ObjectDestroyed

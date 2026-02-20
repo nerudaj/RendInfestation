@@ -9,8 +9,8 @@ void AnimationEngine::operator()(const event::PlayerFiredWeapon&)
 
 void AnimationEngine::operator()(const event::ProjectileHitSomething& e)
 {
-    assert(scene.actors.isIndexValid(e.idx));
-    scene.actors[e.idx].animation.setState("death");
+    // assert(scene.actors.isIndexValid(e.projectileIdx));
+    scene.actors[e.projectileIdx].animation.setState("death");
 }
 
 void AnimationEngine::update(const dgm::Time& time)
