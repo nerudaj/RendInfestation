@@ -35,6 +35,24 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
     player.body.forward += -player.lookDirection * inventory.weapon.kickback;
 }
 
+void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
+{
+    auto&& projectile = scene.actors[e.projectileIdx];
+    auto&& collider = std::get<dgm::Circle>(projectile.body.shape);
+    auto&& projectileInventory = std::get<ProjectileInventory>(
+        scene.inventories[*projectile.inventoryIdx]);
+
+    for (auto&& [actor, idx] : scene.actors)
+    {
+        if (actor.kind == ActorKind::Npc && actor.body.collidesWith(collider))
+        {
+            auto inventory = std::get<NpcInventory>(
+                scene.inventories[actor.inventoryIdx.value()]);
+            inventory.health -= projectileInventory.damage;
+        }
+    }
+}
+
 void GameRulesEngine::update(const dgm::Time& time)
 {
     for (auto&& [actor, _] : scene.actors)

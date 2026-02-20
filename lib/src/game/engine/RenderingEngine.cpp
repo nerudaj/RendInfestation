@@ -115,7 +115,8 @@ void RenderingEngine::renderWorld(dgm::Window& window)
                         actor.lookDirection.dot(sf::Vector2f(1.f, 0.f)) >= 0.f;
 
                     faces.push_back(Face {
-                        .origin = c.getPosition(),
+                        .origin = c.getPosition()
+                                  + actor.spriteOriginOffsetFromCollider,
                         .texUvs =
                             sf::FloatRect(actor.animation.getCurrentFrame()),
                         .scale =
@@ -130,7 +131,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
                 {
                     if (!worldCamera.isObjectVisible(r)) return;
                     faces.push_back(Face {
-                        r.getCenter(),
+                        r.getCenter() + actor.spriteOriginOffsetFromCollider,
                         sf::FloatRect(actor.animation.getCurrentFrame()) });
                     r.debugRender(window);
                 },
@@ -144,16 +145,17 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 
     pipeline.renderTo(window);
 
-    /*
     for (auto&& [actor, _] : scene.actors)
     {
         std::visit(
             overloads {
-                [&](const dgm::Circle& c) { c.debugRender(window); },
-                [&](const dgm::Rect& r) { r.debugRender(window); },
+                [&](const dgm::Circle& c)
+                { c.debugRender(window, sf::Color(255, 255, 0, 128)); },
+                [&](const dgm::Rect& r)
+                { r.debugRender(window, sf::Color(255, 255, 0, 128)); },
             },
-            actor.body);
-    }*/
+            actor.body.shape);
+    }
 }
 
 void RenderingEngine::renderHud(dgm::Window& window)

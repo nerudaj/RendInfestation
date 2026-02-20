@@ -7,12 +7,14 @@
 #include <DGM/dgm.hpp>
 #include <vector>
 
-using Inventory = std::variant<EnemyInventory, PlayerInventory, ProjectileInventory>;
+using Inventory =
+    std::variant<NpcInventory, PlayerInventory, ProjectileInventory>;
 
 struct [[nodiscard]] GameScene final
 {
-    dgm::DynamicBuffer<Actor> actors;
+    dgm::SpatialBuffer<Actor> actors;
     dgm::DynamicBuffer<Inventory> inventories;
     dgm::Mesh levelMesh;
     sf::Vector2f cameraPosition = { 0.f, 0.f };
+    size_t tick = 0;
 };

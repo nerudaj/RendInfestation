@@ -7,6 +7,66 @@ static inline bool isPassableTile(int id)
            || (24 <= id && id <= 27) || id == 30;
 }
 
+PlayerInventory GameSceneBuilder::createPlayerInventory()
+{
+    return PlayerInventory {
+        .health = 100,
+    };
+}
+
+Actor GameSceneBuilder::createPlayer(
+    const sf::Vector2f& spawnPosition,
+    const GameTextureAtlas& atlas,
+    size_t inventoryIdx)
+{
+    auto actor = Actor {
+        .kind = ActorKind::Player,
+        .body =
+            PhysicsBody {
+                .shape = dgm::Circle(spawnPosition, 8.f),
+                .friction = 0.8f,
+            },
+        .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+        .animation = dgm::Animation(
+            atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
+        .inventoryIdx = inventoryIdx,
+    };
+
+    actor.animation.setState("idle-front", "looping"_true);
+
+    return actor;
+}
+
+NpcInventory GameSceneBuilder::createNpcInventory()
+{
+    return NpcInventory {
+        .health = 100,
+    };
+}
+
+Actor GameSceneBuilder::createNpc(
+    const sf::Vector2f& spawnPosition,
+    const GameTextureAtlas& atlas,
+    size_t inventoryIdx)
+{
+    auto actor = Actor {
+        .kind = ActorKind::Npc,
+        .body =
+            PhysicsBody {
+                .shape = dgm::Circle(spawnPosition, 8.f),
+                .friction = 0.8f,
+            },
+        .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+        .animation = dgm::Animation(
+            atlas.atlas.getAnimationStates(atlas.bigheadLocation), 8),
+        .inventoryIdx = inventoryIdx,
+    };
+
+    actor.animation.setState("idle-front", "looping"_true);
+
+    return actor;
+}
+
 GameScene GameSceneBuilder::createScene(
     const GameTextureAtlas& atlas, const dgm::ResourceManager& resmgr)
 {
@@ -17,44 +77,51 @@ GameScene GameSceneBuilder::createScene(
         std::holds_alternative<tiled::ObjectGroupModel>(tiledLevel.layers[1]));
     auto&& layer = std::get<tiled::TileLayerModel>(tiledLevel.layers[0]);
 
-    auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
-    auto actors = dgm::DynamicBuffer<Actor>();
+    const auto levelVoxelSize =
+        sf::Vector2u { tiledLevel.tilewidth, tiledLevel.tileheight };
+    const auto levelDataSize = sf::Vector2u { layer.width, layer.height };
 
-    // Player has to be first
-    {
-        auto idx = actors.emplaceBack(Actor {
-            .kind = ActorKind::Player,
-            .body =
-                PhysicsBody {
-                    .shape = dgm::Circle({ 100.f, 100.f }, 8.f),
-                    .friction = 0.8f,
-                },
-            .animation = dgm::Animation(
-                atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
-            .inventoryIdx = 0,
-        });
-        actors[idx].animation.setState("idle-front", "looping"_true);
-    }
+    auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
+    auto actors = dgm::SpatialBuffer<Actor>(
+        dgm::Rect(
+            { 0.f, 0.f },
+            sf::Vector2f(levelDataSize.componentWiseMul(levelVoxelSize))),
+        128);
+
+    auto inventories = dgm::DynamicBuffer<Inventory>();
+    auto player = createPlayer(
+        { 100.f, 150.f },
+        atlas,
+        inventories.emplaceBack(createPlayerInventory()));
+    actors.insert(std::move(player), std::get<dgm::Circle>(player.body.shape));
 
     for (auto&& prop :
          std::get<tiled::ObjectGroupModel>(tiledLevel.layers[1]).objects)
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
 
-        auto idx = actors.emplaceBack(Actor {
+        auto projectileIdx = actors.emplaceBack(Actor {
             .kind = ActorKind::Prop,
             .body = dgm::Rect({ prop.x, prop.y - 64.f }, { 64.f, 64.f }),
             .animation = dgm::Animation(atlas.propsStates),
         });
 
-        actors[idx].animation.setState(
+        actors[projectileIdx].animation.setState(
             std::format("idle-{}", propId), "looping"_true);
     }
 
-    auto inventories = dgm::DynamicBuffer<Inventory>();
-    inventories.emplaceBack(PlayerInventory {
-        .health = 100,
-    });
+    auto spawnPositions = std::vector<sf::Vector2f> { { 1006.f, 109.f },
+                                                      { 1808.f, 170.f },
+                                                      { 80.f, 681.f },
+                                                      { 1846, 703.f },
+                                                      { 1471.f, 1116.f } };
+
+    for (auto& pos : spawnPositions)
+    {
+        auto npc = createNpc(
+            pos, atlas, inventories.emplaceBack(createNpcInventory()));
+        actors.insert(std::move(npc), std::get<dgm::Circle>(npc.body.shape));
+    }
 
     return GameScene {
         .actors = std::move(actors),
@@ -68,7 +135,7 @@ GameScene GameSceneBuilder::createScene(
                                                         : (tile - 1);
                     })
                 | uniranges::to<std::vector>(),
-            { layer.width, layer.height },
-            { tiledLevel.tilewidth, tiledLevel.tileheight }),
+            levelDataSize,
+            levelVoxelSize),
     };
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-struct [[nodiscard]] EnemyInventory final
+struct [[nodiscard]] NpcInventory final
 {
     int health;
 };

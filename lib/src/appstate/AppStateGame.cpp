@@ -36,6 +36,8 @@ void AppStateGame::update()
     gameEvents.processEvents(
         gameRulesEngine, animationEngine, physicsEngine, janitor);
     janitor.cleanScene(scene);
+
+    ++scene.tick;
 }
 
 void AppStateGame::draw()
