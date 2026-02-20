@@ -11,9 +11,11 @@ namespace event
     struct ProjectileHitSomething
     {
         size_t projectileIdx;
+        std::optional<size_t> hitActorIdx;
 
-        explicit ProjectileHitSomething(size_t projectileIdx)
-            : projectileIdx(projectileIdx)
+        explicit ProjectileHitSomething(
+            size_t projectileIdx, std::optional<size_t> hitActorIdx)
+            : projectileIdx(projectileIdx), hitActorIdx(hitActorIdx)
         {
         }
     };

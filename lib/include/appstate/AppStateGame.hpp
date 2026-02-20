@@ -30,7 +30,7 @@ public:
               dic.resmgr, { 1024, 1024 }))
         , scene(GameSceneBuilder::createScene(atlas, dic.resmgr))
         , gameRulesEngine(gameEvents, scene, atlas, dic.input)
-        , animationEngine(scene, gameEvents)
+        , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
         , renderingEngine(
               dic.resmgr, scene, atlas, dic.settings, dic.touchController)

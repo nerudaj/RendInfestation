@@ -1,5 +1,6 @@
 #include "game/engine/GameRulesEngine.hpp"
 #include "game/builders/ActorBuilder.hpp"
+#include "game/builders/GameSceneBuilder.hpp"
 #include <algorithm>
 #include <limits>
 
@@ -7,7 +8,7 @@ const float SPEED = 192.f;
 
 void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 {
-    assert(scene.actors.isIndexValid(0));
+    // assert(scene.actors.isIndexValid(0));
     assert(scene.actors[0].kind == ActorKind::Player);
     assert(scene.inventories.isIndexValid(0));
     assert(std::holds_alternative<PlayerInventory>(scene.inventories[0]));
@@ -21,15 +22,28 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 
     for (auto&& _ : std::views::iota(0, inventory.weapon.numShots))
     {
-        auto spread =
+        const auto spread =
             rand() % (inventory.weapon.spread * 2) - inventory.weapon.spread;
 
-        scene.actors.emplaceBack(ActorBuilder::createProjectile(
+        const auto direction = player.lookDirection.rotatedBy(
+            sf::degrees(static_cast<float>(spread)));
+
+        auto actor = ActorBuilder::createProjectile(
             player.body.getPosition(),
-            player.lookDirection.rotatedBy(
-                sf::degrees(static_cast<float>(spread))),
+            direction,
             atlas,
-            scene.inventories.emplaceBack(ProjectileInventory {})));
+            scene.inventories.emplaceBack(
+                GameSceneBuilder::createProjectileInventory()));
+
+        const auto spawnOffset =
+            dgm::Math::toUnit(direction)
+            * (std::get<dgm::Circle>(player.body.shape).getRadius()
+               + std::get<dgm::Circle>(actor.body.shape).getRadius() + 1.f);
+
+        actor.body.move(spawnOffset);
+
+        scene.actors.insert(
+            std::move(actor), std::get<dgm::Circle>(actor.body.shape));
     }
 
     player.body.forward += -player.lookDirection * inventory.weapon.kickback;
@@ -37,20 +51,28 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 
 void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
 {
-    auto&& projectile = scene.actors[e.projectileIdx];
-    auto&& collider = std::get<dgm::Circle>(projectile.body.shape);
-    auto&& projectileInventory = std::get<ProjectileInventory>(
-        scene.inventories[*projectile.inventoryIdx]);
-
-    for (auto&& [actor, idx] : scene.actors)
+    if (e.hitActorIdx)
     {
-        if (actor.kind == ActorKind::Npc && actor.body.collidesWith(collider))
+        auto&& projectile = scene.actors[e.projectileIdx];
+        auto&& projectileInventory = std::get<ProjectileInventory>(
+            scene.inventories[*projectile.inventoryIdx]);
+
+        auto&& actor = scene.actors[*e.hitActorIdx];
+
+        if (actor.inventoryIdx)
         {
-            auto inventory = std::get<NpcInventory>(
-                scene.inventories[actor.inventoryIdx.value()]);
-            inventory.health -= projectileInventory.damage;
+            std::visit(
+                overloads {
+                    [&](PlayerInventory& inventory) { /* tbd */ },
+                    [&](NpcInventory& inventory)
+                    { inventory.health -= projectileInventory.damage; },
+                    [&](auto&) {},
+                },
+                scene.inventories[*actor.inventoryIdx]);
         }
     }
+
+    eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileIdx);
 }
 
 void GameRulesEngine::update(const dgm::Time& time)

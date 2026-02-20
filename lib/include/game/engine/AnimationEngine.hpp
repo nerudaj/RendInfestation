@@ -2,13 +2,17 @@
 
 #include "game/definitions/GameEvents.hpp"
 #include "game/definitions/GameScene.hpp"
+#include "game/definitions/GameTextureAtlas.hpp"
 #include "misc/EventQueue.hpp"
 
 class [[nodiscard]] AnimationEngine final
 {
 public:
-    AnimationEngine(GameScene& scene, EventQueue<GameEvent>& eventQueue)
-        : scene(scene), eventQueue(eventQueue)
+    AnimationEngine(
+        GameScene& scene,
+        EventQueue<GameEvent>& eventQueue,
+        const GameTextureAtlas& atlas)
+        : scene(scene), eventQueue(eventQueue), atlas(atlas)
     {
     }
 
@@ -25,4 +29,5 @@ public:
 private:
     GameScene& scene;
     EventQueue<GameEvent>& eventQueue;
+    const GameTextureAtlas& atlas;
 };

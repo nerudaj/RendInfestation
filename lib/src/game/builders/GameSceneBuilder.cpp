@@ -1,4 +1,5 @@
 #include "game/builders/GameSceneBuilder.hpp"
+#include "game/builders/ActorBuilder.hpp"
 
 static inline bool isPassableTile(int id)
 {
@@ -14,29 +15,6 @@ PlayerInventory GameSceneBuilder::createPlayerInventory()
     };
 }
 
-Actor GameSceneBuilder::createPlayer(
-    const sf::Vector2f& spawnPosition,
-    const GameTextureAtlas& atlas,
-    size_t inventoryIdx)
-{
-    auto actor = Actor {
-        .kind = ActorKind::Player,
-        .body =
-            PhysicsBody {
-                .shape = dgm::Circle(spawnPosition, 8.f),
-                .friction = 0.8f,
-            },
-        .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-        .animation = dgm::Animation(
-            atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
-        .inventoryIdx = inventoryIdx,
-    };
-
-    actor.animation.setState("idle-front", "looping"_true);
-
-    return actor;
-}
-
 NpcInventory GameSceneBuilder::createNpcInventory()
 {
     return NpcInventory {
@@ -44,27 +22,11 @@ NpcInventory GameSceneBuilder::createNpcInventory()
     };
 }
 
-Actor GameSceneBuilder::createNpc(
-    const sf::Vector2f& spawnPosition,
-    const GameTextureAtlas& atlas,
-    size_t inventoryIdx)
+ProjectileInventory GameSceneBuilder::createProjectileInventory()
 {
-    auto actor = Actor {
-        .kind = ActorKind::Npc,
-        .body =
-            PhysicsBody {
-                .shape = dgm::Circle(spawnPosition, 8.f),
-                .friction = 0.8f,
-            },
-        .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-        .animation = dgm::Animation(
-            atlas.atlas.getAnimationStates(atlas.bigheadLocation), 8),
-        .inventoryIdx = inventoryIdx,
+    return ProjectileInventory {
+        .damage = 20,
     };
-
-    actor.animation.setState("idle-front", "looping"_true);
-
-    return actor;
 }
 
 GameScene GameSceneBuilder::createScene(
@@ -89,7 +51,7 @@ GameScene GameSceneBuilder::createScene(
         128);
 
     auto inventories = dgm::DynamicBuffer<Inventory>();
-    auto player = createPlayer(
+    auto player = ActorBuilder::createPlayer(
         { 100.f, 150.f },
         atlas,
         inventories.emplaceBack(createPlayerInventory()));
@@ -100,14 +62,9 @@ GameScene GameSceneBuilder::createScene(
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
 
-        auto projectileIdx = actors.emplaceBack(Actor {
-            .kind = ActorKind::Prop,
-            .body = dgm::Rect({ prop.x, prop.y - 64.f }, { 64.f, 64.f }),
-            .animation = dgm::Animation(atlas.propsStates),
-        });
-
-        actors[projectileIdx].animation.setState(
-            std::format("idle-{}", propId), "looping"_true);
+        auto actor =
+            ActorBuilder::createProp({ prop.x, prop.y }, propId, atlas);
+        actors.insert(std::move(actor), std::get<dgm::Rect>(actor.body.shape));
     }
 
     auto spawnPositions = std::vector<sf::Vector2f> { { 1006.f, 109.f },
@@ -118,7 +75,7 @@ GameScene GameSceneBuilder::createScene(
 
     for (auto& pos : spawnPositions)
     {
-        auto npc = createNpc(
+        auto npc = ActorBuilder::createNpc(
             pos, atlas, inventories.emplaceBack(createNpcInventory()));
         actors.insert(std::move(npc), std::get<dgm::Circle>(npc.body.shape));
     }

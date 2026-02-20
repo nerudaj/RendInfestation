@@ -7,4 +7,5 @@ enum class [[nodiscard]] ActorKind
     Player,
     Npc,
     Projectile,
+    Effect,
 };

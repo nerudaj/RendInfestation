@@ -1,4 +1,5 @@
 #include "game/engine/AnimationEngine.hpp"
+#include "game/builders/ActorBuilder.hpp"
 #include "types/SemanticTypes.hpp"
 
 void AnimationEngine::operator()(const event::PlayerFiredWeapon&)
@@ -9,8 +10,13 @@ void AnimationEngine::operator()(const event::PlayerFiredWeapon&)
 
 void AnimationEngine::operator()(const event::ProjectileHitSomething& e)
 {
-    // assert(scene.actors.isIndexValid(e.projectileIdx));
-    scene.actors[e.projectileIdx].animation.setState("death");
+    // Spawn projectile death effect
+    scene.actors.insert(
+        ActorBuilder::createEffect(
+            scene.actors[e.projectileIdx].body.getPosition(),
+            EffectType::BulletDeath,
+            atlas),
+        dgm::Circle({ 0.f, 0.f }, 1.f));
 }
 
 void AnimationEngine::update(const dgm::Time& time)
@@ -18,6 +24,7 @@ void AnimationEngine::update(const dgm::Time& time)
     for (auto&& [actor, idx] : scene.actors)
     {
         auto status = actor.animation.update(time);
+
         if (status != dgm::Animation::PlaybackStatus::Finished) continue;
 
         if (actor.kind == ActorKind::Projectile
@@ -28,6 +35,10 @@ void AnimationEngine::update(const dgm::Time& time)
         else if (actor.kind == ActorKind::Player)
         {
             actor.animation.setState("idle-front", "looping"_true);
+        }
+        else if (actor.kind == ActorKind::Effect)
+        {
+            eventQueue.pushEvent<event::ObjectDestroyed>(idx);
         }
     }
 }
