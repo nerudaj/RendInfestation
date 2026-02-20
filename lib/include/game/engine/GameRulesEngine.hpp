@@ -38,10 +38,22 @@ public:
     void update(const dgm::Time& time);
 
     void updatePlayer(
-        Actor& actor, PlayerInventory& inventory, const dgm::Time& time);
+        size_t actorIdx,
+        Actor& actor,
+        PlayerInventory& inventory,
+        const dgm::Time& time);
+
+    void updateNpc(
+        size_t actorIdx,
+        Actor& actor,
+        NpcInventory& inventory,
+        const dgm::Time& time);
 
     void updateProjectile(
-        Actor& actor, ProjectileInventory& inventory, const dgm::Time& time);
+        size_t actorIdx,
+        Actor& actor,
+        ProjectileInventory& inventory,
+        const dgm::Time& time);
 
 private:
     EventQueue<GameEvent>& eventQueue;

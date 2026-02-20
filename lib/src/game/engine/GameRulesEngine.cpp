@@ -79,7 +79,7 @@ void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
 
 void GameRulesEngine::update(const dgm::Time& time)
 {
-    for (auto&& [actor, _] : scene.actors)
+    for (auto&& [actor, idx] : scene.actors)
     {
         assert(actor.kind != ActorKind::None);
 
@@ -88,9 +88,20 @@ void GameRulesEngine::update(const dgm::Time& time)
             assert(actor.inventoryIdx);
             assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
             updatePlayer(
+                idx,
                 actor,
                 std::get<PlayerInventory>(
                     scene.inventories[*actor.inventoryIdx]),
+                time);
+        }
+        else if (actor.kind == ActorKind::Npc)
+        {
+            assert(actor.inventoryIdx);
+            assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
+            updateNpc(
+                idx,
+                actor,
+                std::get<NpcInventory>(scene.inventories[*actor.inventoryIdx]),
                 time);
         }
         else if (actor.kind == ActorKind::Projectile)
@@ -98,6 +109,7 @@ void GameRulesEngine::update(const dgm::Time& time)
             assert(actor.inventoryIdx);
             assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
             updateProjectile(
+                idx,
                 actor,
                 std::get<ProjectileInventory>(
                     scene.inventories[*actor.inventoryIdx]),
@@ -107,7 +119,7 @@ void GameRulesEngine::update(const dgm::Time& time)
 }
 
 void GameRulesEngine::updatePlayer(
-    Actor& actor, PlayerInventory& inventory, const dgm::Time& time)
+    size_t, Actor& actor, PlayerInventory& inventory, const dgm::Time& time)
 {
     auto&& forwardImpulse = input.getForward();
     if (forwardImpulse.length() > 0.f)
@@ -127,7 +139,32 @@ void GameRulesEngine::updatePlayer(
     inventory.weapon.timeTillFire -= time.getElapsed();
 }
 
+void GameRulesEngine::updateNpc(
+    size_t actorIdx,
+    Actor& actor,
+    NpcInventory& inventory,
+    const dgm::Time& time)
+{
+    if (inventory.health <= 0)
+    {
+        eventQueue.pushEvent<event::ObjectDestroyed>(actorIdx);
+    }
+
+    auto playerPos = scene.actors[0].body.getPosition();
+    auto directionToPlayer = playerPos - actor.body.getPosition();
+
+    if (directionToPlayer.length() > 20.f)
+    {
+        actor.body.forward =
+            dgm::Math::toUnit(directionToPlayer) * SPEED * 0.75f;
+    }
+    else
+    {
+        // TODO: attack
+    }
+}
+
 void GameRulesEngine::updateProjectile(
-    Actor&, ProjectileInventory&, const dgm::Time&)
+    size_t, Actor&, ProjectileInventory&, const dgm::Time&)
 {
 }
