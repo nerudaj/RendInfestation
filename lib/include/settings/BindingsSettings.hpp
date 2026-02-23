@@ -42,6 +42,8 @@ struct [[nodiscard]] BindingsSettings final
               std::pair { sf::Joystick::Axis::R, dgm::AxisHalf::Positive } } },
         { InputKind::Shoot,
           Binding { sf::Keyboard::Key::Space, GamepadButton { 0 } } },
+        { InputKind::SwitchWeapons,
+          Binding { sf::Keyboard::Key::Tab, GamepadButton { 3 } } },
     };
 
     std::map<InputKind, Binding> menuBindings = {

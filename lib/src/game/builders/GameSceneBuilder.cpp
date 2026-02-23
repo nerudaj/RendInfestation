@@ -12,8 +12,13 @@ PlayerInventory GameSceneBuilder::createPlayerInventory()
 {
     return PlayerInventory {
         .health = 100,
-        .weapon = WeaponBuilder::createWeapon(
-            BarrelType::CadenceBarrel, AmmoType::BouncyAmmo),
+        .weapons =
+            std::array {
+                WeaponBuilder::createWeapon(
+                    BarrelType::CadenceBarrel, AmmoType::BouncyAmmo),
+                WeaponBuilder::createWeapon(
+                    BarrelType::SpreadBarrel, AmmoType::RegularAmmo),
+            },
     };
 }
 

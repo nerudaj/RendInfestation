@@ -28,7 +28,7 @@ TouchModel::TouchModel(const sf::Vector2u& windowSize)
           TouchInput(
               TouchObjectKind::Button,
               { windowSize.x - 300.f, windowSize.y - 300.f },
-              100.f),
+              60.f),
       })
 {
 }
@@ -56,6 +56,13 @@ sf::Vector2f TouchController::getAimDirection() const
 [[nodiscard]] bool TouchController::isBackPressed() const
 {
     return model.pauseButton.readButton();
+}
+
+bool TouchController::isSwitchWeaponsPressed() const
+{
+    const auto value = model.swapWeaponButton.readButton();
+    if (value) model.swapWeaponButton.reset();
+    return value;
 }
 
 void TouchController::processEvent(const sf::Event::TouchBegan& e)

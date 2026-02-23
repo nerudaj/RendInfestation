@@ -14,18 +14,18 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
     assert(std::holds_alternative<PlayerInventory>(scene.inventories[0]));
 
     auto&& inventory = std::get<PlayerInventory>(scene.inventories[0]);
+    auto&& weapon = getPlayerWeapon(inventory);
 
-    assert(inventory.weapon.timeTillFire <= sf::Time::Zero);
-    inventory.weapon.timeTillFire = inventory.weapon.cooldown;
+    assert(weapon.timeTillFire <= sf::Time::Zero);
+    weapon.timeTillFire = weapon.cooldown;
 
     soundPlayer.playPovSound(SoundId::Bullet);
 
     auto&& player = scene.actors[0];
 
-    for (auto&& _ : std::views::iota(0, inventory.weapon.numShots))
+    for (auto&& _ : std::views::iota(0, weapon.numShots))
     {
-        const auto spread =
-            rand() % (inventory.weapon.spread * 2) - inventory.weapon.spread;
+        const auto spread = rand() % (weapon.spread * 2) - weapon.spread;
 
         const auto direction = player.lookDirection.rotatedBy(
             sf::degrees(static_cast<float>(spread)));
@@ -34,8 +34,7 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
             player.body.getPosition(),
             dgm::Math::toUnit(direction),
             atlas,
-            scene.inventories.emplaceBack(
-                inventory.weapon.defaultProjectileInventory));
+            scene.inventories.emplaceBack(weapon.defaultProjectileInventory));
 
         const auto spawnOffset =
             dgm::Math::toUnit(direction)
@@ -47,7 +46,7 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
         scene.actors.emplaceBack(std::move(actor));
     }
 
-    player.body.forward += -player.lookDirection * inventory.weapon.kickback;
+    player.body.forward += -player.lookDirection * weapon.kickback;
 }
 
 void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
@@ -156,13 +155,17 @@ void GameRulesEngine::updatePlayer(
 
     scene.cameraPosition = actor.body.getPosition();
 
-    if (input.isShootPressed()
-        && inventory.weapon.timeTillFire <= sf::Time::Zero)
+    auto&& weapon = getPlayerWeapon(inventory);
+    if (input.isShootPressed() && weapon.timeTillFire <= sf::Time::Zero)
     {
         eventQueue.pushEvent<event::PlayerFiredWeapon>();
     }
+    else if (input.isSwapWeaponsPressed())
+    {
+        inventory.activeWeapon = !inventory.activeWeapon;
+    }
 
-    inventory.weapon.timeTillFire -= time.getElapsed();
+    weapon.timeTillFire -= time.getElapsed();
 }
 
 void GameRulesEngine::updateNpc(

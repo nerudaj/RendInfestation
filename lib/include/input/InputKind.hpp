@@ -20,4 +20,5 @@ enum class [[nodiscard]] InputKind
     AimUp,
     AimDown,
     Shoot,
+    SwitchWeapons,
 };

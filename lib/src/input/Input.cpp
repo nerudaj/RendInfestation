@@ -35,6 +35,12 @@ bool Input::isShootPressed() const
            || touchController.getAimDirection().length() >= 1.f;
 }
 
+bool Input::isSwapWeaponsPressed() const
+{
+    return readAndRelease(InputKind::SwitchWeapons)
+           || touchController.isSwitchWeaponsPressed();
+}
+
 [[nodiscard]] bool Input::isMenuCycleLeftPressed() const
 {
     return readAndRelease(InputKind::MenuCycleLeft);

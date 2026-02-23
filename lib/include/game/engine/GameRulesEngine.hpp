@@ -58,6 +58,12 @@ public:
         const dgm::Time& time);
 
 private:
+    Weapon& getPlayerWeapon(PlayerInventory& inventory) const
+    {
+        return inventory.weapons[static_cast<int>(inventory.activeWeapon)];
+    }
+
+private:
     EventQueue<GameEvent>& eventQueue;
     GameScene& scene;
     const GameTextureAtlas& atlas;

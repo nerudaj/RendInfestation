@@ -34,6 +34,8 @@ public:
 
     [[nodiscard]] bool isShootPressed() const;
 
+    [[nodiscard]] bool isSwapWeaponsPressed() const;
+
     [[nodiscard]] bool isMenuCycleLeftPressed() const;
 
     [[nodiscard]] bool isMenuCycleRightPressed() const;
