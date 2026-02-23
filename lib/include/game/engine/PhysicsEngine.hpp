@@ -35,8 +35,6 @@ public:
 
         spatialIndex.removeFromLookup(actorIdx, collider);
 
-        actor.body.move(moment);
-
         for (auto&& candidateIdx : spatialIndex.getOverlapCandidates(collider))
         {
             auto&& candidate = scene.actors[candidateIdx];
@@ -44,15 +42,22 @@ public:
                 && actor.kind == candidate.kind)
                 continue;
 
-            if (candidate.body.collidesWith(collider))
+            const auto hasCollision = std::visit(
+                overloads { [&](const auto& anchor)
+                            {
+                                return dgm::Collision::advanced(
+                                    anchor, collider, moment);
+                            } },
+                candidate.body.shape);
+
+            if (hasCollision && actor.kind == ActorKind::Projectile)
             {
-                if (actor.kind == ActorKind::Projectile)
-                    eventQueue.pushEvent<event::ProjectileHitSomething>(
-                        actorIdx, candidateIdx);
-                else
-                    actor.body.move(-moment);
+                eventQueue.pushEvent<event::ProjectileHitSomething>(
+                    actorIdx, candidateIdx);
             }
         }
+
+        actor.body.move(moment);
 
         spatialIndex.returnToLookup(actorIdx, collider);
 

@@ -118,13 +118,45 @@ Actor ActorBuilder::createEffect(
     return actor;
 }
 
+static PhysicsBody getPropBody(const sf::Vector2f& origin, const size_t propId)
+{
+    if (propId == 0 || propId == 1)
+    {
+        return PhysicsBody { dgm::Circle(
+            { origin.x + 32.f, origin.y + 16.f }, 13.f) };
+    }
+    else if (propId == 2)
+    {
+        return PhysicsBody { dgm::Rect(
+            { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
+    }
+
+    return PhysicsBody { dgm::Rect(
+        { origin.x, origin.y - 64.f }, { 64.f, 64.f }) };
+}
+
+static sf::Vector2f getSpriteOffset(const size_t propId)
+{
+    if (propId == 0 || propId == 1)
+    {
+        return { 0.f, -16.f };
+    }
+    else if (propId == 2)
+    {
+        return { 0.f, 0.f };
+    }
+
+    return { 0.f, 0.f };
+}
+
 Actor ActorBuilder::createProp(
     const sf::Vector2f& origin, size_t propId, const GameTextureAtlas& atlas)
 {
     auto actor = Actor {
         .kind = ActorKind::Prop,
         .skin = ActorSkin::Prop,
-        .body = dgm::Rect({ origin.x, origin.y - 64.f }, { 64.f, 64.f }),
+        .body = getPropBody(origin, propId),
+        .spriteOriginOffsetFromCollider = getSpriteOffset(propId),
         .animation =
             dgm::Animation(atlas.atlas.getAnimationStates(atlas.propsLocation)),
     };
