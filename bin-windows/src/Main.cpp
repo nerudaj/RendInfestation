@@ -38,13 +38,17 @@ int main(int, char*[])
         catch (const std::exception& ex)
         {
             std::cerr << ex.what() << std::endl;
+#ifndef _DEBUG
             throw;
+#endif
         }
     }
     catch (const std::exception&)
     {
+#ifndef _DEBUG
         // streams are too botched at this point for logging
         throw;
+#endif
     }
 
     return 0;

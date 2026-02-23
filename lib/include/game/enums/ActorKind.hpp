@@ -1,6 +1,6 @@
 #pragma once
 
-enum class [[nodiscard]] ActorKind
+enum class [[nodiscard]] ActorKind : unsigned char
 {
     None,
     Prop,

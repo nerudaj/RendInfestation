@@ -10,6 +10,7 @@ Actor ActorBuilder::createPlayer(
 {
     auto actor = Actor {
         .kind = ActorKind::Player,
+        .skin = ActorSkin::PlayerDefault,
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(spawnPosition, 8.f),
@@ -33,6 +34,7 @@ Actor ActorBuilder::createNpc(
 {
     auto actor = Actor {
         .kind = ActorKind::Npc,
+        .skin = ActorSkin::Bighead,
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(spawnPosition, 8.f),
@@ -61,6 +63,7 @@ Actor ActorBuilder::createProjectile(
 
     return Actor {
         .kind = ActorKind::Projectile,
+        .skin = ActorSkin::BigBullet,
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(origin, 3.f),
@@ -83,6 +86,7 @@ Actor ActorBuilder::createEffect(
     {
         auto actor = Actor {
             .kind = ActorKind::Effect,
+            .skin = ActorSkin::BigBullet,
             .body =
                 PhysicsBody {
                     .shape = dgm::Circle(origin, 1.f),
@@ -100,6 +104,7 @@ Actor ActorBuilder::createEffect(
 
     auto actor = Actor {
         .kind = ActorKind::Effect,
+        .skin = ActorSkin::Explosion,
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(origin, 1.f),
@@ -118,11 +123,24 @@ Actor ActorBuilder::createProp(
 {
     auto actor = Actor {
         .kind = ActorKind::Prop,
+        .skin = ActorSkin::Prop,
         .body = dgm::Rect({ origin.x, origin.y - 64.f }, { 64.f, 64.f }),
-        .animation = dgm::Animation(atlas.propsStates),
+        .animation =
+            dgm::Animation(atlas.atlas.getAnimationStates(atlas.propsLocation)),
     };
 
-    actor.animation.setState(std::format("idle-{}", propId), "looping"_true);
+    auto stateName = [](size_t id)
+    {
+        if (id == 0)
+            return "labtube-full";
+        else if (id == 1)
+            return "labtube";
+        else if (id == 2)
+            return "small-table";
+        return "cantina-table";
+    };
+
+    actor.animation.setState(stateName(propId), "looping"_true);
 
     return actor;
 }

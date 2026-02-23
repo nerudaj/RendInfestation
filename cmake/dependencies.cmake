@@ -21,7 +21,12 @@ set ( TGUI_BACKEND SFML_GRAPHICS )
 set ( TGUI_STATIC_LIBRARIES ${USE_SFML_TGUI_STATIC_LINKAGE} )
 CPMAddPackage("gh:texus/TGUI#${TGUI_VERSION}")
 
-CPMAddPackage("gh:nerudaj/dgm-lib#${DGM_LIB_VERSION}")
+CPMAddPackage(
+    NAME dgm-lib
+    GIT_TAG ${DGM_LIB_VERSION}
+    GITHUB_REPOSITORY "nerudaj/dgm-lib"
+    OPTIONS "ENABLE_LEGACY_ANIMATION OFF"
+)
 # CPMAddPackage("gh:nerudaj/fsm-lib#v${FSM_LIB_VERSION}") # Not yet supported on Android
 AddCatch( "${CATCH2_VERSION}" )
 

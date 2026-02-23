@@ -1,5 +1,6 @@
 #pragma once
 
+#include "game/definitions/Face.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
 #include "input/TouchController.hpp"
@@ -45,6 +46,23 @@ private:
     void renderHud(dgm::Window& window);
 
     void renderTouchControls(dgm::Window& window);
+
+private:
+    dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
+    getSkinLocation(ActorSkin skin) const;
+
+    sf::FloatRect getFrame(
+        ActorSkin skin,
+        const std::string& stateName,
+        const size_t frameIdx) const
+    {
+        return sf::FloatRect { atlas.atlas
+                                   .getAnimationStates(getSkinLocation(skin))
+                                   .at(stateName)
+                                   .getFrame(frameIdx) };
+    }
+
+    std::vector<Face> getActorFaces() const;
 
 private:
     const static inline auto INTERNAL_GAME_RESOLUTION =

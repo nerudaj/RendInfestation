@@ -25,6 +25,10 @@ TouchModel::TouchModel(const sf::Vector2u& windowSize)
               { windowSize.x - 150.f, windowSize.y - 150.f },
               150.f),
           TouchInput(TouchObjectKind::Button, { 100.f, 100.f }, 100.f),
+          TouchInput(
+              TouchObjectKind::Button,
+              { windowSize.x - 300.f, windowSize.y - 300.f },
+              100.f),
       })
 {
 }

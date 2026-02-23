@@ -1,0 +1,54 @@
+{
+    "defaults": {
+        "frame": {
+            "width": 64,
+            "height": 64
+        },
+        "spacing": {
+            "horizontal": 2,
+            "vertical": 2
+        }
+    },
+    "states": [
+        {
+            "name": "labtube-full",
+            "bounds": {
+                "left": 2,
+                "top": 2,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "labtube",
+            "bounds": {
+                "left": 2,
+                "top": 68,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "small-table",
+            "bounds": {
+                "left": 2,
+                "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "cantina-table",
+            "bounds": {
+                "left": 2,
+                "top": 200,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        }
+    ]
+}

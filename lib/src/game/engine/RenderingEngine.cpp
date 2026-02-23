@@ -1,5 +1,4 @@
 #include "game/engine/RenderingEngine.hpp"
-#include "game/definitions/Face.hpp"
 
 RenderingEngine::RenderingEngine(
     dgm::ResourceManager& resmgr,
@@ -100,47 +99,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
         }
     }
 
-    std::vector<Face> faces;
-
-    for (auto&& [actor, _] : scene.actors)
-    {
-        std::visit(
-            overloads {
-                [&](const dgm::Circle& c)
-                {
-                    if (!worldCamera.isObjectVisible(c)) return;
-
-                    // looking right
-                    const bool flipX =
-                        actor.lookDirection.dot(sf::Vector2f(1.f, 0.f)) >= 0.f;
-
-                    faces.push_back(Face {
-                        .origin = c.getPosition()
-                                  + actor.spriteOriginOffsetFromCollider,
-                        .texUvs =
-                            sf::FloatRect(actor.animation.getCurrentFrame()),
-                        .scale =
-                            sf::Vector2f {
-                                flipX ? -1.f : 1.f,
-                                1.f,
-                            },
-                    });
-                    c.debugRender(window);
-                },
-                [&](const dgm::Rect& r)
-                {
-                    if (!worldCamera.isObjectVisible(r)) return;
-                    faces.push_back(Face {
-                        r.getCenter() + actor.spriteOriginOffsetFromCollider,
-                        sf::FloatRect(actor.animation.getCurrentFrame()) });
-                    r.debugRender(window);
-                },
-            },
-            actor.body.shape);
-    }
-
-    std::ranges::sort(faces, std::less<Face> {});
-    for (auto&& face : faces)
+    for (auto&& face : getActorFaces())
         pipeline.addFace(face.origin, face.texUvs, sf::degrees(0), face.scale);
 
     pipeline.renderTo(window);
@@ -185,4 +144,71 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
             thumb.debugRender(window, sf::Color(128, 128, 128));
         }
     }
+}
+
+dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
+RenderingEngine::getSkinLocation(ActorSkin skin) const
+{
+    switch (skin)
+    {
+        using enum ActorSkin;
+    case PlayerDefault:
+        return atlas.playerLocation;
+    case Bighead:
+        return atlas.bigheadLocation;
+    case BigBullet:
+        return atlas.bulletLocation;
+    case Prop:
+        return atlas.propsLocation;
+    case Explosion:
+        return atlas.explosionLocation;
+    }
+}
+
+std::vector<Face> RenderingEngine::getActorFaces() const
+{
+    std::vector<Face> faces;
+
+    for (auto&& [actor, _] : scene.actors)
+    {
+        // looking right
+        const bool flipX =
+            actor.lookDirection.dot(sf::Vector2f(1.f, 0.f)) >= 0.f;
+
+        const auto position = std::visit(
+            overloads {
+                [&](const dgm::Circle& c) -> std::optional<sf::Vector2f>
+                {
+                    if (!worldCamera.isObjectVisible(c)) return std::nullopt;
+                    return c.getPosition()
+                           + actor.spriteOriginOffsetFromCollider;
+                },
+                [&](const dgm::Rect& r) -> std::optional<sf::Vector2f>
+                {
+                    if (!worldCamera.isObjectVisible(r)) return std::nullopt;
+                    return r.getCenter() + actor.spriteOriginOffsetFromCollider;
+                },
+            },
+            actor.body.shape);
+
+        if (position)
+        {
+            faces.push_back(Face {
+                .origin = *position,
+                .texUvs = getFrame(
+                    actor.skin,
+                    actor.animation.getStateName(),
+                    actor.animation.getCurrentFrameIndex()),
+                .scale =
+                    sf::Vector2f {
+                        flipX ? -1.f : 1.f,
+                        1.f,
+                    },
+            });
+        }
+    }
+
+    std::ranges::sort(faces, std::less<Face> {});
+
+    return faces;
 }

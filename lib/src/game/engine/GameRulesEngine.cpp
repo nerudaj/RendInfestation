@@ -44,7 +44,7 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 
         actor.body.move(spawnOffset);
 
-        scene.actors.emplaceBack(actor);
+        scene.actors.emplaceBack(std::move(actor));
     }
 
     player.body.forward += -player.lookDirection * inventory.weapon.kickback;
@@ -98,13 +98,11 @@ void GameRulesEngine::update(const dgm::Time& time)
     if (scene.spawnTicker > scene.spawnDelay)
     {
         scene.spawnTicker = sf::Time::Zero;
-        auto npc = ActorBuilder::createNpc(
+        scene.actors.emplaceBack(ActorBuilder::createNpc(
             scene.enemySpawns[rand() % scene.enemySpawns.size()],
             atlas,
             scene.inventories.emplaceBack(
-                GameSceneBuilder::createNpcInventory()));
-
-        scene.actors.emplaceBack(npc);
+                GameSceneBuilder::createNpcInventory())));
     }
 
     for (auto&& [actor, idx] : scene.actors)
