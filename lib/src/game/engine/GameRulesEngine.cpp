@@ -44,8 +44,7 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 
         actor.body.move(spawnOffset);
 
-        scene.actors.insert(
-            std::move(actor), std::get<dgm::Circle>(actor.body.shape));
+        scene.actors.emplaceBack(actor);
     }
 
     player.body.forward += -player.lookDirection * inventory.weapon.kickback;
@@ -67,7 +66,7 @@ void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
         {
             std::visit(
                 overloads {
-                    [&](PlayerInventory& inventory) { /* tbd */ },
+                    [&](PlayerInventory&) { /* tbd */ },
                     [&](NpcInventory& inventory)
                     { inventory.health -= projectileInventory.damage; },
                     [&](auto&) {},
@@ -105,8 +104,7 @@ void GameRulesEngine::update(const dgm::Time& time)
             scene.inventories.emplaceBack(
                 GameSceneBuilder::createNpcInventory()));
 
-        scene.actors.insert(
-            std::move(npc), std::get<dgm::Circle>(npc.body.shape));
+        scene.actors.emplaceBack(npc);
     }
 
     for (auto&& [actor, idx] : scene.actors)
@@ -170,10 +168,7 @@ void GameRulesEngine::updatePlayer(
 }
 
 void GameRulesEngine::updateNpc(
-    size_t actorIdx,
-    Actor& actor,
-    NpcInventory& inventory,
-    const dgm::Time& time)
+    size_t actorIdx, Actor& actor, NpcInventory& inventory, const dgm::Time&)
 {
     if (inventory.health <= 0)
     {

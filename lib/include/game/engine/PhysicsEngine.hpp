@@ -8,7 +8,7 @@ class [[nodiscard]] PhysicsEngine final
 {
 public:
     PhysicsEngine(GameScene& scene, EventQueue<GameEvent>& queue)
-        : scene(scene), eventQueue(queue)
+        : scene(scene), eventQueue(queue), spatialIndex(scene.levelBounds, 128)
     {
     }
 
@@ -33,11 +33,11 @@ public:
                 handleProjectileEnvironmentHit(actorIdx, actor.body, moment);
         }
 
-        scene.actors.removeFromLookup(actorIdx, collider);
+        spatialIndex.removeFromLookup(actorIdx, collider);
 
         actor.body.move(moment);
 
-        for (auto&& candidateIdx : scene.actors.getOverlapCandidates(collider))
+        for (auto&& candidateIdx : spatialIndex.getOverlapCandidates(collider))
         {
             auto&& candidate = scene.actors[candidateIdx];
             if (candidate.kind == ActorKind::Projectile
@@ -54,7 +54,7 @@ public:
             }
         }
 
-        scene.actors.returnToLookup(actorIdx, collider);
+        spatialIndex.returnToLookup(actorIdx, collider);
 
         actor.body.forward -= actor.body.forward * actor.body.friction;
     }
@@ -62,10 +62,8 @@ public:
     void handleProjectileEnvironmentHit(
         size_t projectileIdx, PhysicsBody& body, const sf::Vector2f& moment);
 
-    void handleProjectileActorHit(
-        size_t projectileIdx, std::optional<size_t> hitActorIdx);
-
 private:
     GameScene& scene;
     EventQueue<GameEvent>& eventQueue;
+    dgm::SpatialIndex<> spatialIndex;
 };

@@ -39,27 +39,21 @@ GameScene GameSceneBuilder::createScene(
     const auto levelDataSize = sf::Vector2u { layer.width, layer.height };
 
     auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
-    auto actors = dgm::SpatialBuffer<Actor>(
-        dgm::Rect(
-            { 0.f, 0.f },
-            sf::Vector2f(levelDataSize.componentWiseMul(levelVoxelSize))),
-        128);
+    auto actors = dgm::DynamicBuffer<Actor>();
 
     auto inventories = dgm::DynamicBuffer<Inventory>();
-    auto player = ActorBuilder::createPlayer(
+    actors.emplaceBack(ActorBuilder::createPlayer(
         { 100.f, 150.f },
         atlas,
-        inventories.emplaceBack(createPlayerInventory()));
-    actors.insert(std::move(player), std::get<dgm::Circle>(player.body.shape));
+        inventories.emplaceBack(createPlayerInventory())));
 
     for (auto&& prop :
          std::get<tiled::ObjectGroupModel>(tiledLevel.layers[1]).objects)
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
 
-        auto actor =
-            ActorBuilder::createProp({ prop.x, prop.y }, propId, atlas);
-        actors.insert(std::move(actor), std::get<dgm::Rect>(actor.body.shape));
+        actors.emplaceBack(
+            ActorBuilder::createProp({ prop.x, prop.y }, propId, atlas));
     }
 
     return GameScene {
@@ -76,6 +70,9 @@ GameScene GameSceneBuilder::createScene(
                 | uniranges::to<std::vector>(),
             levelDataSize,
             levelVoxelSize),
+        .levelBounds = dgm::Rect(
+            { 0.f, 0.f },
+            sf::Vector2f(levelDataSize.componentWiseMul(levelVoxelSize))),
         .enemySpawns =
             std::vector<sf::Vector2f> {
                 { 1006.f, 109.f },

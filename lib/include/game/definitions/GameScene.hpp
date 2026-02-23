@@ -12,9 +12,10 @@ using Inventory =
 
 struct [[nodiscard]] GameScene final
 {
-    dgm::SpatialBuffer<Actor> actors;
+    dgm::DynamicBuffer<Actor> actors;
     dgm::DynamicBuffer<Inventory> inventories;
     dgm::Mesh levelMesh;
+    dgm::Rect levelBounds;
     sf::Vector2f cameraPosition = { 0.f, 0.f };
     size_t tick = 0;
     std::vector<sf::Vector2f> enemySpawns;

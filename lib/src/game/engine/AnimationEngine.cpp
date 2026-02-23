@@ -17,14 +17,12 @@ void AnimationEngine::operator()(const event::ProjectileHitSomething& e)
         scene.inventories[*projectile.inventoryIdx]);
 
     // Spawn projectile death effect
-    scene.actors.insert(
-        ActorBuilder::createEffect(
-            scene.actors[e.projectileIdx].body.getPosition(),
-            inventory.traits == ProjectileTraits::Explosive
-                ? EffectType::Explosion
-                : EffectType::BulletDeath,
-            atlas),
-        dgm::Circle({ 0.f, 0.f }, 1.f));
+    scene.actors.emplaceBack(ActorBuilder::createEffect(
+        scene.actors[e.projectileIdx].body.getPosition(),
+        inventory.traits == ProjectileTraits::Explosive
+            ? EffectType::Explosion
+            : EffectType::BulletDeath,
+        atlas));
 }
 
 void AnimationEngine::operator()(const event::EnemyStartedAttack& e)
