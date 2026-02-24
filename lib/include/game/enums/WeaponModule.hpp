@@ -1,0 +1,10 @@
+#pragma once
+
+enum class [[nodiscard]] WeaponModule
+{
+    None,
+    SpreadBarrel,
+    CadenceBarrel,
+    ExplosiveAmmo,
+    BouncyAmmo,
+};

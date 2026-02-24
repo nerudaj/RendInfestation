@@ -1,5 +1,6 @@
 #include "game/builders/GameSceneBuilder.hpp"
 #include "game/builders/ActorBuilder.hpp"
+#include "game/builders/WeaponBuilder.hpp"
 
 static inline bool isPassableTile(int id)
 {
@@ -14,10 +15,10 @@ PlayerInventory GameSceneBuilder::createPlayerInventory()
         .health = 100,
         .weapons =
             std::array {
-                WeaponBuilder::createWeapon(
-                    BarrelType::CadenceBarrel, AmmoType::BouncyAmmo),
-                WeaponBuilder::createWeapon(
-                    BarrelType::SpreadBarrel, AmmoType::RegularAmmo),
+                WeaponBuilder::createWeapon({ WeaponModule::CadenceBarrel,
+                                              WeaponModule::SpreadBarrel,
+                                              WeaponModule::ExplosiveAmmo }),
+                WeaponBuilder::createWeapon({ WeaponModule::None }),
             },
     };
 }

@@ -123,7 +123,7 @@ static PhysicsBody getPropBody(const sf::Vector2f& origin, const size_t propId)
     if (propId == 0 || propId == 1)
     {
         return PhysicsBody { dgm::Circle(
-            { origin.x + 32.f, origin.y + 16.f }, 13.f) };
+            { origin.x + 32.f, origin.y - 16.f }, 13.f) };
     }
     else if (propId == 2)
     {
