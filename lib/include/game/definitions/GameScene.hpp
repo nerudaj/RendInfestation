@@ -20,6 +20,7 @@ struct [[nodiscard]] GameScene final
     dgm::DynamicBuffer<Actor, ActorIndexType> actors;
     dgm::DynamicBuffer<Inventory, InventoryIndexType> inventories;
     dgm::Mesh levelMesh;
+    dgm::Mesh altLevelMesh;
     dgm::Rect levelBounds;
     sf::Vector2f cameraPosition = { 0.f, 0.f };
     size_t tick = 0;

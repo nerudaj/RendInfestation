@@ -9,6 +9,11 @@ static inline bool isPassableTile(int id)
            || (24 <= id && id <= 27) || id == 30;
 }
 
+static inline bool isPassableTileAlt(int id)
+{
+    return isPassableTile(id) || (31 <= id && id <= 34);
+}
+
 PlayerInventory GameSceneBuilder::createPlayerInventory()
 {
     return PlayerInventory {
@@ -16,7 +21,8 @@ PlayerInventory GameSceneBuilder::createPlayerInventory()
         .weapons =
             std::array {
                 WeaponBuilder::createWeapon({ WeaponModule::CadenceBarrel,
-                                              WeaponModule::ExplosiveAmmo }),
+                                              WeaponModule::ExplosiveAmmo,
+                                              WeaponModule::Ricochet }),
                 WeaponBuilder::createWeapon(
                     { WeaponModule::SpreadBarrel, WeaponModule::Spikes }),
             },
@@ -73,6 +79,17 @@ GameScene GameSceneBuilder::createScene(
                     {
                         return isPassableTile(tile - 1) ? -(tile - 1)
                                                         : (tile - 1);
+                    })
+                | uniranges::to<std::vector>(),
+            levelDataSize,
+            levelVoxelSize),
+        .altLevelMesh = dgm::Mesh(
+            layer.data
+                | std::views::transform(
+                    [](int tile)
+                    {
+                        return isPassableTileAlt(tile - 1) ? -(tile - 1)
+                                                           : (tile - 1);
                     })
                 | uniranges::to<std::vector>(),
             levelDataSize,

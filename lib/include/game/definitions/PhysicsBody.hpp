@@ -13,6 +13,7 @@ struct [[nodiscard]] ColliderOptions
     bool reportActorCollisions = false;
     bool nonblocking = false;
     bool disabled = false;
+    bool useAltMesh = false;
 };
 
 struct [[nodiscard]] PhysicsBody final

@@ -64,8 +64,9 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.kickback += 75.f;
             props.fireDelay *= 1.1f;
             props.projectileSkin = ActorSkin::Spikes;
-            props.projectileTraits =
-                props.projectileTraits | ProjectileTraits::Shrapnels;
+            props.projectileTraits = props.projectileTraits
+                                     | ProjectileTraits::Shrapnels
+                                     | ProjectileTraits::Bouncy;
             if (props.numShots > 1) props.spread *= 4;
             return props;
         };

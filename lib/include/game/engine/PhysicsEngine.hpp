@@ -31,7 +31,11 @@ public:
 
         auto moment = actor.body.forward * time.getDeltaTime();
 
-        if (dgm::Collision::advanced(scene.levelMesh, collider, moment))
+        if (dgm::Collision::advanced(
+                actor.body.options.useAltMesh ? scene.altLevelMesh
+                                              : scene.levelMesh,
+                collider,
+                moment))
         {
             if (actor.body.options.reportMeshCollisions)
                 eventQueue.pushEvent<event::ActorToMeshCollision>(actorIdx);

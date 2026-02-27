@@ -7,9 +7,12 @@
 void GameRulesEngine::operator()(const event::ActorToMeshCollision& e)
 {
     assert(scene.actors.isIndexValid(e.idx));
-    const auto& actor = scene.actors[e.idx];
+    if (scene.actors[e.idx].kind != ActorKind::Projectile) return;
 
-    if (actor.kind == ActorKind::Projectile)
+    auto&& [actor, inventory] =
+        getActorAndInventory<ProjectileInventory>(scene, e.idx);
+
+    if (!(inventory.traits & ProjectileTraits::Bouncy))
         eventQueue.pushEvent<event::ProjectileDestroyed>(e.idx);
 }
 

@@ -84,6 +84,7 @@ Actor ActorBuilder::createProjectile(
                         .reportMeshCollisions = true,
                         .reportActorCollisions = true,
                         .nonblocking = true,
+                        .useAltMesh = true,
                     },
             },
         .lookDirection = direction,
