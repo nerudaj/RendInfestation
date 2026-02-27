@@ -30,18 +30,52 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     case ExplosiveAmmo:
         return [](WeaponProperties props)
         {
-            props.projectileTraits = ProjectileTraits::Explosive;
-            if (props.projectileKind == ProjectileKind::Spike)
-                props.projectileKind = ProjectileKind::Landmine;
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Explosive;
+            if (props.projectileSkin == ActorSkin::Spikes)
+                props.projectileSkin = ActorSkin::Landmine;
             props.kickback += 150.f;
             props.fireDelay *= 1.5f;
-            props.baseProjectileDamage *= 10;
+            props.baseProjectileDamage *= 5;
             return props;
         };
     case Ricochet:
         return [](WeaponProperties props)
         {
-            props.projectileTraits = ProjectileTraits::Bouncy;
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Bouncy;
+            return props;
+        };
+    case BigBullet:
+        return [](WeaponProperties props)
+        {
+            props.projectileSpeed /= 2.f;
+            props.baseProjectileDamage *= 1.3f;
+            props.kickback += 75.f;
+            props.fireDelay *= 1.1f;
+            props.projectileSkin = ActorSkin::BigBullet;
+            return props;
+        };
+    case Spikes:
+        return [](WeaponProperties props)
+        {
+            props.projectileSpeed /= 2.f;
+            props.baseProjectileDamage *= 1.3f;
+            props.kickback += 75.f;
+            props.fireDelay *= 1.1f;
+            props.projectileSkin = ActorSkin::Spikes;
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Shrapnels;
+            if (props.numShots > 1) props.spread *= 4;
+            return props;
+        };
+
+    case PassthruAmmo:
+        return [](WeaponProperties props)
+        {
+            props.projectileSkin = ActorSkin::Hyperbeam;
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Passthru;
             return props;
         };
     }
@@ -60,11 +94,12 @@ Weapon WeaponBuilder::createWeapon(const std::vector<WeaponModule>& modules)
         .kickback = properties.kickback,
         .spread = properties.spread,
         .numShots = properties.numShots,
+        .projectileSpeed = properties.projectileSpeed,
+        .projectileSkin = properties.projectileSkin,
         .defaultProjectileInventory =
             ProjectileInventory {
                 .damage = properties.baseProjectileDamage,
                 .traits = properties.projectileTraits,
-
             },
     };
 }

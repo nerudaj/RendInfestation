@@ -8,18 +8,15 @@ void AnimationEngine::operator()(const event::PlayerFiredWeapon&)
     scene.actors[0].animation.setState("attack-front");
 }
 
-void AnimationEngine::operator()(const event::ProjectileHitSomething& e)
+void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
 {
-    auto& projectile = scene.actors[e.projectileIdx];
-    assert(projectile.inventoryIdx);
-
-    auto& inventory = std::get<ProjectileInventory>(
-        scene.inventories[*projectile.inventoryIdx]);
+    auto&& [projectile, inventory] =
+        getActorAndInventory<ProjectileInventory>(scene, e.projectileIdx);
 
     // Spawn projectile death effect
     scene.actors.emplaceBack(ActorBuilder::createEffect(
         scene.actors[e.projectileIdx].body.getPosition(),
-        inventory.traits == ProjectileTraits::Explosive
+        inventory.traits & ProjectileTraits::Explosive
             ? EffectType::Explosion
             : EffectType::BulletDeath,
         atlas));

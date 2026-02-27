@@ -14,5 +14,5 @@ struct [[nodiscard]] WeaponProperties final
     sf::Time fireDelay = BASE_WEAPON_FIRE_DELAY;
     float projectileSpeed = BASE_PROJECTILE_SPEED;
     ProjectileTraits projectileTraits = ProjectileTraits::None;
-    ProjectileKind projectileKind = ProjectileKind::Bullet;
+    ActorSkin projectileSkin = ActorSkin::SmallBullet;
 };

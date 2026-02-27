@@ -9,7 +9,11 @@ enum class [[nodiscard]] ActorSkin : unsigned char
     Bighead,
 
     // Projectiles
+    SmallBullet,
     BigBullet,
+    Landmine,
+    Hyperbeam,
+    Spikes,
 
     // Props
     Prop,

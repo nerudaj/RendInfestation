@@ -4,9 +4,47 @@
 #include <algorithm>
 #include <limits>
 
+void GameRulesEngine::operator()(const event::ActorToMeshCollision& e)
+{
+    assert(scene.actors.isIndexValid(e.idx));
+    const auto& actor = scene.actors[e.idx];
+
+    if (actor.kind == ActorKind::Projectile)
+        eventQueue.pushEvent<event::ProjectileDestroyed>(e.idx);
+}
+
+void GameRulesEngine::operator()(const event::ActorToActorCollision& e)
+{
+    const bool isActor1Projectile =
+        scene.actors[e.actor1].kind == ActorKind::Projectile;
+    const bool isActor2Projectile =
+        scene.actors[e.actor2].kind == ActorKind::Projectile;
+    const bool isActor1DamageMarker =
+        scene.actors[e.actor1].kind == ActorKind::DamageMarker;
+    const bool isActor2DamageMarker =
+        scene.actors[e.actor2].kind == ActorKind::DamageMarker;
+
+    if (isActor1Projectile && isActor2Projectile) return;
+    if (isActor1DamageMarker && isActor2DamageMarker) return;
+
+    if ((isActor1Projectile || isActor2Projectile)
+        && (isActor1DamageMarker || isActor2DamageMarker))
+        return;
+
+    if (isActor1Projectile || isActor2Projectile)
+        handleProjectileToActorCollision(
+            isActor1Projectile ? e.actor1 : e.actor2,
+            isActor1Projectile ? e.actor2 : e.actor1);
+    else if (isActor1DamageMarker || isActor2DamageMarker)
+        handleDamageMarkerToActorCollision(
+            isActor1DamageMarker ? e.actor1 : e.actor2,
+            isActor1DamageMarker ? e.actor2 : e.actor1);
+}
+
 void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 {
-    auto&& [player, inventory] = getActorAndInventory<PlayerInventory>(0);
+    auto&& [player, inventory] =
+        getActorAndInventory<PlayerInventory>(scene, 0);
 
     auto&& weapon = getPlayerWeapon(inventory);
     assert(weapon.timeTillFire <= sf::Time::Zero);
@@ -25,6 +63,7 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
             player.body.getPosition(),
             dgm::Math::toUnit(direction),
             atlas,
+            weapon,
             scene.inventories.emplaceBack(weapon.defaultProjectileInventory));
 
         const auto spawnOffset =
@@ -33,6 +72,8 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
                + std::get<dgm::Circle>(actor.body.shape).getRadius() + 1.f);
 
         actor.body.move(spawnOffset);
+        actor.body.forward =
+            dgm::Math::toUnit(actor.body.forward) * weapon.projectileSpeed;
 
         scene.actors.emplaceBack(std::move(actor));
     }
@@ -40,27 +81,9 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
     player.body.forward += -player.lookDirection * weapon.kickback;
 }
 
-void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
+void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
 {
-    const auto&& [projectile, projectileInventory] =
-        getActorAndInventory<ProjectileInventory>(e.projectileIdx);
-
-    scene.actors.emplaceBack(ActorBuilder::createDamageMarker(
-        projectile.body.getPosition(),
-        projectileInventory.traits & ProjectileTraits::Explosive
-            ? BASE_EXPLOSION_RADIUS
-            : projectile.body.getRadius(),
-        scene.inventories.emplaceBack(DamageMarkerInventory {
-            .originator = ActorKind::Player,
-            .damage = projectileInventory.damage,
-        })));
-
-    const bool shouldNotDeleteProjectile =
-        projectileInventory.traits & ProjectileTraits::Passthru
-        && e.hitActorIdx;
-
-    if (!shouldNotDeleteProjectile)
-        eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileIdx);
+    eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileIdx);
 }
 
 void GameRulesEngine::operator()(const event::EnemyAttackLands& e)
@@ -80,34 +103,6 @@ void GameRulesEngine::operator()(const event::EnemyAttackLands& e)
         scene.inventories.emplaceBack(DamageMarkerInventory {
             .damage = inventory.damage,
         })));
-}
-
-void GameRulesEngine::operator()(const event::ActorDamaged& e)
-{
-    auto&& markerInventoryIdx = scene.actors[e.markerIdx].inventoryIdx;
-    assert(markerInventoryIdx);
-    auto&& markerInventory =
-        std::get<DamageMarkerInventory>(scene.inventories[*markerInventoryIdx]);
-
-    auto&& actor = scene.actors[e.hitActorIdx];
-
-    // Ignore non-player, non-npc collisions
-    if (actor.kind != ActorKind::Player && actor.kind != ActorKind::Npc) return;
-    // Ignore friendly-fire
-    if (actor.kind == markerInventory.originator) return;
-
-    assert(actor.inventoryIdx);
-    assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
-
-    std::visit(
-        overloads {
-            [&](PlayerInventory& inventory)
-            { inventory.health -= markerInventory.damage; },
-            [&](NpcInventory& inventory)
-            { inventory.health -= markerInventory.damage; },
-            [&](auto&) { assert(false); },
-        },
-        scene.inventories[*actor.inventoryIdx]);
 }
 
 void GameRulesEngine::update(const dgm::Time& time)
@@ -226,5 +221,58 @@ void GameRulesEngine::updateProjectile(
 {
     inventory.lifetime -= dt.getElapsed();
     if (inventory.lifetime <= sf::Time::Zero)
-        eventQueue.pushEvent<event::ObjectDestroyed>(idx);
+        eventQueue.pushEvent<event::ProjectileDestroyed>(idx);
+}
+
+void GameRulesEngine::handleProjectileToActorCollision(
+    ActorIndexType projectileIdx, ActorIndexType actorIdx)
+{
+    if (scene.actors[actorIdx].kind == ActorKind::Player) return;
+
+    auto&& [projectile, projectileInventory] =
+        getActorAndInventory<ProjectileInventory>(scene, projectileIdx);
+
+    // Spawn damage marker
+    scene.actors.emplaceBack(ActorBuilder::createDamageMarker(
+        projectile.body.getPosition(),
+        projectileInventory.traits & ProjectileTraits::Explosive
+            ? BASE_EXPLOSION_RADIUS
+            : projectile.body.getRadius(),
+        scene.inventories.emplaceBack(DamageMarkerInventory {
+            .originator = ActorKind::Player,
+            .damage = projectileInventory.damage,
+        })));
+
+    if (projectileInventory.traits & ProjectileTraits::Passthru) return;
+
+    eventQueue.pushEvent<event::ProjectileDestroyed>(projectileIdx);
+}
+
+void GameRulesEngine::handleDamageMarkerToActorCollision(
+    ActorIndexType markerIdx, ActorIndexType actorIdx)
+{
+    auto&& markerInventoryIdx = scene.actors[markerIdx].inventoryIdx;
+    assert(markerInventoryIdx);
+    auto&& markerInventory =
+        std::get<DamageMarkerInventory>(scene.inventories[*markerInventoryIdx]);
+
+    auto&& actor = scene.actors[actorIdx];
+
+    // Ignore non-player, non-npc collisions
+    if (actor.kind != ActorKind::Player && actor.kind != ActorKind::Npc) return;
+    // Ignore friendly-fire
+    if (actor.kind == markerInventory.originator) return;
+
+    assert(actor.inventoryIdx);
+    assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
+
+    std::visit(
+        overloads {
+            [&](PlayerInventory& inventory)
+            { inventory.health -= markerInventory.damage; },
+            [&](NpcInventory& inventory)
+            { inventory.health -= markerInventory.damage; },
+            [&](auto&) { assert(false); },
+        },
+        scene.inventories[*actor.inventoryIdx]);
 }

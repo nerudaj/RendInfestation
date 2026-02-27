@@ -2,8 +2,6 @@
 #include "game/definitions/Constants.hpp"
 #include "types/SemanticTypes.hpp"
 
-constexpr float PROJECTILE_SPEED = 512;
-
 Actor ActorBuilder::createPlayer(
     const sf::Vector2f& spawnPosition,
     const GameTextureAtlas& atlas,
@@ -15,7 +13,10 @@ Actor ActorBuilder::createPlayer(
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(spawnPosition, 8.f),
-                .friction = 0.8f,
+                .options =
+                    ColliderOptions {
+                        .friction = 0.8f,
+                    },
             },
         .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
         .animation = dgm::Animation(
@@ -39,7 +40,10 @@ Actor ActorBuilder::createNpc(
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(spawnPosition, 8.f),
-                .friction = 0.8f,
+                .options =
+                    ColliderOptions {
+                        .friction = 0.8f,
+                    },
             },
         .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
         .animation = dgm::Animation(
@@ -56,6 +60,7 @@ Actor ActorBuilder::createProjectile(
     const sf::Vector2f& origin,
     const sf::Vector2f& direction,
     const GameTextureAtlas& atlas,
+    const Weapon& weapon,
     size_t inventoryIdx)
 {
     auto animation =
@@ -64,13 +69,22 @@ Actor ActorBuilder::createProjectile(
 
     return Actor {
         .kind = ActorKind::Projectile,
-        .skin = ActorSkin::BigBullet,
+        .skin = weapon.projectileSkin,
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(origin, 3.f),
-                .bounciness = 0.8f,
-                .friction = 0.f,
-                .forward = direction * PROJECTILE_SPEED,
+                .forward = direction * weapon.projectileSpeed,
+                .options =
+                    ColliderOptions {
+                        .bounciness = 0.8f,
+                        .friction = weapon.defaultProjectileInventory.traits
+                                            & ProjectileTraits::Shrapnels
+                                        ? 0.01f
+                                        : 0.f,
+                        .reportMeshCollisions = true,
+                        .reportActorCollisions = true,
+                        .nonblocking = true,
+                    },
             },
         .lookDirection = direction,
         .animation = std::move(animation),
@@ -91,6 +105,7 @@ Actor ActorBuilder::createEffect(
             .body =
                 PhysicsBody {
                     .shape = dgm::Circle(origin, 1.f),
+                    .options = { .disabled = true, },
                 },
             .animation = dgm::Animation(
                 atlas.atlas.getAnimationStates(atlas.bulletLocation), 8),
@@ -109,6 +124,7 @@ Actor ActorBuilder::createEffect(
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(origin, 1.f),
+                .options = { .disabled = true, },
             },
         .animation = dgm::Animation(
             atlas.atlas.getAnimationStates(atlas.explosionLocation), 8),
@@ -185,7 +201,12 @@ Actor ActorBuilder::createDamageMarker(
         .kind = ActorKind::DamageMarker,
         .body =
             PhysicsBody {
-                dgm::Circle(origin, radius),
+                .shape = dgm::Circle(origin, radius),
+                .options =
+                    ColliderOptions {
+                        .reportActorCollisions = true,
+                        .nonblocking = true,
+                    },
             },
         .animation = dgm::Animation(NULL_ANIMATION_STATES),
         .inventoryIdx = inventoryIdx,

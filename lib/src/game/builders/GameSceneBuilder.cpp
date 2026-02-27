@@ -16,9 +16,9 @@ PlayerInventory GameSceneBuilder::createPlayerInventory()
         .weapons =
             std::array {
                 WeaponBuilder::createWeapon({ WeaponModule::CadenceBarrel,
-                                              WeaponModule::SpreadBarrel,
                                               WeaponModule::ExplosiveAmmo }),
-                WeaponBuilder::createWeapon({ WeaponModule::None }),
+                WeaponBuilder::createWeapon(
+                    { WeaponModule::SpreadBarrel, WeaponModule::Spikes }),
             },
     };
 }

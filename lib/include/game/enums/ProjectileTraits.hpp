@@ -7,7 +7,8 @@ enum class [[nodiscard]] ProjectileTraits
     None = 0,
     Explosive = 1,
     Bouncy = 2,
-    Passthru = 4
+    Passthru = 4,
+    Shrapnels = 8,
 };
 
 constexpr ProjectileTraits operator|(ProjectileTraits a, ProjectileTraits b)

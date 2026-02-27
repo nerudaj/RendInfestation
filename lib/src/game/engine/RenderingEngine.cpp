@@ -110,6 +110,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 
     pipeline.renderTo(window);
 
+    /*
     for (auto&& [actor, _] : scene.actors)
     {
         std::visit(
@@ -120,7 +121,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
                 { r.debugRender(window, sf::Color(255, 255, 0, 128)); },
             },
             actor.body.shape);
-    }
+    }*/
 }
 
 void RenderingEngine::renderHud(dgm::Window& window)
@@ -167,8 +168,16 @@ RenderingEngine::getSkinLocation(ActorSkin skin) const
         return atlas.playerLocation;
     case Bighead:
         return atlas.bigheadLocation;
+    case SmallBullet:
+        return atlas.smallBulletLocation;
     case BigBullet:
         return atlas.bulletLocation;
+    case Landmine:
+        return atlas.landmineLocation;
+    case Hyperbeam:
+        return atlas.hyperbeamLocation;
+    case Spikes:
+        return atlas.spikesLocation;
     case Prop:
         return atlas.propsLocation;
     case Explosion:

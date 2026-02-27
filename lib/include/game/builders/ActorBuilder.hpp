@@ -2,7 +2,9 @@
 
 #include "game/definitions/Actor.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
+#include "game/definitions/Weapon.hpp"
 #include "game/enums/EffectType.hpp"
+#include "game/enums/ProjectileKind.hpp"
 
 class [[nodiscard]] ActorBuilder final
 {
@@ -21,6 +23,7 @@ public:
         const sf::Vector2f& origin,
         const sf::Vector2f& direction,
         const GameTextureAtlas& atlas,
+        const Weapon& weapon,
         size_t inventoryIdx);
 
     static Actor createEffect(

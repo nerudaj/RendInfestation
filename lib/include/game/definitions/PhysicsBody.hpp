@@ -5,12 +5,21 @@
 #include <DGM/classes/Objects.hpp>
 #include <variant>
 
+struct [[nodiscard]] ColliderOptions
+{
+    float bounciness = 0.f;
+    float friction = 0.5f;
+    bool reportMeshCollisions = false;
+    bool reportActorCollisions = false;
+    bool nonblocking = false;
+    bool disabled = false;
+};
+
 struct [[nodiscard]] PhysicsBody final
 {
     std::variant<dgm::Rect, dgm::Circle> shape;
-    float bounciness = 0.f;
-    float friction = 0.5f;
     sf::Vector2f forward = { 0.f, 0.f };
+    ColliderOptions options;
 
     template<class T>
         requires std::same_as<T, dgm::Rect> || std::same_as<T, dgm::Circle>

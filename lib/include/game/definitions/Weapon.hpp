@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game/definitions/ProjectileInventory.hpp"
+#include "game/enums/ActorSkin.hpp"
 #include "game/enums/ProjectileTraits.hpp"
 
 struct [[nodiscard]] Weapon final
@@ -11,5 +12,6 @@ struct [[nodiscard]] Weapon final
     int spread = 0; // degrees
     int numShots = 0;
     float projectileSpeed = 0.f;
+    ActorSkin projectileSkin = ActorSkin::SmallBullet;
     const ProjectileInventory defaultProjectileInventory;
 };

@@ -29,13 +29,15 @@ public:
     GameRulesEngine(const GameRulesEngine&) = delete;
 
 public:
+    void operator()(const event::ActorToMeshCollision& e);
+
+    void operator()(const event::ActorToActorCollision& e);
+
     void operator()(const event::PlayerFiredWeapon& e);
 
-    void operator()(const event::ProjectileHitSomething& e);
+    void operator()(const event::ProjectileDestroyed& e);
 
     void operator()(const event::EnemyAttackLands& e);
-
-    void operator()(const event::ActorDamaged& e);
 
     void operator()(const auto&) {}
 
@@ -66,21 +68,11 @@ private:
         return inventory.weapons[static_cast<int>(inventory.activeWeapon)];
     }
 
-    template<class InventoryT>
-    std::tuple<Actor&, InventoryT&>
-    getActorAndInventory(ActorIndexType actorIdx) const
-    {
-        assert(scene.actors.isIndexValid(actorIdx));
-        auto& actor = scene.actors[actorIdx];
-        assert(actor.inventoryIdx);
-        assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
-        assert(std::holds_alternative<InventoryT>(
-            scene.inventories[*actor.inventoryIdx]));
-        return {
-            actor,
-            std::get<InventoryT>(scene.inventories[*actor.inventoryIdx]),
-        };
-    }
+    void handleProjectileToActorCollision(
+        ActorIndexType projectileIdx, ActorIndexType actorIdx);
+
+    void handleDamageMarkerToActorCollision(
+        ActorIndexType markerIdx, ActorIndexType actorIdx);
 
 private:
     EventQueue<GameEvent>& eventQueue;

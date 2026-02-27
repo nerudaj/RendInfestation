@@ -5,6 +5,25 @@
 
 namespace event
 {
+    struct ActorToMeshCollision
+    {
+        ActorIndexType idx;
+
+        explicit ActorToMeshCollision(ActorIndexType idx) : idx(idx) {}
+    };
+
+    struct ActorToActorCollision
+    {
+        ActorIndexType actor1;
+        ActorIndexType actor2;
+
+        explicit ActorToActorCollision(
+            ActorIndexType actor1, ActorIndexType actor2)
+            : actor1(actor1), actor2(actor2)
+        {
+        }
+    };
+
     struct PlayerFiredWeapon
     {
     };
@@ -23,27 +42,12 @@ namespace event
         explicit EnemyAttackLands(ActorIndexType idx) : enemyIdx(idx) {}
     };
 
-    struct ProjectileHitSomething
-
+    struct ProjectileDestroyed
     {
         ActorIndexType projectileIdx;
-        std::optional<ActorIndexType> hitActorIdx;
 
-        ProjectileHitSomething(
-            ActorIndexType projectileIdx,
-            std::optional<ActorIndexType> hitActorIdx)
-            : projectileIdx(projectileIdx), hitActorIdx(hitActorIdx)
-        {
-        }
-    };
-
-    struct ActorDamaged
-    {
-        ActorIndexType markerIdx;
-        ActorIndexType hitActorIdx;
-
-        ActorDamaged(ActorIndexType markerIdx, ActorIndexType hitActorIdx)
-            : markerIdx(markerIdx), hitActorIdx(hitActorIdx)
+        explicit ProjectileDestroyed(ActorIndexType projectileIdx)
+            : projectileIdx(projectileIdx)
         {
         }
     };
@@ -57,9 +61,10 @@ namespace event
 } // namespace event
 
 using GameEvent = std::variant<
+    event::ActorToMeshCollision,
+    event::ActorToActorCollision,
     event::PlayerFiredWeapon,
-    event::ProjectileHitSomething,
+    event::ProjectileDestroyed,
     event::ObjectDestroyed,
     event::EnemyStartedAttack,
-    event::EnemyAttackLands,
-    event::ActorDamaged>;
+    event::EnemyAttackLands>;

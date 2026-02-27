@@ -27,3 +27,19 @@ struct [[nodiscard]] GameScene final
     sf::Time spawnTicker;
     const sf::Time spawnDelay = sf::seconds(1.f);
 };
+
+template<class InventoryT>
+static std::tuple<Actor&, InventoryT&>
+getActorAndInventory(GameScene& scene, ActorIndexType actorIdx)
+{
+    assert(scene.actors.isIndexValid(actorIdx));
+    auto& actor = scene.actors[actorIdx];
+    assert(actor.inventoryIdx);
+    assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
+    assert(std::holds_alternative<InventoryT>(
+        scene.inventories[*actor.inventoryIdx]));
+    return {
+        actor,
+        std::get<InventoryT>(scene.inventories[*actor.inventoryIdx]),
+    };
+}

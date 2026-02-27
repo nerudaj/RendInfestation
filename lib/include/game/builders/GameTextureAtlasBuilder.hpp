@@ -57,12 +57,12 @@ public:
                     resmgr.get<dgm::AnimationStates>(
                         "projectile_landmine.png.anim"))
                 .value();
-        /*auto spikes = atlas
+        auto spikes = atlas
                           .addSpritesheet(
                               resmgr.get<sf::Texture>("projectile_spikes.png"),
                               resmgr.get<dgm::AnimationStates>(
                                   "projectile_spikes.png.anim"))
-                          .value();*/
+                          .value();
         auto hyperbeam =
             atlas
                 .addSpritesheet(
@@ -82,7 +82,7 @@ public:
             .smallBulletLocation = smallBullet,
             .bulletLocation = bullet,
             .landmineLocation = landmine,
-            //.spikesLocation = spikes,
+            .spikesLocation = spikes,
             .hyperbeamLocation = hyperbeam,
             .explosionLocation = explosion,
             .playerLocation = player,
