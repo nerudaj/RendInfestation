@@ -1,6 +1,7 @@
 #pragma once
 
 #include "audio/SoundPlayer.hpp"
+#include "game/Types.hpp"
 #include "game/definitions/GameEvents.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
@@ -34,25 +35,27 @@ public:
 
     void operator()(const event::EnemyAttackLands& e);
 
+    void operator()(const event::ActorDamaged& e);
+
     void operator()(const auto&) {}
 
 public:
     void update(const dgm::Time& time);
 
     void updatePlayer(
-        size_t actorIdx,
+        ActorIndexType actorIdx,
         Actor& actor,
         PlayerInventory& inventory,
         const dgm::Time& time);
 
     void updateNpc(
-        size_t actorIdx,
+        ActorIndexType actorIdx,
         Actor& actor,
         NpcInventory& inventory,
         const dgm::Time& time);
 
     void updateProjectile(
-        size_t actorIdx,
+        ActorIndexType actorIdx,
         Actor& actor,
         ProjectileInventory& inventory,
         const dgm::Time& time);
@@ -61,6 +64,22 @@ private:
     Weapon& getPlayerWeapon(PlayerInventory& inventory) const
     {
         return inventory.weapons[static_cast<int>(inventory.activeWeapon)];
+    }
+
+    template<class InventoryT>
+    std::tuple<Actor&, InventoryT&>
+    getActorAndInventory(ActorIndexType actorIdx) const
+    {
+        assert(scene.actors.isIndexValid(actorIdx));
+        auto& actor = scene.actors[actorIdx];
+        assert(actor.inventoryIdx);
+        assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
+        assert(std::holds_alternative<InventoryT>(
+            scene.inventories[*actor.inventoryIdx]));
+        return {
+            actor,
+            std::get<InventoryT>(scene.inventories[*actor.inventoryIdx]),
+        };
     }
 
 private:

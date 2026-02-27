@@ -43,15 +43,53 @@ public:
                     resmgr.get<sf::Texture>("scifi_bighead.png"),
                     resmgr.get<dgm::AnimationStates>("scifi_bighead.png.anim"))
                 .value();
+        auto smallBullet =
+            atlas
+                .addSpritesheet(
+                    resmgr.get<sf::Texture>("projectile_small_bullet.png"),
+                    resmgr.get<dgm::AnimationStates>(
+                        "projectile_small_bullet.png.anim"))
+                .value();
+        auto landmine =
+            atlas
+                .addSpritesheet(
+                    resmgr.get<sf::Texture>("projectile_landmine.png"),
+                    resmgr.get<dgm::AnimationStates>(
+                        "projectile_landmine.png.anim"))
+                .value();
+        /*auto spikes = atlas
+                          .addSpritesheet(
+                              resmgr.get<sf::Texture>("projectile_spikes.png"),
+                              resmgr.get<dgm::AnimationStates>(
+                                  "projectile_spikes.png.anim"))
+                          .value();*/
+        auto hyperbeam =
+            atlas
+                .addSpritesheet(
+                    resmgr.get<sf::Texture>("projectile_hyperbeam.png"),
+                    resmgr.get<dgm::AnimationStates>(
+                        "projectile_hyperbeam.png.anim"))
+                .value();
+
+        auto crosshairs = atlas
+                              .addTileset(
+                                  resmgr.get<sf::Texture>("crosshairs.png"),
+                                  resmgr.get<dgm::Clip>("crosshairs.png.clip"))
+                              .value();
 
         return GameTextureAtlas {
             .atlas = std::move(atlas),
+            .smallBulletLocation = smallBullet,
             .bulletLocation = bullet,
+            .landmineLocation = landmine,
+            //.spikesLocation = spikes,
+            .hyperbeamLocation = hyperbeam,
             .explosionLocation = explosion,
             .playerLocation = player,
             .bigheadLocation = bighead,
             .propsLocation = props,
             .tilesLocation = tiles,
+            .crosshairsLocation = crosshairs,
         };
     }
 };

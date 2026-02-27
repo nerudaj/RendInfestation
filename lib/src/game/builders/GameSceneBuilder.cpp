@@ -27,6 +27,7 @@ NpcInventory GameSceneBuilder::createNpcInventory()
 {
     return NpcInventory {
         .health = 100,
+        .damage = 10,
     };
 }
 

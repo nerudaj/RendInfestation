@@ -1,5 +1,6 @@
 #pragma once
 
+#include "game/Types.hpp"
 #include "game/definitions/GameEvents.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "misc/EventQueue.hpp"
@@ -21,7 +22,10 @@ public:
     template<class T>
         requires std::same_as<T, dgm::Circle> || std::same_as<T, dgm::Rect>
     void updateForConcreteCollider(
-        const dgm::Time& time, Actor& actor, size_t actorIdx, const T& collider)
+        const dgm::Time& time,
+        Actor& actor,
+        ActorIndexType actorIdx,
+        const T& collider)
     {
         if (actor.kind == ActorKind::Effect) return;
 
@@ -42,18 +46,28 @@ public:
                 && actor.kind == candidate.kind)
                 continue;
 
-            const auto hasCollision = std::visit(
-                overloads { [&](const auto& anchor)
-                            {
-                                return dgm::Collision::advanced(
-                                    anchor, collider, moment);
-                            } },
-                candidate.body.shape);
-
-            if (hasCollision && actor.kind == ActorKind::Projectile)
+            const auto hasCollision = [&]
             {
-                eventQueue.pushEvent<event::ProjectileHitSomething>(
-                    actorIdx, candidateIdx);
+                if (candidate.kind == ActorKind::DamageMarker)
+                    return candidate.body.collidesWith(collider);
+
+                return std::visit(
+                    overloads { [&](const auto& anchor)
+                                {
+                                    return dgm::Collision::advanced(
+                                        anchor, collider, moment);
+                                } },
+                    candidate.body.shape);
+            }();
+
+            if (hasCollision)
+            {
+                if (actor.kind == ActorKind::Projectile)
+                    eventQueue.pushEvent<event::ProjectileHitSomething>(
+                        actorIdx, candidateIdx);
+                else if (actor.kind == ActorKind::DamageMarker)
+                    eventQueue.pushEvent<event::ActorDamaged>(
+                        actorIdx, candidateIdx);
             }
         }
 
@@ -65,10 +79,12 @@ public:
     }
 
     void handleProjectileEnvironmentHit(
-        size_t projectileIdx, PhysicsBody& body, const sf::Vector2f& moment);
+        ActorIndexType projectileIdx,
+        PhysicsBody& body,
+        const sf::Vector2f& moment);
 
 private:
     GameScene& scene;
     EventQueue<GameEvent>& eventQueue;
-    dgm::SpatialIndex<> spatialIndex;
+    dgm::SpatialIndex<ActorIndexType> spatialIndex;
 };

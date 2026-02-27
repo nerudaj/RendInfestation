@@ -9,7 +9,7 @@
 class [[nodiscard]] StringProvider final
 {
 public:
-    StringProvider(Language primary);
+    explicit StringProvider(Language primary);
 
     StringProvider(StringProvider&&) = delete;
     StringProvider(const StringProvider&) = delete;
@@ -20,7 +20,8 @@ public:
         current = newLang;
     }
 
-    constexpr const CharType* getString(StringId id) const noexcept
+    [[nodiscard]] constexpr const CharType*
+    getString(StringId id) const noexcept
     {
         const auto result =
             strings[std::to_underlying(current)][std::to_underlying(id)].data();

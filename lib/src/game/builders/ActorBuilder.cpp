@@ -1,4 +1,5 @@
 #include "game/builders/ActorBuilder.hpp"
+#include "game/definitions/Constants.hpp"
 #include "types/SemanticTypes.hpp"
 
 constexpr float PROJECTILE_SPEED = 512;
@@ -175,4 +176,18 @@ Actor ActorBuilder::createProp(
     actor.animation.setState(stateName(propId), "looping"_true);
 
     return actor;
+}
+
+Actor ActorBuilder::createDamageMarker(
+    const sf::Vector2f& origin, const float radius, size_t inventoryIdx)
+{
+    return Actor {
+        .kind = ActorKind::DamageMarker,
+        .body =
+            PhysicsBody {
+                dgm::Circle(origin, radius),
+            },
+        .animation = dgm::Animation(NULL_ANIMATION_STATES),
+        .inventoryIdx = inventoryIdx,
+    };
 }

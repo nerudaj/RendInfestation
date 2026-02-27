@@ -38,7 +38,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.baseProjectileDamage *= 10;
             return props;
         };
-    case BouncyAmmo:
+    case Ricochet:
         return [](WeaponProperties props)
         {
             props.projectileTraits = ProjectileTraits::Bouncy;

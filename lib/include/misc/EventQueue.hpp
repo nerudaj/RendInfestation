@@ -14,11 +14,11 @@ public:
     }
 
     template<class... Visitor>
-    void processEvents(Visitor&&... visitors)
+    void processEvents(Visitor&&... visitors) // NOLINT
     {
         for (size_t idx = 0; idx < events.size(); ++idx)
         {
-            (std::visit(visitors, events[idx]), ...);
+            (std::visit(visitors, events[idx]), ...); // NOLINT
         }
 
         events.clear();

@@ -36,6 +36,16 @@ struct [[nodiscard]] PhysicsBody final
             shape);
     }
 
+    float getRadius() const
+    {
+        return std::visit(
+            overloads {
+                [](const dgm::Rect& r) { return r.getSize().length(); },
+                [](const dgm::Circle& c) { return c.getRadius(); },
+            },
+            shape);
+    }
+
     void move(const sf::Vector2f& vec)
     {
         std::visit(

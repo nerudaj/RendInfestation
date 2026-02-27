@@ -3,4 +3,5 @@
 struct [[nodiscard]] NpcInventory final
 {
     int health;
+    int damage;
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "game/Types.hpp"
 #include "game/definitions/PhysicsBody.hpp"
 #include "game/enums/ActorKind.hpp"
 #include "game/enums/ActorSkin.hpp"
@@ -16,6 +17,5 @@ struct [[nodiscard]] Actor final
     sf::Vector2f spriteOriginOffsetFromCollider;
     sf::Vector2f lookDirection = sf::Vector2f { 1.f, 0.f };
     dgm::Animation animation;
-    int health = 100;
-    std::optional<size_t> inventoryIdx = std::nullopt;
+    std::optional<InventoryIndexType> inventoryIdx = std::nullopt;
 };

@@ -32,4 +32,7 @@ public:
         const sf::Vector2f& origin,
         size_t propId,
         const GameTextureAtlas& atlas);
+
+    static Actor createDamageMarker(
+        const sf::Vector2f& origin, const float radius, size_t inventoryIdx);
 };

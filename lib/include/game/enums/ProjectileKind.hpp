@@ -7,4 +7,6 @@ enum class [[nodiscard]] ProjectileKind
     Spike,
     Landmine,
     Fireball,
+    Hyperbeam,
+    HyperbeamTail,
 };

@@ -4,24 +4,15 @@
 #include <algorithm>
 #include <limits>
 
-const float SPEED = 192.f;
-
 void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 {
-    // assert(scene.actors.isIndexValid(0));
-    assert(scene.actors[0].kind == ActorKind::Player);
-    assert(scene.inventories.isIndexValid(0));
-    assert(std::holds_alternative<PlayerInventory>(scene.inventories[0]));
+    auto&& [player, inventory] = getActorAndInventory<PlayerInventory>(0);
 
-    auto&& inventory = std::get<PlayerInventory>(scene.inventories[0]);
     auto&& weapon = getPlayerWeapon(inventory);
-
     assert(weapon.timeTillFire <= sf::Time::Zero);
     weapon.timeTillFire = weapon.cooldown;
 
     soundPlayer.playPovSound(SoundId::Bullet);
-
-    auto&& player = scene.actors[0];
 
     for (auto&& _ : std::views::iota(0, weapon.numShots))
     {
@@ -51,44 +42,72 @@ void GameRulesEngine::operator()(const event::PlayerFiredWeapon&)
 
 void GameRulesEngine::operator()(const event::ProjectileHitSomething& e)
 {
-    // TODO: explosion hitbox
+    const auto&& [projectile, projectileInventory] =
+        getActorAndInventory<ProjectileInventory>(e.projectileIdx);
 
-    if (e.hitActorIdx)
-    {
-        auto&& projectile = scene.actors[e.projectileIdx];
-        auto&& projectileInventory = std::get<ProjectileInventory>(
-            scene.inventories[*projectile.inventoryIdx]);
+    scene.actors.emplaceBack(ActorBuilder::createDamageMarker(
+        projectile.body.getPosition(),
+        projectileInventory.traits & ProjectileTraits::Explosive
+            ? BASE_EXPLOSION_RADIUS
+            : projectile.body.getRadius(),
+        scene.inventories.emplaceBack(DamageMarkerInventory {
+            .originator = ActorKind::Player,
+            .damage = projectileInventory.damage,
+        })));
 
-        auto&& actor = scene.actors[*e.hitActorIdx];
+    const bool shouldNotDeleteProjectile =
+        projectileInventory.traits & ProjectileTraits::Passthru
+        && e.hitActorIdx;
 
-        if (actor.inventoryIdx)
-        {
-            std::visit(
-                overloads {
-                    [&](PlayerInventory&) { /* tbd */ },
-                    [&](NpcInventory& inventory)
-                    { inventory.health -= projectileInventory.damage; },
-                    [&](auto&) {},
-                },
-                scene.inventories[*actor.inventoryIdx]);
-        }
-    }
-
-    eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileIdx);
+    if (!shouldNotDeleteProjectile)
+        eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileIdx);
 }
 
 void GameRulesEngine::operator()(const event::EnemyAttackLands& e)
 {
     const auto& actor = scene.actors[e.enemyIdx];
-    auto&& attackArea = dgm::Circle(actor.body.getPosition(), 3.f);
-    attackArea.move(
-        actor.lookDirection
-        * (3.f + std::get<dgm::Circle>(actor.body.shape).getRadius()));
+    assert(actor.inventoryIdx);
+    const auto& inventory =
+        std::get<NpcInventory>(scene.inventories[*actor.inventoryIdx]);
 
-    if (scene.actors[0].body.collidesWith(attackArea))
-    {
-        // TODO: damage player
-    }
+    const auto hitboxRadius = 3.f;
+    const auto actorDirectionOffset =
+        actor.lookDirection * (hitboxRadius + actor.body.getRadius());
+
+    scene.actors.emplaceBack(ActorBuilder::createDamageMarker(
+        actor.body.getPosition() + actorDirectionOffset,
+        hitboxRadius,
+        scene.inventories.emplaceBack(DamageMarkerInventory {
+            .damage = inventory.damage,
+        })));
+}
+
+void GameRulesEngine::operator()(const event::ActorDamaged& e)
+{
+    auto&& markerInventoryIdx = scene.actors[e.markerIdx].inventoryIdx;
+    assert(markerInventoryIdx);
+    auto&& markerInventory =
+        std::get<DamageMarkerInventory>(scene.inventories[*markerInventoryIdx]);
+
+    auto&& actor = scene.actors[e.hitActorIdx];
+
+    // Ignore non-player, non-npc collisions
+    if (actor.kind != ActorKind::Player && actor.kind != ActorKind::Npc) return;
+    // Ignore friendly-fire
+    if (actor.kind == markerInventory.originator) return;
+
+    assert(actor.inventoryIdx);
+    assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
+
+    std::visit(
+        overloads {
+            [&](PlayerInventory& inventory)
+            { inventory.health -= markerInventory.damage; },
+            [&](NpcInventory& inventory)
+            { inventory.health -= markerInventory.damage; },
+            [&](auto&) { assert(false); },
+        },
+        scene.inventories[*actor.inventoryIdx]);
 }
 
 void GameRulesEngine::update(const dgm::Time& time)
@@ -140,15 +159,20 @@ void GameRulesEngine::update(const dgm::Time& time)
                     scene.inventories[*actor.inventoryIdx]),
                 time);
         }
+        else if (actor.kind == ActorKind::DamageMarker)
+            eventQueue.pushEvent<event::ObjectDestroyed>(idx);
     }
 }
 
 void GameRulesEngine::updatePlayer(
-    size_t, Actor& actor, PlayerInventory& inventory, const dgm::Time& time)
+    ActorIndexType,
+    Actor& actor,
+    PlayerInventory& inventory,
+    const dgm::Time& time)
 {
     auto&& forwardImpulse = input.getForward();
     if (forwardImpulse.length() > 0.f)
-        actor.body.forward += forwardImpulse * SPEED;
+        actor.body.forward += forwardImpulse * BASE_PLAYER_SPEED;
 
     auto&& direction = input.getAimDirection();
     if (direction.length() > 0.f) actor.lookDirection = direction;
@@ -169,7 +193,10 @@ void GameRulesEngine::updatePlayer(
 }
 
 void GameRulesEngine::updateNpc(
-    size_t actorIdx, Actor& actor, NpcInventory& inventory, const dgm::Time&)
+    ActorIndexType actorIdx,
+    Actor& actor,
+    NpcInventory& inventory,
+    const dgm::Time&)
 {
     if (inventory.health <= 0)
     {
@@ -182,7 +209,7 @@ void GameRulesEngine::updateNpc(
     if (directionToPlayer.length() > 20.f)
     {
         actor.body.forward =
-            dgm::Math::toUnit(directionToPlayer) * SPEED * 0.75f;
+            dgm::Math::toUnit(directionToPlayer) * BASE_ENEMY_SPEED;
         actor.lookDirection = dgm::Math::toUnit(directionToPlayer);
     }
     else if (actor.animation.getStateName() == "walk-front")
@@ -192,6 +219,12 @@ void GameRulesEngine::updateNpc(
 }
 
 void GameRulesEngine::updateProjectile(
-    size_t, Actor&, ProjectileInventory&, const dgm::Time&)
+    ActorIndexType idx,
+    Actor&,
+    ProjectileInventory& inventory,
+    const dgm::Time& dt)
 {
+    inventory.lifetime -= dt.getElapsed();
+    if (inventory.lifetime <= sf::Time::Zero)
+        eventQueue.pushEvent<event::ObjectDestroyed>(idx);
 }

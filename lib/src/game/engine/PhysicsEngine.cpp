@@ -23,7 +23,7 @@ void PhysicsEngine::update(const dgm::Time& time)
 }
 
 void PhysicsEngine::handleProjectileEnvironmentHit(
-    size_t projectileIdx, PhysicsBody& body, const sf::Vector2f& moment)
+    ActorIndexType projectileIdx, PhysicsBody& body, const sf::Vector2f& moment)
 {
     assert(scene.actors[projectileIdx].inventoryIdx.has_value());
     const auto inventoryIdx = *scene.actors[projectileIdx].inventoryIdx;
@@ -34,7 +34,7 @@ void PhysicsEngine::handleProjectileEnvironmentHit(
     auto&& inventory =
         std::get<ProjectileInventory>(scene.inventories[inventoryIdx]);
 
-    if (inventory.traits == ProjectileTraits::Bouncy)
+    if (inventory.traits & ProjectileTraits::Bouncy)
     {
         if (moment.x == 0.f) body.forward.x *= -1.f;
         if (moment.y == 0.f) body.forward.y *= -1.f;

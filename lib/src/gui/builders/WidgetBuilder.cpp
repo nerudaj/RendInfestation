@@ -120,10 +120,8 @@ tgui::Container::Ptr WidgetBuilder::createSlider(
     slider->setStep(properties.step);
     slider->setValue(value);
     slider->onValueChange(
-        [&gui,
-         ID,
-         onChange,
-         valueFormatter = std::move(properties.valueFormatter)](float value)
+        [&gui, ID, onChange, valueFormatter = properties.valueFormatter](
+            float value)
         {
             gui.get<tgui::Label>(ID)->setText(valueFormatter(value));
             onChange(value);

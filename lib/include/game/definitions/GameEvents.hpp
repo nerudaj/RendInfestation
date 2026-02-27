@@ -1,5 +1,6 @@
 #pragma once
 
+#include "game/Types.hpp"
 #include <variant>
 
 namespace event
@@ -10,36 +11,48 @@ namespace event
 
     struct EnemyStartedAttack
     {
-        size_t enemyIdx;
+        ActorIndexType enemyIdx;
 
-        explicit EnemyStartedAttack(size_t idx) : enemyIdx(idx) {}
+        explicit EnemyStartedAttack(ActorIndexType idx) : enemyIdx(idx) {}
     };
 
     struct EnemyAttackLands
     {
-        size_t enemyIdx;
+        ActorIndexType enemyIdx;
 
-        explicit EnemyAttackLands(size_t idx) : enemyIdx(idx) {}
+        explicit EnemyAttackLands(ActorIndexType idx) : enemyIdx(idx) {}
     };
 
     struct ProjectileHitSomething
 
     {
-        size_t projectileIdx;
-        std::optional<size_t> hitActorIdx;
+        ActorIndexType projectileIdx;
+        std::optional<ActorIndexType> hitActorIdx;
 
-        explicit ProjectileHitSomething(
-            size_t projectileIdx, std::optional<size_t> hitActorIdx)
+        ProjectileHitSomething(
+            ActorIndexType projectileIdx,
+            std::optional<ActorIndexType> hitActorIdx)
             : projectileIdx(projectileIdx), hitActorIdx(hitActorIdx)
+        {
+        }
+    };
+
+    struct ActorDamaged
+    {
+        ActorIndexType markerIdx;
+        ActorIndexType hitActorIdx;
+
+        ActorDamaged(ActorIndexType markerIdx, ActorIndexType hitActorIdx)
+            : markerIdx(markerIdx), hitActorIdx(hitActorIdx)
         {
         }
     };
 
     struct ObjectDestroyed
     {
-        size_t idx;
+        ActorIndexType idx;
 
-        explicit ObjectDestroyed(size_t idx) : idx(idx) {}
+        explicit ObjectDestroyed(ActorIndexType idx) : idx(idx) {}
     };
 } // namespace event
 
@@ -48,4 +61,5 @@ using GameEvent = std::variant<
     event::ProjectileHitSomething,
     event::ObjectDestroyed,
     event::EnemyStartedAttack,
-    event::EnemyAttackLands>;
+    event::EnemyAttackLands,
+    event::ActorDamaged>;

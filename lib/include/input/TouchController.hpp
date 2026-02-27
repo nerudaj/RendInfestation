@@ -61,7 +61,7 @@ public:
 struct [[nodiscard]] TouchModel final
 {
 public:
-    TouchModel(const sf::Vector2u& windowSize);
+    explicit TouchModel(const sf::Vector2u& windowSize);
 
 public:
     std::array<TouchInput, 4u> objects;
@@ -80,7 +80,9 @@ public:
 class [[nodiscard]] TouchController final
 {
 public:
-    TouchController(const sf::Vector2u& windowSize) : model(windowSize) {}
+    explicit TouchController(const sf::Vector2u& windowSize) : model(windowSize)
+    {
+    }
 
 public:
     void processEvent(const std::optional<sf::Event>& e);

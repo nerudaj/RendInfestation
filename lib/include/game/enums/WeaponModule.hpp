@@ -6,5 +6,8 @@ enum class [[nodiscard]] WeaponModule
     SpreadBarrel,
     CadenceBarrel,
     ExplosiveAmmo,
-    BouncyAmmo,
+    Ricochet,
+    PassthruAmmo,
+    BigBullet,
+    Spikes,
 };

@@ -102,6 +102,12 @@ void RenderingEngine::renderWorld(dgm::Window& window)
     for (auto&& face : getActorFaces())
         pipeline.addFace(face.origin, face.texUvs, sf::degrees(0), face.scale);
 
+    pipeline.addFace(
+        scene.actors[0].body.getPosition()
+            + scene.actors[0].lookDirection * 100.f,
+        sf::FloatRect {
+            atlas.atlas.getClip(atlas.crosshairsLocation).getFrame(0) });
+
     pipeline.renderTo(window);
 
     for (auto&& [actor, _] : scene.actors)
@@ -124,9 +130,14 @@ void RenderingEngine::renderHud(dgm::Window& window)
     window.draw(text);
 
     text.setPosition({ 10.f, 30.f });
-    text.setString(std::format(
+    text.setString(uni::format(
         "Player pos: {}",
         dgm::Utility::to_string(scene.actors[0].body.getPosition())));
+    window.draw(text);
+
+    text.setPosition({ 10.f, 50.f });
+    int health = std::get<PlayerInventory>(scene.inventories[0]).health;
+    text.setString(uni::format("Player health: {}", health));
     window.draw(text);
 }
 
@@ -171,6 +182,8 @@ std::vector<Face> RenderingEngine::getActorFaces() const
 
     for (auto&& [actor, _] : scene.actors)
     {
+        if (actor.kind == ActorKind::DamageMarker) continue;
+
         // looking right
         const bool flipX =
             actor.lookDirection.dot(sf::Vector2f(1.f, 0.f)) >= 0.f;

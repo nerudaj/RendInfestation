@@ -10,11 +10,14 @@
 class [[nodiscard]] Gui final
 {
 public:
-    Gui(dgm::Window& window) noexcept : gui(window.getSfmlWindowContext()) {}
+    explicit Gui(dgm::Window& window) noexcept
+        : gui(window.getSfmlWindowContext())
+    {
+    }
 
 public:
     template<class T>
-    T::Ptr get(const std::string& id) const
+    [[nodiscard]] T::Ptr get(const std::string& id) const
     {
         return gui.get<T>(id);
     }

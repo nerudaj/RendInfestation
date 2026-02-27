@@ -5,7 +5,7 @@
 #include <misc/DependencyContainer.hpp>
 #include <settings/InputSettings.hpp>
 
-class AppStateInputDetector : public dgm::AppState
+class AppStateInputDetector final : public dgm::AppState
 {
 public:
     template<class BindType>
@@ -31,7 +31,7 @@ public:
             },
             [&] { onCancel(); });
     }
-    ~AppStateInputDetector();
+    ~AppStateInputDetector() override;
 
 public:
     void input() override;
