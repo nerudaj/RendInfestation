@@ -42,8 +42,22 @@ public:
             return strings.getString(StringId::InputKind_Left);
         case InputKind::Right:
             return strings.getString(StringId::InputKind_Right);
+        case InputKind::Up:
+            return strings.getString(StringId::InputKind_Up);
+        case InputKind::Down:
+            return strings.getString(StringId::InputKind_Down);
+        case InputKind::AimLeft:
+            return strings.getString(StringId::InputKind_AimLeft);
+        case InputKind::AimRight:
+            return strings.getString(StringId::InputKind_AimRight);
+        case InputKind::AimUp:
+            return strings.getString(StringId::InputKind_AimUp);
+        case InputKind::AimDown:
+            return strings.getString(StringId::InputKind_AimDown);
         case InputKind::Shoot:
-            return strings.getString(StringId::InputKind_Jump);
+            return strings.getString(StringId::InputKind_Shoot);
+        case InputKind::SwitchWeapons:
+            return strings.getString(StringId::InputKind_SwitchWeapons);
         default:
             return "--error--";
         }

@@ -50,7 +50,14 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { InputKind_MenuCycleRight, "Menu cycle right" },
     { InputKind_Left, "Run left" },
     { InputKind_Right, "Run right" },
-    { InputKind_Jump, "Jump" },
+    { InputKind_Up, "Run up" },
+    { InputKind_Down, "Run down" },
+    { InputKind_AimLeft, "Aim left" },
+    { InputKind_AimRight, "Aim right" },
+    { InputKind_AimUp, "Aim up" },
+    { InputKind_AimDown, "Aim down" },
+    { InputKind_Shoot, "Shoot" },
+    { InputKind_SwitchWeapons, "Switch weapons" },
 
     // Pause
     { Resume, "Resume game" },

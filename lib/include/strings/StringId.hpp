@@ -43,7 +43,14 @@ enum class [[nodiscard]] StringId
     InputKind_MenuCycleRight,
     InputKind_Left,
     InputKind_Right,
-    InputKind_Jump,
+    InputKind_Up,
+    InputKind_Down,
+    InputKind_AimLeft,
+    InputKind_AimRight,
+    InputKind_AimUp,
+    InputKind_AimDown,
+    InputKind_Shoot,
+    InputKind_SwitchWeapons,
 
     // Pause
     Resume,
