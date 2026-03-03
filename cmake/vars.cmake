@@ -1,4 +1,4 @@
-set ( THE_PROJECT_NAME "Template" )
+set ( THE_PROJECT_NAME "Rend_Infestation" )
 set ( LIB_TARGET_NAME "game-lib" )
 set ( TEST_TARGET_NAME "unit-tests" )
 
