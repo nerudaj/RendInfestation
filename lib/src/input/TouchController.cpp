@@ -14,22 +14,32 @@ void TouchInput::reset()
         touchPosition = touchArea.getPosition();
 }
 
+static std::array<TouchInput, 4u>
+createTouchObjects(const sf::Vector2u& windowSize)
+{
+    const float joystickRadius = windowSize.x * 0.1f;
+    const auto windowsSizeF = sf::Vector2f(windowSize);
+
+    return std::array {
+        TouchInput(
+            TouchObjectKind::Joystick,
+            { joystickRadius, windowSize.y - joystickRadius },
+            joystickRadius),
+        TouchInput(
+            TouchObjectKind::Joystick,
+            { windowSize.x - joystickRadius, windowSize.y - joystickRadius },
+            joystickRadius),
+        TouchInput(TouchObjectKind::Button, { 100.f, 100.f }, 100.f),
+        TouchInput(
+            TouchObjectKind::Button,
+            windowsSizeF
+                - 2.f * sf::Vector2f { joystickRadius, joystickRadius },
+            60.f),
+    };
+}
+
 TouchModel::TouchModel(const sf::Vector2u& windowSize)
-    : objects(std::array {
-          TouchInput(
-              TouchObjectKind::Joystick,
-              { 150.f, windowSize.y - 150.f },
-              150.f),
-          TouchInput(
-              TouchObjectKind::Joystick,
-              { windowSize.x - 150.f, windowSize.y - 150.f },
-              150.f),
-          TouchInput(TouchObjectKind::Button, { 100.f, 100.f }, 100.f),
-          TouchInput(
-              TouchObjectKind::Button,
-              { windowSize.x - 300.f, windowSize.y - 300.f },
-              60.f),
-      })
+    : objects(createTouchObjects(windowSize))
 {
 }
 
@@ -88,8 +98,8 @@ void TouchController::processEvent(const sf::Event::TouchEnded& e)
 
 void TouchController::processEvent(const sf::Event::TouchMoved& e)
 {
-    // Update touchPosition, but normalize it so it stays inside the touchArea
-    // even when the finger moves out of it
+    // Update touchPosition, but normalize it so it stays inside the
+    // touchArea even when the finger moves out of it
     if (!model.fingerToTouchObject.contains(e.finger)) return;
 
     auto idx = model.fingerToTouchObject.at(e.finger);
