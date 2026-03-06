@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game/definitions/Actor.hpp"
+#include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
 #include "game/definitions/Weapon.hpp"
 #include "game/enums/EffectType.hpp"
@@ -15,6 +16,12 @@ public:
         const sf::Vector2f& spawnPosition,
         const GameTextureAtlas& atlas,
         Input& input);
+
+    static entt::entity createNpc(
+        entt::registry& actors,
+        const sf::Vector2f& spawnPosition,
+        const GameScene& scene,
+        const GameTextureAtlas& atlas);
 
     static entt::entity createProp(
         entt::registry& actors,

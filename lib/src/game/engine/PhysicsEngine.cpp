@@ -44,8 +44,8 @@ void PhysicsEngine::updateForConcreteCollider(
         if (options.reportMeshCollisions)
             eventQueue.pushEvent<event::ActorToMeshCollision>(entity);
 
-        if (moment.x == 0.f) body.forward.x *= body.bounciness;
-        if (moment.y == 0.f) body.forward.y *= body.bounciness;
+        if (moment.x == 0.f) body.forward.x *= -body.bounciness;
+        if (moment.y == 0.f) body.forward.y *= -body.bounciness;
     }
 
     spatialIndex.removeFromLookup(entity, collider);

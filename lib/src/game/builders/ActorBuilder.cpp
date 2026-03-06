@@ -1,6 +1,7 @@
 #include "game/builders/ActorBuilder.hpp"
 #include "game/builders/WeaponBuilder.hpp"
 #include "game/definitions/Constants.hpp"
+#include "game/input/NpcInput.hpp"
 #include "game/input/PlayerInput.hpp"
 #include "types/SemanticTypes.hpp"
 #include <memory>
@@ -34,6 +35,38 @@ entt::entity ActorBuilder::createPlayer(
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
 
     actors.get<Skin>(entity).animation.setState("idle-front", "looping"_true);
+
+    return entity;
+}
+
+entt::entity ActorBuilder::createNpc(
+    entt::registry& actors,
+    const sf::Vector2f& spawnPosition,
+    const GameScene& scene,
+    const GameTextureAtlas& atlas)
+{
+    auto entity = actors.create();
+
+    actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+    actors.emplace<PhysicsBody>(entity, PhysicsBody { .friction = 0.8f });
+    actors.emplace<Skin>(
+        entity,
+        Skin {
+            .kind = ActorKind::Npc,
+            .skinType = SkinType::Bighead,
+            .animation = dgm::Animation(
+                atlas.atlas.getAnimationStates(atlas.bigheadLocation), 8),
+            .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+        });
+    actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+    actors.emplace<Health>(entity, 100);
+    // TODO: melee weapon
+    actors.emplace<WeaponInventory>(
+        entity, 0, std::vector<Weapon> { WeaponBuilder::createWeapon({}) });
+    actors.emplace<EntityInput>(
+        entity, std::make_unique<NpcInput>(scene, entity));
+
+    actors.get<Skin>(entity).animation.setState("walk-front", "looping"_true);
 
     return entity;
 }
@@ -152,26 +185,7 @@ Actor ActorBuilder::createNpc(
     const GameTextureAtlas& atlas,
     size_t inventoryIdx)
 {
-    auto actor = Actor {
-        .kind = ActorKind::Npc,
-        .skin = SkinType::Bighead,
-        .body =
-            PhysicsBody {
-                .shape = dgm::Circle(spawnPosition, 8.f),
-                .options =
-                    PhysicsOptions {
-                        .friction = 0.8f,
-                    },
-            },
-        .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-        .animation = dgm::Animation(
-            atlas.atlas.getAnimationStates(atlas.bigheadLocation), 8),
-        .inventoryIdx = inventoryIdx,
-    };
 
-    actor.animation.setState("walk-front", "looping"_true);
-
-    return actor;
 }
 
 Actor ActorBuilder::createProjectile(

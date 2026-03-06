@@ -109,13 +109,12 @@ void GameRulesEngine::update(const dgm::Time& time)
     scene.spawnTicker += time.getElapsed();
     if (scene.spawnTicker > scene.spawnDelay)
     {
-        /*
         scene.spawnTicker = sf::Time::Zero;
-        scene.actors.emplaceBack(ActorBuilder::createNpc(
+        ActorBuilder::createNpc(
+            scene.actors,
             scene.enemySpawns[rand() % scene.enemySpawns.size()],
-            atlas,
-            scene.inventories.emplaceBack(
-                GameSceneBuilder::createNpcInventory())));*/
+            scene,
+            atlas);
     }
 
     for (auto&& [entity, controller, body, lookDirection, weaponInventory] :
@@ -150,34 +149,13 @@ void GameRulesEngine::update(const dgm::Time& time)
         if (lifetime.get() <= sf::Time::Zero)
             eventQueue.pushEvent<event::ObjectDestroyed>(entity);
     }
+
+    for (auto&& [entity, health] : scene.actors.view<Health>().each())
+    {
+        if (health.get() <= 0)
+            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+    }
 }
-
-/*
-void GameRulesEngine::updateNpc(
-    ActorIndexType actorIdx,
-    Actor& actor,
-    NpcInventory& inventory,
-    const dgm::Time&)
-{
-    if (inventory.health <= 0)
-    {
-        eventQueue.pushEvent<event::ObjectDestroyed>(actorIdx);
-    }
-
-    auto playerPos = scene.actors[0].body.getPosition();
-    auto directionToPlayer = playerPos - actor.body.getPosition();
-
-    if (directionToPlayer.length() > 20.f)
-    {
-        actor.body.forward =
-            dgm::Math::toUnit(directionToPlayer) * BASE_ENEMY_SPEED;
-        actor.lookDirection = dgm::Math::toUnit(directionToPlayer);
-    }
-    else if (actor.animation.getStateName() == "walk-front")
-    {
-        eventQueue.pushEvent<event::EnemyStartedAttack>(actorIdx);
-    }
-}*/
 
 void GameRulesEngine::handleProjectileToActorCollision(
     ActorIndexType projectileIdx, ActorIndexType actorIdx)
