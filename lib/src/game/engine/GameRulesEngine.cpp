@@ -129,10 +129,6 @@ void GameRulesEngine::update(const dgm::Time& time)
         lifetime.get() -= time.getElapsed();
         if (lifetime.get() <= sf::Time::Zero)
         {
-            std::println(
-                std::cout,
-                "Lifetime expired for entity {}",
-                static_cast<uint32_t>(entity));
             eventQueue.pushEvent<event::ObjectDestroyed>(entity);
         }
     }
@@ -175,22 +171,10 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
     auto inventory = scene.actors.try_get<DamageMarkerInventory>(marker);
     if (!inventory) return;
 
-    std::println(
-        std::cout,
-        "Marker {} collided with actor {}",
-        static_cast<uint32_t>(marker),
-        static_cast<uint32_t>(actor));
-
     auto [skin, health] = scene.actors.try_get<Skin, Health>(actor);
     if (!skin || !health) return;
 
     if (skin->kind == inventory->originator) return;
 
-    std::println(
-        std::cout,
-        "Marker {} dealt {} damage to actor {}",
-        static_cast<uint32_t>(marker),
-        inventory->damage,
-        static_cast<uint32_t>(actor));
     health->get() -= inventory->damage;
 }
