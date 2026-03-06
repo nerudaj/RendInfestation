@@ -3,6 +3,7 @@
 #include "game/builders/GameSceneBuilder.hpp"
 #include <algorithm>
 #include <limits>
+#include <print>
 
 void GameRulesEngine::operator()(const event::ActorToMeshCollision& e)
 {
@@ -15,30 +16,10 @@ void GameRulesEngine::operator()(const event::ActorToMeshCollision& e)
 
 void GameRulesEngine::operator()(const event::ActorToActorCollision& e)
 {
-    /*const bool isActor1Projectile =
-        scene.actors[e.actor1].kind == ActorKind::Projectile;
-    const bool isActor2Projectile =
-        scene.actors[e.actor2].kind == ActorKind::Projectile;
-    const bool isActor1DamageMarker =
-        scene.actors[e.actor1].kind == ActorKind::DamageMarker;
-    const bool isActor2DamageMarker =
-        scene.actors[e.actor2].kind == ActorKind::DamageMarker;
-
-    if (isActor1Projectile && isActor2Projectile) return;
-    if (isActor1DamageMarker && isActor2DamageMarker) return;
-
-    if ((isActor1Projectile || isActor2Projectile)
-        && (isActor1DamageMarker || isActor2DamageMarker))
-        return;
-
-    if (isActor1Projectile || isActor2Projectile)
-        handleProjectileToActorCollision(
-            isActor1Projectile ? e.actor1 : e.actor2,
-            isActor1Projectile ? e.actor2 : e.actor1);
-    else if (isActor1DamageMarker || isActor2DamageMarker)
-        handleDamageMarkerToActorCollision(
-            isActor1DamageMarker ? e.actor1 : e.actor2,
-            isActor1DamageMarker ? e.actor2 : e.actor1);*/
+    // NOTE: See PhysicsEngine's invariants - projectiles and damage
+    // markers should always be the second entity in collision event.
+    handleProjectileToActorCollision(e.entity2, e.entity1);
+    handleDamageMarkerToActorCollision(e.entity2, e.entity1);
 }
 
 void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
@@ -147,7 +128,13 @@ void GameRulesEngine::update(const dgm::Time& time)
     {
         lifetime.get() -= time.getElapsed();
         if (lifetime.get() <= sf::Time::Zero)
+        {
+            std::println(
+                std::cout,
+                "Lifetime expired for entity {}",
+                static_cast<uint32_t>(entity));
             eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        }
     }
 
     for (auto&& [entity, health] : scene.actors.view<Health>().each())
@@ -158,54 +145,52 @@ void GameRulesEngine::update(const dgm::Time& time)
 }
 
 void GameRulesEngine::handleProjectileToActorCollision(
-    ActorIndexType projectileIdx, ActorIndexType actorIdx)
+    entt::entity projectile, entt::entity actor)
 {
-    /*if (scene.actors[actorIdx].kind == ActorKind::Player) return;
+    auto inventory = scene.actors.try_get<ProjectileInventory>(projectile);
+    if (!inventory) return;
 
-    auto&& [projectile, projectileInventory] =
-        getActorAndInventory<ProjectileInventory>(scene, projectileIdx);
+    auto skin = scene.actors.try_get<Skin>(actor);
+    if (!skin) return;
 
-    // Spawn damage marker
-    scene.actors.emplaceBack(ActorBuilder::createDamageMarker(
-        projectile.body.getPosition(),
-        projectileInventory.traits & ProjectileTraits::Explosive
+    // TODO: implement projectile originator
+    if (skin->kind == ActorKind::Player) return;
+
+    ActorBuilder::createDamageMarker(
+        scene.actors,
+        scene.actors.get<Collider>(projectile).getPosition(),
+        inventory->traits & ProjectileTraits::Explosive
             ? BASE_EXPLOSION_RADIUS
-            : projectile.body.getRadius(),
-        scene.inventories.emplaceBack(DamageMarkerInventory {
-            .originator = ActorKind::Player,
-            .damage = projectileInventory.damage,
-        })));
+            : scene.actors.get<Collider>(projectile).getRadius(),
+        *inventory);
 
-    if (projectileInventory.traits & ProjectileTraits::Passthru) return;
+    if (inventory->traits & ProjectileTraits::Passthru) return;
 
-    eventQueue.pushEvent<event::ProjectileDestroyed>(projectileIdx);*/
+    eventQueue.pushEvent<event::ProjectileDestroyed>(projectile);
 }
 
 void GameRulesEngine::handleDamageMarkerToActorCollision(
-    ActorIndexType markerIdx, ActorIndexType actorIdx)
+    entt::entity marker, entt::entity actor)
 {
-    /*auto&& markerInventoryIdx = scene.actors[markerIdx].inventoryIdx;
-    assert(markerInventoryIdx);
-    auto&& markerInventory =
-        std::get<DamageMarkerInventory>(scene.inventories[*markerInventoryIdx]);
+    auto inventory = scene.actors.try_get<DamageMarkerInventory>(marker);
+    if (!inventory) return;
 
-    auto&& actor = scene.actors[actorIdx];
+    std::println(
+        std::cout,
+        "Marker {} collided with actor {}",
+        static_cast<uint32_t>(marker),
+        static_cast<uint32_t>(actor));
 
-    // Ignore non-player, non-npc collisions
-    if (actor.kind != ActorKind::Player && actor.kind != ActorKind::Npc) return;
-    // Ignore friendly-fire
-    if (actor.kind == markerInventory.originator) return;
+    auto [skin, health] = scene.actors.try_get<Skin, Health>(actor);
+    if (!skin || !health) return;
 
-    assert(actor.inventoryIdx);
-    assert(scene.inventories.isIndexValid(*actor.inventoryIdx));
+    if (skin->kind == inventory->originator) return;
 
-    std::visit(
-        overloads {
-            [&](PlayerInventory& inventory)
-            { inventory.health -= markerInventory.damage; },
-            [&](NpcInventory& inventory)
-            { inventory.health -= markerInventory.damage; },
-            [&](auto&) { assert(false); },
-        },
-        scene.inventories[*actor.inventoryIdx]);*/
+    std::println(
+        std::cout,
+        "Marker {} dealt {} damage to actor {}",
+        static_cast<uint32_t>(marker),
+        inventory->damage,
+        static_cast<uint32_t>(actor));
+    health->get() -= inventory->damage;
 }

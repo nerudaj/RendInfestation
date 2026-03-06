@@ -29,6 +29,11 @@ public:
         const ColliderOptions& options,
         PhysicsBody& body);
 
+    template<class T>
+        requires std::same_as<T, dgm::Circle> || std::same_as<T, dgm::Rect>
+    void performEntityCollisionDetection(
+        entt::entity entity, T& collider, sf::Vector2f& moment);
+
 private:
     GameScene& scene;
     EventQueue<GameEvent>& eventQueue;

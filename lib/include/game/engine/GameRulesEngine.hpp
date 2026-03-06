@@ -45,7 +45,7 @@ public:
     void update(const dgm::Time& time);
 
     /*void updateNpc(
-        ActorIndexType actorIdx,
+        entt::entity actorIdx,
         Actor& actor,
         NpcInventory& inventory,
         const dgm::Time& time);*/
@@ -57,10 +57,10 @@ private:
     }
 
     void handleProjectileToActorCollision(
-        ActorIndexType projectileIdx, ActorIndexType actorIdx);
+        entt::entity projectileIdx, entt::entity actorIdx);
 
     void handleDamageMarkerToActorCollision(
-        ActorIndexType markerIdx, ActorIndexType actorIdx);
+        entt::entity markerIdx, entt::entity actorIdx);
 
 private:
     EventQueue<GameEvent>& eventQueue;

@@ -32,7 +32,6 @@ void PhysicsEngine::updateForConcreteCollider(
     T& collider,
     const ColliderOptions& options,
     PhysicsBody& body)
-
 {
     auto moment = body.forward * time.getDeltaTime();
 
@@ -48,6 +47,23 @@ void PhysicsEngine::updateForConcreteCollider(
         if (moment.y == 0.f) body.forward.y *= -body.bounciness;
     }
 
+    if (!options.nonblocking)
+    {
+        // If this assert fails, then we risk missing a collision event
+        assert(!options.reportActorCollisions);
+        performEntityCollisionDetection(entity, collider, moment);
+    }
+
+    collider.move(moment);
+
+    body.forward -= body.forward * body.friction;
+}
+
+template<class T>
+    requires std::same_as<T, dgm::Circle> || std::same_as<T, dgm::Rect>
+void PhysicsEngine::performEntityCollisionDetection(
+    entt::entity entity, T& collider, sf::Vector2f& moment)
+{
     spatialIndex.removeFromLookup(entity, collider);
 
     for (auto&& candidate : spatialIndex.getOverlapCandidates(collider))
@@ -69,18 +85,16 @@ void PhysicsEngine::updateForConcreteCollider(
         }();
 
         const bool reportCollision =
-            options.reportActorCollisions
-            || candidateCollider.options.reportActorCollisions;
+            candidateCollider.options.reportActorCollisions;
         if (hasCollision && reportCollision)
         {
+            // Invariant - entity should never be a projectile nor a damage
+            // marker while candidate is most definitely either projectile or
+            // damage marker
             eventQueue.pushEvent<event::ActorToActorCollision>(
                 entity, candidate);
         }
     }
 
-    collider.move(moment);
-
     spatialIndex.returnToLookup(entity, collider);
-
-    body.forward -= body.forward * body.friction;
 }

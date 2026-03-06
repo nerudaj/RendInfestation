@@ -179,51 +179,32 @@ entt::entity ActorBuilder::createProjectile(
     return entity;
 }
 
-/*
-Actor ActorBuilder::createNpc(
-    const sf::Vector2f& spawnPosition,
-    const GameTextureAtlas& atlas,
-    size_t inventoryIdx)
-{
-
-}
-
-Actor ActorBuilder::createProjectile(
+entt::entity ActorBuilder::createDamageMarker(
+    entt::registry& actors,
     const sf::Vector2f& origin,
-    const sf::Vector2f& direction,
-    const GameTextureAtlas& atlas,
-    const Weapon& weapon,
-    size_t inventoryIdx)
+    const float radius,
+    const ProjectileInventory& inventory)
 {
-    auto animation =
-        dgm::Animation(atlas.atlas.getAnimationStates(atlas.bulletLocation), 8);
-    animation.setState("idle", "looping"_true);
+    auto entity = actors.create();
+    actors.emplace<Collider>(
+        entity,
+        dgm::Circle(origin, radius),
+        ColliderOptions {
+            .reportActorCollisions = true,
+            .nonblocking = true,
+        });
+    actors.emplace<DamageMarkerInventory>(
+        entity,
+        DamageMarkerInventory {
+            .originator = ActorKind::Player,
+            .damage = inventory.damage,
+        });
+    actors.emplace<Lifetime>(entity, sf::Time::Zero);
 
-    return Actor {
-        .kind = ActorKind::Projectile,
-        .skin = weapon.projectileSkin,
-        .body =
-            PhysicsBody {
-                .shape = dgm::Circle(origin, 3.f),
-                .forward = direction * weapon.projectileSpeed,
-                .options =
-                    PhysicsOptions {
-                        .bounciness = 0.8f,
-                        .friction = weapon.defaultProjectileInventory.traits
-                                            & ProjectileTraits::Shrapnels
-                                        ? 0.01f
-                                        : 0.f,
-                        .reportMeshCollisions = true,
-                        .reportActorCollisions = true,
-                        .nonblocking = true,
-                        .useAltMesh = true,
-                    },
-            },
-        .lookDirection = direction,
-        .animation = std::move(animation),
-        .inventoryIdx = inventoryIdx,
-    };
+    return entity;
 }
+
+/*
 
 Actor ActorBuilder::createEffect(
     const sf::Vector2f& origin,
@@ -266,52 +247,5 @@ Actor ActorBuilder::createEffect(
     actor.animation.setState("death", "looping"_false);
 
     return actor;
-}
-
-Actor ActorBuilder::createProp(
-    const sf::Vector2f& origin, size_t propId, const GameTextureAtlas& atlas)
-{
-    auto actor = Actor {
-        .kind = ActorKind::Prop,
-        .skin = SkinType::Prop,
-        .body = getPropBody(origin, propId),
-        .spriteOriginOffsetFromCollider = getSpriteOffset(propId),
-        .animation =
-            dgm::Animation(atlas.atlas.getAnimationStates(atlas.propsLocation)),
-    };
-
-    auto stateName = [](size_t id)
-    {
-        if (id == 0)
-            return "labtube-full";
-        else if (id == 1)
-            return "labtube";
-        else if (id == 2)
-            return "small-table";
-        return "cantina-table";
-    };
-
-    actor.animation.setState(stateName(propId), "looping"_true);
-
-    return actor;
-}
-
-Actor ActorBuilder::createDamageMarker(
-    const sf::Vector2f& origin, const float radius, size_t inventoryIdx)
-{
-    return Actor {
-        .kind = ActorKind::DamageMarker,
-        .body =
-            PhysicsBody {
-                .shape = dgm::Circle(origin, radius),
-                .options =
-                    PhysicsOptions {
-                        .reportActorCollisions = true,
-                        .nonblocking = true,
-                    },
-            },
-        .animation = dgm::Animation(NULL_ANIMATION_STATES),
-        .inventoryIdx = inventoryIdx,
-    };
 }
 */
