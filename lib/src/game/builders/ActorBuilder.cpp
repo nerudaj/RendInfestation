@@ -1,34 +1,152 @@
 #include "game/builders/ActorBuilder.hpp"
+#include "game/builders/WeaponBuilder.hpp"
 #include "game/definitions/Constants.hpp"
+#include "game/input/PlayerInput.hpp"
 #include "types/SemanticTypes.hpp"
+#include <memory>
 
-Actor ActorBuilder::createPlayer(
+entt::entity ActorBuilder::createPlayer(
+    entt::registry& actors,
     const sf::Vector2f& spawnPosition,
     const GameTextureAtlas& atlas,
-    size_t inventoryIdx)
+    Input& input)
 {
-    auto actor = Actor {
-        .kind = ActorKind::Player,
-        .skin = ActorSkin::PlayerDefault,
-        .body =
-            PhysicsBody {
-                .shape = dgm::Circle(spawnPosition, 8.f),
-                .options =
-                    ColliderOptions {
-                        .friction = 0.8f,
-                    },
-            },
-        .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-        .animation = dgm::Animation(
-            atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
-        .inventoryIdx = inventoryIdx,
-    };
+    auto entity = actors.create();
+    actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+    actors.emplace<PhysicsBody>(entity, PhysicsBody { .friction = 0.8f });
+    actors.emplace<Skin>(
+        entity,
+        ActorKind::Player,
+        SkinType::PlayerDefault,
+        dgm::Animation(atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
+        sf::Vector2f { 0.f, -10.f });
+    actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+    actors.emplace<Health>(entity, 100);
+    actors.emplace<WeaponInventory>(
+        entity,
+        0,
+        std::vector<Weapon> {
+            WeaponBuilder::createWeapon({ WeaponModule::CadenceBarrel,
+                                          WeaponModule::ExplosiveAmmo,
+                                          WeaponModule::Ricochet }),
+            WeaponBuilder::createWeapon(
+                { WeaponModule::SpreadBarrel, WeaponModule::Spikes }) });
+    actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
 
-    actor.animation.setState("idle-front", "looping"_true);
+    actors.get<Skin>(entity).animation.setState("idle-front", "looping"_true);
 
-    return actor;
+    return entity;
 }
 
+static Collider getPropCollider(const sf::Vector2f& origin, const size_t propId)
+{
+    if (propId == 0 || propId == 1)
+    {
+        return Collider { dgm::Circle(
+            { origin.x + 32.f, origin.y - 16.f }, 13.f) };
+    }
+    else if (propId == 2)
+    {
+        return Collider { dgm::Rect(
+            { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
+    }
+
+    return Collider { dgm::Rect(
+        { origin.x, origin.y - 64.f }, { 64.f, 64.f }) };
+}
+
+static sf::Vector2f getPropSpriteOffset(const size_t propId)
+{
+    if (propId == 0 || propId == 1)
+    {
+        return { 0.f, -16.f };
+    }
+    else if (propId == 2)
+    {
+        return { 0.f, 0.f };
+    }
+
+    return { 0.f, 0.f };
+}
+
+entt::entity ActorBuilder::createProp(
+    entt::registry& actors,
+    const sf::Vector2f& origin,
+    size_t propId,
+    const GameTextureAtlas& atlas)
+{
+    auto entity = actors.create();
+    actors.emplace<Collider>(entity, getPropCollider(origin, propId));
+    actors.emplace<PhysicsBody>(entity);
+    actors.emplace<Skin>(
+        entity,
+        ActorKind::Prop,
+        SkinType::Prop,
+        dgm::Animation(atlas.atlas.getAnimationStates(atlas.propsLocation)),
+        getPropSpriteOffset(propId));
+
+    auto stateName = [](size_t id)
+    {
+        if (id == 0)
+            return "labtube-full";
+        else if (id == 1)
+            return "labtube";
+        else if (id == 2)
+            return "small-table";
+        return "cantina-table";
+    };
+
+    actors.get<Skin>(entity).animation.setState(
+        stateName(propId), "looping"_true);
+
+    return entity;
+}
+
+entt::entity ActorBuilder::createProjectile(
+    entt::registry& actors,
+    const sf::Vector2f& origin,
+    const sf::Vector2f& direction,
+    const GameTextureAtlas& atlas,
+    const Weapon& weapon)
+{
+    auto entity = actors.create();
+    actors.emplace<Collider>(
+        entity,
+        dgm::Circle(origin, 3.f),
+        "reportMeshCollisions"_true,
+        "reportActorCollisions"_true,
+        "nonblocking"_true);
+    actors.emplace<PhysicsBody>(
+        entity,
+        PhysicsBody {
+            .forward = direction * weapon.projectileSpeed,
+            .bounciness = 0.8f,
+            .friction = weapon.defaultProjectileInventory.traits
+                                & ProjectileTraits::Shrapnels
+                            ? 0.01f
+                            : 0.f,
+            .useAltMesh = true,
+        });
+    actors.emplace<Lifetime>(entity, BASE_PROJECTILE_LIFETIME);
+
+    auto animation =
+        dgm::Animation(atlas.atlas.getAnimationStates(atlas.bulletLocation), 8);
+    animation.setState("idle", "looping"_true);
+    actors.emplace<Skin>(
+        entity,
+        Skin {
+            .kind = ActorKind::Projectile,
+            .skinType = weapon.projectileSkin,
+            .animation = std::move(animation),
+        });
+
+    actors.emplace<ProjectileInventory>(
+        entity, weapon.defaultProjectileInventory);
+
+    return entity;
+}
+
+/*
 Actor ActorBuilder::createNpc(
     const sf::Vector2f& spawnPosition,
     const GameTextureAtlas& atlas,
@@ -36,12 +154,12 @@ Actor ActorBuilder::createNpc(
 {
     auto actor = Actor {
         .kind = ActorKind::Npc,
-        .skin = ActorSkin::Bighead,
+        .skin = SkinType::Bighead,
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(spawnPosition, 8.f),
                 .options =
-                    ColliderOptions {
+                    PhysicsOptions {
                         .friction = 0.8f,
                     },
             },
@@ -75,7 +193,7 @@ Actor ActorBuilder::createProjectile(
                 .shape = dgm::Circle(origin, 3.f),
                 .forward = direction * weapon.projectileSpeed,
                 .options =
-                    ColliderOptions {
+                    PhysicsOptions {
                         .bounciness = 0.8f,
                         .friction = weapon.defaultProjectileInventory.traits
                                             & ProjectileTraits::Shrapnels
@@ -102,7 +220,7 @@ Actor ActorBuilder::createEffect(
     {
         auto actor = Actor {
             .kind = ActorKind::Effect,
-            .skin = ActorSkin::BigBullet,
+            .skin = SkinType::BigBullet,
             .body =
                 PhysicsBody {
                     .shape = dgm::Circle(origin, 1.f),
@@ -121,7 +239,7 @@ Actor ActorBuilder::createEffect(
 
     auto actor = Actor {
         .kind = ActorKind::Effect,
-        .skin = ActorSkin::Explosion,
+        .skin = SkinType::Explosion,
         .body =
             PhysicsBody {
                 .shape = dgm::Circle(origin, 1.f),
@@ -136,43 +254,12 @@ Actor ActorBuilder::createEffect(
     return actor;
 }
 
-static PhysicsBody getPropBody(const sf::Vector2f& origin, const size_t propId)
-{
-    if (propId == 0 || propId == 1)
-    {
-        return PhysicsBody { dgm::Circle(
-            { origin.x + 32.f, origin.y - 16.f }, 13.f) };
-    }
-    else if (propId == 2)
-    {
-        return PhysicsBody { dgm::Rect(
-            { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
-    }
-
-    return PhysicsBody { dgm::Rect(
-        { origin.x, origin.y - 64.f }, { 64.f, 64.f }) };
-}
-
-static sf::Vector2f getSpriteOffset(const size_t propId)
-{
-    if (propId == 0 || propId == 1)
-    {
-        return { 0.f, -16.f };
-    }
-    else if (propId == 2)
-    {
-        return { 0.f, 0.f };
-    }
-
-    return { 0.f, 0.f };
-}
-
 Actor ActorBuilder::createProp(
     const sf::Vector2f& origin, size_t propId, const GameTextureAtlas& atlas)
 {
     auto actor = Actor {
         .kind = ActorKind::Prop,
-        .skin = ActorSkin::Prop,
+        .skin = SkinType::Prop,
         .body = getPropBody(origin, propId),
         .spriteOriginOffsetFromCollider = getSpriteOffset(propId),
         .animation =
@@ -204,7 +291,7 @@ Actor ActorBuilder::createDamageMarker(
             PhysicsBody {
                 .shape = dgm::Circle(origin, radius),
                 .options =
-                    ColliderOptions {
+                    PhysicsOptions {
                         .reportActorCollisions = true,
                         .nonblocking = true,
                     },
@@ -213,3 +300,4 @@ Actor ActorBuilder::createDamageMarker(
         .inventoryIdx = inventoryIdx,
     };
 }
+*/

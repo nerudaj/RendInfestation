@@ -19,6 +19,7 @@ make_static_library ( ${LIB_TARGET_NAME} ${BUILD_OPTIONS}
         SFML::Audio
         fmt::fmt
         range-v3::range-v3
+	EnTT::EnTT
 )
 else ()
 make_static_library ( ${LIB_TARGET_NAME} ${BUILD_OPTIONS}
@@ -28,6 +29,7 @@ make_static_library ( ${LIB_TARGET_NAME} ${BUILD_OPTIONS}
         #fsm::fsm-lib
         TGUI::TGUI
         SFML::Audio
+	EnTT::EnTT
 )
 endif ()
 
@@ -50,4 +52,5 @@ target_precompile_headers( ${LIB_TARGET_NAME}
         <unordered_map>
         <set>
         <nlohmann/json.hpp>
+	<entt/entt.hpp>
 )

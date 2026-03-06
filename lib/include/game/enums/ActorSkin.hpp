@@ -1,6 +1,6 @@
 #pragma once
 
-enum class [[nodiscard]] ActorSkin : unsigned char
+enum class [[nodiscard]] SkinType : unsigned char
 {
     // Player
     PlayerDefault,

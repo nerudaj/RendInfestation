@@ -13,6 +13,12 @@ public:
 
     explicit constexpr BrandedType(T&& value) : value(std::move(value)) {}
 
+    BrandedType<T, Parameter>& operator=(const T& other)
+    {
+        value = other;
+        return *this;
+    }
+
 #ifdef ANDROID
     constexpr const T& get() const noexcept
     {

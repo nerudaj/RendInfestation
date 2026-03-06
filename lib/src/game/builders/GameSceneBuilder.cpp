@@ -14,21 +14,6 @@ static inline bool isPassableTileAlt(int id)
     return isPassableTile(id) || (31 <= id && id <= 34);
 }
 
-PlayerInventory GameSceneBuilder::createPlayerInventory()
-{
-    return PlayerInventory {
-        .health = 100,
-        .weapons =
-            std::array {
-                WeaponBuilder::createWeapon({ WeaponModule::CadenceBarrel,
-                                              WeaponModule::ExplosiveAmmo,
-                                              WeaponModule::Ricochet }),
-                WeaponBuilder::createWeapon(
-                    { WeaponModule::SpreadBarrel, WeaponModule::Spikes }),
-            },
-    };
-}
-
 NpcInventory GameSceneBuilder::createNpcInventory()
 {
     return NpcInventory {
@@ -38,7 +23,9 @@ NpcInventory GameSceneBuilder::createNpcInventory()
 }
 
 GameScene GameSceneBuilder::createScene(
-    const GameTextureAtlas& atlas, const dgm::ResourceManager& resmgr)
+    const GameTextureAtlas& atlas,
+    const dgm::ResourceManager& resmgr,
+    Input& input)
 {
     auto tiledLevel = resmgr.get<tiled::FiniteMapModel>("demo-01.json");
     assert(tiledLevel.layers.size() == 2);
@@ -52,26 +39,23 @@ GameScene GameSceneBuilder::createScene(
     const auto levelDataSize = sf::Vector2u { layer.width, layer.height };
 
     auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
-    auto actors = dgm::DynamicBuffer<Actor>();
+    entt::registry actors;
 
-    auto inventories = dgm::DynamicBuffer<Inventory>();
-    actors.emplaceBack(ActorBuilder::createPlayer(
-        { 100.f, 150.f },
-        atlas,
-        inventories.emplaceBack(createPlayerInventory())));
+    auto playerEntity =
+        ActorBuilder::createPlayer(actors, { 100.f, 150.f }, atlas, input);
 
     for (auto&& prop :
          std::get<tiled::ObjectGroupModel>(tiledLevel.layers[1]).objects)
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
 
-        actors.emplaceBack(
-            ActorBuilder::createProp({ prop.x, prop.y }, propId, atlas));
+        ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
     }
 
     return GameScene {
         .actors = std::move(actors),
-        .inventories = std::move(inventories),
+        .playerEntity = playerEntity,
+        //        .inventories = std::move(inventories),
         .levelMesh = dgm::Mesh(
             layer.data
                 | std::views::transform(

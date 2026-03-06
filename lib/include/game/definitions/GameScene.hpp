@@ -7,6 +7,7 @@
 #include "game/definitions/PlayerInventory.hpp"
 #include "game/definitions/ProjectileInventory.hpp"
 #include <DGM/dgm.hpp>
+#include <entt/entt.hpp>
 #include <vector>
 
 using Inventory = std::variant<
@@ -17,18 +18,21 @@ using Inventory = std::variant<
 
 struct [[nodiscard]] GameScene final
 {
-    dgm::DynamicBuffer<Actor, ActorIndexType> actors;
-    dgm::DynamicBuffer<Inventory, InventoryIndexType> inventories;
+    entt::registry actors;
+    entt::entity playerEntity;
+    // dgm::DynamicBuffer<Actor, ActorIndexType> actors;
+    // dgm::DynamicBuffer<Inventory, InventoryIndexType> inventories;
     dgm::Mesh levelMesh;
     dgm::Mesh altLevelMesh;
     dgm::Rect levelBounds;
-    sf::Vector2f cameraPosition = { 0.f, 0.f };
+    // sf::Vector2f cameraPosition = { 0.f, 0.f };
     size_t tick = 0;
     std::vector<sf::Vector2f> enemySpawns;
     sf::Time spawnTicker;
     const sf::Time spawnDelay = sf::seconds(1.f);
 };
 
+/*
 template<class InventoryT>
 static std::tuple<Actor&, InventoryT&>
 getActorAndInventory(GameScene& scene, ActorIndexType actorIdx)
@@ -44,3 +48,4 @@ getActorAndInventory(GameScene& scene, ActorIndexType actorIdx)
         std::get<InventoryT>(scene.inventories[*actor.inventoryIdx]),
     };
 }
+*/

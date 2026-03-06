@@ -5,21 +5,16 @@
 #include <DGM/classes/Objects.hpp>
 #include <variant>
 
-struct [[nodiscard]] ColliderOptions
+struct [[nodiscard]] ColliderOptions final
 {
-    float bounciness = 0.f;
-    float friction = 0.5f;
     bool reportMeshCollisions = false;
     bool reportActorCollisions = false;
     bool nonblocking = false;
-    bool disabled = false;
-    bool useAltMesh = false;
 };
 
-struct [[nodiscard]] PhysicsBody final
+struct [[nodiscard]] Collider final
 {
     std::variant<dgm::Rect, dgm::Circle> shape;
-    sf::Vector2f forward = { 0.f, 0.f };
     ColliderOptions options;
 
     template<class T>
@@ -64,4 +59,12 @@ struct [[nodiscard]] PhysicsBody final
             },
             shape);
     }
+};
+
+struct [[nodiscard]] PhysicsBody final
+{
+    sf::Vector2f forward = { 0.f, 0.f };
+    float bounciness = 0.f;
+    float friction = 0.5f;
+    bool useAltMesh = false;
 };

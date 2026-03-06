@@ -49,10 +49,10 @@ private:
 
 private:
     dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
-    getSkinLocation(ActorSkin skin) const;
+    getSkinLocation(SkinType skin) const;
 
     sf::FloatRect getFrame(
-        ActorSkin skin,
+        SkinType skin,
         const std::string& stateName,
         const size_t frameIdx) const
     {
@@ -82,4 +82,5 @@ private:
     ShadeableRenderingPipeline2D pipeline;
     dgm::Clip tilesClip;
     float timeElapsed = 0.f;
+    mutable size_t entityCount = 0;
 };

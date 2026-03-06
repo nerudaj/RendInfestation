@@ -2,12 +2,9 @@
 
 void Janitor::cleanScene(GameScene& scene)
 {
-    for (auto&& idx : objectsToClean)
+    for (auto&& entity : objectsToClean)
     {
-        if (scene.actors[idx].inventoryIdx)
-            scene.inventories.eraseAtIndex(*scene.actors[idx].inventoryIdx);
-
-        scene.actors.eraseAtIndex(idx);
+        scene.actors.destroy(entity);
     }
 
     objectsToClean.clear();

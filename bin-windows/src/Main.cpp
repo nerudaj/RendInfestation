@@ -8,8 +8,10 @@ const auto SETTINGS_FILE_NAME = std::filesystem::path("settings.json");
 
 int main(int, char*[])
 {
+#ifndef _DEBUG
     try
     {
+#endif
         auto&& settings = ResourceLoader::loadSettings(SETTINGS_FILE_NAME);
 
         auto&& window = dgm::Window(dgm::WindowSettings {
@@ -19,8 +21,10 @@ int main(int, char*[])
         });
         auto&& app = dgm::App(window);
 
+#ifndef _DEBUG
         try
         {
+#endif
             auto&& dependencies = DependencyContainer(
                 window,
                 "../assets",
@@ -34,22 +38,20 @@ int main(int, char*[])
             app.run();
 
             dependencies.saveSettings();
+#ifndef _DEBUG
         }
         catch (const std::exception& ex)
         {
             std::cerr << ex.what() << std::endl;
-#ifndef _DEBUG
             throw;
-#endif
         }
     }
     catch (const std::exception&)
     {
-#ifndef _DEBUG
         // streams are too botched at this point for logging
         throw;
-#endif
     }
+#endif
 
     return 0;
 }

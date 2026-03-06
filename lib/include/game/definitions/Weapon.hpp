@@ -12,6 +12,6 @@ struct [[nodiscard]] Weapon final
     int spread = 0; // degrees
     int numShots = 0;
     float projectileSpeed = 0.f;
-    ActorSkin projectileSkin = ActorSkin::SmallBullet;
+    SkinType projectileSkin = SkinType::SmallBullet;
     const ProjectileInventory defaultProjectileInventory;
 };

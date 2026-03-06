@@ -32,8 +32,8 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
         {
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Explosive;
-            if (props.projectileSkin == ActorSkin::Spikes)
-                props.projectileSkin = ActorSkin::Landmine;
+            if (props.projectileSkin == SkinType::Spikes)
+                props.projectileSkin = SkinType::Landmine;
             props.kickback += 150.f;
             props.fireDelay *= 1.5f;
             props.baseProjectileDamage *= 5;
@@ -53,7 +53,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.baseProjectileDamage *= 1.3f;
             props.kickback += 75.f;
             props.fireDelay *= 1.1f;
-            props.projectileSkin = ActorSkin::BigBullet;
+            props.projectileSkin = SkinType::BigBullet;
             return props;
         };
     case Spikes:
@@ -63,7 +63,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.baseProjectileDamage *= 1.3f;
             props.kickback += 75.f;
             props.fireDelay *= 1.1f;
-            props.projectileSkin = ActorSkin::Spikes;
+            props.projectileSkin = SkinType::Spikes;
             props.projectileTraits = props.projectileTraits
                                      | ProjectileTraits::Shrapnels
                                      | ProjectileTraits::Bouncy;
@@ -74,7 +74,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     case PassthruAmmo:
         return [](WeaponProperties props)
         {
-            props.projectileSkin = ActorSkin::Hyperbeam;
+            props.projectileSkin = SkinType::Hyperbeam;
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Passthru;
             return props;

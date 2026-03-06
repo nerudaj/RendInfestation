@@ -17,7 +17,7 @@ public:
     }
 
 public:
-    void operator()(const event::PlayerFiredWeapon& e);
+    void operator()(const event::ActorFiredWeapon& e);
 
     void operator()(const event::ProjectileDestroyed& e);
 

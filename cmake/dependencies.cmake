@@ -9,9 +9,11 @@ set ( TGUI_VERSION "1.x" )
 set ( CATCH2_VERSION "v3.8.0" )
 set ( RANGEV3_VERSION "master" )
 set ( FMTLIB_VERSION "12.1.0" )
+set ( ENTT_VERSION "3.16.0" )
 
 CPMAddPackage("gh:jarro2783/cxxopts#v${CXXOPTS_VERSION}")
 CPMAddPackage("gh:nlohmann/json#v${NLOHMANN_VERSION}")
+CPMAddPackage("gh:skypjack/entt@${ENTT_VERSION}")
 
 if ( "${CMAKE_SYSTEM_NAME}" STREQUAL "Android" )
 	set ( BUILD_SHARED_LIBS ON )

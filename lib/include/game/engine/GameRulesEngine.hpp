@@ -33,7 +33,7 @@ public:
 
     void operator()(const event::ActorToActorCollision& e);
 
-    void operator()(const event::PlayerFiredWeapon& e);
+    void operator()(const event::ActorFiredWeapon& e);
 
     void operator()(const event::ProjectileDestroyed& e);
 
@@ -44,28 +44,16 @@ public:
 public:
     void update(const dgm::Time& time);
 
-    void updatePlayer(
-        ActorIndexType actorIdx,
-        Actor& actor,
-        PlayerInventory& inventory,
-        const dgm::Time& time);
-
-    void updateNpc(
+    /*void updateNpc(
         ActorIndexType actorIdx,
         Actor& actor,
         NpcInventory& inventory,
-        const dgm::Time& time);
-
-    void updateProjectile(
-        ActorIndexType actorIdx,
-        Actor& actor,
-        ProjectileInventory& inventory,
-        const dgm::Time& time);
+        const dgm::Time& time);*/
 
 private:
-    Weapon& getPlayerWeapon(PlayerInventory& inventory) const
+    Weapon& getActiveWeapon(WeaponInventory& inventory) const
     {
-        return inventory.weapons[static_cast<int>(inventory.activeWeapon)];
+        return inventory.weapons[inventory.activeWeapon];
     }
 
     void handleProjectileToActorCollision(

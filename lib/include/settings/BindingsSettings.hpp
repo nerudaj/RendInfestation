@@ -27,23 +27,25 @@ struct [[nodiscard]] BindingsSettings final
         { InputKind::AimLeft,
           Binding {
               sf::Keyboard::Key::Left,
-              std::pair { sf::Joystick::Axis::Z, dgm::AxisHalf::Negative } } },
+              std::pair { sf::Joystick::Axis::U, dgm::AxisHalf::Negative } } },
         { InputKind::AimRight,
           Binding {
               sf::Keyboard::Key::Right,
-              std::pair { sf::Joystick::Axis::Z, dgm::AxisHalf::Positive } } },
+              std::pair { sf::Joystick::Axis::U, dgm::AxisHalf::Positive } } },
         { InputKind::AimUp,
           Binding {
               sf::Keyboard::Key::Up,
-              std::pair { sf::Joystick::Axis::R, dgm::AxisHalf::Negative } } },
+              std::pair { sf::Joystick::Axis::V, dgm::AxisHalf::Negative } } },
         { InputKind::AimDown,
           Binding {
               sf::Keyboard::Key::Down,
-              std::pair { sf::Joystick::Axis::R, dgm::AxisHalf::Positive } } },
+              std::pair { sf::Joystick::Axis::V, dgm::AxisHalf::Positive } } },
         { InputKind::Shoot,
           Binding { sf::Keyboard::Key::Space, GamepadButton { 0 } } },
         { InputKind::SwitchWeapons,
-          Binding { sf::Keyboard::Key::Tab, GamepadButton { 3 } } },
+          Binding {
+              sf::Keyboard::Key::Tab,
+              std::pair { sf::Joystick::Axis::Z, dgm::AxisHalf::Negative } } },
     };
 
     std::map<InputKind, Binding> menuBindings = {

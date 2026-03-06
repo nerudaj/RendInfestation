@@ -25,7 +25,8 @@ void RenderingEngine::update(const dgm::Time& time)
 {
     fpsCounter.update(time.getDeltaTime());
     timeElapsed += time.getDeltaTime();
-    worldCamera.setPosition(scene.cameraPosition);
+    worldCamera.setPosition(
+        scene.actors.get<Collider>(scene.playerEntity).getPosition());
 }
 
 void RenderingEngine::draw(dgm::Window& window)
@@ -103,8 +104,8 @@ void RenderingEngine::renderWorld(dgm::Window& window)
         pipeline.addFace(face.origin, face.texUvs, sf::degrees(0), face.scale);
 
     pipeline.addFace(
-        scene.actors[0].body.getPosition()
-            + scene.actors[0].lookDirection * 100.f,
+        scene.actors.get<Collider>(scene.playerEntity).getPosition()
+            + scene.actors.get<LookDirection>(scene.playerEntity).get() * 100.f,
         sf::FloatRect {
             atlas.atlas.getClip(atlas.crosshairsLocation).getFrame(0) });
 
@@ -133,12 +134,17 @@ void RenderingEngine::renderHud(dgm::Window& window)
     text.setPosition({ 10.f, 30.f });
     text.setString(uni::format(
         "Player pos: {}",
-        dgm::Utility::to_string(scene.actors[0].body.getPosition())));
+        dgm::Utility::to_string(
+            scene.actors.get<Collider>(scene.playerEntity).getPosition())));
     window.draw(text);
 
     text.setPosition({ 10.f, 50.f });
-    int health = std::get<PlayerInventory>(scene.inventories[0]).health;
+    const int health = scene.actors.get<Health>(scene.playerEntity).get();
     text.setString(uni::format("Player health: {}", health));
+    window.draw(text);
+
+    text.setPosition({ 600.f, 250.f });
+    text.setString(uni::format("Entity count: {}", entityCount));
     window.draw(text);
 }
 
@@ -159,11 +165,11 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
 }
 
 dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
-RenderingEngine::getSkinLocation(ActorSkin skin) const
+RenderingEngine::getSkinLocation(SkinType skin) const
 {
     switch (skin)
     {
-        using enum ActorSkin;
+        using enum SkinType;
     case PlayerDefault:
         return atlas.playerLocation;
     case Bighead:
@@ -183,19 +189,22 @@ RenderingEngine::getSkinLocation(ActorSkin skin) const
     case Explosion:
         return atlas.explosionLocation;
     }
+
+    assert(false);
 }
 
 std::vector<Face> RenderingEngine::getActorFaces() const
 {
     std::vector<Face> faces;
 
-    for (auto&& [actor, _] : scene.actors)
+    for (auto&& [entity, collider, skin] :
+         scene.actors.view<Collider, Skin>().each())
     {
-        if (actor.kind == ActorKind::DamageMarker) continue;
-
-        // looking right
-        const bool flipX =
-            actor.lookDirection.dot(sf::Vector2f(1.f, 0.f)) >= 0.f;
+        bool flipX = false;
+        if (auto lookDirection = scene.actors.try_get<LookDirection>(entity))
+        {
+            flipX = lookDirection->get().dot(sf::Vector2f(1.f, 0.f)) >= 0.f;
+        }
 
         const auto position = std::visit(
             overloads {
@@ -203,24 +212,24 @@ std::vector<Face> RenderingEngine::getActorFaces() const
                 {
                     if (!worldCamera.isObjectVisible(c)) return std::nullopt;
                     return c.getPosition()
-                           + actor.spriteOriginOffsetFromCollider;
+                           + skin.spriteOriginOffsetFromCollider;
                 },
                 [&](const dgm::Rect& r) -> std::optional<sf::Vector2f>
                 {
                     if (!worldCamera.isObjectVisible(r)) return std::nullopt;
-                    return r.getCenter() + actor.spriteOriginOffsetFromCollider;
+                    return r.getCenter() + skin.spriteOriginOffsetFromCollider;
                 },
             },
-            actor.body.shape);
+            collider.shape);
 
         if (position)
         {
             faces.push_back(Face {
                 .origin = *position,
                 .texUvs = getFrame(
-                    actor.skin,
-                    actor.animation.getStateName(),
-                    actor.animation.getCurrentFrameIndex()),
+                    skin.skinType,
+                    skin.animation.getStateName(),
+                    skin.animation.getCurrentFrameIndex()),
                 .scale =
                     sf::Vector2f {
                         flipX ? -1.f : 1.f,

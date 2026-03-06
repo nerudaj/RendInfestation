@@ -1,69 +1,75 @@
 #pragma once
 
 #include "game/Types.hpp"
+#include <entt/entt.hpp>
 #include <variant>
 
 namespace event
 {
     struct ActorToMeshCollision
     {
-        ActorIndexType idx;
+        entt::entity entity;
 
-        explicit ActorToMeshCollision(ActorIndexType idx) : idx(idx) {}
+        explicit ActorToMeshCollision(entt::entity entity) : entity(entity) {}
     };
 
     struct ActorToActorCollision
     {
-        ActorIndexType actor1;
-        ActorIndexType actor2;
+        entt::entity entity1;
+        entt::entity entity2;
 
         explicit ActorToActorCollision(
-            ActorIndexType actor1, ActorIndexType actor2)
-            : actor1(actor1), actor2(actor2)
+            entt::entity entity1, entt::entity entity2)
+            : entity1(entity1), entity2(entity2)
         {
         }
     };
 
-    struct PlayerFiredWeapon
+    struct ActorFiredWeapon
     {
+        entt::entity entity;
+
+        explicit ActorFiredWeapon(entt::entity entity) : entity(entity) {}
     };
 
     struct EnemyStartedAttack
     {
-        ActorIndexType enemyIdx;
+        entt::entity enemyEntity;
 
-        explicit EnemyStartedAttack(ActorIndexType idx) : enemyIdx(idx) {}
+        explicit EnemyStartedAttack(entt::entity entity) : enemyEntity(entity)
+        {
+        }
     };
 
     struct EnemyAttackLands
     {
-        ActorIndexType enemyIdx;
+        entt::entity enemyEntity;
 
-        explicit EnemyAttackLands(ActorIndexType idx) : enemyIdx(idx) {}
+        explicit EnemyAttackLands(entt::entity entity) : enemyEntity(entity) {}
     };
 
     struct ProjectileDestroyed
     {
-        ActorIndexType projectileIdx;
+        entt::entity projectileEntity;
 
-        explicit ProjectileDestroyed(ActorIndexType projectileIdx)
-            : projectileIdx(projectileIdx)
+        explicit ProjectileDestroyed(entt::entity projectileEntity)
+            : projectileEntity(projectileEntity)
         {
         }
     };
 
     struct ObjectDestroyed
     {
-        ActorIndexType idx;
+        entt::entity entity;
 
-        explicit ObjectDestroyed(ActorIndexType idx) : idx(idx) {}
+        explicit ObjectDestroyed(entt::entity entity) : entity(entity) {}
     };
 } // namespace event
 
 using GameEvent = std::variant<
     event::ActorToMeshCollision,
     event::ActorToActorCollision,
-    event::PlayerFiredWeapon,
+    event::ActorFiredWeapon,
     event::ProjectileDestroyed,
     event::ObjectDestroyed,
     event::EnemyStartedAttack,
