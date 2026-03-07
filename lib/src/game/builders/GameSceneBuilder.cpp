@@ -41,8 +41,17 @@ GameScene GameSceneBuilder::createScene(
     auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
     entt::registry actors;
 
-    auto playerEntity =
-        ActorBuilder::createPlayer(actors, { 100.f, 150.f }, atlas, input);
+    const WeaponLoadout loadout {
+        .weapon1Modules = { WeaponModule::CadenceBarrel,
+                            WeaponModule::ExplosiveAmmo,
+                            WeaponModule::None },
+        .weapon2Modules = { WeaponModule::SpreadBarrel,
+                            WeaponModule::Spikes,
+                            WeaponModule::None },
+    };
+
+    auto playerEntity = ActorBuilder::createPlayer(
+        actors, { 100.f, 150.f }, atlas, input, loadout);
 
     for (auto&& prop :
          std::get<tiled::ObjectGroupModel>(tiledLevel.layers[1]).objects)
@@ -88,13 +97,6 @@ GameScene GameSceneBuilder::createScene(
                 { 1846, 703.f },
                 { 1471.f, 1116.f },
             },
-        .loadout = WeaponLoadout {
-            .weapon1Modules = { WeaponModule::CadenceBarrel,
-                                WeaponModule::ExplosiveAmmo,
-                                WeaponModule::None },
-            .weapon2Modules = { WeaponModule::SpreadBarrel,
-                                WeaponModule::Spikes,
-                                WeaponModule::None },
-        },
+        .loadout = loadout,
     };
 }

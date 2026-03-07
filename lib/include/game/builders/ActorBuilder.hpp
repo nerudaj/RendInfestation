@@ -15,7 +15,8 @@ public:
         entt::registry& actors,
         const sf::Vector2f& spawnPosition,
         const GameTextureAtlas& atlas,
-        Input& input);
+        Input& input,
+        const WeaponLoadout& loadout);
 
     static entt::entity createNpc(
         entt::registry& actors,

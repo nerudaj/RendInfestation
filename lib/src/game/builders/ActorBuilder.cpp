@@ -10,7 +10,8 @@ entt::entity ActorBuilder::createPlayer(
     entt::registry& actors,
     const sf::Vector2f& spawnPosition,
     const GameTextureAtlas& atlas,
-    Input& input)
+    Input& input,
+    const WeaponLoadout& loadout)
 {
     auto entity = actors.create();
     actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
@@ -27,11 +28,14 @@ entt::entity ActorBuilder::createPlayer(
         entity,
         0,
         std::vector<Weapon> {
-            WeaponBuilder::createWeapon({ WeaponModule::CadenceBarrel,
-                                          WeaponModule::ExplosiveAmmo/*,
-                                          WeaponModule::Ricochet*/ }),
             WeaponBuilder::createWeapon(
-                { WeaponModule::SpreadBarrel, WeaponModule::Spikes }) });
+                { loadout.weapon1Modules[0],
+                  loadout.weapon1Modules[1],
+                  loadout.weapon1Modules[2] }),
+            WeaponBuilder::createWeapon(
+                { loadout.weapon2Modules[0],
+                  loadout.weapon2Modules[1],
+                  loadout.weapon2Modules[2] }) });
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
 
     actors.get<Skin>(entity).animation.setState("idle-front", "looping"_true);
