@@ -53,12 +53,42 @@ GameScene GameSceneBuilder::createScene(
     auto playerEntity = ActorBuilder::createPlayer(
         actors, { 100.f, 150.f }, atlas, input, loadout);
 
+    auto lights = std::vector<LightSource>();
+
     for (auto&& prop :
          std::get<tiled::ObjectGroupModel>(tiledLevel.layers[1]).objects)
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
 
-        ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
+        auto entity =
+            ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
+
+        if (propId == 0 || propId == 1)
+        {
+            lights.push_back(LightSource {
+                .position = actors.get<Collider>(entity).getPosition(),
+                .spriteId = 3,
+                .color = sf::Color::Green,
+            });
+        }
+    }
+
+    for (unsigned idx = 0, y = 0; y < levelDataSize.y; ++y)
+    {
+        for (unsigned x = 0; x < levelDataSize.x; ++x, ++idx)
+        {
+            if (layer.data[idx] - 1 == 38)
+            {
+                const auto position =
+                    sf::Vector2u { x, y }.componentWiseMul(levelVoxelSize)
+                    + sf::Vector2u { 16, 69 };
+                lights.push_back(LightSource {
+                    .position = sf::Vector2f { position },
+                    .spriteId = 0,
+                    .color = sf::Color::Yellow,
+                });
+            }
+        }
     }
 
     return GameScene {
@@ -97,6 +127,7 @@ GameScene GameSceneBuilder::createScene(
                 { 1846, 703.f },
                 { 1471.f, 1116.f },
             },
+        .lights = std::move(lights),
         .loadout = loadout,
     };
 }

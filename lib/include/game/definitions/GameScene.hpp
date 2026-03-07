@@ -20,12 +20,19 @@ using Inventory = std::variant<
 
 struct [[nodiscard]] WeaponLoadout final
 {
-    std::array<WeaponModule, 3> weapon1Modules = {
-        WeaponModule::None, WeaponModule::None, WeaponModule::None
-    };
-    std::array<WeaponModule, 3> weapon2Modules = {
-        WeaponModule::None, WeaponModule::None, WeaponModule::None
-    };
+    std::array<WeaponModule, 3> weapon1Modules = { WeaponModule::None,
+                                                   WeaponModule::None,
+                                                   WeaponModule::None };
+    std::array<WeaponModule, 3> weapon2Modules = { WeaponModule::None,
+                                                   WeaponModule::None,
+                                                   WeaponModule::None };
+};
+
+struct [[nodiscard]] LightSource final
+{
+    sf::Vector2f position;
+    size_t spriteId;
+    sf::Color color;
 };
 
 struct [[nodiscard]] GameScene final
@@ -39,5 +46,6 @@ struct [[nodiscard]] GameScene final
     std::vector<sf::Vector2f> enemySpawns;
     sf::Time spawnTicker;
     const sf::Time spawnDelay = sf::seconds(1.f);
+    const std::vector<LightSource> lights;
     WeaponLoadout loadout;
 };

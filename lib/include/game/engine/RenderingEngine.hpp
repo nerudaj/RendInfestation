@@ -80,6 +80,7 @@ private:
     sf::Text text;
 
     ShadeableRenderingPipeline2D pipeline;
+    ShadeableRenderingPipeline2D lightPipeline;
     dgm::Clip tilesClip;
     float timeElapsed = 0.f;
     mutable size_t entityCount = 0;

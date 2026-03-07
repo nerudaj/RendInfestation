@@ -17,4 +17,5 @@ struct [[nodiscard]] GameTextureAtlas final
     dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates> propsLocation;
     dgm::TextureAtlas::ResourceLocation<dgm::Clip> tilesLocation;
     dgm::TextureAtlas::ResourceLocation<dgm::Clip> crosshairsLocation;
+    dgm::TextureAtlas::ResourceLocation<dgm::Clip> lightsLocation;
 };

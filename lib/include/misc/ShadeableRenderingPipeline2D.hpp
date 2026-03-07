@@ -5,9 +5,13 @@ class [[nodiscard]] ShadeableRenderingPipeline2D final
 {
 public:
     ShadeableRenderingPipeline2D(
-        const sf::Texture& texture, const sf::Shader& shader);
+        const sf::Texture& texture,
+        const sf::Shader& shaderc,
+        const std::optional<sf::BlendMode> mode = std::nullopt);
 
-    explicit ShadeableRenderingPipeline2D(const sf::Texture& texture);
+    ShadeableRenderingPipeline2D(
+        const sf::Texture& texture,
+        const std::optional<sf::BlendMode> mode = std::nullopt);
 
 public:
     void clear()
@@ -20,7 +24,8 @@ public:
         const sf::Vector2f& origin,
         const sf::FloatRect& textureRect,
         const sf::Angle& rotation = sf::degrees(0),
-        const sf::Vector2f& scale = sf::Vector2f { 1.f, 1.f });
+        const sf::Vector2f& scale = sf::Vector2f { 1.f, 1.f },
+        const sf::Color color = sf::Color::White);
 
     void renderTo(dgm::Window& window)
     {

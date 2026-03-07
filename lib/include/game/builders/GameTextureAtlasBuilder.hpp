@@ -77,6 +77,12 @@ public:
                                   resmgr.get<dgm::Clip>("crosshairs.png.clip"))
                               .value();
 
+        auto lights = atlas
+                          .addTileset(
+                              resmgr.get<sf::Texture>("lights.png"),
+                              resmgr.get<dgm::Clip>("lights.png.clip"))
+                          .value();
+
         return GameTextureAtlas {
             .atlas = std::move(atlas),
             .smallBulletLocation = smallBullet,
@@ -90,6 +96,7 @@ public:
             .propsLocation = props,
             .tilesLocation = tiles,
             .crosshairsLocation = crosshairs,
+            .lightsLocation = lights,
         };
     }
 };

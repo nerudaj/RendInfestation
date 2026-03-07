@@ -17,6 +17,14 @@ RenderingEngine::RenderingEngine(
           sf::Vector2f(settings.video.resolution))
     , text(resmgr.get<sf::Font>("ChunkFive-Regular.ttf"))
     , pipeline(atlas.atlas.getTexture())
+    , lightPipeline(
+          atlas.atlas.getTexture(),
+        sf::BlendAdd  
+        /*sf::BlendMode(
+              sf::BlendMode::Factor::SrcAlpha, // source factor
+              sf::BlendMode::Factor::One,      // destination factor
+              sf::BlendMode::Equation::Add     // equation
+              )*/)
     , tilesClip(atlas.atlas.getClip(atlas.tilesLocation))
 {
 }
@@ -110,6 +118,27 @@ void RenderingEngine::renderWorld(dgm::Window& window)
             atlas.atlas.getClip(atlas.crosshairsLocation).getFrame(0) });
 
     pipeline.renderTo(window);
+
+    sf::RectangleShape blackRect;
+    blackRect.setFillColor(sf::Color { 0, 0, 0, 96 });
+    blackRect.setSize(INTERNAL_GAME_RESOLUTION);
+    blackRect.setPosition(worldCamera.getCurrentView().getCenter());
+    window.getSfmlWindowContext().draw(blackRect, sf::BlendAdd);
+
+    lightPipeline.clear();
+
+    for (auto&& light : scene.lights)
+    {
+        lightPipeline.addFace(
+            light.position,
+            sf::FloatRect { atlas.atlas.getClip(atlas.lightsLocation)
+                                .getFrame(light.spriteId) },
+            sf::degrees(0),
+            sf::Vector2f { 1.f, 1.f },
+            light.color);
+    }
+
+    lightPipeline.renderTo(window);
 
     /*
     for (auto&& [actor, _] : scene.actors)
