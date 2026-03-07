@@ -1,5 +1,6 @@
 #include "appstate/AppStatePause.hpp"
 #include "appstate/AppStateOptions.hpp"
+#include "appstate/AppStateWeaponModification.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
 
@@ -26,6 +27,7 @@ void AppStatePause::buildLayout()
             .withContent(
                 dic.guiBuilderFactory.createButtonListBuilder()
                     .addButton(StringId::Resume, [&] { onResume(); })
+                    .addButton(StringId::WeaponModification, [&] { onWeaponModification(); })
                     .addButton(StringId::Options, [&] { onOptions(); })
                     .addButton(StringId::BackToMenu, [&] { onBackToMenu(); })
                     .addButton(StringId::ExitButton, [&] { onExit(); })
@@ -37,6 +39,11 @@ void AppStatePause::buildLayout()
 void AppStatePause::onResume()
 {
     app.popState();
+}
+
+void AppStatePause::onWeaponModification()
+{
+    app.pushState<AppStateWeaponModification>(dic, scene);
 }
 
 void AppStatePause::onOptions()

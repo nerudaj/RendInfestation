@@ -6,7 +6,7 @@ void AppStateGame::input()
 {
     if (dic.input.isPauseButtonPressed())
     {
-        app.pushState<AppStatePause>(dic);
+        app.pushState<AppStatePause>(dic, scene);
     }
 
     while (const auto event = app.window.pollEvent())

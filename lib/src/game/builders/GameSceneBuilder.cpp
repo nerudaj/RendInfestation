@@ -55,7 +55,6 @@ GameScene GameSceneBuilder::createScene(
     return GameScene {
         .actors = std::move(actors),
         .playerEntity = playerEntity,
-        //        .inventories = std::move(inventories),
         .levelMesh = dgm::Mesh(
             layer.data
                 | std::views::transform(
@@ -89,5 +88,13 @@ GameScene GameSceneBuilder::createScene(
                 { 1846, 703.f },
                 { 1471.f, 1116.f },
             },
+        .loadout = WeaponLoadout {
+            .weapon1Modules = { WeaponModule::CadenceBarrel,
+                                WeaponModule::ExplosiveAmmo,
+                                WeaponModule::None },
+            .weapon2Modules = { WeaponModule::SpreadBarrel,
+                                WeaponModule::Spikes,
+                                WeaponModule::None },
+        },
     };
 }

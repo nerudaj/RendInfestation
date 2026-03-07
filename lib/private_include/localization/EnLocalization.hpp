@@ -62,4 +62,20 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     // Pause
     { Resume, "Resume game" },
     { BackToMenu, "Back to main menu" },
+
+    // WeaponModification
+    { WeaponModification, "Weapon Modification" },
+    { Weapon1Title,       "Weapon 1" },
+    { Weapon2Title,       "Weapon 2" },
+    { WeaponModuleSlot1,  "Module 1" },
+    { WeaponModuleSlot2,  "Module 2" },
+    { WeaponModuleSlot3,  "Module 3" },
+    { WeaponModule_None,          "None" },
+    { WeaponModule_SpreadBarrel,  "Spread Barrel" },
+    { WeaponModule_CadenceBarrel, "Cadence Barrel" },
+    { WeaponModule_ExplosiveAmmo, "Explosive Ammo" },
+    { WeaponModule_Ricochet,      "Ricochet" },
+    { WeaponModule_PassthruAmmo,  "Passthru Ammo" },
+    { WeaponModule_BigBullet,     "Big Bullet" },
+    { WeaponModule_Spikes,        "Spikes" },
 };

@@ -56,5 +56,21 @@ enum class [[nodiscard]] StringId
     Resume,
     BackToMenu,
 
+    // WeaponModification
+    WeaponModification,
+    Weapon1Title,
+    Weapon2Title,
+    WeaponModuleSlot1,
+    WeaponModuleSlot2,
+    WeaponModuleSlot3,
+    WeaponModule_None,
+    WeaponModule_SpreadBarrel,
+    WeaponModule_CadenceBarrel,
+    WeaponModule_ExplosiveAmmo,
+    WeaponModule_Ricochet,
+    WeaponModule_PassthruAmmo,
+    WeaponModule_BigBullet,
+    WeaponModule_Spikes,
+
     MaxId, // Make sure this one is always the last!
 };

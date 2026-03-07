@@ -2,14 +2,17 @@
 
 #include "game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
-#include "settings/AppSettings.hpp"
 #include <DGM/dgm.hpp>
+#include <string>
+#include <vector>
 
-class [[nodiscard]] AppStatePause final : public dgm::AppState
+class [[nodiscard]] AppStateWeaponModification final : public dgm::AppState
 {
 public:
-    AppStatePause(
-        dgm::App& app, DependencyContainer& dic, GameScene& scene) noexcept
+    AppStateWeaponModification(
+        dgm::App& app,
+        DependencyContainer& dic,
+        GameScene& scene) noexcept
         : dgm::AppState(
               app,
               dgm::AppStateConfig {
@@ -29,11 +32,10 @@ public:
 private:
     void buildLayout();
     void onResume();
-    void onWeaponModification();
-    void onOptions();
-    void onBackToMenu();
-    void onExit();
-    void restoreFocusImpl(const std::string& msg) override;
+
+    [[nodiscard]] std::vector<std::string> getModuleNames() const;
+    [[nodiscard]] static size_t moduleToIndex(WeaponModule module) noexcept;
+    [[nodiscard]] static WeaponModule indexToModule(size_t index) noexcept;
 
 private:
     DependencyContainer& dic;
