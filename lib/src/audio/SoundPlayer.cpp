@@ -46,7 +46,7 @@ sf::Time SoundPlayer::playSound(
 
     if (channel != SoundChannel::POV)
     {
-        slot.setPosition(sf::Vector3f { distance, 0.f, 0.f });
+        slot.setPosition(sf::Vector3f { distance / 100.f, 0.f, 0.f });
     }
 
     slot.play();

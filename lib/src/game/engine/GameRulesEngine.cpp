@@ -65,6 +65,19 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
 
 void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
 {
+    auto&& inventory =
+        scene.actors.get<ProjectileInventory>(e.projectileEntity);
+
+    const auto distance =
+        (scene.actors.get<Collider>(e.projectileEntity).getPosition()
+         - scene.actors.get<Collider>(scene.playerEntity).getPosition())
+            .length();
+    if (inventory.traits & ProjectileTraits::Explosive)
+    {
+        soundPlayer.playAttenuatedSound(
+            SoundChannel::Ambient, SoundId::Explosion, distance);
+    }
+
     eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileEntity);
 }
 
@@ -155,12 +168,6 @@ void GameRulesEngine::handleProjectileToActorCollision(
     // TODO: implement projectile originator
     if (skin->kind == ActorKind::Player) return;
 
-    std::println(
-        std::cout,
-        "Projectile {} hit actor {}, spawning damage marker, damage {}",
-        static_cast<uint32_t>(projectile),
-        static_cast<uint32_t>(actor),
-        inventory->damage);
     ActorBuilder::createDamageMarker(
         scene.actors,
         scene.actors.get<Collider>(projectile).getPosition(),
@@ -171,22 +178,12 @@ void GameRulesEngine::handleProjectileToActorCollision(
 
     if (inventory->traits & ProjectileTraits::Passthru) return;
 
-    std::println(
-        std::cout,
-        "Projectile {} hit actor {}, not passthru, it is now being destroyed",
-        static_cast<uint32_t>(projectile),
-        static_cast<uint32_t>(actor));
     eventQueue.pushEvent<event::ProjectileDestroyed>(projectile);
 }
 
 void GameRulesEngine::handleDamageMarkerToActorCollision(
     entt::entity marker, entt::entity actor)
 {
-    std::println(
-        std::cout,
-        "Damage marker {} hit actor {}",
-        static_cast<uint32_t>(marker),
-        static_cast<uint32_t>(actor));
     auto inventory = scene.actors.try_get<DamageMarkerInventory>(marker);
     if (!inventory) return;
 
@@ -195,11 +192,5 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
 
     if (skin->kind == inventory->originator) return;
 
-    std::println(
-        std::cout,
-        "Damage marker {} hit actor {}, dealing damage {}",
-        static_cast<uint32_t>(marker),
-        static_cast<uint32_t>(actor),
-        inventory->damage);
     health->get() -= inventory->damage;
 }

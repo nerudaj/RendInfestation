@@ -28,8 +28,8 @@ entt::entity ActorBuilder::createPlayer(
         0,
         std::vector<Weapon> {
             WeaponBuilder::createWeapon({ WeaponModule::CadenceBarrel,
-                                          WeaponModule::ExplosiveAmmo,
-                                          WeaponModule::Ricochet }),
+                                          WeaponModule::ExplosiveAmmo/*,
+                                          WeaponModule::Ricochet*/ }),
             WeaponBuilder::createWeapon(
                 { WeaponModule::SpreadBarrel, WeaponModule::Spikes }) });
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
