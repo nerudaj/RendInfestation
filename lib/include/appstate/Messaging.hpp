@@ -9,7 +9,11 @@ struct [[nodiscard]] PopIfNotMenu final
 {
 };
 
-using AppMessage = std::variant<PopIfNotMenu>;
+struct [[nodiscard]] PopIfNotGame final
+{
+};
+
+using AppMessage = std::variant<PopIfNotMenu, PopIfNotGame>;
 
 template<class T>
 concept IsAppMessage = std::constructible_from<AppMessage, T>;

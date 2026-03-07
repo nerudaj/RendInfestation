@@ -1,5 +1,6 @@
 #include "appstate/AppStateWeaponModification.hpp"
 #include "appstate/CommonHandler.hpp"
+#include "appstate/Messaging.hpp"
 #include "game/builders/WeaponBuilder.hpp"
 #include "game/definitions/Actor.hpp"
 #include "gui/builders/FormBuilder.hpp"
@@ -102,8 +103,6 @@ void AppStateWeaponModification::buildLayout()
         }
 
         auto panel = tgui::Panel::create();
-        panel->setWidgetName(dic.strings.getString(titleId));
-        panel->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
 
         auto heading = WidgetBuilder::createHeading(
             dic.strings.getString(titleId), dic.sizer, HeadingLevel::H2);
@@ -163,5 +162,5 @@ void AppStateWeaponModification::onResume()
         scene.loadout.weapon2Modules[2],
     });
 
-    app.popState();
+    app.popState(Messaging::serialize<PopIfNotGame>());
 }

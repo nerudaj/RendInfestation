@@ -10,16 +10,8 @@ class [[nodiscard]] AppStateWeaponModification final : public dgm::AppState
 {
 public:
     AppStateWeaponModification(
-        dgm::App& app,
-        DependencyContainer& dic,
-        GameScene& scene) noexcept
-        : dgm::AppState(
-              app,
-              dgm::AppStateConfig {
-                  .shouldDrawUnderlyingState = true,
-              })
-        , dic(dic)
-        , scene(scene)
+        dgm::App& app, DependencyContainer& dic, GameScene& scene) noexcept
+        : dgm::AppState(app), dic(dic), scene(scene)
     {
         buildLayout();
     }

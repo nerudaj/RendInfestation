@@ -27,7 +27,9 @@ void AppStatePause::buildLayout()
             .withContent(
                 dic.guiBuilderFactory.createButtonListBuilder()
                     .addButton(StringId::Resume, [&] { onResume(); })
-                    .addButton(StringId::WeaponModification, [&] { onWeaponModification(); })
+                    .addButton(
+                        StringId::WeaponModification,
+                        [&] { onWeaponModification(); })
                     .addButton(StringId::Options, [&] { onOptions(); })
                     .addButton(StringId::BackToMenu, [&] { onBackToMenu(); })
                     .addButton(StringId::ExitButton, [&] { onExit(); })
@@ -61,7 +63,18 @@ void AppStatePause::onExit()
     app.exit();
 }
 
-void AppStatePause::restoreFocusImpl(const std::string&)
+void AppStatePause::restoreFocusImpl(const std::string& message)
 {
+    auto msg = Messaging::deserialize(message);
+    if (msg)
+    {
+        std::visit(
+            overloads {
+                [&](PopIfNotGame&) { app.popState(message); },
+                [&](PopIfNotMenu&) { app.popState(message); },
+            },
+            *msg);
+    }
+
     buildLayout();
 }
