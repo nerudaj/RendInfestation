@@ -5,6 +5,8 @@ void PhysicsEngine::update(const dgm::Time& time)
     spatialIndex.clear();
     for (auto&& [entity, collider] : scene.actors.view<Collider>().each())
     {
+        if (collider.options.disabled) continue;
+
         std::visit(
             [&](const auto& shape)
             { spatialIndex.returnToLookup(entity, shape); },

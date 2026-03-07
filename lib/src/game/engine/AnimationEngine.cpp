@@ -10,18 +10,16 @@ void AnimationEngine::operator()(const event::ActorFiredWeapon&)
 
 void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
 {
-    /* TODO: this
-    auto&& [projectile, inventory] =
-        getActorAndInventory<ProjectileInventory>(scene, e.projectileIdx);
+    auto&& [collider, inventory] =
+        scene.actors.get<Collider, ProjectileInventory>(e.projectileEntity);
 
-    // Spawn projectile death effect
-    scene.actors.emplaceBack(ActorBuilder::createEffect(
-        scene.actors[e.projectileIdx].body.getPosition(),
+    ActorBuilder::createEffect(
+        scene.actors,
+        collider.getPosition(),
         inventory.traits & ProjectileTraits::Explosive
             ? EffectType::Explosion
             : EffectType::BulletDeath,
-        atlas));
-    */
+        atlas);
 }
 
 void AnimationEngine::operator()(const event::EnemyStartedAttack& e)

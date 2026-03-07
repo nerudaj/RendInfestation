@@ -42,10 +42,9 @@ public:
         const float radius,
         const ProjectileInventory& inventory);
 
-    /*
-    static Actor createEffect(
+    static entt::entity createEffect(
+        entt::registry& actors,
         const sf::Vector2f& origin,
         const EffectType type,
         const GameTextureAtlas& atlas);
-    */
 };

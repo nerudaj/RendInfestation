@@ -33,7 +33,10 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     weapon.timeTillFire = weapon.cooldown;
 
     // TODO: might not be POV
-    soundPlayer.playPovSound(SoundId::Bullet);
+    if (weapon.numShots == 1)
+        soundPlayer.playPovSound(SoundId::Bullet);
+    else
+        soundPlayer.playPovSound(SoundId::Shotgun);
 
     for (auto&& _ : std::views::iota(0, weapon.numShots))
     {
@@ -152,6 +155,12 @@ void GameRulesEngine::handleProjectileToActorCollision(
     // TODO: implement projectile originator
     if (skin->kind == ActorKind::Player) return;
 
+    std::println(
+        std::cout,
+        "Projectile {} hit actor {}, spawning damage marker, damage {}",
+        static_cast<uint32_t>(projectile),
+        static_cast<uint32_t>(actor),
+        inventory->damage);
     ActorBuilder::createDamageMarker(
         scene.actors,
         scene.actors.get<Collider>(projectile).getPosition(),
@@ -162,12 +171,22 @@ void GameRulesEngine::handleProjectileToActorCollision(
 
     if (inventory->traits & ProjectileTraits::Passthru) return;
 
+    std::println(
+        std::cout,
+        "Projectile {} hit actor {}, not passthru, it is now being destroyed",
+        static_cast<uint32_t>(projectile),
+        static_cast<uint32_t>(actor));
     eventQueue.pushEvent<event::ProjectileDestroyed>(projectile);
 }
 
 void GameRulesEngine::handleDamageMarkerToActorCollision(
     entt::entity marker, entt::entity actor)
 {
+    std::println(
+        std::cout,
+        "Damage marker {} hit actor {}",
+        static_cast<uint32_t>(marker),
+        static_cast<uint32_t>(actor));
     auto inventory = scene.actors.try_get<DamageMarkerInventory>(marker);
     if (!inventory) return;
 
@@ -176,5 +195,11 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
 
     if (skin->kind == inventory->originator) return;
 
+    std::println(
+        std::cout,
+        "Damage marker {} hit actor {}, dealing damage {}",
+        static_cast<uint32_t>(marker),
+        static_cast<uint32_t>(actor),
+        inventory->damage);
     health->get() -= inventory->damage;
 }

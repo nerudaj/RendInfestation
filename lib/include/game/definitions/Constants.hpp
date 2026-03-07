@@ -15,3 +15,4 @@ const dgm::AnimationStates NULL_ANIMATION_STATES = dgm::AnimationStates {
       dgm::Clip(sf::Vector2u(1u, 1u), sf::IntRect({ 0u, 0u }, { 1u, 1u })) },
 };
 constexpr float BASE_EXPLOSION_RADIUS = 16.f;
+constexpr int EFFECT_FPS = 8;

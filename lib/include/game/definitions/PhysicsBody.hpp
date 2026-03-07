@@ -10,6 +10,7 @@ struct [[nodiscard]] ColliderOptions final
     bool reportMeshCollisions = false;
     bool reportActorCollisions = false;
     bool nonblocking = false;
+    bool disabled = false;
 };
 
 struct [[nodiscard]] Collider final

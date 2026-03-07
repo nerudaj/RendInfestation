@@ -204,48 +204,55 @@ entt::entity ActorBuilder::createDamageMarker(
     return entity;
 }
 
-/*
-
-Actor ActorBuilder::createEffect(
+entt::entity ActorBuilder::createEffect(
+    entt::registry& actors,
     const sf::Vector2f& origin,
     const EffectType type,
     const GameTextureAtlas& atlas)
 {
+    auto entity = actors.create();
+
+    actors.emplace<Collider>(
+        entity,
+        dgm::Circle(origin, 1.f),
+        ColliderOptions {
+            .disabled = true,
+        });
+
     if (type == EffectType::BulletDeath)
     {
-        auto actor = Actor {
-            .kind = ActorKind::Effect,
-            .skin = SkinType::BigBullet,
-            .body =
-                PhysicsBody {
-                    .shape = dgm::Circle(origin, 1.f),
-                    .options = { .disabled = true, },
-                },
-            .animation = dgm::Animation(
-                atlas.atlas.getAnimationStates(atlas.bulletLocation), 8),
-        };
-
-        actor.animation.setState("death", "looping"_false);
-
-        return actor;
+        actors.emplace<Skin>(
+            entity,
+            Skin {
+                .kind = ActorKind::Effect,
+                .skinType = SkinType::BigBullet,
+                .animation = dgm::Animation(
+                    atlas.atlas.getAnimationStates(atlas.bulletLocation),
+                    EFFECT_FPS),
+            });
+    }
+    else if (type == EffectType::Explosion)
+    {
+        actors.emplace<Skin>(
+            entity,
+            Skin {
+                .kind = ActorKind::Effect,
+                .skinType = SkinType::Explosion,
+                .animation = dgm::Animation(
+                    atlas.atlas.getAnimationStates(atlas.explosionLocation),
+                    EFFECT_FPS),
+            });
+    }
+    else
+    {
+        assert(false && "Invalid effect type");
     }
 
-    assert(type == EffectType::Explosion);
+    auto&& animation = actors.get<Skin>(entity).animation;
+    animation.setState("death", "looping"_false);
+    /*    actors.get<Lifetime>(entity) = sf::seconds(
+            static_cast<float>(animation.getCurrentStateFrameCount()) /
+       EFFECT_FPS);*/
 
-    auto actor = Actor {
-        .kind = ActorKind::Effect,
-        .skin = SkinType::Explosion,
-        .body =
-            PhysicsBody {
-                .shape = dgm::Circle(origin, 1.f),
-                .options = { .disabled = true, },
-            },
-        .animation = dgm::Animation(
-            atlas.atlas.getAnimationStates(atlas.explosionLocation), 8),
-    };
-
-    actor.animation.setState("death", "looping"_false);
-
-    return actor;
-}
-*/
+    return entity;
+};
