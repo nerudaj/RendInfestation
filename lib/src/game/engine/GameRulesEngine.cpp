@@ -121,7 +121,7 @@ void GameRulesEngine::update(const dgm::Time& time)
     {
         auto&& forwardImpulse = controller->getForward();
         if (forwardImpulse.length() > 0.f)
-            body.forward += forwardImpulse * BASE_PLAYER_SPEED;
+            body.forward += forwardImpulse * body.maxSpeed;
 
         const auto direction = controller->getAimDirection();
         if (direction.length() > 0.f) lookDirection = direction;

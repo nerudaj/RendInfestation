@@ -15,7 +15,9 @@ entt::entity ActorBuilder::createPlayer(
 {
     auto entity = actors.create();
     actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
-    actors.emplace<PhysicsBody>(entity, PhysicsBody { .friction = 0.8f });
+    actors.emplace<PhysicsBody>(
+        entity,
+        PhysicsBody { .maxSpeed = BASE_PLAYER_SPEED, .friction = 0.8f });
     actors.emplace<Skin>(
         entity,
         ActorKind::Player,
@@ -28,14 +30,12 @@ entt::entity ActorBuilder::createPlayer(
         entity,
         0,
         std::vector<Weapon> {
-            WeaponBuilder::createWeapon(
-                { loadout.weapon1Modules[0],
-                  loadout.weapon1Modules[1],
-                  loadout.weapon1Modules[2] }),
-            WeaponBuilder::createWeapon(
-                { loadout.weapon2Modules[0],
-                  loadout.weapon2Modules[1],
-                  loadout.weapon2Modules[2] }) });
+            WeaponBuilder::createWeapon({ loadout.weapon1Modules[0],
+                                          loadout.weapon1Modules[1],
+                                          loadout.weapon1Modules[2] }),
+            WeaponBuilder::createWeapon({ loadout.weapon2Modules[0],
+                                          loadout.weapon2Modules[1],
+                                          loadout.weapon2Modules[2] }) });
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
 
     actors.get<Skin>(entity).animation.setState("idle-front", "looping"_true);
@@ -52,7 +52,8 @@ entt::entity ActorBuilder::createNpc(
     auto entity = actors.create();
 
     actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
-    actors.emplace<PhysicsBody>(entity, PhysicsBody { .friction = 0.8f });
+    actors.emplace<PhysicsBody>(
+        entity, PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED, .friction = 0.8f });
     actors.emplace<Skin>(
         entity,
         Skin {

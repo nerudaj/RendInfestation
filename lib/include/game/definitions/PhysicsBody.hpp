@@ -65,6 +65,7 @@ struct [[nodiscard]] Collider final
 struct [[nodiscard]] PhysicsBody final
 {
     sf::Vector2f forward = { 0.f, 0.f };
+    float maxSpeed = 0.f;
     float bounciness = 0.f;
     float friction = 0.5f;
     bool useAltMesh = false;

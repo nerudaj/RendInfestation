@@ -44,12 +44,6 @@ public:
 public:
     void update(const dgm::Time& time);
 
-    /*void updateNpc(
-        entt::entity actorIdx,
-        Actor& actor,
-        NpcInventory& inventory,
-        const dgm::Time& time);*/
-
 private:
     Weapon& getActiveWeapon(WeaponInventory& inventory) const
     {
