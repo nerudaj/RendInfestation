@@ -5,8 +5,8 @@
             "height": 32
         },
         "spacing": {
-            "horizontal": 32,
-            "vertical": 32
+            "horizontal": 2,
+            "vertical": 2
         }
     },
     "states": [
@@ -71,9 +71,19 @@
             "nframes": 1
         },
         {
-            "name": "idle-back",
+            "name": "idle-hurt",
             "bounds": {
                 "left": 36,
+                "top": 104,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        },
+        {
+            "name": "idle-back",
+            "bounds": {
+                "left": 70,
                 "top": 104,
                 "width": 32,
                 "height": 32

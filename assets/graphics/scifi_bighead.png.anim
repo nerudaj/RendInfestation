@@ -81,7 +81,7 @@
             "nframes": 1
         },
         {
-            "name": "attack-recovery-front",
+            "name": "idle-hurt",
             "bounds": {
                 "left": 36,
                 "top": 138,
@@ -91,7 +91,7 @@
             "nframes": 1
         },
         {
-            "name": "idle-back",
+            "name": "attack-recovery-front",
             "bounds": {
                 "left": 70,
                 "top": 138,
@@ -101,10 +101,20 @@
             "nframes": 1
         },
         {
-            "name": "attack-recovery-back",
+            "name": "idle-back",
             "bounds": {
                 "left": 104,
                 "top": 138,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        },
+        {
+            "name": "attack-recovery-back",
+            "bounds": {
+                "left": 2,
+                "top": 172,
                 "width": 32,
                 "height": 32
             },
