@@ -8,11 +8,11 @@ public:
     virtual ~InputInterface() = default;
 
 public:
-    virtual [[nodiscard]] sf::Vector2f getForward() const = 0;
+    [[nodiscard]] virtual sf::Vector2f getForward() const = 0;
 
-    virtual [[nodiscard]] sf::Vector2f getAimDirection() const = 0;
+    [[nodiscard]] virtual sf::Vector2f getAimDirection() const = 0;
 
-    virtual [[nodiscard]] bool isShootPressed() const = 0;
+    [[nodiscard]] virtual bool isShootPressed() const = 0;
 
-    virtual [[nodiscard]] bool isSwapWeaponsPressed() const = 0;
+    [[nodiscard]] virtual bool isSwapWeaponsPressed() const = 0;
 };
