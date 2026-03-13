@@ -5,13 +5,18 @@
 #include "misc/Compatibility.hpp"
 #include "settings/BindingsSettings.hpp"
 #include <DGM/dgm.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 class [[nodiscard]] Input final
 {
 public:
-    Input(const BindingsSettings& settings, TouchController& touchController)
+    Input(
+        const BindingsSettings& settings,
+        TouchController& touchController,
+        sf::RenderWindow& window)
         : controller(configureController(settings))
         , touchController(touchController)
+        , window(window)
     {
     }
 
@@ -57,4 +62,5 @@ private:
 private:
     mutable dgm::Controller<InputKind> controller;
     TouchController& touchController;
+    sf::RenderWindow& window;
 };

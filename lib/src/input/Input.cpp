@@ -1,5 +1,6 @@
 #include "input/Input.hpp"
 #include "types/Overloads.hpp"
+#include <SFML/Window/Mouse.hpp>
 
 void Input::updateBindings(const BindingsSettings& settings)
 {
@@ -22,11 +23,26 @@ sf::Vector2f Input::getForward() const
 
 sf::Vector2f Input::getAimDirection() const
 {
-    return sf::Vector2f { -controller.readAnalog(InputKind::AimLeft)
-                              + controller.readAnalog(InputKind::AimRight),
-                          -controller.readAnalog(InputKind::AimUp)
-                              + controller.readAnalog(InputKind::AimDown) }
-           + touchController.getAimDirection();
+    const sf::Vector2f controllerAim {
+        -controller.readAnalog(InputKind::AimLeft)
+            + controller.readAnalog(InputKind::AimRight),
+        -controller.readAnalog(InputKind::AimUp)
+            + controller.readAnalog(InputKind::AimDown)
+    };
+    const sf::Vector2f touchAim = touchController.getAimDirection();
+
+    if (controllerAim != sf::Vector2f {} || touchAim != sf::Vector2f {})
+        return controllerAim + touchAim;
+
+    // Fallback: direction from screen center to mouse cursor
+    const sf::Vector2f center { sf::Vector2f(window.getSize()) / 2.f };
+    const sf::Vector2f mousePos {
+        sf::Vector2f(sf::Mouse::getPosition(window))
+    };
+    const sf::Vector2f delta = mousePos - center;
+    if (delta == sf::Vector2f {})
+        return {};
+    return delta / delta.length();
 };
 
 bool Input::isShootPressed() const
