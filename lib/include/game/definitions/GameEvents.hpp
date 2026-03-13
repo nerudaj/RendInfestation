@@ -6,14 +6,14 @@
 
 namespace event
 {
-    struct ActorToMeshCollision
+    struct [[nodiscard]] ActorToMeshCollision final
     {
         entt::entity entity;
 
         explicit ActorToMeshCollision(entt::entity entity) : entity(entity) {}
     };
 
-    struct ActorToActorCollision
+    struct [[nodiscard]] ActorToActorCollision final
     {
         entt::entity entity1;
         entt::entity entity2;
@@ -25,14 +25,14 @@ namespace event
         }
     };
 
-    struct ActorFiredWeapon
+    struct [[nodiscard]] ActorFiredWeapon final
     {
         entt::entity entity;
 
         explicit ActorFiredWeapon(entt::entity entity) : entity(entity) {}
     };
 
-    struct EnemyStartedAttack
+    struct [[nodiscard]] EnemyStartedAttack final
     {
         entt::entity enemyEntity;
 
@@ -41,14 +41,14 @@ namespace event
         }
     };
 
-    struct EnemyAttackLands
+    struct [[nodiscard]] EnemyAttackLands final
     {
         entt::entity enemyEntity;
 
         explicit EnemyAttackLands(entt::entity entity) : enemyEntity(entity) {}
     };
 
-    struct ProjectileDestroyed
+    struct [[nodiscard]] ProjectileDestroyed final
     {
         entt::entity projectileEntity;
 
@@ -58,11 +58,28 @@ namespace event
         }
     };
 
-    struct ObjectDestroyed
+    struct [[nodiscard]] ObjectDestroyed final
     {
         entt::entity entity;
 
         explicit ObjectDestroyed(entt::entity entity) : entity(entity) {}
+    };
+
+    struct [[nodiscard]] DoorOpened final
+    {
+        entt::entity doorEntity;
+
+        explicit DoorOpened(entt::entity doorEntity) : doorEntity(doorEntity) {}
+    };
+
+    struct [[nodiscard]] DoorStartsClosing final
+    {
+        entt::entity doorEntity;
+
+        explicit DoorStartsClosing(entt::entity doorEntity)
+            : doorEntity(doorEntity)
+        {
+        }
     };
 } // namespace event
 
@@ -73,4 +90,6 @@ using GameEvent = std::variant<
     event::ProjectileDestroyed,
     event::ObjectDestroyed,
     event::EnemyStartedAttack,
-    event::EnemyAttackLands>;
+    event::EnemyAttackLands,
+    event::DoorOpened,
+    event::DoorStartsClosing>;

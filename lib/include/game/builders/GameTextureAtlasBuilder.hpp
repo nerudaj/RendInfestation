@@ -86,6 +86,13 @@ public:
                                   resmgr.get<dgm::Clip>("crosshairs.png.clip"))
                               .value();
 
+        auto doorHorizontal =
+            atlas
+                .addSpritesheet(
+                    resmgr.get<sf::Texture>("scifi_door.png"),
+                    resmgr.get<dgm::AnimationStates>("scifi_door.png.anim"))
+                .value();
+
         auto image = sf::Image(atlas.getTexture().copyToImage());
         std::ignore = image.saveToFile("atlas_debug.png");
 
@@ -100,6 +107,7 @@ public:
             .playerLocation = player,
             .bigheadLocation = bighead,
             .propsLocation = props,
+            .doorHorizontalLocation = doorHorizontal,
             .tilesLocation = tiles,
             .crosshairsLocation = crosshairs,
             .lightsLocation = lights,

@@ -297,4 +297,40 @@ entt::entity ActorBuilder::createEffect(
        EFFECT_FPS);*/
 
     return entity;
-};
+}
+
+entt::entity ActorBuilder::createDoor(
+    entt::registry& actors,
+    const sf::Vector2f& position,
+    const GameTextureAtlas& atlas)
+{
+    auto entity = actors.create();
+    actors.emplace<Collider>(entity, dgm::Rect(position, { 64.f, 42.f }));
+    actors.emplace<PhysicsBody>(entity);
+    actors.emplace<Skin>(
+        entity,
+        Skin {
+            .kind = ActorKind::Door,
+            .skinType = SkinType::DoorHorizontal,
+            .animation = dgm::Animation(
+                atlas.atlas.getAnimationStates(atlas.doorHorizontalLocation),
+                EFFECT_FPS),
+        });
+
+    actors.get<Skin>(entity).animation.setState(
+        DOOR_CLOSED_ANIMATION_STATE, "looping"_true);
+
+    // trigger
+    auto trigger = actors.create();
+    actors.emplace<Collider>(
+        trigger,
+        dgm::Rect(position - sf::Vector2f { 0.f, 27.f }, { 64.f, 96.f }),
+        ColliderOptions {
+            .reportActorCollisions = true,
+            .nonblocking = true,
+        });
+    actors.emplace<TriggerInventory>(
+        trigger, TriggerInventory { .targetEntity = entity });
+
+    return entity;
+}

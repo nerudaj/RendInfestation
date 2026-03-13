@@ -40,6 +40,7 @@ struct [[nodiscard]] GameScene final
     entt::registry actors;
     entt::entity playerEntity;
     dgm::Mesh levelMesh;
+    dgm::Mesh decorationsMesh;
     dgm::Mesh altLevelMesh;
     dgm::Rect levelBounds;
     size_t tick = 0;

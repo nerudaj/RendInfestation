@@ -22,6 +22,9 @@ NpcInventory GameSceneBuilder::createNpcInventory()
     };
 }
 
+const int WALL_LIGHT_TILE_ID = 38;
+const int DOOR_TILE_ID = 42;
+
 GameScene GameSceneBuilder::createScene(
     const GameTextureAtlas& atlas,
     const dgm::ResourceManager& resmgr,
@@ -32,7 +35,9 @@ GameScene GameSceneBuilder::createScene(
     assert(std::holds_alternative<tiled::TileLayerModel>(tiledLevel.layers[0]));
     assert(
         std::holds_alternative<tiled::ObjectGroupModel>(tiledLevel.layers[1]));
+    assert(std::holds_alternative<tiled::TileLayerModel>(tiledLevel.layers[2]));
     auto&& layer = std::get<tiled::TileLayerModel>(tiledLevel.layers[0]);
+    auto&& decorLayer = std::get<tiled::TileLayerModel>(tiledLevel.layers[2]);
 
     const auto levelVoxelSize =
         sf::Vector2u { tiledLevel.tilewidth, tiledLevel.tileheight };
@@ -77,7 +82,7 @@ GameScene GameSceneBuilder::createScene(
     {
         for (unsigned x = 0; x < levelDataSize.x; ++x, ++idx)
         {
-            if (layer.data[idx] - 1 == 38)
+            if (layer.data[idx] - 1 == WALL_LIGHT_TILE_ID)
             {
                 const auto position =
                     sf::Vector2u { x, y }.componentWiseMul(levelVoxelSize)
@@ -87,6 +92,20 @@ GameScene GameSceneBuilder::createScene(
                     .spriteId = 0,
                     .color = sf::Color::Yellow,
                 });
+            }
+
+            if (decorLayer.data[idx] - 1 == DOOR_TILE_ID
+                && decorLayer.data[idx + 1] - 1 == DOOR_TILE_ID
+                && decorLayer.data[idx + levelDataSize.x] - 1
+                       == DOOR_TILE_ID) // door horizontal
+            {
+                ActorBuilder::createDoor(
+                    actors,
+                    sf::Vector2f {
+                        sf::Vector2u { x * levelVoxelSize.x,
+                                       y * levelVoxelSize.y + 11 },
+                    },
+                    atlas);
             }
         }
     }
@@ -102,6 +121,14 @@ GameScene GameSceneBuilder::createScene(
                         return isPassableTile(tile - 1) ? -(tile - 1)
                                                         : (tile - 1);
                     })
+                | uniranges::to<std::vector>(),
+            levelDataSize,
+            levelVoxelSize),
+        .decorationsMesh = dgm::Mesh(
+            decorLayer.data
+                | std::views::transform(
+                    [](int tile)
+                    { return tile - 1 == DOOR_TILE_ID ? 28 : tile - 1; })
                 | uniranges::to<std::vector>(),
             levelDataSize,
             levelVoxelSize),

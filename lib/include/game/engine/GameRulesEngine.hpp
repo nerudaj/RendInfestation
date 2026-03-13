@@ -39,6 +39,10 @@ public:
 
     void operator()(const event::EnemyAttackLands& e);
 
+    void operator()(const event::DoorOpened& e);
+
+    void operator()(const event::DoorStartsClosing& e);
+
     void operator()(const auto&) {}
 
 public:
@@ -58,6 +62,9 @@ private:
 
     void handleDamageMarkerToActorCollision(
         entt::entity markerIdx, entt::entity actorIdx);
+
+    void handleTriggerToActorCollision(
+        entt::entity triggerIdx, entt::entity actorIdx);
 
 private:
     EventQueue<GameEvent>& eventQueue;

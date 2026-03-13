@@ -39,3 +39,15 @@ struct [[nodiscard]] BoundLightEmitter final
     sf::Color color;
     size_t lightSpriteId;
 };
+
+struct [[nodiscard]] TriggerInventory final
+{
+    sf::Time delay = sf::Time::Zero;
+    entt::entity targetEntity;
+};
+
+struct [[nodiscard]] Interval final
+{
+    sf::Time timer = sf::Time::Zero;
+    sf::Time delay = sf::Time::Zero;
+};

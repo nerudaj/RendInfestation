@@ -43,6 +43,8 @@ private:
 
     void renderWorld(dgm::Window& window);
 
+    void addLevelFacesToPipeline();
+
     void renderColliders(dgm::Window& window);
 
     void renderLights(dgm::Window& window);

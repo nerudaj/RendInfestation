@@ -63,5 +63,20 @@ void AnimationEngine::update(const dgm::Time& time)
         {
             eventQueue.pushEvent<event::ObjectDestroyed>(actor);
         }
+        else if (skin.kind == ActorKind::Door)
+        {
+            if (skin.animation.getStateName() == DOOR_OPENING_ANIMATION_STATE)
+            {
+                skin.animation.setState(
+                    DOOR_OPEN_ANIMATION_STATE, "looping"_true);
+                eventQueue.pushEvent<event::DoorOpened>(actor);
+            }
+            else if (
+                skin.animation.getStateName() == DOOR_CLOSING_ANIMATION_STATE)
+            {
+                skin.animation.setState(
+                    DOOR_CLOSED_ANIMATION_STATE, "looping"_true);
+            }
+        }
     }
 }

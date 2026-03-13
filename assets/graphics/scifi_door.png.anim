@@ -11,7 +11,7 @@
     },
     "states": [
         {
-            "name": "door-open",
+            "name": "door-opening",
             "bounds": {
                 "left": 2,
                 "top": 2,
@@ -21,10 +21,20 @@
             "nframes": 8
         },
         {
-            "name": "parts",
+            "name": "door-closing",
             "bounds": {
                 "left": 2,
                 "top": 46,
+                "width": 526,
+                "height": 42
+            },
+            "nframes": 8
+        },
+        {
+            "name": "parts",
+            "bounds": {
+                "left": 2,
+                "top": 90,
                 "width": 130,
                 "height": 42
             },
@@ -34,7 +44,7 @@
             "name": "door-idle",
             "bounds": {
                 "left": 134,
-                "top": 46,
+                "top": 90,
                 "width": 64,
                 "height": 42
             },
@@ -44,7 +54,17 @@
             "name": "door-idle-unlocked",
             "bounds": {
                 "left": 200,
-                "top": 46,
+                "top": 90,
+                "width": 64,
+                "height": 42
+            },
+            "nframes": 1
+        },
+        {
+            "name": "door-open",
+            "bounds": {
+                "left": 266,
+                "top": 90,
                 "width": 64,
                 "height": 42
             },

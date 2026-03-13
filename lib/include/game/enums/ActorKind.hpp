@@ -9,4 +9,5 @@ enum class [[nodiscard]] ActorKind : unsigned char
     Projectile,
     Effect,
     DamageMarker,
+    Door,
 };

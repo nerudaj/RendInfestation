@@ -23,6 +23,7 @@ void GameRulesEngine::operator()(const event::ActorToActorCollision& e)
     // markers should always be the second entity in collision event.
     handleProjectileToActorCollision(e.entity2, e.entity1);
     handleDamageMarkerToActorCollision(e.entity2, e.entity1);
+    handleTriggerToActorCollision(e.entity2, e.entity1);
 }
 
 void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
@@ -104,6 +105,20 @@ void GameRulesEngine::operator()(const event::EnemyAttackLands& e)
         })));*/
 }
 
+void GameRulesEngine::operator()(const event::DoorOpened& e)
+{
+    auto&& collider = scene.actors.get<Collider>(e.doorEntity);
+    collider.options.disabled = true;
+    collider.options.nonblocking = true;
+}
+
+void GameRulesEngine::operator()(const event::DoorStartsClosing& e)
+{
+    auto&& collider = scene.actors.get<Collider>(e.doorEntity);
+    collider.options.disabled = false;
+    collider.options.nonblocking = false;
+}
+
 void GameRulesEngine::update(const dgm::Time& time)
 {
     scene.spawnTicker += time.getElapsed();
@@ -157,6 +172,26 @@ void GameRulesEngine::update(const dgm::Time& time)
         if (health.get() <= 0)
             eventQueue.pushEvent<event::ObjectDestroyed>(entity);
     }
+
+    for (auto&& [entity, inventory] :
+         scene.actors.view<TriggerInventory>().each())
+    {
+        // if (inventory.delay <= sf::Time::Zero) continue;
+        inventory.delay -= time.getElapsed();
+
+        if (inventory.delay <= sf::Time::Zero)
+        {
+            auto& targetSkin = scene.actors.get<Skin>(inventory.targetEntity);
+            if (targetSkin.animation.getStateName()
+                == DOOR_OPEN_ANIMATION_STATE)
+            {
+                targetSkin.animation.setState(
+                    DOOR_CLOSING_ANIMATION_STATE, "looping"_false);
+                eventQueue.pushEvent<event::DoorStartsClosing>(
+                    inventory.targetEntity);
+            }
+        }
+    }
 }
 
 void GameRulesEngine::handleProjectileToActorCollision(
@@ -203,4 +238,24 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
 
     health->get() -= inventory->damage;
     skin->animation.setState(HURT_ANIMATION_STATE.data(), "looping"_false);
+}
+
+void GameRulesEngine::handleTriggerToActorCollision(
+    entt::entity triggerIdx, entt::entity actorIdx)
+{
+    auto&& inventory = scene.actors.try_get<TriggerInventory>(triggerIdx);
+    if (!inventory) return;
+
+    // Nobody except for the player can open the doors
+    auto skin = scene.actors.try_get<Skin>(actorIdx);
+    if (!skin || skin->kind != ActorKind::Player) return;
+
+    inventory->delay = BASE_DOOR_CLOSE_DELAY;
+    auto&& targetSkin = scene.actors.get<Skin>(inventory->targetEntity);
+
+    if (targetSkin.animation.getStateName() == DOOR_CLOSED_ANIMATION_STATE)
+    {
+        targetSkin.animation.setState(
+            DOOR_OPENING_ANIMATION_STATE, "looping"_false);
+    }
 }

@@ -85,21 +85,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 {
     pipeline.clear();
 
-    for (auto y = 0, idx = 0; y < scene.levelMesh.getDataSize().y; ++y)
-    {
-        for (auto x = 0; x < scene.levelMesh.getDataSize().x; ++x, ++idx)
-        {
-            auto pos = sf::Vector2f(scene.levelMesh.getVoxelSize()) / 2.f
-                       + sf::Vector2f(x, y).componentWiseMul(
-                           sf::Vector2f(scene.levelMesh.getVoxelSize()));
-            if (!worldCamera.isObjectVisible(dgm::Circle(pos, 16.f))) continue;
-
-            pipeline.addFace(
-                pos,
-                sf::FloatRect(
-                    tilesClip.getFrame(std::abs(scene.levelMesh[idx]))));
-        }
-    }
+    addLevelFacesToPipeline();
 
     for (auto&& face : getActorFaces())
         pipeline.addFace(face.origin, face.texUvs, sf::degrees(0), face.scale);
@@ -117,9 +103,33 @@ void RenderingEngine::renderWorld(dgm::Window& window)
     renderColliders(window);
 }
 
+void RenderingEngine::addLevelFacesToPipeline()
+{
+    for (auto y = 0, idx = 0; y < scene.levelMesh.getDataSize().y; ++y)
+    {
+        for (auto x = 0; x < scene.levelMesh.getDataSize().x; ++x, ++idx)
+        {
+            auto pos = sf::Vector2f(scene.levelMesh.getVoxelSize()) / 2.f
+                       + sf::Vector2f(x, y).componentWiseMul(
+                           sf::Vector2f(scene.levelMesh.getVoxelSize()));
+            if (!worldCamera.isObjectVisible(dgm::Circle(pos, 16.f))) continue;
+
+            pipeline.addFace(
+                pos,
+                sf::FloatRect(
+                    tilesClip.getFrame(std::abs(scene.levelMesh[idx]))));
+
+            pipeline.addFace(
+                pos,
+                sf::FloatRect(
+                    tilesClip.getFrame(std::abs(scene.decorationsMesh[idx]))));
+        }
+    }
+}
+
 void RenderingEngine::renderColliders(dgm::Window& window)
 {
-    return;
+    // return;
 
     for (auto&& [entity, collider] : scene.actors.view<Collider>().each())
     {
@@ -239,6 +249,8 @@ RenderingEngine::getSkinLocation(SkinType skin) const
         return atlas.propsLocation;
     case Explosion:
         return atlas.explosionLocation;
+    case DoorHorizontal:
+        return atlas.doorHorizontalLocation;
     }
 
     assert(false);

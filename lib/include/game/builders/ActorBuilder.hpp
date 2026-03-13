@@ -48,4 +48,9 @@ public:
         const sf::Vector2f& origin,
         const EffectType type,
         const GameTextureAtlas& atlas);
+
+    static entt::entity createDoor(
+        entt::registry& actors,
+        const sf::Vector2f& position,
+        const GameTextureAtlas& atlas);
 };

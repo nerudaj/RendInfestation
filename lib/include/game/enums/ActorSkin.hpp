@@ -20,4 +20,7 @@ enum class [[nodiscard]] SkinType : unsigned char
 
     // Effects
     Explosion,
+
+    // Door
+    DoorHorizontal,
 };
