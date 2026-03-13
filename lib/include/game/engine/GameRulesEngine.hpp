@@ -53,6 +53,9 @@ private:
     void handleProjectileToActorCollision(
         entt::entity projectileIdx, entt::entity actorIdx);
 
+    void createDamageMarkerForProjectile(
+        entt::entity projectile, ProjectileInventory* inventory);
+
     void handleDamageMarkerToActorCollision(
         entt::entity markerIdx, entt::entity actorIdx);
 

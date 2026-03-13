@@ -112,13 +112,14 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 
     pipeline.renderTo(window);
 
-    sf::RectangleShape blackRect;
-    blackRect.setFillColor(sf::Color { 0, 0, 0, 96 });
-    blackRect.setSize(INTERNAL_GAME_RESOLUTION);
-    blackRect.setPosition(worldCamera.getCurrentView().getCenter());
-    window.getSfmlWindowContext().draw(blackRect, sf::BlendAdd);
-
     renderLights(window);
+
+    renderColliders(window);
+}
+
+void RenderingEngine::renderColliders(dgm::Window& window)
+{
+    return;
 
     for (auto&& [entity, collider] : scene.actors.view<Collider>().each())
     {
@@ -135,6 +136,14 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 
 void RenderingEngine::renderLights(dgm::Window& window)
 {
+    sf::RectangleShape blackRect;
+    blackRect.setFillColor(sf::Color { 0, 0, 0, 128 });
+    blackRect.setSize(INTERNAL_GAME_RESOLUTION);
+    blackRect.setPosition(
+        worldCamera.getCurrentView().getCenter()
+        - INTERNAL_GAME_RESOLUTION / 2.f);
+    window.getSfmlWindowContext().draw(blackRect, sf::BlendAlpha);
+
     lightPipeline.clear();
 
     for (auto&& light : scene.lights)
@@ -187,10 +196,6 @@ void RenderingEngine::renderHud(dgm::Window& window)
     text.setPosition({ 10.f, 50.f });
     const int health = scene.actors.get<Health>(scene.playerEntity).get();
     text.setString(uni::format("Player health: {}", health));
-    window.draw(text);
-
-    text.setPosition({ 600.f, 250.f });
-    text.setString(uni::format("Entity count: {}", entityCount));
     window.draw(text);
 }
 

@@ -10,7 +10,10 @@ void GameRulesEngine::operator()(const event::ActorToMeshCollision& e)
     if (auto inventory = scene.actors.try_get<ProjectileInventory>(e.entity))
     {
         if (!(inventory->traits & ProjectileTraits::Bouncy))
+        {
+            createDamageMarkerForProjectile(e.entity, inventory);
             eventQueue.pushEvent<event::ProjectileDestroyed>(e.entity);
+        }
     }
 }
 
@@ -168,6 +171,16 @@ void GameRulesEngine::handleProjectileToActorCollision(
     // TODO: implement projectile originator
     if (skin->kind == ActorKind::Player) return;
 
+    createDamageMarkerForProjectile(projectile, inventory);
+
+    if (inventory->traits & ProjectileTraits::Passthru) return;
+
+    eventQueue.pushEvent<event::ProjectileDestroyed>(projectile);
+}
+
+void GameRulesEngine::createDamageMarkerForProjectile(
+    entt::entity projectile, ProjectileInventory* inventory)
+{
     ActorBuilder::createDamageMarker(
         scene.actors,
         scene.actors.get<Collider>(projectile).getPosition(),
@@ -175,10 +188,6 @@ void GameRulesEngine::handleProjectileToActorCollision(
             ? BASE_EXPLOSION_RADIUS
             : scene.actors.get<Collider>(projectile).getRadius(),
         *inventory);
-
-    if (inventory->traits & ProjectileTraits::Passthru) return;
-
-    eventQueue.pushEvent<event::ProjectileDestroyed>(projectile);
 }
 
 void GameRulesEngine::handleDamageMarkerToActorCollision(
@@ -193,4 +202,5 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
     if (skin->kind == inventory->originator) return;
 
     health->get() -= inventory->damage;
+    skin->animation.setState(HURT_ANIMATION_STATE.data(), "looping"_false);
 }
