@@ -43,6 +43,8 @@ private:
 
     void renderWorld(dgm::Window& window);
 
+    void renderLights(dgm::Window& window);
+
     void renderHud(dgm::Window& window);
 
     void renderTouchControls(dgm::Window& window);

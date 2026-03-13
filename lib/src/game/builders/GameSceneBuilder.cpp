@@ -67,7 +67,7 @@ GameScene GameSceneBuilder::createScene(
         {
             lights.push_back(LightSource {
                 .position = actors.get<Collider>(entity).getPosition(),
-                .spriteId = 3,
+                .spriteId = 7,
                 .color = sf::Color::Green,
             });
         }

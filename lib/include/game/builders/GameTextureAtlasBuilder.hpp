@@ -8,6 +8,13 @@ public:
         const dgm::ResourceManager& resmgr, const sf::Vector2i& atlasSize)
     {
         auto atlas = dgm::TextureAtlas(atlasSize.x, atlasSize.y);
+
+        auto lights = atlas
+                          .addTileset(
+                              resmgr.get<sf::Texture>("lights.png"),
+                              resmgr.get<dgm::Clip>("lights.png.clip"))
+                          .value();
+
         auto tiles = atlas
                          .addTileset(
                              resmgr.get<sf::Texture>("scifi_tiles.png"),
@@ -77,11 +84,8 @@ public:
                                   resmgr.get<dgm::Clip>("crosshairs.png.clip"))
                               .value();
 
-        auto lights = atlas
-                          .addTileset(
-                              resmgr.get<sf::Texture>("lights.png"),
-                              resmgr.get<dgm::Clip>("lights.png.clip"))
-                          .value();
+        auto image = sf::Image(atlas.getTexture().copyToImage());
+        std::ignore = image.saveToFile("atlas_debug.png");
 
         return GameTextureAtlas {
             .atlas = std::move(atlas),

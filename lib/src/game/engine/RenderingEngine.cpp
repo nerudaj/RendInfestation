@@ -17,14 +17,7 @@ RenderingEngine::RenderingEngine(
           sf::Vector2f(settings.video.resolution))
     , text(resmgr.get<sf::Font>("ChunkFive-Regular.ttf"))
     , pipeline(atlas.atlas.getTexture())
-    , lightPipeline(
-          atlas.atlas.getTexture(),
-        sf::BlendAdd  
-        /*sf::BlendMode(
-              sf::BlendMode::Factor::SrcAlpha, // source factor
-              sf::BlendMode::Factor::One,      // destination factor
-              sf::BlendMode::Equation::Add     // equation
-              )*/)
+    , lightPipeline(atlas.atlas.getTexture(), sf::BlendAdd)
     , tilesClip(atlas.atlas.getClip(atlas.tilesLocation))
 {
 }
@@ -125,6 +118,23 @@ void RenderingEngine::renderWorld(dgm::Window& window)
     blackRect.setPosition(worldCamera.getCurrentView().getCenter());
     window.getSfmlWindowContext().draw(blackRect, sf::BlendAdd);
 
+    renderLights(window);
+
+    for (auto&& [entity, collider] : scene.actors.view<Collider>().each())
+    {
+        std::visit(
+            overloads {
+                [&](const dgm::Circle& c)
+                { c.debugRender(window, sf::Color(255, 0, 0, 64)); },
+                [&](const dgm::Rect& r)
+                { r.debugRender(window, sf::Color(255, 0, 0, 64)); },
+            },
+            collider.shape);
+    }
+}
+
+void RenderingEngine::renderLights(dgm::Window& window)
+{
     lightPipeline.clear();
 
     for (auto&& light : scene.lights)
@@ -138,20 +148,27 @@ void RenderingEngine::renderWorld(dgm::Window& window)
             light.color);
     }
 
-    lightPipeline.renderTo(window);
+    lightPipeline.addFace(
+        scene.actors.get<Collider>(scene.playerEntity).getPosition(),
+        sf::FloatRect {
+            atlas.atlas.getClip(atlas.lightsLocation).getFrame(10) },
+        sf::degrees(0),
+        sf::Vector2f { 1.f, 1.f },
+        sf::Color { 255, 255, 255, 128 });
 
-    /*
-    for (auto&& [actor, _] : scene.actors)
+    for (auto&& [entity, collider, _] :
+         scene.actors.view<Collider, ProjectileInventory>().each())
     {
-        std::visit(
-            overloads {
-                [&](const dgm::Circle& c)
-                { c.debugRender(window, sf::Color(255, 255, 0, 128)); },
-                [&](const dgm::Rect& r)
-                { r.debugRender(window, sf::Color(255, 255, 0, 128)); },
-            },
-            actor.body.shape);
-    }*/
+        lightPipeline.addFace(
+            collider.getPosition(),
+            sf::FloatRect {
+                atlas.atlas.getClip(atlas.lightsLocation).getFrame(11) },
+            sf::degrees(0),
+            sf::Vector2f { 1.f, 1.f },
+            sf::Color { 255, 255, 0, 128 });
+    }
+
+    lightPipeline.renderTo(window);
 }
 
 void RenderingEngine::renderHud(dgm::Window& window)
