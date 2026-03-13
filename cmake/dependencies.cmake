@@ -30,7 +30,7 @@ CPMAddPackage(
     NAME dgm-lib
     GIT_TAG ${DGM_LIB_VERSION}
     GITHUB_REPOSITORY "nerudaj/dgm-lib"
-    OPTIONS "ENABLE_LEGACY_ANIMATION OFF"
+    OPTIONS "ENABLE_LEGACY_ANIMATION OFF ENABLE_LINTER=OFF"
 )
 # CPMAddPackage("gh:nerudaj/fsm-lib#v${FSM_LIB_VERSION}") # Not yet supported on Android
 AddCatch( "${CATCH2_VERSION}" )
