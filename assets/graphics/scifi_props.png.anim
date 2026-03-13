@@ -49,6 +49,56 @@
                 "height": 64
             },
             "nframes": 1
+        },
+        {
+            "name": "green-carcass",
+            "bounds": {
+                "left": 2,
+                "top": 266,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "blue-carcass",
+            "bounds": {
+                "left": 2,
+                "top": 332,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "pc",
+            "bounds": {
+                "left": 2,
+                "top": 398,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "blood-puddle-a",
+            "bounds": {
+                "left": 2,
+                "top": 464,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "unused",
+            "bounds": {
+                "left": 2,
+                "top": 530,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
         }
     ]
 }

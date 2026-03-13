@@ -33,3 +33,9 @@ struct [[nodiscard]] WeaponInventory final
 using Lifetime = BrandedType<sf::Time, struct LifetimeTag>;
 
 using EntityInput = std::unique_ptr<InputInterface>;
+
+struct [[nodiscard]] BoundLightEmitter final
+{
+    sf::Color color;
+    size_t lightSpriteId;
+};

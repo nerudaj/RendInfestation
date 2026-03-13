@@ -88,9 +88,25 @@ static Collider getPropCollider(const sf::Vector2f& origin, const size_t propId)
         return Collider { dgm::Rect(
             { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
     }
+    else if (propId == 4 || propId == 5)
+        return Collider {
+            dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
+            ColliderOptions { .nonblocking = true, .disabled = true }
+        };
+    else if (propId == 6)
+        return Collider {
+            dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
+            ColliderOptions { .nonblocking = true, .disabled = true }
+        };
+    else if (propId == 7)
+        return Collider {
+            dgm::Rect({ origin.x, origin.y - 64.f }, { 24.f, 14.f }),
+            ColliderOptions { .nonblocking = true, .disabled = true }
+        };
 
-    return Collider { dgm::Rect(
-        { origin.x, origin.y - 64.f }, { 64.f, 64.f }) };
+    return Collider { dgm::Rect({ origin.x, origin.y - 64.f }, { 64.f, 64.f }),
+                      ColliderOptions { .nonblocking = true,
+                                        .disabled = true } };
 }
 
 static sf::Vector2f getPropSpriteOffset(const size_t propId)
@@ -103,8 +119,19 @@ static sf::Vector2f getPropSpriteOffset(const size_t propId)
     {
         return { 0.f, 0.f };
     }
+    else if (propId == 4 || propId == 5)
+        return { 16.f, 16.f };
+    else if (propId == 6)
+        return { 22.f, 25.f };
+    else if (propId == 7)
+        return { 20.f, 25.f };
 
     return { 0.f, 0.f };
+}
+
+static bool isPropPassable(const size_t propId)
+{
+    return propId == 4 || propId == 5 || propId == 6 || propId == 7;
 }
 
 entt::entity ActorBuilder::createProp(
@@ -115,7 +142,8 @@ entt::entity ActorBuilder::createProp(
 {
     auto entity = actors.create();
     actors.emplace<Collider>(entity, getPropCollider(origin, propId));
-    actors.emplace<PhysicsBody>(entity);
+
+    if (!isPropPassable(propId)) actors.emplace<PhysicsBody>(entity);
     actors.emplace<Skin>(
         entity,
         ActorKind::Prop,
@@ -131,7 +159,16 @@ entt::entity ActorBuilder::createProp(
             return "labtube";
         else if (id == 2)
             return "small-table";
-        return "cantina-table";
+        else if (id == 3)
+            return "cantina-table";
+        else if (id == 4)
+            return "green-carcass";
+        else if (id == 5)
+            return "blue-carcass";
+        else if (id == 6)
+            return "pc";
+        else if (id == 7)
+            return "blood-puddle-a";
     };
 
     actors.get<Skin>(entity).animation.setState(

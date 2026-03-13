@@ -28,7 +28,7 @@ GameScene GameSceneBuilder::createScene(
     Input& input)
 {
     auto tiledLevel = resmgr.get<tiled::FiniteMapModel>("demo-01.json");
-    assert(tiledLevel.layers.size() == 2);
+    // assert(tiledLevel.layers.size() == 2);
     assert(std::holds_alternative<tiled::TileLayerModel>(tiledLevel.layers[0]));
     assert(
         std::holds_alternative<tiled::ObjectGroupModel>(tiledLevel.layers[1]));

@@ -9,6 +9,13 @@ public:
     {
         auto atlas = dgm::TextureAtlas(atlasSize.x, atlasSize.y);
 
+        auto props =
+            atlas
+                .addSpritesheet(
+                    resmgr.get<sf::Texture>("scifi_props.png"),
+                    resmgr.get<dgm::AnimationStates>("scifi_props.png.anim"))
+                .value();
+
         auto lights = atlas
                           .addTileset(
                               resmgr.get<sf::Texture>("lights.png"),
@@ -32,12 +39,7 @@ public:
                     resmgr.get<sf::Texture>("bullet.png"),
                     resmgr.get<dgm::AnimationStates>("bullet.png.anim"))
                 .value();
-        auto props =
-            atlas
-                .addSpritesheet(
-                    resmgr.get<sf::Texture>("scifi_props.png"),
-                    resmgr.get<dgm::AnimationStates>("scifi_props.png.anim"))
-                .value();
+
         auto player =
             atlas
                 .addSpritesheet(
