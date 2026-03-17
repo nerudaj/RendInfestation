@@ -151,16 +151,20 @@ void AppStateWeaponModification::onResume()
 {
     auto& inv = scene.actors.get<WeaponInventory>(scene.playerEntity);
 
-    inv.weapons[0] = WeaponBuilder::createWeapon({
-        scene.loadout.weapon1Modules[0],
-        scene.loadout.weapon1Modules[1],
-        scene.loadout.weapon1Modules[2],
-    });
-    inv.weapons[1] = WeaponBuilder::createWeapon({
-        scene.loadout.weapon2Modules[0],
-        scene.loadout.weapon2Modules[1],
-        scene.loadout.weapon2Modules[2],
-    });
+    inv.weapons[0] = WeaponBuilder::createWeapon(
+        ActorKind::Player,
+        {
+            scene.loadout.weapon1Modules[0],
+            scene.loadout.weapon1Modules[1],
+            scene.loadout.weapon1Modules[2],
+        });
+    inv.weapons[1] = WeaponBuilder::createWeapon(
+        ActorKind::Player,
+        {
+            scene.loadout.weapon2Modules[0],
+            scene.loadout.weapon2Modules[1],
+            scene.loadout.weapon2Modules[2],
+        });
 
     app.popState(Messaging::serialize<PopIfNotGame>());
 }

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "demo-01.tmx",
+    "activeFile": "Props.tsx",
     "expandedProjectPaths": [
         "."
     ],
@@ -18,10 +18,10 @@
         },
         "demo-01.tmx": {
             "scale": 1,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 34.5,
-                "y": -93
+                "x": 722.5,
+                "y": 829
             }
         }
     },
@@ -39,8 +39,8 @@
     "project": "infestation.tiled-project",
     "recentFiles": [
         "Core Tiles.tsx",
-        "Props.tsx",
-        "demo-01.tmx"
+        "demo-01.tmx",
+        "Props.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 2,

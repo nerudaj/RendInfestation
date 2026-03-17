@@ -26,6 +26,15 @@ void GameRulesEngine::operator()(const event::ActorToActorCollision& e)
     handleTriggerToActorCollision(e.entity2, e.entity1);
 }
 
+void GameRulesEngine::operator()(const event::ActorStartedAttack& e)
+{
+    auto& skin = scene.actors.get<Skin>(e.entity);
+    if (skin.kind == ActorKind::Player)
+    {
+        eventQueue.pushEvent<event::ActorFiredWeapon>(e.entity);
+    }
+}
+
 void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
 {
     auto&& [lookDirection, shooterCollider, shooterBody, weaponInventory] =
@@ -37,10 +46,7 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     weapon.timeTillFire = weapon.cooldown;
 
     // TODO: might not be POV
-    if (weapon.numShots == 1)
-        soundPlayer.playPovSound(SoundId::Bullet);
-    else
-        soundPlayer.playPovSound(SoundId::Shotgun);
+    soundPlayer.playPovSound(weapon.soundId);
 
     for (auto&& _ : std::views::iota(0, weapon.numShots))
     {
@@ -65,6 +71,8 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     }
 
     shooterBody.forward += -lookDirection.get() * weapon.kickback;
+
+    eventQueue.pushEvent<event::ActorFinishedAttack>(e.entity);
 }
 
 void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
@@ -83,26 +91,6 @@ void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
     }
 
     eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileEntity);
-}
-
-void GameRulesEngine::operator()(const event::EnemyAttackLands& e)
-{
-    // TODO: create short-lived projectile
-    /*const auto& actor = scene.actors[e.enemyIdx];
-    assert(actor.inventoryIdx);
-    const auto& inventory =
-        std::get<NpcInventory>(scene.inventories[*actor.inventoryIdx]);
-
-    const auto hitboxRadius = 3.f;
-    const auto actorDirectionOffset =
-        actor.lookDirection * (hitboxRadius + actor.body.getRadius());
-
-    scene.actors.emplaceBack(ActorBuilder::createDamageMarker(
-        actor.body.getPosition() + actorDirectionOffset,
-        hitboxRadius,
-        scene.inventories.emplaceBack(DamageMarkerInventory {
-            .damage = inventory.damage,
-        })));*/
 }
 
 void GameRulesEngine::operator()(const event::DoorOpened& e)
@@ -148,7 +136,7 @@ void GameRulesEngine::update(const dgm::Time& time)
         if (controller->isShootPressed()
             && weapon.timeTillFire <= sf::Time::Zero)
         {
-            eventQueue.pushEvent<event::ActorFiredWeapon>(entity);
+            eventQueue.pushEvent<event::ActorStartedAttack>(entity);
         }
         else if (controller->isSwapWeaponsPressed())
         {
@@ -158,14 +146,7 @@ void GameRulesEngine::update(const dgm::Time& time)
         weapon.timeTillFire -= time.getElapsed();
     }
 
-    for (auto&& [entity, lifetime] : scene.actors.view<Lifetime>().each())
-    {
-        lifetime.get() -= time.getElapsed();
-        if (lifetime.get() <= sf::Time::Zero)
-        {
-            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
-        }
-    }
+    updateLifetimes(time);
 
     for (auto&& [entity, health] : scene.actors.view<Health>().each())
     {
@@ -194,6 +175,24 @@ void GameRulesEngine::update(const dgm::Time& time)
     }
 }
 
+void GameRulesEngine::updateLifetimes(const dgm::Time& time)
+{
+    for (auto&& [entity, lifetime] : scene.actors.view<Lifetime>().each())
+    {
+        lifetime.get() -= time.getElapsed();
+        if (lifetime.get() <= sf::Time::Zero)
+        {
+            if (auto inventory =
+                    scene.actors.try_get<ProjectileInventory>(entity))
+            {
+                createDamageMarkerForProjectile(entity, inventory);
+            }
+
+            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        }
+    }
+}
+
 void GameRulesEngine::handleProjectileToActorCollision(
     entt::entity projectile, entt::entity actor)
 {
@@ -203,8 +202,7 @@ void GameRulesEngine::handleProjectileToActorCollision(
     auto skin = scene.actors.try_get<Skin>(actor);
     if (!skin) return;
 
-    // TODO: implement projectile originator
-    if (skin->kind == ActorKind::Player) return;
+    if (skin->kind == inventory->originator) return;
 
     createDamageMarkerForProjectile(projectile, inventory);
 

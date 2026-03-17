@@ -2,10 +2,10 @@
 #include "game/builders/ActorBuilder.hpp"
 #include "types/SemanticTypes.hpp"
 
-void AnimationEngine::operator()(const event::ActorFiredWeapon&)
+void AnimationEngine::operator()(const event::ActorFiredWeapon& e)
 {
-    /*scene.actors.get<Skin>(scene.playerEntity)
-        .animation.setState("attack-front");*/
+    auto&& skin = scene.actors.get<Skin>(e.entity);
+    skin.animation.setState("attack-front", "looping"_false);
 }
 
 void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
@@ -22,10 +22,22 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
         atlas);
 }
 
-void AnimationEngine::operator()(const event::EnemyStartedAttack& e)
+void AnimationEngine::operator()(const event::ActorStartedAttack& e)
 {
-    scene.actors.get<Skin>(e.enemyEntity)
-        .animation.setState("attack-windup-front", "looping"_false);
+    auto&& skin = scene.actors.get<Skin>(e.entity);
+    if (skin.kind == ActorKind::Npc)
+    {
+        skin.animation.setState("attack-windup-front", "looping"_false);
+    }
+}
+
+void AnimationEngine::operator()(const event::ActorFinishedAttack& e)
+{
+    auto&& skin = scene.actors.get<Skin>(e.entity);
+    if (skin.kind == ActorKind::Npc)
+    {
+        skin.animation.setState("attack-recovery-front", "looping"_false);
+    }
 }
 
 void AnimationEngine::update(const dgm::Time& time)
@@ -48,13 +60,11 @@ void AnimationEngine::update(const dgm::Time& time)
         {
             if (skin.animation.getStateName() == "attack-windup-front")
             {
-                eventQueue.pushEvent<event::EnemyAttackLands>(actor);
-                skin.animation.setState("attack-punch-front", "looping"_false);
+                eventQueue.pushEvent<event::ActorFiredWeapon>(actor);
             }
-            else if (skin.animation.getStateName() == "attack-punch-front")
+            else if (skin.animation.getStateName() == "attack-front")
             {
-                skin.animation.setState(
-                    "attack-recovery-front", "looping"_false);
+                eventQueue.pushEvent<event::ActorFinishedAttack>(actor);
             }
             else
                 skin.animation.setState("walk-front", "looping"_true);

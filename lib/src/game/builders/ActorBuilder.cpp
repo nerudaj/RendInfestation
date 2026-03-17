@@ -25,17 +25,20 @@ entt::entity ActorBuilder::createPlayer(
         dgm::Animation(atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
         sf::Vector2f { 0.f, -10.f });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-    actors.emplace<Health>(entity, 100);
+    actors.emplace<Health>(entity, 10000);
     actors.emplace<WeaponInventory>(
         entity,
         0,
-        std::vector<Weapon> {
-            WeaponBuilder::createWeapon({ loadout.weapon1Modules[0],
-                                          loadout.weapon1Modules[1],
-                                          loadout.weapon1Modules[2] }),
-            WeaponBuilder::createWeapon({ loadout.weapon2Modules[0],
-                                          loadout.weapon2Modules[1],
-                                          loadout.weapon2Modules[2] }) });
+        std::vector<Weapon> { WeaponBuilder::createWeapon(
+                                  ActorKind::Player,
+                                  { loadout.weapon1Modules[0],
+                                    loadout.weapon1Modules[1],
+                                    loadout.weapon1Modules[2] }),
+                              WeaponBuilder::createWeapon(
+                                  ActorKind::Player,
+                                  { loadout.weapon2Modules[0],
+                                    loadout.weapon2Modules[1],
+                                    loadout.weapon2Modules[2] }) });
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
 
     actors.get<Skin>(entity).animation.setState("idle-front", "looping"_true);
@@ -65,9 +68,11 @@ entt::entity ActorBuilder::createNpc(
         });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
     actors.emplace<Health>(entity, 100);
-    // TODO: melee weapon
     actors.emplace<WeaponInventory>(
-        entity, 0, std::vector<Weapon> { WeaponBuilder::createWeapon({}) });
+        entity,
+        0,
+        std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
+            ActorKind::Npc, BASE_MELEE_DAMAGE) });
     actors.emplace<EntityInput>(
         entity, std::make_unique<NpcInput>(scene, entity));
 
@@ -104,9 +109,8 @@ static Collider getPropCollider(const sf::Vector2f& origin, const size_t propId)
             ColliderOptions { .nonblocking = true, .disabled = true }
         };
 
-    return Collider { dgm::Rect({ origin.x, origin.y - 64.f }, { 64.f, 64.f }),
-                      ColliderOptions { .nonblocking = true,
-                                        .disabled = true } };
+    return Collider { dgm::Rect(
+        { origin.x, origin.y - 64.f }, { 64.f, 64.f }) };
 }
 
 static sf::Vector2f getPropSpriteOffset(const size_t propId)
@@ -202,7 +206,7 @@ entt::entity ActorBuilder::createProjectile(
                             : 0.f,
             .useAltMesh = true,
         });
-    actors.emplace<Lifetime>(entity, BASE_PROJECTILE_LIFETIME);
+    actors.emplace<Lifetime>(entity, weapon.projectileLifetime);
 
     auto animation =
         dgm::Animation(atlas.atlas.getAnimationStates(atlas.bulletLocation), 8);
@@ -238,7 +242,7 @@ entt::entity ActorBuilder::createDamageMarker(
     actors.emplace<DamageMarkerInventory>(
         entity,
         DamageMarkerInventory {
-            .originator = ActorKind::Player,
+            .originator = inventory.originator,
             .damage = inventory.damage,
         });
     actors.emplace<Lifetime>(entity, sf::Time::Zero);

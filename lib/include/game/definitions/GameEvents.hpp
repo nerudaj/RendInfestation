@@ -32,20 +32,18 @@ namespace event
         explicit ActorFiredWeapon(entt::entity entity) : entity(entity) {}
     };
 
-    struct [[nodiscard]] EnemyStartedAttack final
+    struct [[nodiscard]] ActorStartedAttack final
     {
-        entt::entity enemyEntity;
+        entt::entity entity;
 
-        explicit EnemyStartedAttack(entt::entity entity) : enemyEntity(entity)
-        {
-        }
+        explicit ActorStartedAttack(entt::entity entity) : entity(entity) {}
     };
 
-    struct [[nodiscard]] EnemyAttackLands final
+    struct [[nodiscard]] ActorFinishedAttack final
     {
-        entt::entity enemyEntity;
+        entt::entity entity;
 
-        explicit EnemyAttackLands(entt::entity entity) : enemyEntity(entity) {}
+        explicit ActorFinishedAttack(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ProjectileDestroyed final
@@ -89,7 +87,7 @@ using GameEvent = std::variant<
     event::ActorFiredWeapon,
     event::ProjectileDestroyed,
     event::ObjectDestroyed,
-    event::EnemyStartedAttack,
-    event::EnemyAttackLands,
+    event::ActorStartedAttack,
+    event::ActorFinishedAttack,
     event::DoorOpened,
     event::DoorStartsClosing>;

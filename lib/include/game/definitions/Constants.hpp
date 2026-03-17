@@ -7,6 +7,7 @@ constexpr float BASE_PROJECTILE_SPEED = 1024_px_per_second;
 constexpr float BASE_PLAYER_SPEED = 192_px_per_second;
 constexpr float BASE_ENEMY_SPEED = 192_px_per_second * 0.75f;
 constexpr int BASE_PROJECTILE_DAMAGE = 25;
+constexpr int BASE_MELEE_DAMAGE = 10;
 constexpr float BASE_PROJECTILE_KICKBACK = 50.f;
 constexpr sf::Time BASE_WEAPON_FIRE_DELAY = sf::seconds(0.5f);
 constexpr sf::Time BASE_PROJECTILE_LIFETIME = sf::seconds(50.f);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "audio/SoundId.hpp"
 #include "game/definitions/Constants.hpp"
 #include "game/enums/ProjectileKind.hpp"
 #include "game/enums/ProjectileTraits.hpp"
@@ -7,6 +8,7 @@
 
 struct [[nodiscard]] WeaponProperties final
 {
+    SoundId::IdType soundId = SoundId::Error;
     int baseProjectileDamage = BASE_PROJECTILE_DAMAGE;
     int numShots = 1;
     int spread = 1;

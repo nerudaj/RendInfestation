@@ -28,7 +28,6 @@ public:
 
     [[nodiscard]] bool isShootPressed() const
     {
-        return false;
         const auto toPlayer = getDirectionToPlayer();
         if (scene.actors.get<Skin>(thisNpc).animation.getStateName()
                 == "walk-front"

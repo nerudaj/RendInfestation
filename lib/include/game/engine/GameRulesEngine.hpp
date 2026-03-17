@@ -33,11 +33,11 @@ public:
 
     void operator()(const event::ActorToActorCollision& e);
 
+    void operator()(const event::ActorStartedAttack& e);
+
     void operator()(const event::ActorFiredWeapon& e);
 
     void operator()(const event::ProjectileDestroyed& e);
-
-    void operator()(const event::EnemyAttackLands& e);
 
     void operator()(const event::DoorOpened& e);
 
@@ -47,6 +47,8 @@ public:
 
 public:
     void update(const dgm::Time& time);
+
+    void updateLifetimes(const dgm::Time& time);
 
 private:
     Weapon& getActiveWeapon(WeaponInventory& inventory) const

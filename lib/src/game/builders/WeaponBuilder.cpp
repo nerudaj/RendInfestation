@@ -11,6 +11,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     case SpreadBarrel:
         return [](WeaponProperties props)
         {
+            props.soundId = SoundId::Shotgun;
             props.numShots = 4;
             props.baseProjectileDamage /= 2;
             props.kickback += 100.f;
@@ -67,7 +68,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.projectileTraits = props.projectileTraits
                                      | ProjectileTraits::Shrapnels
                                      | ProjectileTraits::Bouncy;
-            if (props.numShots > 1) props.spread *= 4;
+            props.spread *= 4;
             return props;
         };
 
@@ -82,7 +83,8 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     }
 }
 
-Weapon WeaponBuilder::createWeapon(const std::vector<WeaponModule>& modules)
+Weapon WeaponBuilder::createWeapon(
+    ActorKind ownerKind, const std::vector<WeaponModule>& modules)
 {
     auto properties = WeaponProperties();
     for (auto module : modules)
@@ -92,15 +94,34 @@ Weapon WeaponBuilder::createWeapon(const std::vector<WeaponModule>& modules)
 
     return Weapon {
         .cooldown = properties.fireDelay,
+        .projectileLifetime = BASE_PROJECTILE_LIFETIME,
         .kickback = properties.kickback,
+        .projectileSpeed = properties.projectileSpeed,
         .spread = properties.spread,
         .numShots = properties.numShots,
-        .projectileSpeed = properties.projectileSpeed,
         .projectileSkin = properties.projectileSkin,
         .defaultProjectileInventory =
             ProjectileInventory {
                 .damage = properties.baseProjectileDamage,
                 .traits = properties.projectileTraits,
+                .originator = ownerKind,
+            },
+    };
+}
+
+Weapon WeaponBuilder::createMeleeWeapon(ActorKind ownerKind, int damage)
+{
+    return Weapon {
+        .soundId = SoundId::Click,
+        .cooldown = sf::seconds(0.5f),
+        .projectileLifetime = sf::seconds(0.f),
+        .kickback = 20.f,
+        .projectileSpeed = 0.f,
+        .projectileSkin = SkinType::SmallBullet,
+        .defaultProjectileInventory =
+            ProjectileInventory {
+                .damage = damage,
+                .originator = ownerKind,
             },
     };
 }
