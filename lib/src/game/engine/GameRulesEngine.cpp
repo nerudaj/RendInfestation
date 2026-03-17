@@ -71,8 +71,6 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     }
 
     shooterBody.forward += -lookDirection.get() * weapon.kickback;
-
-    eventQueue.pushEvent<event::ActorFinishedAttack>(e.entity);
 }
 
 void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)

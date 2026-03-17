@@ -38,6 +38,10 @@ void AnimationEngine::operator()(const event::ActorFinishedAttack& e)
     {
         skin.animation.setState("attack-recovery-front", "looping"_false);
     }
+    else if (skin.kind == ActorKind::Player)
+    {
+        skin.animation.setState("idle-front", "looping"_true);
+    }
 }
 
 void AnimationEngine::update(const dgm::Time& time)
@@ -54,7 +58,7 @@ void AnimationEngine::update(const dgm::Time& time)
         }
         else if (skin.kind == ActorKind::Player)
         {
-            skin.animation.setState("idle-front", "looping"_true);
+            eventQueue.pushEvent<event::ActorFinishedAttack>(actor);
         }
         else if (skin.kind == ActorKind::Npc)
         {
