@@ -129,7 +129,7 @@ void RenderingEngine::addLevelFacesToPipeline()
 
 void RenderingEngine::renderColliders(dgm::Window& window)
 {
-    // return;
+    return;
 
     for (auto&& [entity, collider] : scene.actors.view<Collider>().each())
     {

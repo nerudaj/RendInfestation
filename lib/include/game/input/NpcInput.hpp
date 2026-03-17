@@ -14,11 +14,14 @@ public:
 public:
     [[nodiscard]] sf::Vector2f getForward() const override
     {
+        if (!isWalking()) return { 0.f, 0.f };
+
         const auto toPlayer = getDirectionToPlayer();
         if (toPlayer.length() > 20.f)
         {
             return dgm::Math::toUnit(toPlayer);
         }
+        return sf::Vector2f { 0.f, 0.f };
     }
 
     [[nodiscard]] sf::Vector2f getAimDirection() const
@@ -29,10 +32,8 @@ public:
     [[nodiscard]] bool isShootPressed() const
     {
         const auto toPlayer = getDirectionToPlayer();
-        if (scene.actors.get<Skin>(thisNpc).animation.getStateName()
-                == "walk-front"
-            && toPlayer.length() <= 20.f)
-            return true;
+        if (isWalking() && toPlayer.length() <= 20.f) return true;
+        return false;
     }
 
     [[nodiscard]] bool isSwapWeaponsPressed() const
@@ -45,6 +46,12 @@ private:
     {
         return scene.actors.get<Collider>(scene.playerEntity).getPosition()
                - scene.actors.get<Collider>(thisNpc).getPosition();
+    }
+
+    bool isWalking() const
+    {
+        return scene.actors.get<Skin>(thisNpc).animation.getStateName()
+               == "walk-front";
     }
 
 private:
