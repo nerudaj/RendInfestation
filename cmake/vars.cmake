@@ -15,6 +15,6 @@ set ( ANDROID_ORG "org.nerudaj.${PROJECT_NAME_LOWERCASE}" )
 set ( ANDROID_NATIVE_LIB_NAME "cppcore" )
 set ( ANDROID_ARCH_ABI "arm64-v8a" )
 set ( ANDROID_NDK_VERSION "27.0.12077973" )
-set ( ANDROID_MIN_SDK "21" )
+set ( ANDROID_MIN_SDK "22" )
 set ( ANDROID_TARGET_SDK "33" )
 set ( ANDROID_ENFORCED_ORIENTATION "landscape" ) # landscape | portrait
