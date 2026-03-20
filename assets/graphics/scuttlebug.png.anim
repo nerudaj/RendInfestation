@@ -1,0 +1,94 @@
+{
+    "defaults": {
+        "frame": {
+            "width": 32,
+            "height": 32
+        },
+        "spacing": {
+            "horizontal": 2,
+            "vertical": 2
+        }
+    },
+    "states": [
+        {
+            "name": "attack-windup-front",
+            "bounds": {
+                "left": 2,
+                "top": 2,
+                "width": 168,
+                "height": 32
+            },
+            "nframes": 5
+        },
+        {
+            "name": "walk-front",
+            "bounds": {
+                "left": 2,
+                "top": 36,
+                "width": 134,
+                "height": 32
+            },
+            "nframes": 4
+        },
+        {
+            "name": "idle-hurt",
+            "bounds": {
+                "left": 138,
+                "top": 36,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        },
+        {
+            "name": "walk-back",
+            "bounds": {
+                "left": 2,
+                "top": 70,
+                "width": 134,
+                "height": 32
+            },
+            "nframes": 4
+        },
+        {
+            "name": "idle-front",
+            "bounds": {
+                "left": 138,
+                "top": 70,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        },
+        {
+            "name": "attack-recovery-front",
+            "bounds": {
+                "left": 2,
+                "top": 104,
+                "width": 100,
+                "height": 32
+            },
+            "nframes": 3
+        },
+        {
+            "name": "attack-front",
+            "bounds": {
+                "left": 104,
+                "top": 104,
+                "width": 66,
+                "height": 32
+            },
+            "nframes": 2
+        },
+        {
+            "name": "idle-back",
+            "bounds": {
+                "left": 2,
+                "top": 138,
+                "width": 32,
+                "height": 32
+            },
+            "nframes": 1
+        }
+    ]
+}

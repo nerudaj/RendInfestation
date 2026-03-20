@@ -2,8 +2,8 @@
 
 #include "audio/SoundId.hpp"
 #include "game/definitions/ProjectileInventory.hpp"
-#include "game/enums/ActorSkin.hpp"
 #include "game/enums/ProjectileTraits.hpp"
+#include "game/enums/SkinType.hpp"
 
 struct [[nodiscard]] Weapon final
 {

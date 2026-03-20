@@ -6,6 +6,7 @@
 #include "game/definitions/Weapon.hpp"
 #include "game/enums/EffectType.hpp"
 #include "game/enums/ProjectileKind.hpp"
+#include "game/enums/SkinType.hpp"
 #include "input/Input.hpp"
 
 class [[nodiscard]] ActorBuilder final
@@ -21,6 +22,7 @@ public:
     static entt::entity createNpc(
         entt::registry& actors,
         const sf::Vector2f& spawnPosition,
+        const SkinType skin,
         const GameScene& scene,
         const GameTextureAtlas& atlas);
 

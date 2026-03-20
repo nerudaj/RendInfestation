@@ -244,6 +244,7 @@ function ( apply_compile_options TARGET )
 			/we4457 # Name shadowing
 			/we4458 # Name shadowing
 			/we4459 # Name shadowing
+			/we4715 # Not all control paths return a value
 			# /wd4251
 			/we4369 # value of enum overflows underlying type
 			/we5205 # Dtor on iface is not virtual

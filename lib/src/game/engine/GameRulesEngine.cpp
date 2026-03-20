@@ -114,6 +114,7 @@ void GameRulesEngine::update(const dgm::Time& time)
         ActorBuilder::createNpc(
             scene.actors,
             scene.enemySpawns[rand() % scene.enemySpawns.size()],
+            true ? SkinType::Scuttlebug : SkinType::Bighead,
             scene,
             atlas);
     }

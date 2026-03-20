@@ -225,37 +225,6 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
     }
 }
 
-dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
-RenderingEngine::getSkinLocation(SkinType skin) const
-{
-    switch (skin)
-    {
-        using enum SkinType;
-    case PlayerDefault:
-        return atlas.playerLocation;
-    case Bighead:
-        return atlas.bigheadLocation;
-    case SmallBullet:
-        return atlas.smallBulletLocation;
-    case BigBullet:
-        return atlas.bulletLocation;
-    case Landmine:
-        return atlas.landmineLocation;
-    case Hyperbeam:
-        return atlas.hyperbeamLocation;
-    case Spikes:
-        return atlas.spikesLocation;
-    case Prop:
-        return atlas.propsLocation;
-    case Explosion:
-        return atlas.explosionLocation;
-    case DoorHorizontal:
-        return atlas.doorHorizontalLocation;
-    }
-
-    assert(false);
-}
-
 std::vector<Face> RenderingEngine::getActorFaces() const
 {
     std::vector<Face> faces;

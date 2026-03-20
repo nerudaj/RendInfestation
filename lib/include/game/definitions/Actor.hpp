@@ -4,7 +4,7 @@
 #include "game/definitions/PhysicsBody.hpp"
 #include "game/definitions/Weapon.hpp"
 #include "game/enums/ActorKind.hpp"
-#include "game/enums/ActorSkin.hpp"
+#include "game/enums/SkinType.hpp"
 #include "game/input/InputInterface.hpp"
 #include "types/BrandedType.hpp"
 #include <DGM/classes/Animation.hpp>

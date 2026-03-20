@@ -54,18 +54,14 @@ private:
     void renderTouchControls(dgm::Window& window);
 
 private:
-    dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
-    getSkinLocation(SkinType skin) const;
-
     sf::FloatRect getFrame(
         SkinType skin,
         const std::string& stateName,
         const size_t frameIdx) const
     {
-        return sf::FloatRect { atlas.atlas
-                                   .getAnimationStates(getSkinLocation(skin))
-                                   .at(stateName)
-                                   .getFrame(frameIdx) };
+        return sf::FloatRect {
+            atlas.getSkinAnimationStates(skin).at(stateName).getFrame(frameIdx)
+        };
     }
 
     std::vector<Face> getActorFaces() const;

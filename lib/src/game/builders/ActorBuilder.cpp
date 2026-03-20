@@ -49,6 +49,7 @@ entt::entity ActorBuilder::createPlayer(
 entt::entity ActorBuilder::createNpc(
     entt::registry& actors,
     const sf::Vector2f& spawnPosition,
+    const SkinType skin,
     const GameScene& scene,
     const GameTextureAtlas& atlas)
 {
@@ -61,9 +62,8 @@ entt::entity ActorBuilder::createNpc(
         entity,
         Skin {
             .kind = ActorKind::Npc,
-            .skinType = SkinType::Bighead,
-            .animation = dgm::Animation(
-                atlas.atlas.getAnimationStates(atlas.bigheadLocation), 8),
+            .skinType = skin,
+            .animation = dgm::Animation(atlas.getSkinAnimationStates(skin), 8),
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
         });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });

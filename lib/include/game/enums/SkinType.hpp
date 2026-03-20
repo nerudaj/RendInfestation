@@ -7,6 +7,7 @@ enum class [[nodiscard]] SkinType : unsigned char
 
     // Npcs
     Bighead,
+    Scuttlebug,
 
     // Projectiles
     SmallBullet,
