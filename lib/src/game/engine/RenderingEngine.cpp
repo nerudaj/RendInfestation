@@ -167,24 +167,16 @@ void RenderingEngine::renderLights(dgm::Window& window)
             light.color);
     }
 
-    lightPipeline.addFace(
-        scene.actors.get<Collider>(scene.playerEntity).getPosition(),
-        sf::FloatRect {
-            atlas.atlas.getClip(atlas.lightsLocation).getFrame(10) },
-        sf::degrees(0),
-        sf::Vector2f { 1.f, 1.f },
-        sf::Color { 255, 255, 255, 128 });
-
-    for (auto&& [entity, collider, _] :
-         scene.actors.view<Collider, ProjectileInventory>().each())
+    for (auto&& [entity, collider, light] :
+         scene.actors.view<Collider, BoundLightEmitter>().each())
     {
         lightPipeline.addFace(
             collider.getPosition(),
-            sf::FloatRect {
-                atlas.atlas.getClip(atlas.lightsLocation).getFrame(11) },
+            sf::FloatRect { atlas.atlas.getClip(atlas.lightsLocation)
+                                .getFrame(light.lightSpriteId) },
             sf::degrees(0),
             sf::Vector2f { 1.f, 1.f },
-            sf::Color { 255, 255, 0, 128 });
+            light.color);
     }
 
     lightPipeline.renderTo(window);

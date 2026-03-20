@@ -23,3 +23,7 @@ constexpr const char* DOOR_CLOSED_ANIMATION_STATE = "door-idle-unlocked";
 constexpr const char* DOOR_OPEN_ANIMATION_STATE = "door-open";
 constexpr const char* DOOR_OPENING_ANIMATION_STATE = "door-opening";
 constexpr const char* DOOR_CLOSING_ANIMATION_STATE = "door-closing";
+constexpr const sf::Color COLOR_WHITE = sf::Color { 0xff, 0xf1, 0xe8 };
+constexpr const sf::Color COLOR_GREEN = sf::Color { 0xa8, 0xe7, 0x2e };
+constexpr const sf::Color COLOR_YELLOW = sf::Color { 0xff, 0xec, 0x27 };
+constexpr const sf::Color COLOR_MUTED_YELLOW = sf::Color { 0xf3, 0xef, 0x7d };

@@ -40,6 +40,8 @@ entt::entity ActorBuilder::createPlayer(
                                     loadout.weapon2Modules[1],
                                     loadout.weapon2Modules[2] }) });
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
+    actors.emplace<BoundLightEmitter>(
+        entity, BoundLightEmitter { COLOR_WHITE, 10u });
 
     actors.get<Skin>(entity).animation.setState("idle-front", "looping"_true);
 
@@ -67,7 +69,7 @@ entt::entity ActorBuilder::createNpc(
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
         });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-    actors.emplace<Health>(entity, 100);
+    actors.emplace<Health>(entity, skin == SkinType::Bighead ? 100 : 50);
     actors.emplace<WeaponInventory>(
         entity,
         0,
@@ -138,6 +140,11 @@ static bool isPropPassable(const size_t propId)
     return propId == 4 || propId == 5 || propId == 6 || propId == 7;
 }
 
+static bool isPropLabtune(const size_t propId)
+{
+    return propId == 0 || propId == 1;
+}
+
 entt::entity ActorBuilder::createProp(
     entt::registry& actors,
     const sf::Vector2f& origin,
@@ -177,6 +184,12 @@ entt::entity ActorBuilder::createProp(
 
     actors.get<Skin>(entity).animation.setState(
         stateName(propId), "looping"_true);
+
+    if (isPropLabtune(propId))
+    {
+        actors.emplace<BoundLightEmitter>(
+            entity, BoundLightEmitter { COLOR_GREEN, 7 });
+    }
 
     return entity;
 }
@@ -221,6 +234,22 @@ entt::entity ActorBuilder::createProjectile(
 
     actors.emplace<ProjectileInventory>(
         entity, weapon.defaultProjectileInventory);
+
+    /*if (weapon.projectileSkin == SkinType::SmallBullet)
+    {
+        actors.emplace<BoundLightEmitter>(
+            entity, BoundLightEmitter { COLOR_YELLOW, 10 });
+    }
+    else if (weapon.projectileSkin == SkinType::BigBullet)
+    {
+        actors.emplace<BoundLightEmitter>(
+            entity, BoundLightEmitter { COLOR_YELLOW, 10 });
+    }
+    else if (weapon.projectileSkin == SkinType::Hyperbeam)
+    {
+        actors.emplace<BoundLightEmitter>(
+            entity, BoundLightEmitter { COLOR_GREEN, 10 });
+    }*/
 
     return entity;
 }

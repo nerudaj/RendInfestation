@@ -67,15 +67,6 @@ GameScene GameSceneBuilder::createScene(
 
         auto entity =
             ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
-
-        if (propId == 0 || propId == 1)
-        {
-            lights.push_back(LightSource {
-                .position = actors.get<Collider>(entity).getPosition(),
-                .spriteId = 7,
-                .color = sf::Color::Green,
-            });
-        }
     }
 
     for (unsigned idx = 0, y = 0; y < levelDataSize.y; ++y)
@@ -90,7 +81,7 @@ GameScene GameSceneBuilder::createScene(
                 lights.push_back(LightSource {
                     .position = sf::Vector2f { position },
                     .spriteId = 0,
-                    .color = sf::Color::Yellow,
+                    .color = COLOR_MUTED_YELLOW,
                 });
             }
 

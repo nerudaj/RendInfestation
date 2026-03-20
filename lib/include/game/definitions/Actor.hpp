@@ -37,7 +37,7 @@ using EntityInput = std::unique_ptr<InputInterface>;
 struct [[nodiscard]] BoundLightEmitter final
 {
     sf::Color color;
-    size_t lightSpriteId;
+    unsigned lightSpriteId;
 };
 
 struct [[nodiscard]] TriggerInventory final
