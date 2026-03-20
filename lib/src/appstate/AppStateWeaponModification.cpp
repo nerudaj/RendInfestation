@@ -50,6 +50,34 @@ std::vector<std::string> AppStateWeaponModification::getModuleNames() const
     return names;
 }
 
+std::vector<std::string>
+AppStateWeaponModification::getAvailableModuleNames() const
+{
+    std::vector<std::string> names;
+    // None is always available
+    names.push_back(dic.strings.getString(StringId::WeaponModule_None));
+    for (size_t i = 1; i < ALL_MODULES.size(); ++i)
+    {
+        if (scene.loadout.unlockedModules.contains(ALL_MODULES[i]))
+            names.push_back(dic.strings.getString(MODULE_STRING_IDS[i]));
+    }
+    return names;
+}
+
+// Build the subset of available modules (None + unlocked)
+std::vector<WeaponModule>
+AppStateWeaponModification::getAvailableModules() const
+{
+    std::vector<WeaponModule> modules;
+    modules.push_back(WeaponModule::None);
+    for (size_t i = 1; i < ALL_MODULES.size(); ++i)
+    {
+        if (scene.loadout.unlockedModules.contains(ALL_MODULES[i]))
+            modules.push_back(ALL_MODULES[i]);
+    }
+    return modules;
+}
+
 size_t AppStateWeaponModification::moduleToIndex(WeaponModule module) noexcept
 {
     for (size_t i = 0; i < ALL_MODULES.size(); ++i)
@@ -78,7 +106,17 @@ void AppStateWeaponModification::draw()
 
 void AppStateWeaponModification::buildLayout()
 {
-    const auto moduleNames = getModuleNames();
+    const auto availableModules = getAvailableModules();
+    const auto availableModuleNames = getAvailableModuleNames();
+
+    // Helper: returns the index within availableModules for a given module.
+    // Falls back to 0 (None) if the module is not available.
+    auto toAvailableIndex = [&](WeaponModule module) -> size_t
+    {
+        for (size_t i = 0; i < availableModules.size(); ++i)
+            if (availableModules[i] == module) return i;
+        return 0;
+    };
 
     // Helper: build one weapon column as a FormBuilder panel
     auto buildWeaponColumn =
@@ -89,14 +127,24 @@ void AppStateWeaponModification::buildLayout()
 
         for (size_t slot = 0; slot < 3; ++slot)
         {
-            // Capture slot index and modules array by value/ref appropriately
             const size_t capturedSlot = slot;
+
+            // If the currently selected module is no longer available, reset
+            // it to None
+            if (!scene.loadout.unlockedModules.contains(modules[capturedSlot])
+                && modules[capturedSlot] != WeaponModule::None)
+            {
+                modules[capturedSlot] = WeaponModule::None;
+            }
+
             auto dropdown = WidgetBuilder::createDropdown(
-                moduleNames,
-                dic.strings.getString(
-                    MODULE_STRING_IDS[moduleToIndex(modules[capturedSlot])]),
-                [&modules, capturedSlot](size_t idx)
-                { modules[capturedSlot] = indexToModule(idx); },
+                availableModuleNames,
+                availableModuleNames[toAvailableIndex(modules[capturedSlot])],
+                [&modules, capturedSlot, availableModules](size_t idx)
+                {
+                    if (idx < availableModules.size())
+                        modules[capturedSlot] = availableModules[idx];
+                },
                 dic.sizer);
 
             builder.addOption(SLOT_LABEL_IDS[slot], dropdown);

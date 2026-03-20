@@ -26,6 +26,8 @@ private:
     void onResume();
 
     [[nodiscard]] std::vector<std::string> getModuleNames() const;
+    [[nodiscard]] std::vector<std::string> getAvailableModuleNames() const;
+    [[nodiscard]] std::vector<WeaponModule> getAvailableModules() const;
     [[nodiscard]] static size_t moduleToIndex(WeaponModule module) noexcept;
     [[nodiscard]] static WeaponModule indexToModule(size_t index) noexcept;
 

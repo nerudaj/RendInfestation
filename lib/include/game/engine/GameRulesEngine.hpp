@@ -5,6 +5,7 @@
 #include "game/definitions/GameEvents.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
+#include "game/enums/WeaponModule.hpp"
 #include "input/Input.hpp"
 #include "misc/EventQueue.hpp"
 
@@ -52,6 +53,8 @@ private:
     void updateSpawner(const dgm::Time& time);
 
     void updateLifetimes(const dgm::Time& time);
+
+    void tryUnlockRandomModule();
 
     Weapon& getActiveWeapon(WeaponInventory& inventory) const
     {

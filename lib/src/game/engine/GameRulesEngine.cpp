@@ -173,6 +173,9 @@ void GameRulesEngine::updateSpawner(const dgm::Time& time)
 {
     auto& context = scene.survivalSpawnerContext;
 
+    // wave == -1 means Story mode, skip survival spawner logic
+    if (context.wave == -1) return;
+
     if (context.state == SurvivalModeState::WaitingForNextWave)
     {
         context.timeTillNextWave -= time.getElapsed();
@@ -214,7 +217,7 @@ void GameRulesEngine::updateSpawner(const dgm::Time& time)
         {
             context.state = SurvivalModeState::WaitingForNextWave;
             context.timeTillNextWave = sf::seconds(5.f);
-            postMessage(uni::format("Wave {} cleared!", context.wave));
+            tryUnlockRandomModule();
         }
     }
 }
@@ -235,6 +238,35 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
             eventQueue.pushEvent<event::ObjectDestroyed>(entity);
         }
     }
+}
+
+void GameRulesEngine::tryUnlockRandomModule()
+{
+    constexpr std::array<WeaponModule, 7> ALL_NON_NONE_MODULES = {
+        WeaponModule::SpreadBarrel,
+        WeaponModule::CadenceBarrel,
+        WeaponModule::ExplosiveAmmo,
+        WeaponModule::Ricochet,
+        WeaponModule::PassthruAmmo,
+        WeaponModule::BigBullet,
+        WeaponModule::Spikes,
+    };
+
+    auto& unlocked = scene.loadout.unlockedModules;
+
+    // Collect modules that are not yet unlocked
+    std::vector<WeaponModule> locked;
+    for (auto module : ALL_NON_NONE_MODULES)
+    {
+        if (!unlocked.contains(module))
+            locked.push_back(module);
+    }
+
+    if (locked.empty()) return; // All modules already unlocked
+
+    const auto chosen = locked[rand() % locked.size()];
+    unlocked.insert(chosen);
+    postMessage("New weapon module unlocked!");
 }
 
 void GameRulesEngine::handleProjectileToActorCollision(

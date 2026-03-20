@@ -10,6 +10,7 @@
 #include <DGM/dgm.hpp>
 #include <array>
 #include <entt/entt.hpp>
+#include <set>
 #include <vector>
 
 using Inventory = std::variant<
@@ -26,6 +27,7 @@ struct [[nodiscard]] WeaponLoadout final
     std::array<WeaponModule, 3> weapon2Modules = { WeaponModule::None,
                                                    WeaponModule::None,
                                                    WeaponModule::None };
+    std::set<WeaponModule> unlockedModules = {};
 };
 
 struct [[nodiscard]] LightSource final

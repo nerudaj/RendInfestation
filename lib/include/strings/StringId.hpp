@@ -73,5 +73,8 @@ enum class [[nodiscard]] StringId
     WeaponModule_BigBullet,
     WeaponModule_Spikes,
 
+    // Survival progression
+    NewWeaponModuleUnlocked,
+
     MaxId, // Make sure this one is always the last!
 };

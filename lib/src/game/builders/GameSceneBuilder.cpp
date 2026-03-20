@@ -48,12 +48,26 @@ GameScene GameSceneBuilder::createScene(
     for (auto&& prop : level.objectLayer.objects)
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
-
         auto entity =
             ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
     }
 
     auto artifact = evaluateTileLayers(level, actors, atlas, input);
+
+    // Initialize unlocked modules based on game mode
+    if (gameModeProperties.mode == GameMode::Story)
+    {
+        artifact.loadout.unlockedModules = {
+            WeaponModule::SpreadBarrel,
+            WeaponModule::CadenceBarrel,
+            WeaponModule::ExplosiveAmmo,
+            WeaponModule::Ricochet,
+            WeaponModule::PassthruAmmo,
+            WeaponModule::BigBullet,
+            WeaponModule::Spikes,
+        };
+    }
+    // For Survival, unlockedModules stays empty (no modules initially)
 
     return GameScene {
         .actors = std::move(actors),
@@ -99,7 +113,7 @@ GameScene GameSceneBuilder::createScene(
             sf::Vector2f(level.dataSize.componentWiseMul(level.voxelSize))),
         .enemySpawns = std::move(artifact.enemySpawns),
         .lights = std::move(artifact.lights),
-        .loadout = artifact.loadout,
+        .loadout = std::move(artifact.loadout),
         .survivalSpawnerContext =
             SurvivalSpawnerContext {
                 .wave = gameModeProperties.mode == GameMode::Survival ? 0 : -1,
