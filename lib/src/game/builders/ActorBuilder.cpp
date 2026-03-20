@@ -74,7 +74,9 @@ entt::entity ActorBuilder::createNpc(
         entity,
         0,
         std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-            ActorKind::Npc, BASE_MELEE_DAMAGE) });
+            ActorKind::Npc,
+            skin == SkinType::Bighead ? BASE_MELEE_DAMAGE
+                                      : BASE_MELEE_DAMAGE / 2) });
     actors.emplace<EntityInput>(
         entity, std::make_unique<NpcInput>(scene, entity));
 
