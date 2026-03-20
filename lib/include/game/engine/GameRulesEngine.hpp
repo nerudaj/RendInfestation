@@ -70,6 +70,12 @@ private:
     void handleTriggerToActorCollision(
         entt::entity triggerIdx, entt::entity actorIdx);
 
+    void postMessage(const std::string& message)
+    {
+        scene.hudMessage.text = message;
+        scene.hudMessage.displayTime = sf::seconds(3.f);
+    }
+
 private:
     EventQueue<GameEvent>& eventQueue;
     GameScene& scene;

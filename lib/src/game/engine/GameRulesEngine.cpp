@@ -164,6 +164,9 @@ void GameRulesEngine::update(const dgm::Time& time)
             }
         }
     }
+
+    if (scene.hudMessage.displayTime > sf::Time::Zero)
+        scene.hudMessage.displayTime -= time.getElapsed();
 }
 
 void GameRulesEngine::updateSpawner(const dgm::Time& time)
@@ -211,6 +214,7 @@ void GameRulesEngine::updateSpawner(const dgm::Time& time)
         {
             context.state = SurvivalModeState::WaitingForNextWave;
             context.timeTillNextWave = sf::seconds(5.f);
+            postMessage(uni::format("Wave {} cleared!", context.wave));
         }
     }
 }

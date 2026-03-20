@@ -53,6 +53,12 @@ struct [[nodiscard]] SurvivalSpawnerContext final
     SurvivalModeState state = SurvivalModeState::WaitingForNextWave;
 };
 
+struct [[nodiscard]] HudMessage final
+{
+    std::string text;
+    sf::Time displayTime = sf::Time::Zero;
+};
+
 struct [[nodiscard]] GameScene final
 {
     entt::registry actors;
@@ -68,4 +74,5 @@ struct [[nodiscard]] GameScene final
     const std::vector<LightSource> lights;
     WeaponLoadout loadout;
     SurvivalSpawnerContext survivalSpawnerContext;
+    HudMessage hudMessage;
 };

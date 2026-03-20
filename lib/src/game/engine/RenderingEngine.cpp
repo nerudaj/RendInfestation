@@ -226,6 +226,15 @@ void RenderingEngine::renderHud(dgm::Window& window)
             window.draw(text);
         }
     }
+
+    if (scene.hudMessage.displayTime > sf::Time::Zero)
+    {
+        text.setString(scene.hudMessage.text);
+        text.setPosition(
+            { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
+              window.getSize().y * 2.f / 3.f });
+        window.draw(text);
+    }
 }
 
 void RenderingEngine::renderTouchControls(dgm::Window& window)
