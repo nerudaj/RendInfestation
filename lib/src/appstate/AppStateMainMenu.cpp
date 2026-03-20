@@ -2,6 +2,7 @@
 #include "appstate/AppStateGame.hpp"
 #include "appstate/AppStateOptions.hpp"
 #include "appstate/CommonHandler.hpp"
+#include "game/definitions/GameMode.hpp"
 #include "misc/CMakeVars.hpp"
 #include "strings/StringProvider.hpp"
 #include "types/SemanticTypes.hpp"
@@ -44,21 +45,38 @@ void AppStateMainMenu::buildLayout()
         dic.guiBuilderFactory.createDefaultLayoutBuiler()
             .withNoBackgroundImage()
             .withTitle(CMakeVars::TITLE, HeadingLevel::H1)
-            .withContent(dic.guiBuilderFactory.createButtonListBuilder()
-                             .addButton(StringId::PlayButton, [&] { onPlay(); })
-                             .addButton(StringId::Options, [&] { onOptions(); })
-                             .addButton(
-                                 StringId::ExitButton,
-                                 [&] { onExit(); },
-                                 "MainMenu_Button_Exit")
-                             .build())
+            .withContent(
+                dic.guiBuilderFactory.createButtonListBuilder()
+                    .addButton(StringId::PlayButton, [&] { onPlay(); })
+                    .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
+                    .addButton(StringId::Options, [&] { onOptions(); })
+                    .addButton(
+                        StringId::ExitButton,
+                        [&] { onExit(); },
+                        "MainMenu_Button_Exit")
+                    .build())
             .withNoCornerButtons()
             .build());
 }
 
 void AppStateMainMenu::onPlay()
 {
-    app.pushState<AppStateGame>(dic);
+    app.pushState<AppStateGame>(
+        dic,
+        GameModeProperties {
+            .mode = GameMode::Story,
+            .mapName = "demo-01.json",
+        });
+}
+
+void AppStateMainMenu::onSurvival()
+{
+    app.pushState<AppStateGame>(
+        dic,
+        GameModeProperties {
+            .mode = GameMode::Survival,
+            .mapName = "survival-01.json",
+        });
 }
 
 void AppStateMainMenu::onOptions()

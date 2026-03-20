@@ -20,6 +20,8 @@ private:
 
     void onPlay();
 
+    void onSurvival();
+
     void onOptions();
 
     void onExit();

@@ -20,14 +20,22 @@
             "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 722.5,
-                "y": 829
+                "x": 1249.5,
+                "y": 442
+            }
+        },
+        "survival-01.tmx": {
+            "scale": 1,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 973.5,
+                "y": 822
             }
         }
     },
     "last.exportedFilePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/levels",
     "last.imagePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/graphics",
-    "map.height": 40,
+    "map.height": 60,
     "map.lastUsedExportFilter": "Všechny soubory (*)",
     "map.lastUsedFormat": "tmx",
     "map.width": 60,

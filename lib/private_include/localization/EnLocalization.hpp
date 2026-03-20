@@ -7,6 +7,7 @@ using enum StringId;
 
 const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { PlayButton, "Play" },
+    { SurvivalButton, "Survival" },
     { Options, "Options" },
     { PauseTitle, "Game paused" },
     { ExitButton, "Exit" },

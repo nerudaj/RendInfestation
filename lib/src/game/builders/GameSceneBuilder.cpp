@@ -22,16 +22,95 @@ NpcInventory GameSceneBuilder::createNpcInventory()
     };
 }
 
+const int TRANSPARENT_TILE_ID = 28;
 const int WALL_LIGHT_TILE_ID = 38;
 const int DOOR_TILE_ID = 42;
+const int ENEMY_SPAWN_TILE_ID = 43;
+const int PLAYER_SPAWN_TILE_ID = 44;
 
 GameScene GameSceneBuilder::createScene(
     const GameTextureAtlas& atlas,
     const dgm::ResourceManager& resmgr,
-    Input& input)
+    Input& input,
+    const GameModeProperties& gameModeProperties)
 {
-    auto tiledLevel = resmgr.get<tiled::FiniteMapModel>("demo-01.json");
-    // assert(tiledLevel.layers.size() == 2);
+    const auto level = fetchLevel(resmgr, gameModeProperties);
+
+    auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
+    entt::registry actors;
+
+    const WeaponLoadout playerLoadout {
+        .weapon1Modules = { WeaponModule::CadenceBarrel,
+                            WeaponModule::ExplosiveAmmo,
+                            WeaponModule::None },
+        .weapon2Modules = { WeaponModule::SpreadBarrel,
+                            WeaponModule::Spikes,
+                            WeaponModule::None },
+    };
+
+    for (auto&& prop : level.objectLayer.objects)
+    {
+        const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
+
+        auto entity =
+            ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
+    }
+
+    auto artifact = evaluateTileLayers(level, actors, atlas, input);
+
+    return GameScene {
+        .actors = std::move(actors),
+        .playerEntity = artifact.playerEntity,
+        .levelMesh = dgm::Mesh(
+            level.meshLayer.data
+                | std::views::transform(
+                    [](int tile)
+                    {
+                        return isPassableTile(tile - 1) ? -(tile - 1)
+                                                        : (tile - 1);
+                    })
+                | uniranges::to<std::vector>(),
+            level.dataSize,
+            level.voxelSize),
+        .decorationsMesh = dgm::Mesh(
+            level.decorLayer.data
+                | std::views::transform(
+                    [](int tile)
+                    {
+                        return tile - 1 == DOOR_TILE_ID ? 28
+                               : tile == 0              ? TRANSPARENT_TILE_ID
+                                                        : tile - 1;
+                    })
+                | uniranges::to<std::vector>(),
+            level.dataSize,
+            level.voxelSize),
+        .altLevelMesh = dgm::Mesh(
+            level.meshLayer.data
+                | std::views::transform(
+                    [](int tile)
+                    {
+                        return isPassableTileAlt(tile - 1) ? -(tile - 1)
+                                                           : (tile - 1);
+                    })
+                | uniranges::to<std::vector>(),
+            level.dataSize,
+            level.voxelSize),
+        .levelBounds = dgm::Rect(
+            { 0.f, 0.f },
+            sf::Vector2f(level.dataSize.componentWiseMul(level.voxelSize))),
+        .enemySpawns = std::move(artifact.enemySpawns),
+        .lights = std::move(artifact.lights),
+        .loadout = playerLoadout,
+    };
+}
+
+GameSceneBuilder::Level GameSceneBuilder::fetchLevel(
+    const dgm::ResourceManager& resmgr,
+    const GameModeProperties& gameModeProperties)
+{
+    auto& tiledLevel =
+        resmgr.get<tiled::FiniteMapModel>(gameModeProperties.mapName);
+    assert(tiledLevel.layers.size() == 3);
     assert(std::holds_alternative<tiled::TileLayerModel>(tiledLevel.layers[0]));
     assert(
         std::holds_alternative<tiled::ObjectGroupModel>(tiledLevel.layers[1]));
@@ -43,10 +122,24 @@ GameScene GameSceneBuilder::createScene(
         sf::Vector2u { tiledLevel.tilewidth, tiledLevel.tileheight };
     const auto levelDataSize = sf::Vector2u { layer.width, layer.height };
 
-    auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
-    entt::registry actors;
+    return Level {
+        .meshLayer = layer,
+        .objectLayer = std::get<tiled::ObjectGroupModel>(tiledLevel.layers[1]),
+        .decorLayer = decorLayer,
+        .dataSize = levelDataSize,
+        .voxelSize = levelVoxelSize,
+    };
+}
 
-    const WeaponLoadout loadout {
+GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
+    const Level& level,
+    entt::registry& actors,
+    const GameTextureAtlas& atlas,
+    Input& input)
+{
+    LevelCreationArtifact result;
+
+    const WeaponLoadout playerLoadout {
         .weapon1Modules = { WeaponModule::CadenceBarrel,
                             WeaponModule::ExplosiveAmmo,
                             WeaponModule::None },
@@ -55,97 +148,65 @@ GameScene GameSceneBuilder::createScene(
                             WeaponModule::None },
     };
 
-    auto playerEntity = ActorBuilder::createPlayer(
-        actors, { 100.f, 150.f }, atlas, input, loadout);
-
-    auto lights = std::vector<LightSource>();
-
-    for (auto&& prop :
-         std::get<tiled::ObjectGroupModel>(tiledLevel.layers[1]).objects)
+    auto tileCoordToWorld = [&](unsigned x, unsigned y)
     {
-        const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
+        return sf::Vector2f {
+            x * level.voxelSize.x + level.voxelSize.x / 2.f,
+            y * level.voxelSize.y + level.voxelSize.y / 2.f,
+        };
+    };
 
-        auto entity =
-            ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
-    }
-
-    for (unsigned idx = 0, y = 0; y < levelDataSize.y; ++y)
+    for (unsigned idx = 0, y = 0; y < level.dataSize.y; ++y)
     {
-        for (unsigned x = 0; x < levelDataSize.x; ++x, ++idx)
+        for (unsigned x = 0; x < level.dataSize.x; ++x, ++idx)
         {
-            if (layer.data[idx] - 1 == WALL_LIGHT_TILE_ID)
+            if (level.meshLayer.data[idx] - 1 == WALL_LIGHT_TILE_ID)
             {
                 const auto position =
-                    sf::Vector2u { x, y }.componentWiseMul(levelVoxelSize)
+                    sf::Vector2u { x, y }.componentWiseMul(level.voxelSize)
                     + sf::Vector2u { 16, 69 };
-                lights.push_back(LightSource {
+                result.lights.push_back(LightSource {
                     .position = sf::Vector2f { position },
                     .spriteId = 0,
                     .color = COLOR_MUTED_YELLOW,
                 });
             }
 
-            if (decorLayer.data[idx] - 1 == DOOR_TILE_ID
-                && decorLayer.data[idx + 1] - 1 == DOOR_TILE_ID
-                && decorLayer.data[idx + levelDataSize.x] - 1
+            if (level.decorLayer.data[idx] - 1 == ENEMY_SPAWN_TILE_ID)
+            {
+                result.enemySpawns.push_back(tileCoordToWorld(x, y));
+            }
+            else if (level.decorLayer.data[idx] - 1 == PLAYER_SPAWN_TILE_ID)
+            {
+                if (result.playerEntity != entt::null)
+                {
+                    throw std::runtime_error(
+                        "Multiple player spawn points in level");
+                }
+
+                result.playerEntity = ActorBuilder::createPlayer(
+                    actors,
+                    tileCoordToWorld(x, y),
+                    atlas,
+                    input,
+                    playerLoadout);
+            }
+            else if (
+                level.decorLayer.data[idx] - 1 == DOOR_TILE_ID
+                && level.decorLayer.data[idx + 1] - 1 == DOOR_TILE_ID
+                && level.decorLayer.data[idx + level.dataSize.x] - 1
                        == DOOR_TILE_ID) // door horizontal
             {
                 ActorBuilder::createDoor(
                     actors,
                     sf::Vector2f {
-                        sf::Vector2u { x * levelVoxelSize.x,
-                                       y * levelVoxelSize.y + 11 },
+                        sf::Vector2u { x * level.voxelSize.x,
+                                       y * level.voxelSize.y + 11 },
                     },
                     atlas);
             }
         }
     }
 
-    return GameScene {
-        .actors = std::move(actors),
-        .playerEntity = playerEntity,
-        .levelMesh = dgm::Mesh(
-            layer.data
-                | std::views::transform(
-                    [](int tile)
-                    {
-                        return isPassableTile(tile - 1) ? -(tile - 1)
-                                                        : (tile - 1);
-                    })
-                | uniranges::to<std::vector>(),
-            levelDataSize,
-            levelVoxelSize),
-        .decorationsMesh = dgm::Mesh(
-            decorLayer.data
-                | std::views::transform(
-                    [](int tile)
-                    { return tile - 1 == DOOR_TILE_ID ? 28 : tile - 1; })
-                | uniranges::to<std::vector>(),
-            levelDataSize,
-            levelVoxelSize),
-        .altLevelMesh = dgm::Mesh(
-            layer.data
-                | std::views::transform(
-                    [](int tile)
-                    {
-                        return isPassableTileAlt(tile - 1) ? -(tile - 1)
-                                                           : (tile - 1);
-                    })
-                | uniranges::to<std::vector>(),
-            levelDataSize,
-            levelVoxelSize),
-        .levelBounds = dgm::Rect(
-            { 0.f, 0.f },
-            sf::Vector2f(levelDataSize.componentWiseMul(levelVoxelSize))),
-        .enemySpawns =
-            std::vector<sf::Vector2f> {
-                { 1006.f, 109.f },
-                { 1808.f, 170.f },
-                { 80.f, 681.f },
-                { 1846, 703.f },
-                { 1471.f, 1116.f },
-            },
-        .lights = std::move(lights),
-        .loadout = loadout,
-    };
+    return result;
 }

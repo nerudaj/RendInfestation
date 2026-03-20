@@ -3,6 +3,7 @@
 #include "game/Janitor.hpp"
 #include "game/builders/GameSceneBuilder.hpp"
 #include "game/builders/GameTextureAtlasBuilder.hpp"
+#include "game/definitions/GameMode.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
 #include "game/engine/AnimationEngine.hpp"
@@ -19,7 +20,10 @@
 class [[nodiscard]] AppStateGame : public dgm::AppState
 {
 public:
-    AppStateGame(dgm::App& app, DependencyContainer& dic)
+    AppStateGame(
+        dgm::App& app,
+        DependencyContainer& dic,
+        const GameModeProperties& gameModeProperties)
         : dgm::AppState(
               app,
               dgm::AppStateConfig {
@@ -28,7 +32,8 @@ public:
         , dic(dic)
         , atlas(GameTextureAtlasBuilder::createTextureAtlas(
               dic.resmgr, { 1024, 1024 }))
-        , scene(GameSceneBuilder::createScene(atlas, dic.resmgr, dic.input))
+        , scene(GameSceneBuilder::createScene(
+              atlas, dic.resmgr, dic.input, gameModeProperties))
         , gameRulesEngine(gameEvents, scene, atlas, dic.input, dic.soundPlayer)
         , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
