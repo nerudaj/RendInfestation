@@ -27,3 +27,6 @@ constexpr const sf::Color COLOR_WHITE = sf::Color { 0xff, 0xf1, 0xe8 };
 constexpr const sf::Color COLOR_GREEN = sf::Color { 0xa8, 0xe7, 0x2e };
 constexpr const sf::Color COLOR_YELLOW = sf::Color { 0xff, 0xec, 0x27 };
 constexpr const sf::Color COLOR_MUTED_YELLOW = sf::Color { 0xf3, 0xef, 0x7d };
+constexpr const sf::Time SPAWNER_SPAWN_DELAY = sf::seconds(1.f);
+const static inline auto INTERNAL_GAME_RESOLUTION =
+    sf::Vector2f { 576.f, 324.f };

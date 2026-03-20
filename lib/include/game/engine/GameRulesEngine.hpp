@@ -48,9 +48,11 @@ public:
 public:
     void update(const dgm::Time& time);
 
+private:
+    void updateSpawner(const dgm::Time& time);
+
     void updateLifetimes(const dgm::Time& time);
 
-private:
     Weapon& getActiveWeapon(WeaponInventory& inventory) const
     {
         return inventory.weapons[inventory.activeWeapon];

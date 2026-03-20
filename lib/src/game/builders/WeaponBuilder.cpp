@@ -12,7 +12,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
         return [](WeaponProperties props)
         {
             props.soundId = SoundId::Shotgun;
-            props.numShots = 4;
+            props.numShots *= 4;
             props.baseProjectileDamage /= 2;
             props.kickback += 100.f;
             props.fireDelay *= 1.2f;
@@ -94,6 +94,7 @@ Weapon WeaponBuilder::createWeapon(
     }
 
     return Weapon {
+        .soundId = properties.soundId,
         .cooldown = properties.fireDelay,
         .projectileLifetime = BASE_PROJECTILE_LIFETIME,
         .kickback = properties.kickback,

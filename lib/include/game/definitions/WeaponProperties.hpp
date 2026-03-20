@@ -8,7 +8,7 @@
 
 struct [[nodiscard]] WeaponProperties final
 {
-    SoundId::IdType soundId = SoundId::Error;
+    SoundId::IdType soundId = SoundId::Bullet;
     int baseProjectileDamage = BASE_PROJECTILE_DAMAGE;
     int numShots = 1;
     int spread = 1;

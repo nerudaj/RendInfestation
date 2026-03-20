@@ -108,17 +108,7 @@ void GameRulesEngine::operator()(const event::DoorStartsClosing& e)
 
 void GameRulesEngine::update(const dgm::Time& time)
 {
-    scene.spawnTicker += time.getElapsed();
-    if (scene.spawnTicker > scene.spawnDelay)
-    {
-        scene.spawnTicker = sf::Time::Zero;
-        ActorBuilder::createNpc(
-            scene.actors,
-            scene.enemySpawns[rand() % scene.enemySpawns.size()],
-            true ? SkinType::Scuttlebug : SkinType::Bighead,
-            scene,
-            atlas);
-    }
+    updateSpawner(time);
 
     for (auto&& [entity, controller, body, lookDirection, weaponInventory] :
          scene.actors
@@ -150,8 +140,9 @@ void GameRulesEngine::update(const dgm::Time& time)
 
     for (auto&& [entity, health] : scene.actors.view<Health>().each())
     {
-        if (health.get() <= 0)
-            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        if (health.get() > 0) continue;
+        ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
+        eventQueue.pushEvent<event::ObjectDestroyed>(entity);
     }
 
     for (auto&& [entity, inventory] :
@@ -171,6 +162,55 @@ void GameRulesEngine::update(const dgm::Time& time)
                 eventQueue.pushEvent<event::DoorStartsClosing>(
                     inventory.targetEntity);
             }
+        }
+    }
+}
+
+void GameRulesEngine::updateSpawner(const dgm::Time& time)
+{
+    auto& context = scene.survivalSpawnerContext;
+
+    if (context.state == SurvivalModeState::WaitingForNextWave)
+    {
+        context.timeTillNextWave -= time.getElapsed();
+        if (context.timeTillNextWave <= sf::Time::Zero)
+        {
+            ++context.wave;
+            context.enemiesSpawnedInCurrentWave = 0;
+            context.enemiesKilledInCurrentWave = 0;
+            context.enemiesInCurrentWave = context.wave * 10;
+            context.state = SurvivalModeState::SpawningEnemies;
+        }
+    }
+    else if (context.state == SurvivalModeState::SpawningEnemies)
+    {
+        context.timeTillNextSpawn -= time.getElapsed();
+        if (context.timeTillNextSpawn <= sf::Time::Zero)
+        {
+            context.timeTillNextSpawn = SPAWNER_SPAWN_DELAY;
+            ++context.enemiesSpawnedInCurrentWave;
+            ActorBuilder::createNpc(
+                scene.actors,
+                scene.enemySpawns[rand() % scene.enemySpawns.size()],
+                context.enemiesSpawnedInCurrentWave % 5 == 0
+                    ? SkinType::Bighead
+                    : SkinType::Scuttlebug,
+                scene,
+                atlas);
+
+            if (context.enemiesInCurrentWave
+                == context.enemiesSpawnedInCurrentWave)
+            {
+                context.state = SurvivalModeState::WaitingForEnemiesToDie;
+            }
+        }
+    }
+    else if (context.state == SurvivalModeState::WaitingForEnemiesToDie)
+    {
+        if (context.enemiesKilledInCurrentWave == context.enemiesInCurrentWave)
+        {
+            context.state = SurvivalModeState::WaitingForNextWave;
+            context.timeTillNextWave = sf::seconds(5.f);
         }
     }
 }

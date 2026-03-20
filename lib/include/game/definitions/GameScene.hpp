@@ -35,6 +35,24 @@ struct [[nodiscard]] LightSource final
     sf::Color color;
 };
 
+enum class SurvivalModeState
+{
+    WaitingForNextWave,
+    SpawningEnemies,
+    WaitingForEnemiesToDie,
+};
+
+struct [[nodiscard]] SurvivalSpawnerContext final
+{
+    int wave = -1;
+    int enemiesInCurrentWave = 10;
+    int enemiesSpawnedInCurrentWave = 0;
+    int enemiesKilledInCurrentWave = 0;
+    sf::Time timeTillNextWave = sf::seconds(5.f);
+    sf::Time timeTillNextSpawn = SPAWNER_SPAWN_DELAY;
+    SurvivalModeState state = SurvivalModeState::WaitingForNextWave;
+};
+
 struct [[nodiscard]] GameScene final
 {
     entt::registry actors;
@@ -49,4 +67,5 @@ struct [[nodiscard]] GameScene final
     const sf::Time spawnDelay = sf::seconds(1.f);
     const std::vector<LightSource> lights;
     WeaponLoadout loadout;
+    SurvivalSpawnerContext survivalSpawnerContext;
 };

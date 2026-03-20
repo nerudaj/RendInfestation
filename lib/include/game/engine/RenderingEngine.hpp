@@ -67,10 +67,6 @@ private:
     std::vector<Face> getActorFaces() const;
 
 private:
-    const static inline auto INTERNAL_GAME_RESOLUTION =
-        // sf::Vector2f { 640.f, 360.f };
-        sf::Vector2f { 576.f, 324.f };
-
     GameScene& scene;
     const GameTextureAtlas& atlas;
     const AppSettings& settings;

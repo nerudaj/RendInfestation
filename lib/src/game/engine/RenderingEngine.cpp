@@ -188,17 +188,44 @@ void RenderingEngine::renderHud(dgm::Window& window)
     text.setString(fpsCounter.getText());
     window.draw(text);
 
-    text.setPosition({ 10.f, 30.f });
-    text.setString(uni::format(
-        "Player pos: {}",
-        dgm::Utility::to_string(
-            scene.actors.get<Collider>(scene.playerEntity).getPosition())));
-    window.draw(text);
-
     text.setPosition({ 10.f, 50.f });
     const int health = scene.actors.get<Health>(scene.playerEntity).get();
     text.setString(uni::format("Player health: {}", health));
     window.draw(text);
+
+    if (scene.survivalSpawnerContext.wave != -1)
+    {
+        if (scene.survivalSpawnerContext.state
+            == SurvivalModeState::WaitingForNextWave)
+        {
+            text.setString(uni::format(
+                "Next wave in: {}s",
+                std::ceil(scene.survivalSpawnerContext.timeTillNextWave
+                              .asSeconds())));
+            text.setPosition(
+                { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
+                  10.f });
+            window.draw(text);
+        }
+        else
+        {
+            text.setString(
+                uni::format("Wave: {}", scene.survivalSpawnerContext.wave));
+            text.setPosition(
+                { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
+                  10.f });
+            window.draw(text);
+
+            text.setString(uni::format(
+                "{} / {}",
+                scene.survivalSpawnerContext.enemiesKilledInCurrentWave,
+                scene.survivalSpawnerContext.enemiesInCurrentWave));
+            text.setPosition(
+                { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
+                  40.f });
+            window.draw(text);
+        }
+    }
 }
 
 void RenderingEngine::renderTouchControls(dgm::Window& window)

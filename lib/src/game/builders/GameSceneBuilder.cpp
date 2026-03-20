@@ -100,6 +100,12 @@ GameScene GameSceneBuilder::createScene(
         .enemySpawns = std::move(artifact.enemySpawns),
         .lights = std::move(artifact.lights),
         .loadout = artifact.loadout,
+        .survivalSpawnerContext =
+            SurvivalSpawnerContext {
+                .wave = gameModeProperties.mode == GameMode::Survival ? 0 : -1,
+                .enemiesInCurrentWave =
+                    gameModeProperties.mode == GameMode::Survival ? 5 : 1000000,
+            },
     };
 }
 
