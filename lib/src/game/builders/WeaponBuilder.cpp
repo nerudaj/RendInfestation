@@ -69,6 +69,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
                                      | ProjectileTraits::Shrapnels
                                      | ProjectileTraits::Bouncy;
             props.spread *= 4;
+            props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
             return props;
         };
 
@@ -97,6 +98,7 @@ Weapon WeaponBuilder::createWeapon(
         .projectileLifetime = BASE_PROJECTILE_LIFETIME,
         .kickback = properties.kickback,
         .projectileSpeed = properties.projectileSpeed,
+        .projectileSpeedVariance = properties.projectileSpeedVariance,
         .spread = properties.spread,
         .numShots = properties.numShots,
         .projectileSkin = properties.projectileSkin,

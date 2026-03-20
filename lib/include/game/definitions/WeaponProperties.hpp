@@ -15,6 +15,7 @@ struct [[nodiscard]] WeaponProperties final
     float kickback = BASE_PROJECTILE_KICKBACK;
     sf::Time fireDelay = BASE_WEAPON_FIRE_DELAY;
     float projectileSpeed = BASE_PROJECTILE_SPEED;
+    float projectileSpeedVariance = 0.f;
     ProjectileTraits projectileTraits = ProjectileTraits::None;
     SkinType projectileSkin = SkinType::SmallBullet;
 };

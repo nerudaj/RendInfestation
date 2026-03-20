@@ -13,6 +13,7 @@ struct [[nodiscard]] Weapon final
     sf::Time projectileLifetime = sf::seconds(0.f);
     float kickback = 0.f;
     float projectileSpeed = 0.f;
+    float projectileSpeedVariance = 0.f;
     int spread = 1; // degrees
     int numShots = 1;
     SkinType projectileSkin = SkinType::SmallBullet;

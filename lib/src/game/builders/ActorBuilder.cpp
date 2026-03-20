@@ -208,10 +208,14 @@ entt::entity ActorBuilder::createProjectile(
         "reportMeshCollisions"_true,
         "reportActorCollisions"_true,
         "nonblocking"_true);
+
+    const float speedVariance = static_cast<float>(rand() % 200 - 100) / 100.f
+                                * weapon.projectileSpeedVariance;
+
     actors.emplace<PhysicsBody>(
         entity,
         PhysicsBody {
-            .forward = direction * weapon.projectileSpeed,
+            .forward = direction * (weapon.projectileSpeed + speedVariance),
             .bounciness = 0.8f,
             .friction = weapon.defaultProjectileInventory.traits
                                 & ProjectileTraits::Shrapnels
