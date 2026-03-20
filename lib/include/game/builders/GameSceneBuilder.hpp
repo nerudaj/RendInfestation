@@ -33,6 +33,7 @@ private:
         entt::entity playerEntity = entt::null;
         std::vector<LightSource> lights = {};
         std::vector<sf::Vector2f> enemySpawns = {};
+        WeaponLoadout loadout = {};
     };
 
 private:

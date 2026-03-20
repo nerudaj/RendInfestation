@@ -28,6 +28,12 @@ const int DOOR_TILE_ID = 42;
 const int ENEMY_SPAWN_TILE_ID = 43;
 const int PLAYER_SPAWN_TILE_ID = 44;
 
+static inline bool shouldDecorTileBeTransparent(int tile)
+{
+    return tile - 1 == DOOR_TILE_ID || tile - 1 == PLAYER_SPAWN_TILE_ID
+           || tile == 0;
+}
+
 GameScene GameSceneBuilder::createScene(
     const GameTextureAtlas& atlas,
     const dgm::ResourceManager& resmgr,
@@ -38,15 +44,6 @@ GameScene GameSceneBuilder::createScene(
 
     auto&& tilesClip = atlas.atlas.getClip(atlas.tilesLocation);
     entt::registry actors;
-
-    const WeaponLoadout playerLoadout {
-        .weapon1Modules = { WeaponModule::CadenceBarrel,
-                            WeaponModule::ExplosiveAmmo,
-                            WeaponModule::None },
-        .weapon2Modules = { WeaponModule::SpreadBarrel,
-                            WeaponModule::Spikes,
-                            WeaponModule::None },
-    };
 
     for (auto&& prop : level.objectLayer.objects)
     {
@@ -67,7 +64,9 @@ GameScene GameSceneBuilder::createScene(
                     [](int tile)
                     {
                         return isPassableTile(tile - 1) ? -(tile - 1)
-                                                        : (tile - 1);
+                               : shouldDecorTileBeTransparent(tile)
+                                   ? TRANSPARENT_TILE_ID
+                                   : tile - 1;
                     })
                 | uniranges::to<std::vector>(),
             level.dataSize,
@@ -77,9 +76,9 @@ GameScene GameSceneBuilder::createScene(
                 | std::views::transform(
                     [](int tile)
                     {
-                        return tile - 1 == DOOR_TILE_ID ? 28
-                               : tile == 0              ? TRANSPARENT_TILE_ID
-                                                        : tile - 1;
+                        return shouldDecorTileBeTransparent(tile)
+                                   ? TRANSPARENT_TILE_ID
+                                   : tile - 1;
                     })
                 | uniranges::to<std::vector>(),
             level.dataSize,
@@ -100,7 +99,7 @@ GameScene GameSceneBuilder::createScene(
             sf::Vector2f(level.dataSize.componentWiseMul(level.voxelSize))),
         .enemySpawns = std::move(artifact.enemySpawns),
         .lights = std::move(artifact.lights),
-        .loadout = playerLoadout,
+        .loadout = artifact.loadout,
     };
 }
 
@@ -137,15 +136,15 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
     const GameTextureAtlas& atlas,
     Input& input)
 {
-    LevelCreationArtifact result;
-
-    const WeaponLoadout playerLoadout {
-        .weapon1Modules = { WeaponModule::CadenceBarrel,
-                            WeaponModule::ExplosiveAmmo,
-                            WeaponModule::None },
-        .weapon2Modules = { WeaponModule::SpreadBarrel,
-                            WeaponModule::Spikes,
-                            WeaponModule::None },
+    LevelCreationArtifact result {
+        .loadout = {
+            .weapon1Modules = { WeaponModule::None,
+                                WeaponModule::None,
+                                WeaponModule::None },
+            .weapon2Modules = { WeaponModule::SpreadBarrel,
+                                WeaponModule::None,
+                                WeaponModule::None },
+        },
     };
 
     auto tileCoordToWorld = [&](unsigned x, unsigned y)
@@ -189,7 +188,7 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
                     tileCoordToWorld(x, y),
                     atlas,
                     input,
-                    playerLoadout);
+                    result.loadout);
             }
             else if (
                 level.decorLayer.data[idx] - 1 == DOOR_TILE_ID
