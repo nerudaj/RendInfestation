@@ -19,6 +19,14 @@ void AppStateGame::input()
             dic.jukebox.resume();
         else if (event->is<sf::Event::FocusLost>())
             dic.jukebox.stop();
+        else if (event->is<sf::Event::KeyPressed>())
+        {
+            if (event->getIf<sf::Event::KeyPressed>()->code
+                == sf::Keyboard::Key::P)
+            {
+                std::ignore = app.window.getScreenshot().saveToFile("ss.png");
+            }
+        }
         else
         {
             dic.touchController.processEvent(event);
