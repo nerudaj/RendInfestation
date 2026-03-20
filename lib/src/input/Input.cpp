@@ -32,17 +32,15 @@ sf::Vector2f Input::getAimDirection() const
     const sf::Vector2f touchAim = touchController.getAimDirection();
 
     if (controllerAim != sf::Vector2f {} || touchAim != sf::Vector2f {})
-        return controllerAim + touchAim;
+        return (controllerAim + touchAim) * 100.f;
 
     // Fallback: direction from screen center to mouse cursor
     const sf::Vector2f center { sf::Vector2f(window.getSize()) / 2.f };
-    const sf::Vector2f mousePos {
-        sf::Vector2f(sf::Mouse::getPosition(window))
-    };
+    const sf::Vector2f mousePos { sf::Vector2f(
+        sf::Mouse::getPosition(window)) };
     const sf::Vector2f delta = mousePos - center;
-    if (delta == sf::Vector2f {})
-        return {};
-    return delta / delta.length();
+    if (delta == sf::Vector2f {}) return {};
+    return delta;
 };
 
 bool Input::isShootPressed() const

@@ -92,7 +92,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 
     pipeline.addFace(
         scene.actors.get<Collider>(scene.playerEntity).getPosition()
-            + scene.actors.get<LookDirection>(scene.playerEntity).get() * 100.f,
+            + scene.actors.get<LookDirection>(scene.playerEntity).get(),
         sf::FloatRect {
             atlas.atlas.getClip(atlas.crosshairsLocation).getFrame(0) });
 

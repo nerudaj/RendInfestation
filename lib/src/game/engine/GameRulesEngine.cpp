@@ -48,12 +48,13 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     // TODO: might not be POV
     soundPlayer.playPovSound(weapon.soundId);
 
+    const auto unitDirection = dgm::Math::toUnit(lookDirection.get());
     for (auto&& _ : std::views::iota(0, weapon.numShots))
     {
         const auto spread = rand() % (weapon.spread * 2) - weapon.spread;
 
-        const auto direction = lookDirection.get().rotatedBy(
-            sf::degrees(static_cast<float>(spread)));
+        const auto direction =
+            unitDirection.rotatedBy(sf::degrees(static_cast<float>(spread)));
 
         auto projectile = ActorBuilder::createProjectile(
             scene.actors,
@@ -70,7 +71,7 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
         projectileCollider.move(spawnOffset);
     }
 
-    shooterBody.forward += -lookDirection.get() * weapon.kickback;
+    shooterBody.forward += -unitDirection * weapon.kickback;
 }
 
 void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
