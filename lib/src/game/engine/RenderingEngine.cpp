@@ -168,8 +168,6 @@ void RenderingEngine::renderColliders(dgm::Window& window)
 
 void RenderingEngine::renderLights(dgm::Window& window)
 {
-    return;
-
     sf::RectangleShape blackRect;
     blackRect.setFillColor(sf::Color { 0, 0, 0, 128 });
     blackRect.setSize(INTERNAL_GAME_RESOLUTION);

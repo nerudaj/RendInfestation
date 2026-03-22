@@ -201,7 +201,6 @@ void GameRulesEngine::updateSpawner(const dgm::Time& time)
                 context.enemiesSpawnedInCurrentWave % 5 == 0
                     ? SkinType::Bighead
                     : SkinType::Scuttlebug,
-                scene,
                 atlas);
 
             if (context.enemiesInCurrentWave
@@ -243,12 +242,9 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
 void GameRulesEngine::tryUnlockRandomModule()
 {
     constexpr std::array<WeaponModule, 7> ALL_NON_NONE_MODULES = {
-        WeaponModule::SpreadBarrel,
-        WeaponModule::CadenceBarrel,
-        WeaponModule::ExplosiveAmmo,
-        WeaponModule::Ricochet,
-        WeaponModule::PassthruAmmo,
-        WeaponModule::BigBullet,
+        WeaponModule::SpreadBarrel,  WeaponModule::CadenceBarrel,
+        WeaponModule::ExplosiveAmmo, WeaponModule::Ricochet,
+        WeaponModule::PassthruAmmo,  WeaponModule::BigBullet,
         WeaponModule::Spikes,
     };
 
@@ -258,8 +254,7 @@ void GameRulesEngine::tryUnlockRandomModule()
     std::vector<WeaponModule> locked;
     for (auto module : ALL_NON_NONE_MODULES)
     {
-        if (!unlocked.contains(module))
-            locked.push_back(module);
+        if (!unlocked.contains(module)) locked.push_back(module);
     }
 
     if (locked.empty()) return; // All modules already unlocked

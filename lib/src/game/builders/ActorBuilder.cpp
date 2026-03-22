@@ -1,6 +1,7 @@
 #include "game/builders/ActorBuilder.hpp"
 #include "game/builders/WeaponBuilder.hpp"
 #include "game/definitions/Constants.hpp"
+#include "game/definitions/NpcBlackboard.hpp"
 #include "game/input/NpcInput.hpp"
 #include "game/input/PlayerInput.hpp"
 #include "types/SemanticTypes.hpp"
@@ -52,7 +53,6 @@ entt::entity ActorBuilder::createNpc(
     entt::registry& actors,
     const sf::Vector2f& spawnPosition,
     const SkinType skin,
-    const GameScene& scene,
     const GameTextureAtlas& atlas)
 {
     auto entity = actors.create();
@@ -77,8 +77,8 @@ entt::entity ActorBuilder::createNpc(
             ActorKind::Npc,
             skin == SkinType::Bighead ? BASE_MELEE_DAMAGE
                                       : BASE_MELEE_DAMAGE / 2) });
-    actors.emplace<EntityInput>(
-        entity, std::make_unique<NpcInput>(scene, entity));
+    actors.emplace<EntityInput>(entity, std::make_unique<NpcInput>());
+    actors.emplace<NpcBlackboard>(entity);
 
     actors.get<Skin>(entity).animation.setState("walk-front", "looping"_true);
 

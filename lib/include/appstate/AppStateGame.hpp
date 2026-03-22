@@ -6,6 +6,7 @@
 #include "game/definitions/GameMode.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
+#include "game/engine/AiEngine.hpp"
 #include "game/engine/AnimationEngine.hpp"
 #include "game/engine/GameRulesEngine.hpp"
 #include "game/engine/PhysicsEngine.hpp"
@@ -34,6 +35,7 @@ public:
               dic.resmgr, { 1024, 1024 }))
         , scene(GameSceneBuilder::createScene(
               atlas, dic.resmgr, dic.input, gameModeProperties))
+        , aiEngine(scene)
         , gameRulesEngine(gameEvents, scene, atlas, dic.input, dic.soundPlayer)
         , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
@@ -57,6 +59,7 @@ private:
     GameTextureAtlas atlas;
     GameScene scene;
     EventQueue<GameEvent> gameEvents;
+    AiEngine aiEngine;
     GameRulesEngine gameRulesEngine;
     AnimationEngine animationEngine;
     PhysicsEngine physicsEngine;

@@ -6,34 +6,34 @@
 class NpcInput final : public InputInterface
 {
 public:
-    explicit NpcInput(const GameScene& scene, entt::entity thisNpc) noexcept
-        : scene(scene), thisNpc(thisNpc)
+    void setForward(const sf::Vector2f& newForward)
     {
+        forward = newForward;
     }
 
-public:
     [[nodiscard]] sf::Vector2f getForward() const override
     {
-        if (!isWalking()) return { 0.f, 0.f };
+        return forward;
+    }
 
-        const auto toPlayer = getDirectionToPlayer();
-        if (toPlayer.length() > 20.f)
-        {
-            return dgm::Math::toUnit(toPlayer);
-        }
-        return sf::Vector2f { 0.f, 0.f };
+    void setAimDirection(const sf::Vector2f& newAimDirection)
+    {
+        aimDirection = newAimDirection;
     }
 
     [[nodiscard]] sf::Vector2f getAimDirection() const
     {
-        return dgm::Math::toUnit(getDirectionToPlayer());
+        return aimDirection;
+    }
+
+    void setShooting(bool value)
+    {
+        shooting = value;
     }
 
     [[nodiscard]] bool isShootPressed() const
     {
-        const auto toPlayer = getDirectionToPlayer();
-        if (isWalking() && toPlayer.length() <= 20.f) return true;
-        return false;
+        return shooting;
     }
 
     [[nodiscard]] bool isSwapWeaponsPressed() const
@@ -41,20 +41,15 @@ public:
         return false;
     }
 
-private:
-    sf::Vector2f getDirectionToPlayer() const
+    void clearInputs()
     {
-        return scene.actors.get<Collider>(scene.playerEntity).getPosition()
-               - scene.actors.get<Collider>(thisNpc).getPosition();
-    }
-
-    bool isWalking() const
-    {
-        return scene.actors.get<Skin>(thisNpc).animation.getStateName()
-               == "walk-front";
+        forward = {};
+        aimDirection = {};
+        shooting = false;
     }
 
 private:
-    const GameScene& scene;
-    entt::entity thisNpc;
+    sf::Vector2f forward = {};
+    sf::Vector2f aimDirection = {};
+    bool shooting = false;
 };

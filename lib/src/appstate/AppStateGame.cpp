@@ -36,6 +36,7 @@ void AppStateGame::input()
 
 void AppStateGame::update()
 {
+    aiEngine.update(app.time);
     gameRulesEngine.update(app.time);
     animationEngine.update(app.time);
     physicsEngine.update(app.time);

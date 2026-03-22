@@ -23,7 +23,6 @@ public:
         entt::registry& actors,
         const sf::Vector2f& spawnPosition,
         const SkinType skin,
-        const GameScene& scene,
         const GameTextureAtlas& atlas);
 
     static entt::entity createProp(
