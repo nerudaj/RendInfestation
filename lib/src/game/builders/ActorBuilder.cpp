@@ -249,7 +249,7 @@ entt::entity ActorBuilder::createProjectile(
     if (weapon.defaultProjectileInventory.traits & ProjectileTraits::Passthru)
     {
         actors.emplace<Interval>(
-            entity, Interval { .delay = sf::seconds(0.1f) });
+            entity, Interval { .delay = sf::milliseconds(30) });
     }
 
     /*if (weapon.projectileSkin == SkinType::SmallBullet)
@@ -300,7 +300,8 @@ entt::entity ActorBuilder::createEffect(
     entt::registry& actors,
     const sf::Vector2f& origin,
     const EffectType type,
-    const GameTextureAtlas& atlas)
+    const GameTextureAtlas& atlas,
+    const float scale)
 {
     auto entity = actors.create();
 
@@ -333,6 +334,7 @@ entt::entity ActorBuilder::createEffect(
                 .animation = dgm::Animation(
                     atlas.atlas.getAnimationStates(atlas.explosionLocation),
                     EFFECT_FPS),
+                .scale = scale,
             });
     }
     else

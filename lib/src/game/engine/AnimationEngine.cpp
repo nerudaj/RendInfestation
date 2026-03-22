@@ -19,7 +19,8 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
         inventory.traits & ProjectileTraits::Explosive
             ? EffectType::Explosion
             : EffectType::BulletDeath,
-        atlas);
+        atlas,
+        inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
 }
 
 void AnimationEngine::operator()(const event::ActorStartedAttack& e)

@@ -48,7 +48,8 @@ public:
         entt::registry& actors,
         const sf::Vector2f& origin,
         const EffectType type,
-        const GameTextureAtlas& atlas);
+        const GameTextureAtlas& atlas,
+        const float scale);
 
     static entt::entity createDoor(
         entt::registry& actors,

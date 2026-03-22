@@ -322,12 +322,16 @@ void GameRulesEngine::createDamageMarkerForProjectile(
     auto interval = scene.actors.try_get<Interval>(projectile);
     if (interval && interval->timer > sf::Time::Zero) return;
 
+    const float scaleFactor =
+        inventory->traits & ProjectileTraits::Explosive ? 2.f : 1.f;
+
     ActorBuilder::createDamageMarker(
         scene.actors,
         scene.actors.get<Collider>(projectile).getPosition(),
-        inventory->traits & ProjectileTraits::Explosive
-            ? BASE_EXPLOSION_RADIUS
-            : scene.actors.get<Collider>(projectile).getRadius(),
+        (inventory->traits & ProjectileTraits::Explosive
+             ? BASE_EXPLOSION_RADIUS
+             : scene.actors.get<Collider>(projectile).getRadius())
+            * scaleFactor,
         *inventory);
 
     if (interval)
