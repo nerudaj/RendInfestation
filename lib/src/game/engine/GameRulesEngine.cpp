@@ -117,6 +117,19 @@ void GameRulesEngine::operator()(const event::ActorIsFalling& e)
     }
 }
 
+void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
+{
+    const auto skin = scene.actors.try_get<Skin>(e.entity);
+    if (skin && skin->kind == ActorKind::Npc)
+    {
+        ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
+    }
+    else if (skin && skin->kind == ActorKind::Player)
+    {
+        // TODO: this
+    }
+}
+
 void GameRulesEngine::update(const dgm::Time& time)
 {
     updateSpawner(time);
@@ -198,7 +211,6 @@ void GameRulesEngine::updateHealth()
     for (auto&& [entity, health] : scene.actors.view<Health>().each())
     {
         if (health.get() > 0) continue;
-        ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
         eventQueue.pushEvent<event::ObjectDestroyed>(entity);
     }
 }

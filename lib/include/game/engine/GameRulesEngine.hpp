@@ -46,6 +46,8 @@ public:
 
     void operator()(const event::ActorIsFalling& e);
 
+    void operator()(const event::ObjectDestroyed& e);
+
     void operator()(const auto&) {}
 
 public:
