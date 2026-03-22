@@ -240,6 +240,12 @@ void AppStateOptions::onInputTabSelected(tgui::Container::Ptr content)
                     [&](bool val)
                     { dic.settings.input.showTouchControls = val; }))
 #endif
+            .addOption(
+                StringId::CameraFollowsCrosshair,
+                WidgetBuilder::createCheckbox(
+                    dic.settings.input.cameraFollowsCrosshair,
+                    [&](bool val)
+                    { dic.settings.input.cameraFollowsCrosshair = val; }))
             .build());
 }
 

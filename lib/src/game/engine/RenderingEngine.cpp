@@ -1,4 +1,5 @@
 #include "game/engine/RenderingEngine.hpp"
+#include <cmath>
 
 RenderingEngine::RenderingEngine(
     dgm::ResourceManager& resmgr,
@@ -26,8 +27,32 @@ void RenderingEngine::update(const dgm::Time& time)
 {
     fpsCounter.update(time.getDeltaTime());
     timeElapsed += time.getDeltaTime();
-    worldCamera.setPosition(
-        scene.actors.get<Collider>(scene.playerEntity).getPosition());
+
+    const auto offset =
+        dgm::Math::toUnit(
+            scene.actors.get<LookDirection>(scene.playerEntity).get())
+        * (settings.input.cameraFollowsCrosshair ? 50.f : 0.f);
+    const auto newCameraPosition =
+        scene.actors.get<Collider>(scene.playerEntity).getPosition() + offset;
+
+    if (lastCameraPosition == sf::Vector2f {})
+        lastCameraPosition = newCameraPosition;
+    else
+    {
+        const auto directionToNew = newCameraPosition - lastCameraPosition;
+        if (directionToNew.length()
+            > BASE_PROJECTILE_SPEED * time.getDeltaTime())
+        {
+            lastCameraPosition += dgm::Math::toUnit(directionToNew)
+                                  * CAMERA_MOVE_SPEED * time.getDeltaTime();
+        }
+        else
+        {
+            lastCameraPosition = newCameraPosition;
+        }
+    }
+
+    worldCamera.setPosition(lastCameraPosition);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
@@ -146,6 +171,8 @@ void RenderingEngine::renderColliders(dgm::Window& window)
 
 void RenderingEngine::renderLights(dgm::Window& window)
 {
+    return;
+
     sf::RectangleShape blackRect;
     blackRect.setFillColor(sf::Color { 0, 0, 0, 128 });
     blackRect.setSize(INTERNAL_GAME_RESOLUTION);

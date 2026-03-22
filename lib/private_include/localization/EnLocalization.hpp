@@ -28,6 +28,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { GamepadDeadzone, "Gamepad deadzone" },
     { CursorSpeed, "Cursor speed" },
     { ShowTouchControls, "Show touch controls" },
+    { CameraFollowsCrosshair, "Camera follows crosshair" },
     { ReleaseAllInputs, "Release all inputs" },
 #ifdef ANDROID
     { PressAKeyOrEscape,

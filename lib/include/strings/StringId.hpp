@@ -26,6 +26,7 @@ enum class [[nodiscard]] StringId
     GamepadDeadzone,
     CursorSpeed,
     ShowTouchControls,
+    CameraFollowsCrosshair,
     ReleaseAllInputs,
     PressAKeyOrEscape,
     BindingHeadingAction,

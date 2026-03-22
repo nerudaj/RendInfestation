@@ -30,3 +30,5 @@ constexpr const sf::Color COLOR_MUTED_YELLOW = sf::Color { 0xf3, 0xef, 0x7d };
 constexpr const sf::Time SPAWNER_SPAWN_DELAY = sf::seconds(1.f);
 const static inline auto INTERNAL_GAME_RESOLUTION =
     sf::Vector2f { 576.f, 324.f };
+constexpr float CAMERA_SHAKE_MAGNITUDE = 8.f;
+constexpr float CAMERA_MOVE_SPEED = 256.f;
