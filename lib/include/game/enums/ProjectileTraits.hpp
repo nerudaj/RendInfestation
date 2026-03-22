@@ -9,6 +9,8 @@ enum class [[nodiscard]] ProjectileTraits
     Bouncy = 2,
     Passthru = 4,
     Shrapnels = 8,
+    Big = 16,        // should have twice the scale
+    Attractive = 32, // for dummy who attracks enemies
 };
 
 constexpr ProjectileTraits operator|(ProjectileTraits a, ProjectileTraits b)

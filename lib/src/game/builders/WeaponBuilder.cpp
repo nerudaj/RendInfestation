@@ -54,7 +54,8 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.baseProjectileDamage *= 1.3f;
             props.kickback += 75.f;
             props.fireDelay *= 1.1f;
-            props.projectileSkin = SkinType::BigBullet;
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Big;
             return props;
         };
     case Spikes:

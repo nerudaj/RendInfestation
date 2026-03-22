@@ -316,7 +316,8 @@ std::vector<Face> RenderingEngine::getActorFaces() const
                     sf::Vector2f {
                         flipX ? -1.f : 1.f,
                         1.f,
-                    },
+                    }
+                    * skin.scale,
             });
         }
     }

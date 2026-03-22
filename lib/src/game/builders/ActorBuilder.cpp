@@ -203,10 +203,14 @@ entt::entity ActorBuilder::createProjectile(
     const GameTextureAtlas& atlas,
     const Weapon& weapon)
 {
+    const float sizeFactor =
+        weapon.defaultProjectileInventory.traits & ProjectileTraits::Big ? 2.f
+                                                                         : 1.f;
+
     auto entity = actors.create();
     actors.emplace<Collider>(
         entity,
-        dgm::Circle(origin, 3.f),
+        dgm::Circle(origin, 3.f * sizeFactor),
         "reportMeshCollisions"_true,
         "reportActorCollisions"_true,
         "nonblocking"_true);
@@ -236,6 +240,7 @@ entt::entity ActorBuilder::createProjectile(
             .kind = ActorKind::Projectile,
             .skinType = weapon.projectileSkin,
             .animation = std::move(animation),
+            .scale = sizeFactor,
         });
 
     actors.emplace<ProjectileInventory>(

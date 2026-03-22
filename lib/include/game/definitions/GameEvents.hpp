@@ -79,6 +79,17 @@ namespace event
         {
         }
     };
+
+    struct [[nodiscard]] ActorIsFalling final
+    {
+        entt::entity entity;
+        float deltaTime;
+
+        ActorIsFalling(entt::entity _entity, float _deltaTime)
+            : entity(_entity), deltaTime(_deltaTime)
+        {
+        }
+    };
 } // namespace event
 
 using GameEvent = std::variant<
@@ -90,4 +101,5 @@ using GameEvent = std::variant<
     event::ActorStartedAttack,
     event::ActorFinishedAttack,
     event::DoorOpened,
-    event::DoorStartsClosing>;
+    event::DoorStartsClosing,
+    event::ActorIsFalling>;

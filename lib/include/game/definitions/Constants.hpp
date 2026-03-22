@@ -32,3 +32,4 @@ const static inline auto INTERNAL_GAME_RESOLUTION =
     sf::Vector2f { 576.f, 324.f };
 constexpr float CAMERA_SHAKE_MAGNITUDE = 8.f;
 constexpr float CAMERA_MOVE_SPEED = 256.f;
+constexpr float FALL_SPEED = 0.75f; // percent per second

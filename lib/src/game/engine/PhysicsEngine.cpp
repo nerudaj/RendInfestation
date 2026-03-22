@@ -49,6 +49,22 @@ void PhysicsEngine::updateForConcreteCollider(
         if (moment.y == 0.f) body.forward.y *= -body.bounciness;
     }
 
+    if (body.useAltMesh)
+    {
+        const auto tilePos =
+            sf::Vector2i(collider.getPosition().componentWiseDiv(
+                sf::Vector2f(scene.altLevelMesh.getVoxelSize())));
+
+        const auto tile =
+            scene.altLevelMesh
+                [tilePos.y * scene.altLevelMesh.getDataSize().x + tilePos.x];
+        if (tile < 0)
+        {
+            eventQueue.pushEvent<event::ActorIsFalling>(
+                entity, time.getDeltaTime());
+        }
+    }
+
     if (!options.nonblocking)
     {
         // If this assert fails, then we risk missing a collision event

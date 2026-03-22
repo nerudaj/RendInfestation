@@ -44,10 +44,18 @@ public:
 
     void operator()(const event::DoorStartsClosing& e);
 
+    void operator()(const event::ActorIsFalling& e);
+
     void operator()(const auto&) {}
 
 public:
     void update(const dgm::Time& time);
+
+    void updateEntitiesWithInput(const dgm::Time& time);
+
+    void updateTriggers(const dgm::Time& time);
+
+    void updateHealth();
 
 private:
     void updateSpawner(const dgm::Time& time);

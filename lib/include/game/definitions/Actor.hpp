@@ -18,6 +18,7 @@ struct [[nodiscard]] Skin final
     SkinType skinType = SkinType::PlayerDefault;
     dgm::Animation animation;
     sf::Vector2f spriteOriginOffsetFromCollider;
+    float scale = 1.f;
 };
 
 using LookDirection = BrandedType<sf::Vector2f, struct LookDirectionTag>;

@@ -14,6 +14,11 @@ static inline bool isPassableTileAlt(int id)
     return isPassableTile(id) || (31 <= id && id <= 34);
 }
 
+static inline bool isAbyssTile(int id)
+{
+    return 31 <= id && id <= 34;
+}
+
 NpcInventory GameSceneBuilder::createNpcInventory()
 {
     return NpcInventory {
@@ -58,12 +63,9 @@ GameScene GameSceneBuilder::createScene(
     if (gameModeProperties.mode == GameMode::Story)
     {
         artifact.loadout.unlockedModules = {
-            WeaponModule::SpreadBarrel,
-            WeaponModule::CadenceBarrel,
-            WeaponModule::ExplosiveAmmo,
-            WeaponModule::Ricochet,
-            WeaponModule::PassthruAmmo,
-            WeaponModule::BigBullet,
+            WeaponModule::SpreadBarrel,  WeaponModule::CadenceBarrel,
+            WeaponModule::ExplosiveAmmo, WeaponModule::Ricochet,
+            WeaponModule::PassthruAmmo,  WeaponModule::BigBullet,
             WeaponModule::Spikes,
         };
     }
@@ -102,8 +104,9 @@ GameScene GameSceneBuilder::createScene(
                 | std::views::transform(
                     [](int tile)
                     {
-                        return isPassableTileAlt(tile - 1) ? -(tile - 1)
-                                                           : (tile - 1);
+                        return isPassableTileAlt(tile - 1)
+                                   ? isAbyssTile(tile - 1) ? -(tile - 1) : 0
+                                   : (tile - 1);
                     })
                 | uniranges::to<std::vector>(),
             level.dataSize,

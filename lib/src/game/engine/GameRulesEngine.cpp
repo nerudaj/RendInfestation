@@ -106,10 +106,35 @@ void GameRulesEngine::operator()(const event::DoorStartsClosing& e)
     collider.options.nonblocking = false;
 }
 
+void GameRulesEngine::operator()(const event::ActorIsFalling& e)
+{
+    auto& skin = scene.actors.get<Skin>(e.entity);
+    skin.scale -= FALL_SPEED * e.deltaTime;
+    if (skin.scale <= 0.f)
+    {
+        skin.scale = 0.f;
+        eventQueue.pushEvent<event::ObjectDestroyed>(e.entity);
+    }
+}
+
 void GameRulesEngine::update(const dgm::Time& time)
 {
     updateSpawner(time);
 
+    updateEntitiesWithInput(time);
+
+    updateLifetimes(time);
+
+    updateHealth();
+
+    updateTriggers(time);
+
+    if (scene.hudMessage.displayTime > sf::Time::Zero)
+        scene.hudMessage.displayTime -= time.getElapsed();
+}
+
+void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
+{
     for (auto&& [entity, controller, body, lookDirection, weaponInventory] :
          scene.actors
              .view<EntityInput, PhysicsBody, LookDirection, WeaponInventory>()
@@ -135,16 +160,10 @@ void GameRulesEngine::update(const dgm::Time& time)
 
         weapon.timeTillFire -= time.getElapsed();
     }
+}
 
-    updateLifetimes(time);
-
-    for (auto&& [entity, health] : scene.actors.view<Health>().each())
-    {
-        if (health.get() > 0) continue;
-        ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
-        eventQueue.pushEvent<event::ObjectDestroyed>(entity);
-    }
-
+void GameRulesEngine::updateTriggers(const dgm::Time& time)
+{
     for (auto&& [entity, inventory] :
          scene.actors.view<TriggerInventory>().each())
     {
@@ -164,9 +183,16 @@ void GameRulesEngine::update(const dgm::Time& time)
             }
         }
     }
+}
 
-    if (scene.hudMessage.displayTime > sf::Time::Zero)
-        scene.hudMessage.displayTime -= time.getElapsed();
+void GameRulesEngine::updateHealth()
+{
+    for (auto&& [entity, health] : scene.actors.view<Health>().each())
+    {
+        if (health.get() > 0) continue;
+        ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
+        eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+    }
 }
 
 void GameRulesEngine::updateSpawner(const dgm::Time& time)
