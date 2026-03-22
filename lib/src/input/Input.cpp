@@ -46,7 +46,7 @@ sf::Vector2f Input::getAimDirection() const
 bool Input::isShootPressed() const
 {
     return controller.readDigital(InputKind::Shoot)
-           || touchController.getAimDirection().length() >= 1.f;
+           || touchController.getAimDirection().length() >= 0.01f;
 }
 
 bool Input::isSwapWeaponsPressed() const
