@@ -125,6 +125,14 @@ void GameRulesEngine::update(const dgm::Time& time)
 
     updateLifetimes(time);
 
+    for (auto&& [entity, interval] : scene.actors.view<Interval>().each())
+    {
+        if (interval.timer > sf::Time::Zero)
+        {
+            interval.timer -= time.getElapsed();
+        }
+    }
+
     updateHealth();
 
     updateTriggers(time);
@@ -268,9 +276,9 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
 void GameRulesEngine::tryUnlockRandomModule()
 {
     constexpr std::array<WeaponModule, 7> ALL_NON_NONE_MODULES = {
-        WeaponModule::SpreadBarrel,  WeaponModule::CadenceBarrel,
-        WeaponModule::ExplosiveAmmo, WeaponModule::Ricochet,
-        WeaponModule::PassthruAmmo,  WeaponModule::BigBullet,
+        WeaponModule::SpreadBarrel_x4, WeaponModule::CadenceBarrel,
+        WeaponModule::ExplosiveAmmo,   WeaponModule::Ricochet,
+        WeaponModule::PassthruAmmo,    WeaponModule::BigBullet,
         WeaponModule::Spikes,
     };
 
@@ -311,6 +319,9 @@ void GameRulesEngine::handleProjectileToActorCollision(
 void GameRulesEngine::createDamageMarkerForProjectile(
     entt::entity projectile, ProjectileInventory* inventory)
 {
+    auto interval = scene.actors.try_get<Interval>(projectile);
+    if (interval && interval->timer > sf::Time::Zero) return;
+
     ActorBuilder::createDamageMarker(
         scene.actors,
         scene.actors.get<Collider>(projectile).getPosition(),
@@ -318,6 +329,11 @@ void GameRulesEngine::createDamageMarkerForProjectile(
             ? BASE_EXPLOSION_RADIUS
             : scene.actors.get<Collider>(projectile).getRadius(),
         *inventory);
+
+    if (interval)
+    {
+        interval->timer = interval->delay;
+    }
 }
 
 void GameRulesEngine::handleDamageMarkerToActorCollision(

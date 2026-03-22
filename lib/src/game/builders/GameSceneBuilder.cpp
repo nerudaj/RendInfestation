@@ -63,9 +63,9 @@ GameScene GameSceneBuilder::createScene(
     if (gameModeProperties.mode == GameMode::Story)
     {
         artifact.loadout.unlockedModules = {
-            WeaponModule::SpreadBarrel,  WeaponModule::CadenceBarrel,
-            WeaponModule::ExplosiveAmmo, WeaponModule::Ricochet,
-            WeaponModule::PassthruAmmo,  WeaponModule::BigBullet,
+            WeaponModule::SpreadBarrel_x4, WeaponModule::CadenceBarrel,
+            WeaponModule::ExplosiveAmmo,   WeaponModule::Ricochet,
+            WeaponModule::PassthruAmmo,    WeaponModule::BigBullet,
             WeaponModule::Spikes,
         };
     }
@@ -164,7 +164,7 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
             .weapon1Modules = { WeaponModule::None,
                                 WeaponModule::None,
                                 WeaponModule::None },
-            .weapon2Modules = { WeaponModule::SpreadBarrel,
+            .weapon2Modules = { WeaponModule::SpreadBarrel_x4,
                                 WeaponModule::None,
                                 WeaponModule::None },
         },

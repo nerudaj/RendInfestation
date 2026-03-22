@@ -225,14 +225,14 @@ entt::entity ActorBuilder::createProjectile(
             .bounciness = 0.8f,
             .friction = weapon.defaultProjectileInventory.traits
                                 & ProjectileTraits::Shrapnels
-                            ? 0.01f
+                            ? 0.02f
                             : 0.f,
             .useAltMesh = true,
         });
     actors.emplace<Lifetime>(entity, weapon.projectileLifetime);
 
     auto animation =
-        dgm::Animation(atlas.atlas.getAnimationStates(atlas.bulletLocation), 8);
+        dgm::Animation(atlas.getSkinAnimationStates(weapon.projectileSkin), 8);
     animation.setState("idle", "looping"_true);
     actors.emplace<Skin>(
         entity,
@@ -245,6 +245,12 @@ entt::entity ActorBuilder::createProjectile(
 
     actors.emplace<ProjectileInventory>(
         entity, weapon.defaultProjectileInventory);
+
+    if (weapon.defaultProjectileInventory.traits & ProjectileTraits::Passthru)
+    {
+        actors.emplace<Interval>(
+            entity, Interval { .delay = sf::seconds(0.1f) });
+    }
 
     /*if (weapon.projectileSkin == SkinType::SmallBullet)
     {

@@ -3,11 +3,11 @@
 enum class [[nodiscard]] WeaponModule
 {
     None,
-    SpreadBarrel,
     CadenceBarrel,
-    ExplosiveAmmo,
+    SpreadBarrel_x4,
+    BigBullet,
     Ricochet,
     PassthruAmmo,
-    BigBullet,
     Spikes,
+    ExplosiveAmmo,
 };

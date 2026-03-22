@@ -14,7 +14,7 @@ public:
     createWeaponModuleTransformer(WeaponModule module);
 
     static Weapon
-    createWeapon(ActorKind ownerKind, const std::vector<WeaponModule>& modules);
+    createWeapon(ActorKind ownerKind, std::vector<WeaponModule> modules);
 
     static Weapon createMeleeWeapon(ActorKind ownerKind, int damage);
 };

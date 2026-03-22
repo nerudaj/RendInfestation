@@ -14,7 +14,7 @@ namespace
 {
 
     constexpr std::array<WeaponModule, 8> ALL_MODULES = {
-        WeaponModule::None,          WeaponModule::SpreadBarrel,
+        WeaponModule::None,          WeaponModule::SpreadBarrel_x4,
         WeaponModule::CadenceBarrel, WeaponModule::ExplosiveAmmo,
         WeaponModule::Ricochet,      WeaponModule::PassthruAmmo,
         WeaponModule::BigBullet,     WeaponModule::Spikes,
