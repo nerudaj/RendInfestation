@@ -25,6 +25,8 @@ public:
 public:
     void update(const dgm::Time& time);
 
+    void updateCameraPosition(const dgm::Time& time);
+
     void draw(dgm::Window& window);
 
 private:
@@ -82,5 +84,5 @@ private:
     dgm::Clip tilesClip;
     float timeElapsed = 0.f;
     mutable size_t entityCount = 0;
-    sf::Vector2f lastCameraPosition = { 0.f, 0.f };
+    sf::Vector2f cameraPosition = { 0.f, 0.f };
 };

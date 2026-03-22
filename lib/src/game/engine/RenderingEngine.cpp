@@ -20,14 +20,22 @@ RenderingEngine::RenderingEngine(
     , pipeline(atlas.atlas.getTexture())
     , lightPipeline(atlas.atlas.getTexture(), sf::BlendAdd)
     , tilesClip(atlas.atlas.getClip(atlas.tilesLocation))
+    , cameraPosition(
+          scene.actors.get<Collider>(scene.playerEntity).getPosition())
 {
 }
 
 void RenderingEngine::update(const dgm::Time& time)
 {
+    worldCamera.update(time);
     fpsCounter.update(time.getDeltaTime());
     timeElapsed += time.getDeltaTime();
 
+    updateCameraPosition(time);
+}
+
+void RenderingEngine::updateCameraPosition(const dgm::Time& time)
+{
     const auto offset =
         dgm::Math::toUnit(
             scene.actors.get<LookDirection>(scene.playerEntity).get())
@@ -35,24 +43,13 @@ void RenderingEngine::update(const dgm::Time& time)
     const auto newCameraPosition =
         scene.actors.get<Collider>(scene.playerEntity).getPosition() + offset;
 
-    if (lastCameraPosition == sf::Vector2f {})
-        lastCameraPosition = newCameraPosition;
-    else
-    {
-        const auto directionToNew = newCameraPosition - lastCameraPosition;
-        if (directionToNew.length()
-            > BASE_PROJECTILE_SPEED * time.getDeltaTime())
-        {
-            lastCameraPosition += dgm::Math::toUnit(directionToNew)
-                                  * CAMERA_MOVE_SPEED * time.getDeltaTime();
-        }
-        else
-        {
-            lastCameraPosition = newCameraPosition;
-        }
-    }
+    const auto directionToNew = newCameraPosition - cameraPosition;
 
-    worldCamera.setPosition(lastCameraPosition);
+    cameraPosition +=
+        dgm::Math::toUnit(directionToNew)
+        * std::clamp(directionToNew.length(), 0.f, 512.f * time.getDeltaTime());
+
+    worldCamera.setPosition(cameraPosition);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
