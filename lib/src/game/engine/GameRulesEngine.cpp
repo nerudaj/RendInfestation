@@ -162,8 +162,16 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
              .each())
     {
         auto&& forwardImpulse = controller->getForward();
-        if (forwardImpulse.length() > 0.f)
-            body.forward += forwardImpulse * body.maxSpeed;
+        body.forward += forwardImpulse * body.maxSpeed;
+
+        if (forwardImpulse.length() == 0.f)
+        {
+            eventQueue.pushEvent<event::ActorStopped>(entity);
+        }
+        else
+        {
+            eventQueue.pushEvent<event::ActorMoved>(entity);
+        }
 
         const auto direction = controller->getAimDirection();
         if (direction.length() > 0.f) lookDirection = direction;

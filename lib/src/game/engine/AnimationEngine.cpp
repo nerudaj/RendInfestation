@@ -45,6 +45,26 @@ void AnimationEngine::operator()(const event::ActorFinishedAttack& e)
     }
 }
 
+void AnimationEngine::operator()(const event::ActorMoved& e)
+{
+    auto&& skin = scene.actors.get<Skin>(e.entity);
+    if (skin.kind == ActorKind::Player || skin.kind == ActorKind::Npc)
+    {
+        if (skin.animation.getStateName() == "idle-front")
+            skin.animation.setState("walk-front", "looping"_true);
+    }
+}
+
+void AnimationEngine::operator()(const event::ActorStopped& e)
+{
+    auto&& skin = scene.actors.get<Skin>(e.entity);
+    if (skin.kind == ActorKind::Player || skin.kind == ActorKind::Npc)
+    {
+        if (skin.animation.getStateName() == "walk-front")
+            skin.animation.setState("idle-front", "looping"_true);
+    }
+}
+
 void AnimationEngine::update(const dgm::Time& time)
 {
     for (auto&& [actor, skin] : scene.actors.view<Skin>().each())

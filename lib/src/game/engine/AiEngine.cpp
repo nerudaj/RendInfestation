@@ -58,7 +58,8 @@ void AiEngine::updateNpcBrain(
 
 bool AiEngine::isNpcWalking(entt::entity npc)
 {
-    return scene.actors.get<Skin>(npc).animation.getStateName() == "walk-front";
+    const auto& name = scene.actors.get<Skin>(npc).animation.getStateName();
+    return name == "walk-front" || name == "idle-front";
 }
 
 bool AiEngine::hasNpcReachedWaypoint(

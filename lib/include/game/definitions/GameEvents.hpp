@@ -90,6 +90,20 @@ namespace event
         {
         }
     };
+
+    struct [[nodiscard]] ActorMoved final
+    {
+        entt::entity entity;
+
+        explicit ActorMoved(entt::entity entity) : entity(entity) {}
+    };
+
+    struct [[nodiscard]] ActorStopped final
+    {
+        entt::entity entity;
+
+        explicit ActorStopped(entt::entity entity) : entity(entity) {}
+    };
 } // namespace event
 
 using GameEvent = std::variant<
@@ -102,4 +116,6 @@ using GameEvent = std::variant<
     event::ActorFinishedAttack,
     event::DoorOpened,
     event::DoorStartsClosing,
-    event::ActorIsFalling>;
+    event::ActorIsFalling,
+    event::ActorMoved,
+    event::ActorStopped>;

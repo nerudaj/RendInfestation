@@ -25,6 +25,10 @@ public:
 
     void operator()(const event::ActorFinishedAttack& e);
 
+    void operator()(const event::ActorMoved& e);
+
+    void operator()(const event::ActorStopped& e);
+
     void operator()(const auto&) {}
 
 public:
