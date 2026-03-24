@@ -1,4 +1,5 @@
 #include "game/engine/AiEngine.hpp"
+#include <fsm/Builder.hpp>
 
 void AiEngine::update(const dgm::Time& time)
 {
@@ -6,64 +7,107 @@ void AiEngine::update(const dgm::Time& time)
     // throw their logic into some FSM
     // update input
 
-    for (auto&& [entity, blackboard, input] :
-         scene.actors.view<NpcBlackboard, EntityInput>().each())
+    for (auto&& [_, blackboard] : scene.actors.view<NpcBlackboard>().each())
     {
-        updateNpcBrain(
-            dynamic_cast<NpcInput&>(*input.get()), blackboard, entity);
+        if (blackboard.targetEntity == entt::null)
+            blackboard.targetEntity = scene.playerEntity;
+        blackboard.input.clearInputs();
+
+        fsm.tick(blackboard);
     }
 }
 
-void AiEngine::updateNpcBrain(
-    NpcInput& input, NpcBlackboard& blackboard, entt::entity npc)
+void AiEngine::waitTillAttackFinishes(NpcBlackboard& blackboard)
 {
-    input.clearInputs();
-
-    const auto position = scene.actors.get<Collider>(npc).getPosition();
-    if (blackboard.targetEntity == entt::null)
-    {
-        blackboard.targetEntity = scene.playerEntity;
-        blackboard.movementTarget = position;
-    }
-
-    const auto targetEntityPosition =
-        scene.actors.get<Collider>(blackboard.targetEntity).getPosition();
-    const auto directionToTarget = targetEntityPosition - position;
-    const bool isWalking = isNpcWalking(npc);
-
-    if (isWalking && directionToTarget.length() <= 20.f)
-    {
-        input.setShooting(true);
-    }
-    if (isWalking
-        && !hasNpcReachedWaypoint(position, blackboard.movementTarget))
-    {
-        input.setForward(
-            [&]
-            {
-                if (!isWalking) return sf::Vector2f { 0.f, 0.f };
-                return dgm::Math::toUnit(blackboard.movementTarget - position);
-            }());
-    }
-    else
-    {
-        auto path = navMesh.computePath(position, targetEntityPosition);
-
-        if (!path.isTraversed())
-            blackboard.movementTarget = path.getCurrentPoint().coord;
-    }
-
-    input.setAimDirection(dgm::Math::toUnit(directionToTarget));
+    blackboard.input.setAimDirection(dgm::Math::toUnit(
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition()
+        - scene.actors.get<Collider>(blackboard.ownerEntity).getPosition()));
 }
 
-bool AiEngine::isNpcWalking(entt::entity npc)
+void AiEngine::attack(NpcBlackboard& blackboard)
 {
-    const auto& name = scene.actors.get<Skin>(npc).animation.getStateName();
+    blackboard.input.setShooting(true);
+}
+
+void AiEngine::moveTowardsWaypoint(NpcBlackboard& blackboard)
+{
+    const auto position =
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
+    const auto direction = dgm::Math::toUnit(blackboard.waypoint - position);
+
+    blackboard.input.setForward(direction);
+    blackboard.input.setAimDirection(direction);
+}
+
+void AiEngine::generateWaypoint(NpcBlackboard& blackboard)
+{
+    const auto position =
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
+    const auto targetPosition =
+        scene.actors.get<Collider>(scene.playerEntity).getPosition();
+    auto path = navMesh.computePath(position, targetPosition);
+
+    if (!path.isTraversed()) blackboard.waypoint = path.getCurrentPoint().coord;
+}
+
+bool AiEngine::isNpcWalking(const NpcBlackboard& blackboard) const
+{
+    const auto& name =
+        scene.actors.get<Skin>(blackboard.ownerEntity).animation.getStateName();
     return name == "walk-front" || name == "idle-front";
 }
 
-bool AiEngine::hasNpcReachedWaypoint(
-    const sf::Vector2f position, const sf::Vector2f target)
+bool AiEngine::isCloseToTargetEntity(const NpcBlackboard& blackboard) const
 {
-    return (position - target).length() <= 1.f;
+    const auto position =
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
+    const auto targetPosition =
+        scene.actors.get<Collider>(scene.playerEntity).getPosition();
+    return (position - targetPosition).length() <= 20.f;
 }
+
+bool AiEngine::hasNpcReachedWaypoint(const NpcBlackboard& blackboard) const
+{
+    if (blackboard.waypoint == sf::Vector2f {}) return true;
+    const auto position =
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
+    return (position - blackboard.waypoint).length() <= 1.f;
+}
+
+#define CONDITION(x) [&](const NpcBlackboard& b) -> bool { return self.x(b); }
+
+#define NOT(x) [&](const NpcBlackboard& b) -> bool { return self.x(b); }
+
+#define ACTION(x) [&](NpcBlackboard& b) { self.x(b); }
+
+fsm::Fsm<NpcBlackboard> AiEngine::buildNpcFsm(AiEngine& self)
+{
+    // clang-format off
+    return fsm::Builder<NpcBlackboard>()
+        .withNoErrorMachine()
+        .withMainMachine()
+            .withEntryState("Start")
+                .when(CONDITION(isCloseToTargetEntity))
+                    .goToState("Attack")
+                .orWhen(CONDITION(hasNpcReachedWaypoint))
+                    .goToState("GenerateWaypoint")
+                .otherwiseExec(ACTION(moveTowardsWaypoint))
+                .andLoop()
+            .withState("GenerateWaypoint")
+                .exec(ACTION(generateWaypoint))
+                .andGoToState("Start")
+            .withState("Attack")
+                .exec(ACTION(attack))
+                .andGoToState("WaitUntilAttackFinishes")
+            .withState("WaitUntilAttackFinishes")
+                .when(CONDITION(isNpcWalking))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(waitTillAttackFinishes))
+                .andLoop()
+        .done()
+    .build();
+    // clang-format on
+}
+
+#undef CONDITION;
+#undef ACTION;

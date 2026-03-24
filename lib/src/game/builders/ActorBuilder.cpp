@@ -85,8 +85,16 @@ entt::entity ActorBuilder::createNpc(
         0,
         std::vector<Weapon> {
             WeaponBuilder::createMeleeWeapon(ActorKind::Npc, DAMAGE) });
-    actors.emplace<EntityInput>(entity, std::make_unique<NpcInput>());
-    actors.emplace<NpcBlackboard>(entity);
+
+    auto input = std::make_unique<NpcInput>();
+    auto underlyingInput = input.get();
+    actors.emplace<EntityInput>(entity, std::move(input));
+    actors.emplace<NpcBlackboard>(
+        entity,
+        NpcBlackboard {
+            .ownerEntity = entity,
+            .input = dynamic_cast<NpcInput&>(*underlyingInput),
+        });
 
     actors.get<Skin>(entity).animation.setState("walk-front", "looping"_true);
 

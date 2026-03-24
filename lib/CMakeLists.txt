@@ -14,7 +14,7 @@ make_static_library ( ${LIB_TARGET_NAME} ${BUILD_OPTIONS}
     DEPS
         nlohmann_json::nlohmann_json
         dgm::dgm-lib
-        #fsm::fsm-lib
+        fsm::fsm-lib
         TGUI::TGUI
         SFML::Audio
         fmt::fmt
@@ -26,7 +26,7 @@ make_static_library ( ${LIB_TARGET_NAME} ${BUILD_OPTIONS}
     DEPS
         nlohmann_json::nlohmann_json
         dgm::dgm-lib
-        #fsm::fsm-lib
+        fsm::fsm-lib
         TGUI::TGUI
         SFML::Audio
 	EnTT::EnTT

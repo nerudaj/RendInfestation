@@ -4,7 +4,7 @@ set ( CXXOPTS_VERSION "3.3.1" )
 set ( NLOHMANN_VERSION "3.12.0" )
 set ( SFML_VERSION "3.0.0" )
 set ( DGM_LIB_VERSION "main" )
-set ( FSM_LIB_VERSION "2.1.1" )
+set ( FSM_LIB_VERSION "main" )
 set ( TGUI_VERSION "1.x" )
 set ( CATCH2_VERSION "v3.8.0" )
 set ( RANGEV3_VERSION "master" )
@@ -32,7 +32,7 @@ CPMAddPackage(
     GITHUB_REPOSITORY "nerudaj/dgm-lib"
     OPTIONS "ENABLE_LEGACY_ANIMATION OFF ENABLE_LINTER=OFF"
 )
-# CPMAddPackage("gh:nerudaj/fsm-lib#v${FSM_LIB_VERSION}") # Not yet supported on Android
+CPMAddPackage("gh:nerudaj/fsm-lib#${FSM_LIB_VERSION}") 
 AddCatch( "${CATCH2_VERSION}" )
 
 if ( "${CMAKE_SYSTEM_NAME}" STREQUAL "Android" )
