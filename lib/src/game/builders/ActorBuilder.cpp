@@ -56,10 +56,20 @@ entt::entity ActorBuilder::createNpc(
     const GameTextureAtlas& atlas)
 {
     auto entity = actors.create();
+    const auto [HEALTH, SPEED, DAMAGE] = [&skin]
+    {
+        if (skin == SkinType::Bighead)
+        {
+            return std::tuple { 100, BASE_ENEMY_SPEED, BASE_MELEE_DAMAGE };
+        }
+        return std::tuple { 50,
+                            BASE_ENEMY_SPEED * 1.1f,
+                            BASE_MELEE_DAMAGE / 2 };
+    }();
 
     actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
     actors.emplace<PhysicsBody>(
-        entity, PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED, .friction = 0.8f });
+        entity, PhysicsBody { .maxSpeed = SPEED, .friction = 0.8f });
     actors.emplace<Skin>(
         entity,
         Skin {
@@ -69,14 +79,12 @@ entt::entity ActorBuilder::createNpc(
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
         });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-    actors.emplace<Health>(entity, skin == SkinType::Bighead ? 100 : 50);
+    actors.emplace<Health>(entity, HEALTH);
     actors.emplace<WeaponInventory>(
         entity,
         0,
-        std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-            ActorKind::Npc,
-            skin == SkinType::Bighead ? BASE_MELEE_DAMAGE
-                                      : BASE_MELEE_DAMAGE / 2) });
+        std::vector<Weapon> {
+            WeaponBuilder::createMeleeWeapon(ActorKind::Npc, DAMAGE) });
     actors.emplace<EntityInput>(entity, std::make_unique<NpcInput>());
     actors.emplace<NpcBlackboard>(entity);
 
