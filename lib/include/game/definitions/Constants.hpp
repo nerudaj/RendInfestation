@@ -3,9 +3,9 @@
 #include "types/SemanticTypes.hpp"
 #include <DGM/classes/Animation.hpp>
 
-constexpr float BASE_PROJECTILE_SPEED = 1024_px_per_second;
-constexpr float BASE_PLAYER_SPEED = 192_px_per_second;
-constexpr float BASE_ENEMY_SPEED = 192_px_per_second * 0.75f;
+constexpr float BASE_PLAYER_SPEED = 128_px_per_second;
+constexpr float BASE_ENEMY_SPEED = BASE_PLAYER_SPEED * 0.5f;
+constexpr float BASE_PROJECTILE_SPEED = BASE_PLAYER_SPEED * 4.f;
 constexpr int BASE_PROJECTILE_DAMAGE = 25;
 constexpr int BASE_MELEE_DAMAGE = 10;
 constexpr float BASE_PROJECTILE_KICKBACK = 50.f;
@@ -29,7 +29,7 @@ constexpr const sf::Color COLOR_YELLOW = sf::Color { 0xff, 0xec, 0x27 };
 constexpr const sf::Color COLOR_MUTED_YELLOW = sf::Color { 0xf3, 0xef, 0x7d };
 constexpr const sf::Time SPAWNER_SPAWN_DELAY = sf::seconds(1.f);
 const static inline auto INTERNAL_GAME_RESOLUTION =
-    sf::Vector2f { 576.f, 324.f };
+    sf::Vector2f { 576.f, 324.f } / 1.5f;
 constexpr float CAMERA_SHAKE_MAGNITUDE = 8.f;
 constexpr float CAMERA_MOVE_SPEED = 256.f;
 constexpr float FALL_SPEED = 0.75f; // percent per second
