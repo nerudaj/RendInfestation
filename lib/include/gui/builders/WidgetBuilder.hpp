@@ -68,6 +68,12 @@ public:
         SoundPlayer& player,
         WidgetOptions options = WidgetOptions {});
 
+    [[nodiscard]] static tgui::Button::Ptr createTexturedButton(
+        const tgui::Texture& texture,
+        std::function<void(void)> onClick,
+        SoundPlayer& player,
+        WidgetOptions options = {});
+
     [[nodiscard]] static tgui::CheckBox::Ptr createCheckbox(
         bool checked,
         std::function<void(bool)> onChange,

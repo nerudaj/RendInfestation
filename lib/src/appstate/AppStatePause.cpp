@@ -3,6 +3,7 @@
 #include "appstate/AppStateWeaponModification.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
+#include "gui/Icon.hpp"
 
 void AppStatePause::input()
 {
@@ -19,6 +20,36 @@ void AppStatePause::draw()
 
 void AppStatePause::buildLayout()
 {
+    auto createIconButton = [&](Icon icon, auto&& callback)
+    {
+        return WidgetBuilder::createTexturedButton(
+            dic.resmgr.get<tgui::Texture>(
+                uni::format("Icon-{}", std::to_underlying(icon))),
+            std::forward<decltype(callback)>(callback),
+            dic.soundPlayer);
+    };
+
+    dic.gui.rebuildWith(
+        dic.guiBuilderFactory.createDefaultLayoutBuiler()
+            .withBackgroundImage(dic.resmgr.get<tgui::Texture>("darken.png"))
+            .withTitle(
+                dic.strings.getString(StringId::PauseTitle), HeadingLevel::H1)
+            .withContent(dic.guiBuilderFactory.createButtonListBuilder()
+                             .addButton(
+                                 StringId::WeaponModification,
+                                 [&] { onWeaponModification(); })
+                             .addButton(StringId::ExitButton, [&] { onExit(); })
+                             .build())
+            .withTopLeftButton(
+                createIconButton(Icon::Exit, [&] { onBackToMenu(); }))
+            .withTopRightButton(
+                createIconButton(Icon::Settings, [&] { onOptions(); }))
+            .withBottomLeftButton(
+                createIconButton(Icon::Play2, [&] { onResume(); }))
+            .withNoBottomRightButton()
+            .build());
+
+    return;
     dic.gui.rebuildWith(
         dic.guiBuilderFactory.createDefaultLayoutBuiler()
             .withNoBackgroundImage()

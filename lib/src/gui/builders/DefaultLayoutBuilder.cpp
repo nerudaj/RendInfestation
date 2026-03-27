@@ -138,11 +138,10 @@ namespace priv
 } // namespace priv
 
 priv::LayoutBuilderWithBackground
-DefaultLayoutBuilder::withBackgroundImage(const sf::Texture& texture)
+DefaultLayoutBuilder::withBackgroundImage(const tgui::Texture& texture)
 {
     auto&& bgr = tgui::Panel::create();
-    bgr->getRenderer()->setTextureBackground(
-        TguiHelper::convertTexture(texture));
+    bgr->getRenderer()->setTextureBackground(texture);
     return priv::LayoutBuilderWithBackground(
         bgr, buildProperties(sizer), sizer);
 }

@@ -184,7 +184,7 @@ public:
 
 public:
     priv::LayoutBuilderWithBackground
-    withBackgroundImage(const sf::Texture& texture);
+    withBackgroundImage(const tgui::Texture& texture);
 
     priv::LayoutBuilderWithBackground withNoBackgroundImage();
 

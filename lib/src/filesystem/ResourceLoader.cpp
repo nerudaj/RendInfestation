@@ -1,6 +1,7 @@
 #include "filesystem/ResourceLoader.hpp"
 #include "filesystem/AppStorage.hpp"
 #include "filesystem/TiledLoader.hpp"
+#include "gui/TguiHelper.hpp"
 #include "misc/Compatibility.hpp"
 #include <SFML/Audio/Music.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -60,6 +61,28 @@ loadSong(const std::filesystem::path& path)
     }
 }
 
+static dgm::ExpectedSuccess
+loadTguiIcons(dgm::ResourceManager& resmgr, const std::string& iconName)
+{
+    auto&& iconTexture = resmgr.get<sf::Texture>(iconName);
+    auto&& iconClip = resmgr.get<dgm::Clip>(iconName + ".clip");
+
+    tgui::Texture::setDefaultSmooth(false);
+
+    for (auto&& idx : std::views::iota(0u, iconClip.getFrameCount()))
+    {
+        auto&& texture =
+            TguiHelper::convertTexture(iconTexture, iconClip.getFrame(idx));
+        assert(!texture.isSmooth());
+
+        auto result = resmgr.insertResource<tgui::Texture>(
+            uni::format("Icon-{}", idx), std::move(texture));
+        if (!result) return result;
+    }
+
+    return std::true_type {};
+}
+
 dgm::ResourceManager
 ResourceLoader::loadResources(const std::filesystem::path& assetDir)
 {
@@ -95,6 +118,14 @@ ResourceLoader::loadResources(const std::filesystem::path& assetDir)
     {
         throw std::runtime_error(uni::format(
             "Could not load texture: {}", result.error().getMessage()));
+    }
+
+    if (auto result = resmgr.loadResourcesFromDirectory<tgui::Texture>(
+            assetDir / "tgui-graphics", dgm::Utility::loadTexture, { ".png" });
+        !result)
+    {
+        throw std::runtime_error(uni::format(
+            "Could not load TGUI texture: {}", result.error().getMessage()));
     }
 
     if (auto result = resmgr.loadResourcesFromDirectory<dgm::AnimationStates>(
@@ -138,6 +169,13 @@ ResourceLoader::loadResources(const std::filesystem::path& assetDir)
     {
         throw std::runtime_error(uni::format(
             "Could not load level: {}", result.error().getMessage()));
+    }
+
+    if (auto result = loadTguiIcons(resmgr, "pixel-ui-icons.png"); !result)
+    {
+        throw std::runtime_error(uni::format(
+            "Could not create icons for TGUI: {}",
+            result.error().getMessage()));
     }
 
     return resmgr;

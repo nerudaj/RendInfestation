@@ -43,7 +43,10 @@ struct [[nodiscard]] DependencyContainer final
         , resmgr(ResourceLoader::loadResources(rootDir))
         , strings(primaryLang)
         , touchController(settingsSM.video.resolution)
-        , input(settingsSM.bindings, touchController, window.getSfmlWindowContext())
+        , input(
+              settingsSM.bindings,
+              touchController,
+              window.getSfmlWindowContext())
         , virtualCursor(
               window.getSfmlWindowContext(),
               input,
