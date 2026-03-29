@@ -49,20 +49,21 @@ void ShadeableRenderingPipeline2D::addFace(
     // both triangles are going clockwise
 
     vertices[currentVertexIdx + 0].position =
-        (origin - texSizeHalf.componentWiseMul(scale)).rotatedBy(rotation);
+        origin - texSizeHalf.componentWiseMul(scale).rotatedBy(rotation);
     vertices[currentVertexIdx + 0].texCoords = textureRect.position;
     vertices[currentVertexIdx + 0].color = color;
 
     vertices[currentVertexIdx + 1].position =
-        (origin
-         + sf::Vector2f(texSizeHalf.x, -texSizeHalf.y).componentWiseMul(scale))
-            .rotatedBy(rotation);
+        origin
+        + sf::Vector2f(texSizeHalf.x, -texSizeHalf.y)
+              .componentWiseMul(scale)
+              .rotatedBy(rotation);
     vertices[currentVertexIdx + 1].texCoords =
         textureRect.position + sf::Vector2f(textureRect.size.x, 0.f);
     vertices[currentVertexIdx + 1].color = color;
 
     vertices[currentVertexIdx + 2].position =
-        (origin + texSizeHalf.componentWiseMul(scale)).rotatedBy(rotation);
+        origin + texSizeHalf.componentWiseMul(scale).rotatedBy(rotation);
     vertices[currentVertexIdx + 2].texCoords =
         textureRect.position + textureRect.size;
     vertices[currentVertexIdx + 2].color = color;
@@ -82,9 +83,10 @@ void ShadeableRenderingPipeline2D::addFace(
     vertices[currentVertexIdx + 4].color = color;
 
     vertices[currentVertexIdx + 5].position =
-        (origin
-         + sf::Vector2f(-texSizeHalf.x, texSizeHalf.y).componentWiseMul(scale))
-            .rotatedBy(rotation);
+        origin
+        + sf::Vector2f(-texSizeHalf.x, texSizeHalf.y)
+              .componentWiseMul(scale)
+              .rotatedBy(rotation);
     vertices[currentVertexIdx + 5].texCoords =
         textureRect.position + sf::Vector2f(0.f, textureRect.size.y);
     vertices[currentVertexIdx + 5].color = color;
