@@ -17,8 +17,11 @@ RenderingEngine::RenderingEngine(
     , worldCamera(createFullscreenCamera(
           sf::Vector2f(settings.video.resolution), INTERNAL_GAME_RESOLUTION))
     , hudCamera(
-          sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } }, INTERNAL_GAME_RESOLUTION
-          /*sf::Vector2f(settings.video.resolution)*/)
+          sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
+          INTERNAL_GAME_RESOLUTION)
+    , touchInputCamera(
+          sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
+          sf::Vector2f(settings.video.resolution))
     , text(resmgr.get<sf::Font>("ChunkFive-Regular.ttf"))
     , hudSprite(atlas.atlas.getTexture())
     , pipeline(atlas.atlas.getTexture())
@@ -71,6 +74,7 @@ void RenderingEngine::draw(dgm::Window& window)
 
     if (settings.input.showTouchControls)
     {
+        window.setViewFromCamera(touchInputCamera);
         renderTouchControls(window);
     }
 }

@@ -84,6 +84,7 @@ private:
     const dgm::ResourceManager& resmgr;
     dgm::Camera worldCamera;
     dgm::Camera hudCamera;
+    dgm::Camera touchInputCamera;
 
     FpsCounter fpsCounter;
     sf::Text text;
