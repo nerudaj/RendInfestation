@@ -53,6 +53,14 @@ private:
 
     void renderHud(dgm::Window& window);
 
+    void renderHudBackgroundAndHealth(
+        const sf::Vector2f& hudOrigin, dgm::Window& window);
+
+    void renderHudReloadTimeAndModules(
+        const sf::Vector2f& hudOrigin, dgm::Window& window);
+
+    void renderHudStrings(dgm::Window& window);
+
     void renderTouchControls(dgm::Window& window);
 
 private:
@@ -73,15 +81,20 @@ private:
     const GameTextureAtlas& atlas;
     const AppSettings& settings;
     const TouchController& touchController;
+    const dgm::ResourceManager& resmgr;
     dgm::Camera worldCamera;
     dgm::Camera hudCamera;
 
     FpsCounter fpsCounter;
     sf::Text text;
+    sf::Sprite hudSprite;
 
     ShadeableRenderingPipeline2D pipeline;
     ShadeableRenderingPipeline2D lightPipeline;
-    dgm::Clip tilesClip;
+    const dgm::Clip& tilesClip;
+    const dgm::Clip& hudClip;
+    const dgm::Clip& iconsClip;
+    const dgm::Clip& modulesClip;
     float timeElapsed = 0.f;
     mutable size_t entityCount = 0;
     sf::Vector2f cameraPosition = { 0.f, 0.f };

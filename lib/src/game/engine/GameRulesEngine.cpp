@@ -188,6 +188,8 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
         }
 
         weapon.timeTillFire -= time.getElapsed();
+        if (weapon.timeTillFire < sf::Time::Zero)
+            weapon.timeTillFire = sf::Time::Zero;
     }
 }
 

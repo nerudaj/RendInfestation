@@ -4,7 +4,6 @@
 #include "game/definitions/Actor.hpp"
 #include "game/definitions/DamageMarkerInventory.hpp"
 #include "game/definitions/EnemyInventory.hpp"
-#include "game/definitions/PlayerInventory.hpp"
 #include "game/definitions/ProjectileInventory.hpp"
 #include "game/enums/WeaponModule.hpp"
 #include <DGM/dgm.hpp>
@@ -12,12 +11,6 @@
 #include <entt/entt.hpp>
 #include <set>
 #include <vector>
-
-using Inventory = std::variant<
-    NpcInventory,
-    PlayerInventory,
-    ProjectileInventory,
-    DamageMarkerInventory>;
 
 struct [[nodiscard]] WeaponLoadout final
 {

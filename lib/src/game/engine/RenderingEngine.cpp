@@ -1,4 +1,6 @@
 #include "game/engine/RenderingEngine.hpp"
+#include "game/enums/Hud.hpp"
+#include "gui/Icon.hpp"
 #include <cmath>
 
 RenderingEngine::RenderingEngine(
@@ -11,15 +13,20 @@ RenderingEngine::RenderingEngine(
     , atlas(atlas)
     , settings(settings)
     , touchController(touchController)
+    , resmgr(resmgr)
     , worldCamera(createFullscreenCamera(
           sf::Vector2f(settings.video.resolution), INTERNAL_GAME_RESOLUTION))
     , hudCamera(
-          sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
-          sf::Vector2f(settings.video.resolution))
+          sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } }, INTERNAL_GAME_RESOLUTION
+          /*sf::Vector2f(settings.video.resolution)*/)
     , text(resmgr.get<sf::Font>("ChunkFive-Regular.ttf"))
+    , hudSprite(atlas.atlas.getTexture())
     , pipeline(atlas.atlas.getTexture())
     , lightPipeline(atlas.atlas.getTexture(), sf::BlendAdd)
     , tilesClip(atlas.atlas.getClip(atlas.tilesLocation))
+    , hudClip(atlas.atlas.getClip(atlas.hudLocation))
+    , iconsClip(atlas.atlas.getClip(atlas.iconsLocation))
+    , modulesClip(atlas.atlas.getClip(atlas.modulesLocation))
     , cameraPosition(
           scene.actors.get<Collider>(scene.playerEntity).getPosition())
 {
@@ -206,13 +213,72 @@ void RenderingEngine::renderLights(dgm::Window& window)
 
 void RenderingEngine::renderHud(dgm::Window& window)
 {
+    const auto hudOrigin =
+        sf::Vector2f { INTERNAL_GAME_RESOLUTION.x - hudClip.getFrameSize().x,
+                       0.f };
+
+    renderHudBackgroundAndHealth(hudOrigin, window);
+    renderHudReloadTimeAndModules(hudOrigin, window);
+
+#if defined(ANDROID) || defined(_DEBUG)
+    hudSprite.setTextureRect(iconsClip.getFrame(Icon::Pause2));
+    hudSprite.setPosition({ 2.f, 2.f });
+    window.draw(hudSprite);
+#endif
+
+    renderHudStrings(window);
+}
+
+void RenderingEngine::renderHudBackgroundAndHealth(
+    const sf::Vector2f& hudOrigin, dgm::Window& window)
+{
+    hudSprite.setTextureRect(hudClip.getFrame(Hud::Background));
+    hudSprite.setPosition(hudOrigin);
+    window.draw(hudSprite);
+
+    const int health = scene.actors.get<Health>(scene.playerEntity).get();
+    const auto tenth = (std::clamp(health, 0, 100) + 9) / 10;
+    hudSprite.setTextureRect(
+        hudClip.getFrame(std::to_underlying(Hud::Health1) + tenth - 1));
+    window.draw(hudSprite);
+}
+
+void RenderingEngine::renderHudReloadTimeAndModules(
+    const sf::Vector2f& hudOrigin, dgm::Window& window)
+{
+    const auto& weaponInventory =
+        scene.actors.get<WeaponInventory>(scene.playerEntity);
+    const auto activeWeapon =
+        weaponInventory.weapons[weaponInventory.activeWeapon];
+    const auto cooldownFactor =
+        (activeWeapon.cooldown - activeWeapon.timeTillFire)
+        / activeWeapon.cooldown;
+
+    // Render reload time
+    auto&& reloadShape = sf::RectangleShape({ cooldownFactor * 58.f, 2.f });
+    reloadShape.setFillColor(COLOR_PURPLE);
+    reloadShape.setPosition(hudOrigin + sf::Vector2f { 5.f, 23.f });
+    window.draw(reloadShape);
+
+    // Render used modules:
+    const auto& loadout = weaponInventory.activeWeapon
+                              ? scene.loadout.weapon2Modules
+                              : scene.loadout.weapon1Modules;
+    for (auto&& [idx, module] : std::views::enumerate(loadout))
+    {
+        if (module == WeaponModule::None) continue;
+        hudSprite.setTextureRect(
+            modulesClip.getFrame(std::to_underlying(module)));
+        hudSprite.setPosition(
+            hudOrigin + sf::Vector2f { 4.f + idx * 19.f, 4.f });
+        window.draw(hudSprite);
+    }
+}
+
+void RenderingEngine::renderHudStrings(dgm::Window& window)
+{
     text.setPosition({ 10.f, 10.f });
     text.setString(fpsCounter.getText());
-    window.draw(text);
-
-    text.setPosition({ 10.f, 50.f });
-    const int health = scene.actors.get<Health>(scene.playerEntity).get();
-    text.setString(uni::format("Player health: {}", health));
     window.draw(text);
 
     if (scene.survivalSpawnerContext.wave != -1)

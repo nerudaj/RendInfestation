@@ -96,6 +96,25 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                 resmgr.get<dgm::AnimationStates>("scifi_door.png.anim"))
             .value();
 
+    auto hud = atlas
+                   .addTileset(
+                       resmgr.get<sf::Texture>("infestation_hud.png"),
+                       resmgr.get<dgm::Clip>("infestation_hud.png.clip"))
+                   .value();
+
+    auto icons = atlas
+                     .addTileset(
+                         resmgr.get<sf::Texture>("pixel-ui-icons.png"),
+                         resmgr.get<dgm::Clip>("pixel-ui-icons.png.clip"))
+                     .value();
+
+    auto modules =
+        atlas
+            .addTileset(
+                resmgr.get<sf::Texture>("infestation_modules.png"),
+                resmgr.get<dgm::Clip>("infestation_modules.png.clip"))
+            .value();
+
     auto image = sf::Image(atlas.getTexture().copyToImage());
     std::ignore = image.saveToFile("atlas_debug.png");
 
@@ -115,5 +134,8 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         .tilesLocation = tiles,
         .crosshairsLocation = crosshairs,
         .lightsLocation = lights,
+        .hudLocation = hud,
+        .iconsLocation = icons,
+        .modulesLocation = modules,
     };
 }
