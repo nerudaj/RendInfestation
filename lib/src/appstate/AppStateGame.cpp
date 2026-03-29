@@ -65,4 +65,8 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
             },
             *message);
     }
+
+    sf::Mouse::setPosition(
+        sf::Vector2i(INTERNAL_GAME_RESOLUTION / 2.f),
+        app.window.getSfmlWindowContext());
 }

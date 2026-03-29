@@ -33,6 +33,7 @@ RenderingEngine::RenderingEngine(
     , cameraPosition(
           scene.actors.get<Collider>(scene.playerEntity).getPosition())
 {
+    resmgr.getMutable<sf::Font>("ChunkFive-Regular.ttf").setSmooth(false);
 }
 
 void RenderingEngine::update(const dgm::Time& time)
@@ -281,6 +282,7 @@ void RenderingEngine::renderHudReloadTimeAndModules(
 
 void RenderingEngine::renderHudStrings(dgm::Window& window)
 {
+    text.setCharacterSize(10);
     text.setPosition({ 10.f, 10.f });
     text.setString(fpsCounter.getText());
     window.draw(text);
@@ -295,7 +297,8 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
                 std::ceil(scene.survivalSpawnerContext.timeTillNextWave
                               .asSeconds())));
             text.setPosition(
-                { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
+                { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
+                      / 2.f,
                   10.f });
             window.draw(text);
         }
@@ -304,7 +307,8 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
             text.setString(
                 uni::format("Wave: {}", scene.survivalSpawnerContext.wave));
             text.setPosition(
-                { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
+                { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
+                      / 2.f,
                   10.f });
             window.draw(text);
 
@@ -313,7 +317,8 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
                 scene.survivalSpawnerContext.enemiesKilledInCurrentWave,
                 scene.survivalSpawnerContext.enemiesInCurrentWave));
             text.setPosition(
-                { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
+                { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
+                      / 2.f,
                   40.f });
             window.draw(text);
         }
@@ -323,8 +328,9 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
     {
         text.setString(scene.hudMessage.text);
         text.setPosition(
-            { (window.getSize().x - text.getGlobalBounds().size.x) / 2.f,
-              window.getSize().y * 2.f / 3.f });
+            { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
+                  / 2.f,
+              INTERNAL_GAME_RESOLUTION.y * 2.f / 3.f });
         window.draw(text);
     }
 }
