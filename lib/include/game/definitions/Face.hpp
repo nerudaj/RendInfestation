@@ -7,6 +7,7 @@ struct [[nodiscard]] Face final
     sf::Vector2f origin;
     sf::FloatRect texUvs;
     sf::Vector2f scale = { 1.f, 1.f };
+    sf::Angle rotation = sf::degrees(0);
 };
 
 namespace std

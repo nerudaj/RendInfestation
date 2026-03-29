@@ -121,7 +121,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
     addLevelFacesToPipeline();
 
     for (auto&& face : getActorFaces())
-        pipeline.addFace(face.origin, face.texUvs, sf::degrees(0), face.scale);
+        pipeline.addFace(face.origin, face.texUvs, face.rotation, face.scale);
 
     pipeline.addFace(
         scene.actors.get<Collider>(scene.playerEntity).getPosition()
@@ -349,8 +349,8 @@ std::vector<Face> RenderingEngine::getActorFaces() const
 {
     std::vector<Face> faces;
 
-    for (auto&& [entity, collider, skin] :
-         scene.actors.view<Collider, Skin>().each())
+    for (auto&& [entity, collider, body, skin] :
+         scene.actors.view<Collider, PhysicsBody, Skin>().each())
     {
         bool flipX = false;
         if (auto lookDirection = scene.actors.try_get<LookDirection>(entity))
@@ -388,6 +388,9 @@ std::vector<Face> RenderingEngine::getActorFaces() const
                         1.f,
                     }
                     * skin.scale,
+                .rotation = skin.kind == ActorKind::Projectile
+                                ? body.forward.angle()
+                                : sf::degrees(0),
             });
         }
     }
