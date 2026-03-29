@@ -382,6 +382,11 @@ std::vector<Face> RenderingEngine::getActorFaces() const
 
         if (position)
         {
+            const auto rotation = skin.kind == ActorKind::Projectile
+                                          && body.forward.lengthSquared() > 0.f
+                                      ? body.forward.angle()
+                                      : sf::degrees(0);
+
             faces.push_back(Face {
                 .origin = *position,
                 .texUvs = getFrame(
