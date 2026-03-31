@@ -63,6 +63,8 @@ private:
 
     void renderTouchControls(dgm::Window& window);
 
+    sf::Angle getEntityRotation(entt::entity entity, ActorKind kind) const;
+
 private:
     sf::FloatRect getFrame(
         SkinType skin,

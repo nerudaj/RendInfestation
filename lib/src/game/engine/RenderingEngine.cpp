@@ -351,6 +351,14 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
     }
 }
 
+sf::Angle
+RenderingEngine::getEntityRotation(entt::entity entity, ActorKind kind) const
+{
+    if (kind != ActorKind::Projectile) return sf::degrees(0);
+    const auto forward = scene.actors.get<PhysicsBody>(entity).forward;
+    return forward.lengthSquared() > 0.f ? forward.angle() : sf::degrees(0);
+}
+
 std::vector<Face> RenderingEngine::getActorFaces() const
 {
     std::vector<Face> faces;
@@ -382,11 +390,6 @@ std::vector<Face> RenderingEngine::getActorFaces() const
 
         if (position)
         {
-            const auto rotation = skin.kind == ActorKind::Projectile
-                                          && body.forward.lengthSquared() > 0.f
-                                      ? body.forward.angle()
-                                      : sf::degrees(0);
-
             faces.push_back(Face {
                 .origin = *position,
                 .texUvs = getFrame(
@@ -399,9 +402,7 @@ std::vector<Face> RenderingEngine::getActorFaces() const
                         1.f,
                     }
                     * skin.scale,
-                .rotation = skin.kind == ActorKind::Projectile
-                                ? body.forward.angle()
-                                : sf::degrees(0),
+                .rotation = getEntityRotation(entity, skin.kind),
             });
         }
     }
