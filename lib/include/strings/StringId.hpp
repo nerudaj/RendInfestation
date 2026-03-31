@@ -73,6 +73,7 @@ enum class [[nodiscard]] StringId
     WeaponModule_PassthruAmmo,
     WeaponModule_BigBullet,
     WeaponModule_Spikes,
+    WeaponModule_Splitter,
 
     // Survival progression
     NewWeaponModuleUnlocked,

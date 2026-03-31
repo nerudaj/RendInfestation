@@ -66,7 +66,7 @@ GameScene GameSceneBuilder::createScene(
             WeaponModule::SpreadBarrel_x4, WeaponModule::CadenceBarrel,
             WeaponModule::ExplosiveAmmo,   WeaponModule::Ricochet,
             WeaponModule::PassthruAmmo,    WeaponModule::BigBullet,
-            WeaponModule::Spikes,
+            WeaponModule::Spikes,          WeaponModule::Splitter,
         };
     }
     // For Survival, unlockedModules stays empty (no modules initially)

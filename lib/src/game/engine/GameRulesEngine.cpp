@@ -89,6 +89,11 @@ void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
             SoundChannel::Ambient, SoundId::Explosion, distance);
     }
 
+    if (inventory.traits & ProjectileTraits::SplitOnHit)
+    {
+        ActorBuilder::shatterProjectile(scene.actors, e.projectileEntity);
+    }
+
     eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileEntity);
 }
 

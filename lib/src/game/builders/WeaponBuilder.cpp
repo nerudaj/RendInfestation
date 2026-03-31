@@ -83,6 +83,14 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.baseProjectileDamage *= 4;
             return props;
         };
+
+    case Splitter:
+        return [](WeaponProperties props)
+        {
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::SplitOnHit;
+            return props;
+        };
     }
 }
 

@@ -38,6 +38,9 @@ public:
         const GameTextureAtlas& atlas,
         const Weapon& weapon);
 
+    static void
+    shatterProjectile(entt::registry& actors, entt::entity projectile);
+
     static entt::entity createDamageMarker(
         entt::registry& actors,
         const sf::Vector2f& origin,

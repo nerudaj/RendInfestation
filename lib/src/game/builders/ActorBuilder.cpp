@@ -271,24 +271,39 @@ entt::entity ActorBuilder::createProjectile(
         actors.emplace<Interval>(
             entity, Interval { .delay = sf::milliseconds(30) });
     }
-
-    /*if (weapon.projectileSkin == SkinType::SmallBullet)
-    {
-        actors.emplace<BoundLightEmitter>(
-            entity, BoundLightEmitter { COLOR_YELLOW, 10 });
-    }
-    else if (weapon.projectileSkin == SkinType::BigBullet)
-    {
-        actors.emplace<BoundLightEmitter>(
-            entity, BoundLightEmitter { COLOR_YELLOW, 10 });
-    }
-    else if (weapon.projectileSkin == SkinType::Hyperbeam)
-    {
-        actors.emplace<BoundLightEmitter>(
-            entity, BoundLightEmitter { COLOR_GREEN, 10 });
-    }*/
-
     return entity;
+}
+
+void ActorBuilder::shatterProjectile(
+    entt::registry& actors, entt::entity projectile)
+{
+    auto body = actors.get<PhysicsBody>(projectile);
+    auto skin = actors.get<Skin>(projectile);
+    skin.scale *= 0.5f;
+    auto inventory = actors.get<ProjectileInventory>(projectile);
+    // TODO: somehow substract the trait for splitting
+    inventory.damage /= 2;
+    inventory.traits = inventory.traits - ProjectileTraits::SplitOnHit;
+
+    for (auto direction = sf::degrees(45); direction < sf::degrees(360);
+         direction += sf::degrees(90))
+    {
+        auto entity = actors.create();
+        actors.emplace<Collider>(entity, actors.get<Collider>(projectile));
+
+        body.forward = body.forward.rotatedBy(sf::degrees(90));
+        actors.emplace<PhysicsBody>(entity, body);
+
+        actors.emplace<Lifetime>(entity, actors.get<Lifetime>(projectile));
+        actors.emplace<ZIndex>(entity, actors.get<ZIndex>(projectile));
+        actors.emplace<Skin>(entity, skin);
+        actors.emplace<ProjectileInventory>(entity, inventory);
+
+        if (auto interval = actors.try_get<Interval>(projectile))
+        {
+            actors.emplace<Interval>(entity, *interval);
+        }
+    }
 }
 
 entt::entity ActorBuilder::createDamageMarker(
