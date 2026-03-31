@@ -29,5 +29,5 @@ constexpr bool operator&(ProjectileTraits base, ProjectileTraits question)
 constexpr ProjectileTraits operator-(ProjectileTraits a, ProjectileTraits b)
 {
     using T = std::underlying_type_t<ProjectileTraits>;
-    return (static_cast<T>(a) | static_cast<T>(b)) ^ static_cast<T>(b);
+    return static_cast<ProjectileTraits>((static_cast<T>(a) | static_cast<T>(b)) ^ static_cast<T>(b));
 }
