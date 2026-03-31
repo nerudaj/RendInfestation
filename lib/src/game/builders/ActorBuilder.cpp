@@ -27,6 +27,7 @@ entt::entity ActorBuilder::createPlayer(
         sf::Vector2f { 0.f, -10.f });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
     actors.emplace<Health>(entity, 10000);
+    actors.emplace<ZIndex>(entity, 1);
     actors.emplace<WeaponInventory>(
         entity,
         0,
@@ -95,6 +96,7 @@ entt::entity ActorBuilder::createNpc(
             .ownerEntity = entity,
             .input = dynamic_cast<NpcInput&>(*underlyingInput),
         });
+    actors.emplace<ZIndex>(entity, 1);
 
     actors.get<Skin>(entity).animation.setState("walk-front", "looping"_true);
 
@@ -202,6 +204,7 @@ entt::entity ActorBuilder::createProp(
 
     actors.get<Skin>(entity).animation.setState(
         stateName(propId), "looping"_true);
+    actors.emplace<ZIndex>(entity, 0);
 
     if (isPropLabtune(propId))
     {
@@ -246,6 +249,7 @@ entt::entity ActorBuilder::createProjectile(
             .useAltMesh = true,
         });
     actors.emplace<Lifetime>(entity, weapon.projectileLifetime);
+    actors.emplace<ZIndex>(entity, 50);
 
     auto animation =
         dgm::Animation(atlas.getSkinAnimationStates(weapon.projectileSkin), 8);
@@ -358,6 +362,7 @@ entt::entity ActorBuilder::createEffect(
         assert(false && "Invalid effect type");
     }
 
+    actors.emplace<ZIndex>(entity, 100);
     auto&& animation = actors.get<Skin>(entity).animation;
     animation.setState("death", "looping"_false);
     /*    actors.get<Lifetime>(entity) = sf::seconds(
@@ -375,6 +380,7 @@ entt::entity ActorBuilder::createDoor(
     auto entity = actors.create();
     actors.emplace<Collider>(entity, dgm::Rect(position, { 64.f, 42.f }));
     actors.emplace<PhysicsBody>(entity);
+    actors.emplace<ZIndex>(entity, 1);
     actors.emplace<Skin>(
         entity,
         Skin {

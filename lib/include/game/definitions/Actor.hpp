@@ -35,6 +35,8 @@ using Lifetime = BrandedType<sf::Time, struct LifetimeTag>;
 
 using EntityInput = std::unique_ptr<InputInterface>;
 
+using ZIndex = BrandedType<int, struct ZIndexTag>;
+
 struct [[nodiscard]] BoundLightEmitter final
 {
     sf::Color color;
