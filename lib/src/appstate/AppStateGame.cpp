@@ -7,6 +7,9 @@ void AppStateGame::input()
     if (dic.input.isPauseButtonPressed())
     {
         app.pushState<AppStatePause>(dic, scene);
+        // If pause button is the same as back button, we need
+        // to release it to prevent pause menu from immediately closing again
+        dic.input.forceRelease(InputKind::BackButton);
     }
 
     while (const auto event = app.window.pollEvent())
