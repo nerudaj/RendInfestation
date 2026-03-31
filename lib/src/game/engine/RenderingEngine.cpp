@@ -22,7 +22,7 @@ RenderingEngine::RenderingEngine(
     , touchInputCamera(
           sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
           sf::Vector2f(settings.video.resolution))
-    , text(resmgr.get<sf::Font>("ChunkFive-Regular.ttf"))
+    , text(resmgr.get<sf::Font>(FONT_NAME))
     , hudSprite(atlas.atlas.getTexture())
     , pipeline(atlas.atlas.getTexture())
     , lightPipeline(atlas.atlas.getTexture(), sf::BlendAdd)
@@ -33,7 +33,7 @@ RenderingEngine::RenderingEngine(
     , cameraPosition(
           scene.actors.get<Collider>(scene.playerEntity).getPosition())
 {
-    resmgr.getMutable<sf::Font>("ChunkFive-Regular.ttf").setSmooth(false);
+    resmgr.getMutable<sf::Font>(FONT_NAME).setSmooth(false);
 }
 
 void RenderingEngine::update(const dgm::Time& time)
@@ -282,8 +282,8 @@ void RenderingEngine::renderHudReloadTimeAndModules(
 
 void RenderingEngine::renderHudStrings(dgm::Window& window)
 {
-    text.setCharacterSize(10);
-    text.setPosition({ 10.f, 10.f });
+    text.setCharacterSize(FONT_BASE_HEIGHT);
+    text.setPosition({ 10.f, 2.f });
     text.setString(fpsCounter.getText());
     window.draw(text);
 
@@ -299,7 +299,7 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
             text.setPosition(
                 { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
                       / 2.f,
-                  10.f });
+                  2.f });
             window.draw(text);
         }
         else
@@ -309,7 +309,7 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
             text.setPosition(
                 { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
                       / 2.f,
-                  10.f });
+                  2.f });
             window.draw(text);
 
             text.setString(uni::format(
@@ -319,7 +319,7 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
             text.setPosition(
                 { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
                       / 2.f,
-                  40.f });
+                  11.f });
             window.draw(text);
         }
     }

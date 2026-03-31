@@ -4,6 +4,7 @@
 #include "audio/SoundPlayer.hpp"
 #include "filesystem/AppStorage.hpp"
 #include "filesystem/ResourceLoader.hpp"
+#include "game/definitions/Constants.hpp"
 #include "gui/Gui.hpp"
 #include "gui/GuiBuilderFactory.hpp"
 #include "gui/Sizers.hpp"
@@ -87,7 +88,7 @@ struct [[nodiscard]] DependencyContainer final
             BindingsSettings {}.menuBindings.size()
             == settingsSM.bindings.menuBindings.size());
 
-        gui.setFont(resmgr.get<tgui::Font>("ChunkFive-Regular.ttf"));
+        gui.setFont(resmgr.get<tgui::Font>(FONT_NAME));
         // NOTE: You can create your own theme file and use it here
         gui.setTheme(resmgr.get<tgui::Theme::Ptr>("Pico8.txt"));
     }
