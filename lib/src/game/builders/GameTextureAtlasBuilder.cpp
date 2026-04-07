@@ -6,12 +6,15 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
 {
     auto atlas = dgm::TextureAtlas(atlasSize.x, atlasSize.y);
 
-    auto props =
+    auto skins = decltype(GameTextureAtlas::skinLocations) {};
+
+    skins.emplace(
+        SkinType::Prop,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("scifi_props.png"),
                 resmgr.get<dgm::AnimationStates>("scifi_props.png.anim"))
-            .value();
+            .value());
 
     auto lights = atlas
                       .addTileset(
@@ -24,64 +27,76 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                          resmgr.get<sf::Texture>("scifi_tiles.png"),
                          resmgr.get<dgm::Clip>("scifi_tiles.png.clip"))
                      .value();
-    auto explosion =
+
+    skins.emplace(
+        SkinType::Explosion,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("explosion.png"),
                 resmgr.get<dgm::AnimationStates>("explosion.png.anim"))
-            .value();
-    auto bullet = atlas
-                      .addSpritesheet(
-                          resmgr.get<sf::Texture>("bullet.png"),
-                          resmgr.get<dgm::AnimationStates>("bullet.png.anim"))
-                      .value();
+            .value());
+    skins.emplace(
+        SkinType::BigBullet,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("bullet.png"),
+                resmgr.get<dgm::AnimationStates>("bullet.png.anim"))
+            .value());
 
-    auto player =
+    skins.emplace(
+        SkinType::PlayerDefault,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("scifi_soldier.png"),
                 resmgr.get<dgm::AnimationStates>("scifi_soldier.png.anim"))
-            .value();
-    auto bighead =
+            .value());
+    skins.emplace(
+        SkinType::Bighead,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("scifi_bighead.png"),
                 resmgr.get<dgm::AnimationStates>("scifi_bighead.png.anim"))
-            .value();
+            .value());
 
-    auto scuttlebug =
+    skins.emplace(
+        SkinType::Scuttlebug,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("scuttlebug.png"),
                 resmgr.get<dgm::AnimationStates>("scuttlebug.png.anim"))
-            .value();
+            .value());
 
-    auto smallBullet =
+    skins.emplace(
+        SkinType::SmallBullet,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("projectile_small_bullet.png"),
                 resmgr.get<dgm::AnimationStates>(
                     "projectile_small_bullet.png.anim"))
-            .value();
-    auto landmine = atlas
-                        .addSpritesheet(
-                            resmgr.get<sf::Texture>("projectile_landmine.png"),
-                            resmgr.get<dgm::AnimationStates>(
-                                "projectile_landmine.png.anim"))
-                        .value();
-    auto spikes =
+            .value());
+    skins.emplace(
+        SkinType::Landmine,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("projectile_landmine.png"),
+                resmgr.get<dgm::AnimationStates>(
+                    "projectile_landmine.png.anim"))
+            .value());
+    skins.emplace(
+        SkinType::Spikes,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("projectile_spikes.png"),
                 resmgr.get<dgm::AnimationStates>("projectile_spikes.png.anim"))
-            .value();
-    auto hyperbeam =
+            .value());
+    skins.emplace(
+        SkinType::Hyperbeam,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("projectile_hyperbeam.png"),
                 resmgr.get<dgm::AnimationStates>(
                     "projectile_hyperbeam.png.anim"))
-            .value();
+            .value());
 
     auto crosshairs = atlas
                           .addTileset(
@@ -89,12 +104,13 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                               resmgr.get<dgm::Clip>("crosshairs.png.clip"))
                           .value();
 
-    auto doorHorizontal =
+    skins.emplace(
+        SkinType::DoorHorizontal,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("scifi_door.png"),
                 resmgr.get<dgm::AnimationStates>("scifi_door.png.anim"))
-            .value();
+            .value());
 
     auto hud = atlas
                    .addTileset(
@@ -115,38 +131,28 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                 resmgr.get<dgm::Clip>("infestation_modules.png.clip"))
             .value();
 
-    auto scuttlebugBlue =
+    skins.emplace(
+        SkinType::ScuttlebugBlue,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("scuttlebug_blue.png"),
                 resmgr.get<dgm::AnimationStates>("scuttlebug_blue.png.anim"))
-            .value();
+            .value());
 
-    auto beholder =
+    skins.emplace(
+        SkinType::Beholder,
         atlas
             .addSpritesheet(
                 resmgr.get<sf::Texture>("beholder.png"),
                 resmgr.get<dgm::AnimationStates>("beholder.png.anim"))
-            .value();
+            .value());
 
     auto image = sf::Image(atlas.getTexture().copyToImage());
     std::ignore = image.saveToFile("atlas_debug.png");
 
     return GameTextureAtlas {
         .atlas = std::move(atlas),
-        .smallBulletLocation = smallBullet,
-        .bulletLocation = bullet,
-        .landmineLocation = landmine,
-        .spikesLocation = spikes,
-        .hyperbeamLocation = hyperbeam,
-        .explosionLocation = explosion,
-        .playerLocation = player,
-        .bigheadLocation = bighead,
-        .scuttlebugLocation = scuttlebug,
-        .scuttlebugBlueLocation = scuttlebugBlue,
-        .beholderLocation = beholder,
-        .propsLocation = props,
-        .doorHorizontalLocation = doorHorizontal,
+        .skinLocations = std::move(skins),
         .tilesLocation = tiles,
         .crosshairsLocation = crosshairs,
         .lightsLocation = lights,

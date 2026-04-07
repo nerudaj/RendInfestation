@@ -23,7 +23,9 @@ entt::entity ActorBuilder::createPlayer(
         entity,
         ActorKind::Player,
         SkinType::PlayerDefault,
-        dgm::Animation(atlas.atlas.getAnimationStates(atlas.playerLocation), 8),
+        dgm::Animation(
+            atlas.getSkinAnimationStates(SkinType::PlayerDefault),
+            BASE_ANIMATION_FPS),
         sf::Vector2f { 0.f, -10.f });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
     actors.emplace<Health>(entity, 10000);
@@ -89,7 +91,8 @@ entt::entity ActorBuilder::createNpc(
         Skin {
             .kind = ActorKind::Npc,
             .skinType = skin,
-            .animation = dgm::Animation(atlas.getSkinAnimationStates(skin), 8),
+            .animation = dgm::Animation(
+                atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
         });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
@@ -205,7 +208,8 @@ entt::entity ActorBuilder::createProp(
         entity,
         ActorKind::Prop,
         SkinType::Prop,
-        dgm::Animation(atlas.atlas.getAnimationStates(atlas.propsLocation)),
+        dgm::Animation(
+            atlas.getSkinAnimationStates(SkinType::Prop), BASE_ANIMATION_FPS),
         getPropSpriteOffset(propId));
 
     auto stateName = [](size_t id)
@@ -277,8 +281,9 @@ entt::entity ActorBuilder::createProjectile(
     actors.emplace<Lifetime>(entity, weapon.projectileLifetime);
     actors.emplace<ZIndex>(entity, 50);
 
-    auto animation =
-        dgm::Animation(atlas.getSkinAnimationStates(weapon.projectileSkin), 8);
+    auto animation = dgm::Animation(
+        atlas.getSkinAnimationStates(weapon.projectileSkin),
+        BASE_ANIMATION_FPS);
     animation.setState(IDLE_ANIMATION_STATE, "looping"_true);
     actors.emplace<Skin>(
         entity,
@@ -381,8 +386,8 @@ entt::entity ActorBuilder::createEffect(
                 .kind = ActorKind::Effect,
                 .skinType = SkinType::BigBullet,
                 .animation = dgm::Animation(
-                    atlas.atlas.getAnimationStates(atlas.bulletLocation),
-                    EFFECT_FPS),
+                    atlas.getSkinAnimationStates(SkinType::BigBullet),
+                    BASE_ANIMATION_FPS),
             });
     }
     else if (type == EffectType::Explosion)
@@ -393,8 +398,8 @@ entt::entity ActorBuilder::createEffect(
                 .kind = ActorKind::Effect,
                 .skinType = SkinType::Explosion,
                 .animation = dgm::Animation(
-                    atlas.atlas.getAnimationStates(atlas.explosionLocation),
-                    EFFECT_FPS),
+                    atlas.getSkinAnimationStates(SkinType::Explosion),
+                    BASE_ANIMATION_FPS),
                 .scale = scale,
             });
     }
@@ -408,7 +413,7 @@ entt::entity ActorBuilder::createEffect(
     animation.setState(DEATH_ANIMATION_STATE, "looping"_false);
     /*    actors.get<Lifetime>(entity) = sf::seconds(
             static_cast<float>(animation.getCurrentStateFrameCount()) /
-       EFFECT_FPS);*/
+       BASE_ANIMATION_FPS);*/
 
     return entity;
 }
@@ -428,8 +433,8 @@ entt::entity ActorBuilder::createDoor(
             .kind = ActorKind::Door,
             .skinType = SkinType::DoorHorizontal,
             .animation = dgm::Animation(
-                atlas.atlas.getAnimationStates(atlas.doorHorizontalLocation),
-                EFFECT_FPS),
+                atlas.getSkinAnimationStates(SkinType::DoorHorizontal),
+                BASE_ANIMATION_FPS),
         });
 
     actors.get<Skin>(entity).animation.setState(
