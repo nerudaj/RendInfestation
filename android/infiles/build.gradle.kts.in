@@ -27,6 +27,7 @@ android {
             cmake {
                 arguments.add("-DANDROID_STL=c++_shared")
                 arguments.add("-DSFML_STATIC_LIBRARIES=OFF")
+                arguments.add("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
             }
         }
     }
