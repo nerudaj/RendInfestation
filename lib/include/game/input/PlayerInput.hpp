@@ -14,17 +14,17 @@ public:
         return input.getForward();
     }
 
-    [[nodiscard]] sf::Vector2f getAimDirection() const
+    [[nodiscard]] sf::Vector2f getAimDirection() const override
     {
         return input.getAimDirection();
     }
 
-    [[nodiscard]] bool isShootPressed() const
+    [[nodiscard]] bool isShootPressed() const override
     {
         return input.isShootPressed();
     }
 
-    [[nodiscard]] bool isSwapWeaponsPressed() const
+    [[nodiscard]] bool isSwapWeaponsPressed() const override
     {
         return input.isSwapWeaponsPressed();
     }

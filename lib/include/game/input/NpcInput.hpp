@@ -21,7 +21,7 @@ public:
         aimDirection = newAimDirection;
     }
 
-    [[nodiscard]] sf::Vector2f getAimDirection() const
+    [[nodiscard]] sf::Vector2f getAimDirection() const override
     {
         return aimDirection;
     }
@@ -31,12 +31,12 @@ public:
         shooting = value;
     }
 
-    [[nodiscard]] bool isShootPressed() const
+    [[nodiscard]] bool isShootPressed() const override
     {
         return shooting;
     }
 
-    [[nodiscard]] bool isSwapWeaponsPressed() const
+    [[nodiscard]] bool isSwapWeaponsPressed() const override
     {
         return false;
     }
