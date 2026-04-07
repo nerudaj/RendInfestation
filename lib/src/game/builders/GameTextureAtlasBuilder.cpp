@@ -115,6 +115,20 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                 resmgr.get<dgm::Clip>("infestation_modules.png.clip"))
             .value();
 
+    auto scuttlebugBlue =
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("scuttlebug_blue.png"),
+                resmgr.get<dgm::AnimationStates>("scuttlebug_blue.png.anim"))
+            .value();
+
+    auto beholder =
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("beholder.png"),
+                resmgr.get<dgm::AnimationStates>("beholder.png.anim"))
+            .value();
+
     auto image = sf::Image(atlas.getTexture().copyToImage());
     std::ignore = image.saveToFile("atlas_debug.png");
 
@@ -129,6 +143,8 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         .playerLocation = player,
         .bigheadLocation = bighead,
         .scuttlebugLocation = scuttlebug,
+        .scuttlebugBlueLocation = scuttlebugBlue,
+        .beholderLocation = beholder,
         .propsLocation = props,
         .doorHorizontalLocation = doorHorizontal,
         .tilesLocation = tiles,

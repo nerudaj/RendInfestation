@@ -230,6 +230,17 @@ void GameRulesEngine::updateHealth()
     }
 }
 
+static SkinType getNpcToSpawn(int enemiesSpawnedInThisWave)
+{
+    if (enemiesSpawnedInThisWave % 2 == 0)
+        return SkinType::Scuttlebug;
+    else if (enemiesSpawnedInThisWave % 8 == 1)
+        return SkinType::Bighead;
+    else if (enemiesSpawnedInThisWave % 8 == 5)
+        return SkinType::Beholder;
+    return SkinType::ScuttlebugBlue;
+}
+
 void GameRulesEngine::updateSpawner(const dgm::Time& time)
 {
     auto& context = scene.survivalSpawnerContext;
@@ -259,9 +270,7 @@ void GameRulesEngine::updateSpawner(const dgm::Time& time)
             ActorBuilder::createNpc(
                 scene.actors,
                 scene.enemySpawns[rand() % scene.enemySpawns.size()],
-                context.enemiesSpawnedInCurrentWave % 5 == 0
-                    ? SkinType::Bighead
-                    : SkinType::Scuttlebug,
+                getNpcToSpawn(context.enemiesSpawnedInCurrentWave),
                 atlas);
 
             if (context.enemiesInCurrentWave

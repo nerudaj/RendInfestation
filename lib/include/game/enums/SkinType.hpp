@@ -8,6 +8,8 @@ enum class [[nodiscard]] SkinType : unsigned char
     // Npcs
     Bighead,
     Scuttlebug,
+    ScuttlebugBlue,
+    Beholder,
 
     // Projectiles
     SmallBullet,

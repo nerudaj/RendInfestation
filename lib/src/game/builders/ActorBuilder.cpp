@@ -64,6 +64,18 @@ entt::entity ActorBuilder::createNpc(
         {
             return std::tuple { 100, BASE_ENEMY_SPEED, BASE_MELEE_DAMAGE };
         }
+        else if (skin == SkinType::ScuttlebugBlue)
+        {
+            return std::tuple { 65,
+                                BASE_ENEMY_SPEED * 1.5f,
+                                BASE_MELEE_DAMAGE / 2 };
+        }
+        else if (skin == SkinType::Beholder)
+        {
+            return std::tuple { 120,
+                                BASE_ENEMY_SPEED * 0.5f,
+                                BASE_MELEE_DAMAGE * 2 };
+        }
         return std::tuple { 50,
                             BASE_ENEMY_SPEED * 1.1f,
                             BASE_MELEE_DAMAGE / 2 };
@@ -82,11 +94,23 @@ entt::entity ActorBuilder::createNpc(
         });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
     actors.emplace<Health>(entity, HEALTH);
-    actors.emplace<WeaponInventory>(
-        entity,
-        0,
-        std::vector<Weapon> {
-            WeaponBuilder::createMeleeWeapon(ActorKind::Npc, DAMAGE) });
+
+    if (skin != SkinType::Beholder)
+    {
+        actors.emplace<WeaponInventory>(
+            entity,
+            0,
+            std::vector<Weapon> {
+                WeaponBuilder::createMeleeWeapon(ActorKind::Npc, DAMAGE) });
+    }
+    else
+    {
+        actors.emplace<WeaponInventory>(
+            entity,
+            0,
+            std::vector<Weapon> {
+                WeaponBuilder::createWeapon(ActorKind::Npc, {}) });
+    }
 
     auto input = std::make_unique<NpcInput>();
     auto underlyingInput = input.get();

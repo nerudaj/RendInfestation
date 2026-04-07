@@ -17,6 +17,9 @@ struct [[nodiscard]] GameTextureAtlas final
     dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates> bigheadLocation;
     dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
         scuttlebugLocation;
+    dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
+        scuttlebugBlueLocation;
+    dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates> beholderLocation;
     dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates> propsLocation;
     dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
         doorHorizontalLocation;
@@ -39,6 +42,10 @@ struct [[nodiscard]] GameTextureAtlas final
             return bigheadLocation;
         case Scuttlebug:
             return scuttlebugLocation;
+        case ScuttlebugBlue:
+            return scuttlebugBlueLocation;
+        case Beholder:
+            return beholderLocation;
         case SmallBullet:
             return smallBulletLocation;
         case BigBullet:
