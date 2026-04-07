@@ -65,7 +65,9 @@ sf::Vector2f TouchController::getAimDirection() const
 
 [[nodiscard]] bool TouchController::isBackPressed() const
 {
-    return model.pauseButton.readButton();
+    const auto value = model.pauseButton.readButton();
+    if (value) model.pauseButton.reset();
+    return value;
 }
 
 bool TouchController::isSwitchWeaponsPressed() const
