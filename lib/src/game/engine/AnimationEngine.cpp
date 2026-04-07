@@ -5,7 +5,7 @@
 void AnimationEngine::operator()(const event::ActorFiredWeapon& e)
 {
     auto&& skin = scene.actors.get<Skin>(e.entity);
-    skin.animation.setState("attack-front", "looping"_false);
+    skin.animation.setState(ATTACK_ANIMATION_STATE, "looping"_false);
 }
 
 void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
@@ -28,7 +28,7 @@ void AnimationEngine::operator()(const event::ActorStartedAttack& e)
     auto&& skin = scene.actors.get<Skin>(e.entity);
     if (skin.kind == ActorKind::Npc)
     {
-        skin.animation.setState("attack-windup-front", "looping"_false);
+        skin.animation.setState(ATTACK_WINDUP_ANIMATION_STATE, "looping"_false);
     }
 }
 
@@ -37,11 +37,12 @@ void AnimationEngine::operator()(const event::ActorFinishedAttack& e)
     auto&& skin = scene.actors.get<Skin>(e.entity);
     if (skin.kind == ActorKind::Npc)
     {
-        skin.animation.setState("attack-recovery-front", "looping"_false);
+        skin.animation.setState(
+            ATTACK_RECOVERY_ANIMATION_STATE, "looping"_false);
     }
     else if (skin.kind == ActorKind::Player)
     {
-        skin.animation.setState("idle-front", "looping"_true);
+        skin.animation.setState(IDLE_ANIMATION_STATE, "looping"_true);
     }
 }
 
@@ -50,8 +51,8 @@ void AnimationEngine::operator()(const event::ActorMoved& e)
     auto&& skin = scene.actors.get<Skin>(e.entity);
     if (skin.kind == ActorKind::Player || skin.kind == ActorKind::Npc)
     {
-        if (skin.animation.getStateName() == "idle-front")
-            skin.animation.setState("walk-front", "looping"_true);
+        if (skin.animation.getStateName() == IDLE_ANIMATION_STATE)
+            skin.animation.setState(WALK_ANIMATION_STATE, "looping"_true);
     }
 }
 
@@ -60,8 +61,8 @@ void AnimationEngine::operator()(const event::ActorStopped& e)
     auto&& skin = scene.actors.get<Skin>(e.entity);
     if (skin.kind == ActorKind::Player || skin.kind == ActorKind::Npc)
     {
-        if (skin.animation.getStateName() == "walk-front")
-            skin.animation.setState("idle-front", "looping"_true);
+        if (skin.animation.getStateName() == WALK_ANIMATION_STATE)
+            skin.animation.setState(IDLE_ANIMATION_STATE, "looping"_true);
     }
 }
 
@@ -73,7 +74,7 @@ void AnimationEngine::update(const dgm::Time& time)
 
         if (status != dgm::Animation::PlaybackStatus::Finished) continue;
 
-        if (skin.animation.getStateName() == "death")
+        if (skin.animation.getStateName() == DEATH_ANIMATION_STATE)
         {
             eventQueue.pushEvent<event::ObjectDestroyed>(actor);
         }
@@ -83,16 +84,16 @@ void AnimationEngine::update(const dgm::Time& time)
         }
         else if (skin.kind == ActorKind::Npc)
         {
-            if (skin.animation.getStateName() == "attack-windup-front")
+            if (skin.animation.getStateName() == ATTACK_WINDUP_ANIMATION_STATE)
             {
                 eventQueue.pushEvent<event::ActorFiredWeapon>(actor);
             }
-            else if (skin.animation.getStateName() == "attack-front")
+            else if (skin.animation.getStateName() == ATTACK_ANIMATION_STATE)
             {
                 eventQueue.pushEvent<event::ActorFinishedAttack>(actor);
             }
             else
-                skin.animation.setState("walk-front", "looping"_true);
+                skin.animation.setState(WALK_ANIMATION_STATE, "looping"_true);
         }
         else if (skin.kind == ActorKind::Effect)
         {

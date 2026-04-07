@@ -54,7 +54,7 @@ bool AiEngine::isNpcWalking(const NpcBlackboard& blackboard) const
 {
     const auto& name =
         scene.actors.get<Skin>(blackboard.ownerEntity).animation.getStateName();
-    return name == "walk-front" || name == "idle-front";
+    return name == WALK_ANIMATION_STATE || name == IDLE_ANIMATION_STATE;
 }
 
 bool AiEngine::isCloseToTargetEntity(const NpcBlackboard& blackboard) const

@@ -11,7 +11,7 @@
     },
     "states": [
         {
-            "name": "attack-windup-front",
+            "name": "attack-windup",
             "bounds": {
                 "left": 2,
                 "top": 2,
@@ -21,7 +21,7 @@
             "nframes": 5
         },
         {
-            "name": "walk-front",
+            "name": "walk",
             "bounds": {
                 "left": 2,
                 "top": 36,
@@ -51,7 +51,7 @@
             "nframes": 4
         },
         {
-            "name": "idle-front",
+            "name": "idle",
             "bounds": {
                 "left": 138,
                 "top": 70,
@@ -61,7 +61,7 @@
             "nframes": 1
         },
         {
-            "name": "attack-recovery-front",
+            "name": "attack-recovery",
             "bounds": {
                 "left": 2,
                 "top": 104,
@@ -71,7 +71,7 @@
             "nframes": 3
         },
         {
-            "name": "attack-front",
+            "name": "attack",
             "bounds": {
                 "left": 104,
                 "top": 104,

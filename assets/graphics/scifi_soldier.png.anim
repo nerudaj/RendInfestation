@@ -21,7 +21,7 @@
             "nframes": 4
         },
         {
-            "name": "walk-front",
+            "name": "walk",
             "bounds": {
                 "left": 2,
                 "top": 36,
@@ -41,7 +41,7 @@
             "nframes": 2
         },
         {
-            "name": "attack-front",
+            "name": "attack",
             "bounds": {
                 "left": 2,
                 "top": 70,
@@ -61,7 +61,7 @@
             "nframes": 2
         },
         {
-            "name": "idle-front",
+            "name": "idle",
             "bounds": {
                 "left": 2,
                 "top": 104,

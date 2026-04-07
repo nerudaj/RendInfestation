@@ -379,7 +379,7 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
     if (skin->kind == inventory->originator) return;
 
     health->get() -= inventory->damage;
-    skin->animation.setState(HURT_ANIMATION_STATE.data(), "looping"_false);
+    skin->animation.setState(HURT_ANIMATION_STATE, "looping"_false);
 }
 
 void GameRulesEngine::handleTriggerToActorCollision(

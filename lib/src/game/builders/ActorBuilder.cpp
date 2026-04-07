@@ -45,7 +45,8 @@ entt::entity ActorBuilder::createPlayer(
     actors.emplace<BoundLightEmitter>(
         entity, BoundLightEmitter { COLOR_WHITE, 10u });
 
-    actors.get<Skin>(entity).animation.setState("idle-front", "looping"_true);
+    actors.get<Skin>(entity).animation.setState(
+        IDLE_ANIMATION_STATE, "looping"_true);
 
     return entity;
 }
@@ -98,7 +99,8 @@ entt::entity ActorBuilder::createNpc(
         });
     actors.emplace<ZIndex>(entity, 1);
 
-    actors.get<Skin>(entity).animation.setState("walk-front", "looping"_true);
+    actors.get<Skin>(entity).animation.setState(
+        IDLE_ANIMATION_STATE, "looping"_true);
 
     return entity;
 }
@@ -253,7 +255,7 @@ entt::entity ActorBuilder::createProjectile(
 
     auto animation =
         dgm::Animation(atlas.getSkinAnimationStates(weapon.projectileSkin), 8);
-    animation.setState("idle", "looping"_true);
+    animation.setState(IDLE_ANIMATION_STATE, "looping"_true);
     actors.emplace<Skin>(
         entity,
         Skin {
@@ -379,7 +381,7 @@ entt::entity ActorBuilder::createEffect(
 
     actors.emplace<ZIndex>(entity, 100);
     auto&& animation = actors.get<Skin>(entity).animation;
-    animation.setState("death", "looping"_false);
+    animation.setState(DEATH_ANIMATION_STATE, "looping"_false);
     /*    actors.get<Lifetime>(entity) = sf::seconds(
             static_cast<float>(animation.getCurrentStateFrameCount()) /
        EFFECT_FPS);*/
