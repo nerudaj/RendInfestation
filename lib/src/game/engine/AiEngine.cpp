@@ -19,9 +19,11 @@ void AiEngine::update(const dgm::Time& time)
 
 void AiEngine::waitTillAttackFinishes(NpcBlackboard& blackboard)
 {
-    blackboard.input.setAimDirection(dgm::Math::toUnit(
-        scene.actors.get<Collider>(blackboard.targetEntity).getPosition()
-        - scene.actors.get<Collider>(blackboard.ownerEntity).getPosition()));
+    blackboard.input.setAimDirection(
+        dgm::Math::toUnit(
+            scene.actors.get<Collider>(blackboard.targetEntity).getPosition()
+            - scene.actors.get<Collider>(blackboard.ownerEntity)
+                  .getPosition()));
 }
 
 void AiEngine::attack(NpcBlackboard& blackboard)
@@ -109,5 +111,5 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildNpcFsm(AiEngine& self)
     // clang-format on
 }
 
-#undef CONDITION;
-#undef ACTION;
+#undef CONDITION
+#undef ACTION
