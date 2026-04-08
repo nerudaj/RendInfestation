@@ -20,43 +20,14 @@ void AppStatePause::draw()
 
 void AppStatePause::buildLayout()
 {
-    auto createIconButton = [&](Icon icon, auto&& callback)
+    auto& builderFactory = dic.guiBuilderFactory;
+
+    auto createDesktopLayout =
+        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
     {
-        return WidgetBuilder::createTexturedButton(
-            dic.resmgr.get<tgui::Texture>(
-                uni::format("Icon-{}", std::to_underlying(icon))),
-            std::forward<decltype(callback)>(callback),
-            dic.soundPlayer);
-    };
-
-    dic.gui.rebuildWith(
-        dic.guiBuilderFactory.createDefaultLayoutBuiler()
-            .withBackgroundImage(dic.resmgr.get<tgui::Texture>("darken.png"))
-            .withTitle(
-                dic.strings.getString(StringId::PauseTitle), HeadingLevel::H1)
-            .withContent(dic.guiBuilderFactory.createButtonListBuilder()
-                             .addButton(
-                                 StringId::WeaponModification,
-                                 [&] { onWeaponModification(); })
-                             .addButton(StringId::ExitButton, [&] { onExit(); })
-                             .build())
-            .withTopLeftButton(
-                createIconButton(Icon::Exit, [&] { onBackToMenu(); }))
-            .withTopRightButton(
-                createIconButton(Icon::Settings, [&] { onOptions(); }))
-            .withBottomLeftButton(
-                createIconButton(Icon::Play2, [&] { onResume(); }))
-            .withNoBottomRightButton()
-            .build());
-
-    return;
-    dic.gui.rebuildWith(
-        dic.guiBuilderFactory.createDefaultLayoutBuiler()
-            .withNoBackgroundImage()
-            .withTitle(
-                dic.strings.getString(StringId::PauseTitle), HeadingLevel::H1)
+        return builder
             .withContent(
-                dic.guiBuilderFactory.createButtonListBuilder()
+                builderFactory.createButtonListBuilder()
                     .addButton(StringId::Resume, [&] { onResume(); })
                     .addButton(
                         StringId::WeaponModification,
@@ -65,7 +36,40 @@ void AppStatePause::buildLayout()
                     .addButton(StringId::BackToMenu, [&] { onBackToMenu(); })
                     .addButton(StringId::ExitButton, [&] { onExit(); })
                     .build())
-            .withNoCornerButtons()
+            .withNoCornerButtons();
+    };
+
+    auto createAndroidLayout =
+        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
+    {
+        return builder
+            .withContent(builderFactory.createButtonListBuilder()
+                             .addButton(
+                                 StringId::WeaponModification,
+                                 [&] { onWeaponModification(); })
+                             .addButton(StringId::ExitButton, [&] { onExit(); })
+                             .build())
+            .withTopLeftButton(builderFactory.createIconButton(
+                Icon::Exit, [&] { onBackToMenu(); }))
+            .withTopRightButton(builderFactory.createIconButton(
+                Icon::Settings, [&] { onOptions(); }))
+            .withBottomLeftButton(builderFactory.createIconButton(
+                Icon::Play2, [&] { onResume(); }))
+            .withNoBottomRightButton();
+    };
+
+    auto&& builderWithTitle =
+        builderFactory.createDefaultLayoutBuiler()
+            .withBackgroundImage(dic.resmgr.get<tgui::Texture>("darken.png"))
+            .withTitle(
+                dic.strings.getString(StringId::PauseTitle), HeadingLevel::H1);
+
+    dic.gui.rebuildWith(
+#ifdef ANDROID
+        createAndroidLayout(builderWithTitle)
+#else
+        createDesktopLayout(builderWithTitle)
+#endif
             .build());
 }
 

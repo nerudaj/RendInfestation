@@ -3,6 +3,7 @@
 #include "appstate/AppStateOptions.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "game/definitions/GameMode.hpp"
+#include "gui/Icon.hpp"
 #include "misc/CMakeVars.hpp"
 #include "strings/StringProvider.hpp"
 #include "types/SemanticTypes.hpp"
@@ -41,12 +42,14 @@ void AppStateMainMenu::restoreFocusImpl(const std::string&)
 
 void AppStateMainMenu::buildLayout()
 {
-    dic.gui.rebuildWith(
-        dic.guiBuilderFactory.createDefaultLayoutBuiler()
-            .withNoBackgroundImage()
-            .withTitle(CMakeVars::TITLE, HeadingLevel::H1)
+    auto& builderFactory = dic.guiBuilderFactory;
+
+    auto createDesktopLayout =
+        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
+    {
+        return builder
             .withContent(
-                dic.guiBuilderFactory.createButtonListBuilder()
+                builderFactory.createButtonListBuilder()
                     .addButton(StringId::PlayButton, [&] { onPlay(); })
                     .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
                     .addButton(StringId::Options, [&] { onOptions(); })
@@ -55,7 +58,36 @@ void AppStateMainMenu::buildLayout()
                         [&] { onExit(); },
                         "MainMenu_Button_Exit")
                     .build())
-            .withNoCornerButtons()
+            .withNoCornerButtons();
+    };
+
+    auto createAndroidLayout =
+        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
+    {
+        return builder
+            .withContent(
+                builderFactory.createButtonListBuilder()
+                    .addButton(StringId::PlayButton, [&] { onPlay(); })
+                    .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
+                    .build())
+            .withNoTopLeftButton()
+            .withTopRightButton(builderFactory.createIconButton(
+                Icon::Settings, [&] { onOptions(); }))
+            .withNoBottomLeftButton()
+            .withNoBottomRightButton();
+    };
+
+    auto&& builderWithTitle =
+        builderFactory.createDefaultLayoutBuiler()
+            .withNoBackgroundImage()
+            .withTitle(CMakeVars::TITLE, HeadingLevel::H1);
+
+    dic.gui.rebuildWith(
+#ifdef ANDROID
+        createAndroidLayout(builderWithTitle)
+#else
+        createDesktopLayout(builderWithTitle)
+#endif
             .build());
 }
 

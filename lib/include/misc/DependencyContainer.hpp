@@ -55,29 +55,30 @@ struct [[nodiscard]] DependencyContainer final
         , sizer(settings.video)
         , jukebox(resmgr)
         , soundPlayer(resmgr)
-        , settings(AppSettings {
-              .audio =
-                  AudioSettings {
-                      .soundVolume = Observable<float>(
-                          settingsSM.audio.soundVolume,
-                          [&](float newVolume)
-                          { soundPlayer.setVolume(newVolume); }),
-                      .musicVolume = Observable<float>(
-                          settingsSM.audio.musicVolume,
-                          [&](float newVolume)
-                          { jukebox.setVolume(newVolume); }),
-                  },
-              .video = settingsSM.video,
-              .input = settingsSM.input,
-              .bindings = settingsSM.bindings,
-          })
+        , settings(
+              AppSettings {
+                  .audio =
+                      AudioSettings {
+                          .soundVolume = Observable<float>(
+                              settingsSM.audio.soundVolume,
+                              [&](float newVolume)
+                              { soundPlayer.setVolume(newVolume); }),
+                          .musicVolume = Observable<float>(
+                              settingsSM.audio.musicVolume,
+                              [&](float newVolume)
+                              { jukebox.setVolume(newVolume); }),
+                      },
+                  .video = settingsSM.video,
+                  .input = settingsSM.input,
+                  .bindings = settingsSM.bindings,
+              })
         , saveSettings(
               [settingsFileName, this]
               {
                   AppStorage::saveFile(
                       settingsFileName, AppSettingsStorageModel(settings));
               })
-        , guiBuilderFactory(sizer, strings, soundPlayer)
+        , guiBuilderFactory(resmgr, sizer, strings, soundPlayer)
     {
         // These asserts will fail when you're adding new bindings
         // just delete the settings.json and all will be fine again

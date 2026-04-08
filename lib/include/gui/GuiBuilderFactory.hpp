@@ -9,16 +9,22 @@
 #include "gui/builders/TabbedLayoutBuilder.hpp"
 #include "gui/builders/TableBuilder.hpp"
 #include "gui/builders/WidgetBuilder.hpp"
+#include "misc/Compatibility.hpp"
 #include "strings/StringProvider.hpp"
+#include <type_traits>
+
+template<class E>
+concept EnumType = std::is_scoped_enum_v<E>;
 
 class [[nodiscard]] GuiBuilderFactory final
 {
 public:
     GuiBuilderFactory(
+        const dgm::ResourceManager& resmgr,
         const Sizer& sizer,
         const StringProvider& strings,
         SoundPlayer& player) noexcept
-        : sizer(sizer), strings(strings), player(player)
+        : resmgr(resmgr), sizer(sizer), strings(strings), player(player)
     {
     }
 
@@ -56,7 +62,17 @@ public:
         return TableBuilder(sizer);
     }
 
+    tgui::Button::Ptr createIconButton(EnumType auto icon, auto&& callback)
+    {
+        return WidgetBuilder::createTexturedButton(
+            resmgr.get<tgui::Texture>(
+                uni::format("Icon-{}", std::to_underlying(icon))),
+            std::forward<decltype(callback)>(callback),
+            player);
+    };
+
 private:
+    const dgm::ResourceManager& resmgr;
     const Sizer& sizer;
     const StringProvider& strings;
     SoundPlayer& player;
