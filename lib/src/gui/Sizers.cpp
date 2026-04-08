@@ -57,27 +57,42 @@ private:
 #elif LINUX
 #else
 #include <Windows.h>
+#include <iostream>
+
+using DllPtr =
+    std::unique_ptr<std::remove_pointer_t<HMODULE>, decltype(&FreeLibrary)>;
+
+static DllPtr loadWindowsDLL(const char* dllPath)
+{
+    HMODULE dll = LoadLibraryA(dllPath);
+    if (!dll)
+    {
+        std::cerr << dllPath << " not found. UI scaling may be incorrect."
+                  << std::endl;
+        return DllPtr(nullptr, FreeLibrary);
+    }
+    return DllPtr(dll, FreeLibrary);
+}
 #endif
 
 #if !defined(ANDROID) && !defined(GetDpiForSystem) && !defined(LINUX)
 
 unsigned GetDpiForSystem()
 {
-    HMODULE shcore = LoadLibraryA("Shcore.dll");
-    if (!shcore) return 96; // fallback
+    auto dll = loadWindowsDLL("C:\\Windows\\System32\\User32.dll");
+    if (!dll) return 96; // fallback
 
     auto getDpiForSystem = reinterpret_cast<UINT(WINAPI*)()>(
-        GetProcAddress(shcore, "GetDpiForSystem"));
+        GetProcAddress(dll.get(), "GetDpiForSystem"));
 
     if (!getDpiForSystem)
     {
-        FreeLibrary(shcore);
+        std::cerr << "GetDpiForSystem not found. UI scaling may be incorrect."
+                  << std::endl;
         return 96; // fallback
     }
 
-    const UINT dpi = getDpiForSystem();
-    FreeLibrary(shcore);
-    return dpi;
+    return getDpiForSystem();
 }
 
 #endif
@@ -86,20 +101,20 @@ unsigned GetDpiForSystem()
 
 unsigned GetSystemMetricsForDpi(DWORD nIndex, UINT dpi)
 {
-    HMODULE shcore = LoadLibraryA("Shcore.dll");
-    if (!shcore) return 96; // Fallback to default DPI
+    auto dll = loadWindowsDLL("C:\\Windows\\System32\\User32.dll");
+    if (!dll) return 96; // Fallback to default DPI
 
     auto getSystemMetricsForDpi = reinterpret_cast<int(WINAPI*)(DWORD, UINT)>(
-        GetProcAddress(shcore, "GetSystemMetricsForDpi"));
+        GetProcAddress(dll.get(), "GetSystemMetricsForDpi"));
     if (!getSystemMetricsForDpi)
     {
-        FreeLibrary(shcore);
+        std::cerr
+            << "GetSystemMetricsForDpi not found. UI scaling may be incorrect."
+            << std::endl;
         return 96; // Fallback to default DPI
     }
 
-    const int result = getSystemMetricsForDpi(nIndex, dpi);
-    FreeLibrary(shcore);
-    return result;
+    return getSystemMetricsForDpi(nIndex, dpi);
 }
 
 #endif
@@ -126,8 +141,6 @@ unsigned Sizer::getBaseFontSize() const
 #ifdef ANDROID
     return BaseSizeProviderSingleton::getInstance().getBaseFontSize()
            * settings.uiScale;
-#elif LINUX
-    return 18u;
 #else
     return static_cast<unsigned>(
         getBaseContainerHeight() / CONTAINER_PADDING_MULTIPLIER
