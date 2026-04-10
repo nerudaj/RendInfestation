@@ -70,9 +70,8 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         SkinType::SmallBullet,
         atlas
             .addSpritesheet(
-                resmgr.get<sf::Texture>("projectile_small_bullet.png"),
-                resmgr.get<dgm::AnimationStates>(
-                    "projectile_small_bullet.png.anim"))
+                resmgr.get<sf::Texture>("long_bullet.png"),
+                resmgr.get<dgm::AnimationStates>("long_bullet.png.anim"))
             .value());
     skins.emplace(
         SkinType::Landmine,
