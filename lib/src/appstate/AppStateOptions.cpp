@@ -158,6 +158,12 @@ void AppStateOptions::onVideoTabSelected(tgui::Container::Ptr content)
                     dic.soundPlayer))
 #ifdef _DEBUG
             .addOption(
+                StringId::RenderColliders,
+                WidgetBuilder::createCheckbox(
+                    dic.settings.video.renderColliders,
+                    [&](bool val)
+                    { dic.settings.video.renderColliders = val; }))
+            .addOption(
                 StringId::SetTheme,
                 WidgetBuilder::createDropdown(
                     dic.resmgr.getLoadedResourceIds<tgui::Theme::Ptr>().value(),

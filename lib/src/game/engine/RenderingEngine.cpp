@@ -138,7 +138,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 
     renderLights(window);
 
-    renderColliders(window);
+    if (settings.video.renderColliders) renderColliders(window);
 }
 
 void RenderingEngine::addLevelFacesToPipeline()
@@ -167,8 +167,6 @@ void RenderingEngine::addLevelFacesToPipeline()
 
 void RenderingEngine::renderColliders(dgm::Window& window)
 {
-    return;
-
     for (auto&& [entity, collider] : scene.actors.view<Collider>().each())
     {
         std::visit(
