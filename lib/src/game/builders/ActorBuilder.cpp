@@ -60,59 +60,110 @@ entt::entity ActorBuilder::createNpc(
     const GameTextureAtlas& atlas)
 {
     auto entity = actors.create();
-    const auto [HEALTH, SPEED, DAMAGE] = [&skin]
-    {
-        if (skin == SkinType::Bighead)
-        {
-            return std::tuple { 100, BASE_ENEMY_SPEED, BASE_MELEE_DAMAGE };
-        }
-        else if (skin == SkinType::ScuttlebugBlue)
-        {
-            return std::tuple { 65,
-                                BASE_ENEMY_SPEED * 1.5f,
-                                BASE_MELEE_DAMAGE / 2 };
-        }
-        else if (skin == SkinType::Beholder)
-        {
-            return std::tuple { 120,
-                                BASE_ENEMY_SPEED * 0.5f,
-                                BASE_MELEE_DAMAGE * 2 };
-        }
-        return std::tuple { 50,
-                            BASE_ENEMY_SPEED * 1.1f,
-                            BASE_MELEE_DAMAGE / 2 };
-    }();
 
-    actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
-    actors.emplace<PhysicsBody>(
-        entity, PhysicsBody { .maxSpeed = SPEED, .friction = 0.8f });
-    actors.emplace<Skin>(
-        entity,
-        Skin {
-            .kind = ActorKind::Npc,
-            .skinType = skin,
-            .animation = dgm::Animation(
-                atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
-            .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-        });
-    actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-    actors.emplace<Health>(entity, HEALTH);
-
-    if (skin != SkinType::Beholder)
+    if (skin == SkinType::Scuttlebug)
     {
+        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<PhysicsBody>(
+            entity,
+            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED * 1.2f,
+                          .friction = 0.8f });
+        actors.emplace<Skin>(
+            entity,
+            Skin {
+                .kind = ActorKind::Npc,
+                .skinType = skin,
+                .animation = dgm::Animation(
+                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
+                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+            });
+        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+        actors.emplace<Health>(entity, 50);
+
         actors.emplace<WeaponInventory>(
             entity,
             0,
-            std::vector<Weapon> {
-                WeaponBuilder::createMeleeWeapon(ActorKind::Npc, DAMAGE) });
+            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
+                ActorKind::Npc, BASE_MELEE_DAMAGE / 2) });
     }
-    else
+    else if (skin == SkinType::ScuttlebugBlue)
     {
+        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<PhysicsBody>(
+            entity,
+            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED * 1.5f,
+                          .friction = 0.8f });
+        actors.emplace<Skin>(
+            entity,
+            Skin {
+                .kind = ActorKind::Npc,
+                .skinType = skin,
+                .animation = dgm::Animation(
+                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
+                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+            });
+        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+        actors.emplace<Health>(entity, 65);
+
+        actors.emplace<WeaponInventory>(
+            entity,
+            0,
+            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
+                ActorKind::Npc, BASE_MELEE_DAMAGE / 2) });
+    }
+    else if (skin == SkinType::Bighead)
+    {
+        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<PhysicsBody>(
+            entity,
+            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED, .friction = 0.8f });
+        actors.emplace<Skin>(
+            entity,
+            Skin {
+                .kind = ActorKind::Npc,
+                .skinType = skin,
+                .animation = dgm::Animation(
+                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
+                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+            });
+        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+        actors.emplace<Health>(entity, 100);
+
+        actors.emplace<WeaponInventory>(
+            entity,
+            0,
+            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
+                ActorKind::Npc, BASE_MELEE_DAMAGE) });
+    }
+    else if (skin == SkinType::Beholder)
+    {
+        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<PhysicsBody>(
+            entity,
+            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED / 2.f,
+                          .friction = 0.8f });
+        actors.emplace<Skin>(
+            entity,
+            Skin {
+                .kind = ActorKind::Npc,
+                .skinType = skin,
+                .animation = dgm::Animation(
+                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
+                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+            });
+        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+        actors.emplace<Health>(entity, 120);
+
         actors.emplace<WeaponInventory>(
             entity,
             0,
             std::vector<Weapon> {
                 WeaponBuilder::createWeapon(ActorKind::Npc, {}) });
+    }
+    else
+    {
+        throw std::runtime_error(uni::format(
+            "Invalid skin type {} for NPC", std::to_underlying(skin)));
     }
 
     auto input = std::make_unique<NpcInput>();
@@ -134,17 +185,17 @@ entt::entity ActorBuilder::createNpc(
 
 static Collider getPropCollider(const sf::Vector2f& origin, const size_t propId)
 {
-    if (propId == 0 || propId == 1)
+    if (propId == 0 || propId == 1) // labtubes
     {
         return Collider { dgm::Circle(
             { origin.x + 32.f, origin.y - 16.f }, 13.f) };
     }
-    else if (propId == 2)
+    else if (propId == 2) // Small table
     {
         return Collider { dgm::Rect(
             { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
     }
-    else if (propId == 4 || propId == 5)
+    else if (propId == 4 || propId == 5) // dead bodies
         return Collider {
             dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
             ColliderOptions { .nonblocking = true, .disabled = true }
@@ -160,8 +211,9 @@ static Collider getPropCollider(const sf::Vector2f& origin, const size_t propId)
             ColliderOptions { .nonblocking = true, .disabled = true }
         };
 
+    // Cantina table
     return Collider { dgm::Rect(
-        { origin.x, origin.y - 64.f }, { 64.f, 64.f }) };
+        { origin.x, origin.y - 64.f }, { 64.f, 56.f }) };
 }
 
 static sf::Vector2f getPropSpriteOffset(const size_t propId)
@@ -181,7 +233,7 @@ static sf::Vector2f getPropSpriteOffset(const size_t propId)
     else if (propId == 7)
         return { 20.f, 25.f };
 
-    return { 0.f, 0.f };
+    return { 0.f, -4.f };
 }
 
 static bool isPropPassable(const size_t propId)
@@ -230,11 +282,12 @@ entt::entity ActorBuilder::createProp(
             return "pc";
         else if (id == 7)
             return "blood-puddle-a";
+        return "--error--";
     };
 
     actors.get<Skin>(entity).animation.setState(
         stateName(propId), "looping"_true);
-    actors.emplace<ZIndex>(entity, 0);
+    actors.emplace<ZIndex>(entity, isPropPassable(propId) ? 0 : 1);
 
     if (isPropLabtune(propId))
     {
