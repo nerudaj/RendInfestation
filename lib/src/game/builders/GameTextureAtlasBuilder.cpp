@@ -32,8 +32,8 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         SkinType::Explosion,
         atlas
             .addSpritesheet(
-                resmgr.get<sf::Texture>("explosion.png"),
-                resmgr.get<dgm::AnimationStates>("explosion.png.anim"))
+                resmgr.get<sf::Texture>("explosion_1.png"),
+                resmgr.get<dgm::AnimationStates>("explosion_1.png.anim"))
             .value());
     skins.emplace(
         SkinType::BigBullet,
