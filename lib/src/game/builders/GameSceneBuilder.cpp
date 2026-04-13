@@ -69,7 +69,13 @@ GameScene GameSceneBuilder::createScene(
             WeaponModule::Spikes,          WeaponModule::Splitter,
         };
     }
-    // For Survival, unlockedModules stays empty (no modules initially)
+    else
+    { // Survival
+        artifact.loadout.unlockedModules = {
+            WeaponModule::SpreadBarrel_x4,
+            WeaponModule::CadenceBarrel,
+        };
+    }
 
     return GameScene {
         .actors = std::move(actors),
@@ -161,7 +167,7 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
 {
     LevelCreationArtifact result {
         .loadout = {
-            .weapon1Modules = { WeaponModule::None,
+            .weapon1Modules = { WeaponModule::CadenceBarrel,
                                 WeaponModule::None,
                                 WeaponModule::None },
             .weapon2Modules = { WeaponModule::SpreadBarrel_x4,
@@ -187,11 +193,12 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
                 const auto position =
                     sf::Vector2u { x, y }.componentWiseMul(level.voxelSize)
                     + sf::Vector2u { 16, 69 };
-                result.lights.push_back(LightSource {
-                    .position = sf::Vector2f { position },
-                    .spriteId = 0,
-                    .color = COLOR_MUTED_YELLOW,
-                });
+                result.lights.push_back(
+                    LightSource {
+                        .position = sf::Vector2f { position },
+                        .spriteId = 0,
+                        .color = COLOR_MUTED_YELLOW,
+                    });
             }
 
             if (level.decorLayer.data[idx] - 1 == ENEMY_SPAWN_TILE_ID)
