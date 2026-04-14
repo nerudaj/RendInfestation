@@ -1,6 +1,7 @@
 #include "game/engine/GameRulesEngine.hpp"
 #include "game/builders/ActorBuilder.hpp"
 #include "game/builders/GameSceneBuilder.hpp"
+#include "game/definitions/Constants.hpp"
 #include <algorithm>
 #include <limits>
 #include <print>
@@ -29,7 +30,7 @@ void GameRulesEngine::operator()(const event::ActorToActorCollision& e)
 void GameRulesEngine::operator()(const event::ActorStartedAttack& e)
 {
     auto& skin = scene.actors.get<Skin>(e.entity);
-    if (skin.kind == ActorKind::Player)
+    if (skin.kind == EntityKind::Player)
     {
         eventQueue.pushEvent<event::ActorFiredWeapon>(e.entity);
     }
@@ -125,11 +126,11 @@ void GameRulesEngine::operator()(const event::ActorIsFalling& e)
 void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
 {
     const auto skin = scene.actors.try_get<Skin>(e.entity);
-    if (skin && skin->kind == ActorKind::Npc)
+    if (skin && skin->kind == EntityKind::Npc)
     {
         ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
     }
-    else if (skin && skin->kind == ActorKind::Player)
+    else if (skin && skin->kind == EntityKind::Player)
     {
         // TODO: this
     }
@@ -399,7 +400,7 @@ void GameRulesEngine::handleTriggerToActorCollision(
 
     // Nobody except for the player can open the doors
     auto skin = scene.actors.try_get<Skin>(actorIdx);
-    if (!skin || skin->kind != ActorKind::Player) return;
+    if (!skin || skin->kind != EntityKind::Player) return;
 
     inventory->delay = BASE_DOOR_CLOSE_DELAY;
     auto&& targetSkin = scene.actors.get<Skin>(inventory->targetEntity);

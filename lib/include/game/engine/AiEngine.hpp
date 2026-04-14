@@ -43,9 +43,9 @@ private: // Actions
 
     void generateWaypoint(NpcBlackboard& blackboard);
 
-    void chooseTarget(NpcBlackboard& blackboard) {}
+    void chooseTarget(NpcBlackboard&) {}
 
-    void doNothing(NpcBlackboard& blackboard) {}
+    void doNothing(NpcBlackboard&) {}
 
 private: // Predicates
     bool isTargetInMeleeRange(const NpcBlackboard& blackboard) const;

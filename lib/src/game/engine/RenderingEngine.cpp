@@ -1,4 +1,5 @@
 #include "game/engine/RenderingEngine.hpp"
+#include "game/definitions/Constants.hpp"
 #include "game/enums/Hud.hpp"
 #include "gui/Icon.hpp"
 #include <cmath>
@@ -354,9 +355,9 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
 }
 
 sf::Angle
-RenderingEngine::getEntityRotation(entt::entity entity, ActorKind kind) const
+RenderingEngine::getEntityRotation(entt::entity entity, EntityKind kind) const
 {
-    if (kind != ActorKind::Projectile) return sf::degrees(0);
+    if (kind != EntityKind::Projectile) return sf::degrees(0);
     const auto forward = scene.actors.get<PhysicsBody>(entity).forward;
     return forward.lengthSquared() > 0.f ? forward.angle() : sf::degrees(0);
 }

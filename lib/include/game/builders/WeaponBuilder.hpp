@@ -1,8 +1,8 @@
 #pragma once
 
-#include "game/definitions/Weapon.hpp"
+#include "game/definitions/Components.hpp"
 #include "game/definitions/WeaponProperties.hpp"
-#include "game/enums/ActorKind.hpp"
+#include "game/enums/EntityKind.hpp"
 #include "game/enums/WeaponModule.hpp"
 #include <functional>
 #include <vector>
@@ -14,7 +14,7 @@ public:
     createWeaponModuleTransformer(WeaponModule module);
 
     static Weapon
-    createWeapon(ActorKind ownerKind, std::vector<WeaponModule> modules);
+    createWeapon(EntityKind ownerKind, std::vector<WeaponModule> modules);
 
-    static Weapon createMeleeWeapon(ActorKind ownerKind, int damage);
+    static Weapon createMeleeWeapon(EntityKind ownerKind, int damage);
 };

@@ -1,9 +1,8 @@
 #pragma once
 
-#include "game/definitions/Actor.hpp"
+#include "game/definitions/Components.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
-#include "game/definitions/Weapon.hpp"
 #include "game/enums/EffectType.hpp"
 #include "game/enums/ProjectileKind.hpp"
 #include "game/enums/SkinType.hpp"

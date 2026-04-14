@@ -1,10 +1,8 @@
 #pragma once
 
 #include "game/Types.hpp"
-#include "game/definitions/Actor.hpp"
-#include "game/definitions/DamageMarkerInventory.hpp"
-#include "game/definitions/EnemyInventory.hpp"
-#include "game/definitions/ProjectileInventory.hpp"
+#include "game/definitions/Components.hpp"
+#include "game/definitions/Constants.hpp"
 #include "game/enums/WeaponModule.hpp"
 #include <DGM/dgm.hpp>
 #include <array>

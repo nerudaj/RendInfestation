@@ -1,0 +1,162 @@
+/*
+All structs that contribute to Entity Component System (ECS) should be defined
+here.
+*/
+
+#pragma once
+
+#include "audio/SoundId.hpp"
+#include "game/Types.hpp"
+#include "game/enums/EntityKind.hpp"
+#include "game/enums/ProjectileTraits.hpp"
+#include "game/enums/SkinType.hpp"
+#include "game/input/InputInterface.hpp"
+#include "types/BrandedType.hpp"
+#include "types/Overloads.hpp"
+#include <DGM/classes/Animation.hpp>
+#include <DGM/classes/Collision.hpp>
+#include <DGM/classes/Objects.hpp>
+#include <memory>
+#include <optional>
+#include <variant>
+#include <vector>
+
+struct [[nodiscard]] ColliderOptions final
+{
+    bool reportMeshCollisions = false;
+    bool reportActorCollisions = false;
+    bool nonblocking = false;
+    bool disabled = false;
+};
+
+struct [[nodiscard]] Collider final
+{
+    std::variant<dgm::Rect, dgm::Circle> shape;
+    ColliderOptions options;
+
+    template<class T>
+        requires std::same_as<T, dgm::Rect> || std::same_as<T, dgm::Circle>
+    bool collidesWith(const T& otherShape) const
+    {
+        return std::visit(
+            overloads {
+                [&](const dgm::Rect& r)
+                { return dgm::Collision::basic(r, otherShape); },
+                [&](const dgm::Circle& c)
+                { return dgm::Collision::basic(otherShape, c); },
+            },
+            shape);
+    }
+
+    sf::Vector2f getPosition() const
+    {
+        return std::visit(
+            overloads {
+                [](const dgm::Rect& r) { return r.getCenter(); },
+                [](const dgm::Circle& c) { return c.getPosition(); },
+            },
+            shape);
+    }
+
+    float getRadius() const
+    {
+        return std::visit(
+            overloads {
+                [](const dgm::Rect& r) { return r.getSize().length(); },
+                [](const dgm::Circle& c) { return c.getRadius(); },
+            },
+            shape);
+    }
+
+    void move(const sf::Vector2f& vec)
+    {
+        std::visit(
+            overloads {
+                [&vec](auto& b) { b.move(vec); },
+            },
+            shape);
+    }
+};
+
+struct [[nodiscard]] PhysicsBody final
+{
+    sf::Vector2f forward = { 0.f, 0.f };
+    float maxSpeed = 0.f;
+    float bounciness = 0.f;
+    float friction = 0.5f;
+    bool useAltMesh = false;
+};
+
+struct [[nodiscard]] Skin final
+{
+    EntityKind kind = EntityKind::Player;
+    SkinType skinType = SkinType::PlayerDefault;
+    dgm::Animation animation;
+    sf::Vector2f spriteOriginOffsetFromCollider;
+    float scale = 1.f;
+};
+
+using LookDirection = BrandedType<sf::Vector2f, struct LookDirectionTag>;
+
+using Health = BrandedType<int, struct HealthTag>;
+
+using Lifetime = BrandedType<sf::Time, struct LifetimeTag>;
+
+using EntityInput = std::unique_ptr<InputInterface>;
+
+using ZIndex = BrandedType<int, struct ZIndexTag>;
+
+struct [[nodiscard]] Interval final
+{
+    sf::Time timer = sf::Time::Zero;
+    sf::Time delay = sf::Time::Zero;
+};
+
+// ===========
+// INVENTORIES
+// ===========
+struct [[nodiscard]] BoundLightEmitter final
+{
+    sf::Color color;
+    unsigned lightSpriteId;
+};
+
+struct [[nodiscard]] TriggerInventory final
+{
+    sf::Time delay = sf::Time::Zero;
+    entt::entity targetEntity;
+};
+
+struct [[nodiscard]] DamageMarkerInventory final
+{
+    EntityKind originator;
+    int damage;
+};
+
+struct [[nodiscard]] ProjectileInventory final
+{
+    int damage = 0;
+    ProjectileTraits traits = ProjectileTraits::None;
+    EntityKind originator = {};
+};
+
+struct [[nodiscard]] Weapon final
+{
+    SoundId::IdType soundId = SoundId::Bullet;
+    sf::Time cooldown = sf::seconds(0.1f);
+    sf::Time timeTillFire = sf::seconds(0.f);
+    sf::Time projectileLifetime = sf::seconds(0.f);
+    float kickback = 0.f;
+    float projectileSpeed = 0.f;
+    float projectileSpeedVariance = 0.f;
+    int spread = 1; // degrees
+    int numShots = 1;
+    SkinType projectileSkin = SkinType::SmallBullet;
+    ProjectileInventory defaultProjectileInventory;
+};
+
+struct [[nodiscard]] WeaponInventory final
+{
+    int activeWeapon = 0;
+    std::vector<Weapon> weapons;
+};

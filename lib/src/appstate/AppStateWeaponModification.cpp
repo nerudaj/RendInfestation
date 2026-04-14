@@ -2,7 +2,7 @@
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
 #include "game/builders/WeaponBuilder.hpp"
-#include "game/definitions/Actor.hpp"
+#include "game/definitions/Components.hpp"
 #include "gui/builders/FormBuilder.hpp"
 #include "gui/builders/WidgetBuilder.hpp"
 #include "strings/StringId.hpp"
@@ -202,14 +202,14 @@ void AppStateWeaponModification::onResume()
     auto& inv = scene.actors.get<WeaponInventory>(scene.playerEntity);
 
     inv.weapons[0] = WeaponBuilder::createWeapon(
-        ActorKind::Player,
+        EntityKind::Player,
         {
             scene.loadout.weapon1Modules[0],
             scene.loadout.weapon1Modules[1],
             scene.loadout.weapon1Modules[2],
         });
     inv.weapons[1] = WeaponBuilder::createWeapon(
-        ActorKind::Player,
+        EntityKind::Player,
         {
             scene.loadout.weapon2Modules[0],
             scene.loadout.weapon2Modules[1],

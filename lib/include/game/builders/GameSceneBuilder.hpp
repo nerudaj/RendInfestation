@@ -1,4 +1,5 @@
 #include "filesystem/models/TiledModels.hpp"
+#include "game/definitions/Components.hpp"
 #include "game/definitions/GameMode.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
@@ -10,8 +11,6 @@
 class GameSceneBuilder final
 {
 public:
-    static NpcInventory createNpcInventory();
-
     static GameScene createScene(
         const GameTextureAtlas& atlas,
         const dgm::ResourceManager& resmgr,

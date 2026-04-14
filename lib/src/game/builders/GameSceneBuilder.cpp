@@ -19,14 +19,6 @@ static inline bool isAbyssTile(int id)
     return 31 <= id && id <= 34;
 }
 
-NpcInventory GameSceneBuilder::createNpcInventory()
-{
-    return NpcInventory {
-        .health = 100,
-        .damage = 10,
-    };
-}
-
 const int TRANSPARENT_TILE_ID = 28;
 const int WALL_LIGHT_TILE_ID = 38;
 const int DOOR_TILE_ID = 42;
@@ -193,12 +185,11 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
                 const auto position =
                     sf::Vector2u { x, y }.componentWiseMul(level.voxelSize)
                     + sf::Vector2u { 16, 69 };
-                result.lights.push_back(
-                    LightSource {
-                        .position = sf::Vector2f { position },
-                        .spriteId = 0,
-                        .color = COLOR_MUTED_YELLOW,
-                    });
+                result.lights.push_back(LightSource {
+                    .position = sf::Vector2f { position },
+                    .spriteId = 0,
+                    .color = COLOR_MUTED_YELLOW,
+                });
             }
 
             if (level.decorLayer.data[idx] - 1 == ENEMY_SPAWN_TILE_ID)

@@ -95,7 +95,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
 }
 
 Weapon WeaponBuilder::createWeapon(
-    ActorKind ownerKind, std::vector<WeaponModule> modules)
+    EntityKind ownerKind, std::vector<WeaponModule> modules)
 {
     std::ranges::sort(modules);
 
@@ -124,7 +124,7 @@ Weapon WeaponBuilder::createWeapon(
     };
 }
 
-Weapon WeaponBuilder::createMeleeWeapon(ActorKind ownerKind, int damage)
+Weapon WeaponBuilder::createMeleeWeapon(EntityKind ownerKind, int damage)
 {
     return Weapon {
         .soundId = SoundId::Click,

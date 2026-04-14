@@ -21,7 +21,7 @@ entt::entity ActorBuilder::createPlayer(
         PhysicsBody { .maxSpeed = BASE_PLAYER_SPEED, .friction = 0.8f });
     actors.emplace<Skin>(
         entity,
-        ActorKind::Player,
+        EntityKind::Player,
         SkinType::PlayerDefault,
         dgm::Animation(
             atlas.getSkinAnimationStates(SkinType::PlayerDefault),
@@ -34,12 +34,12 @@ entt::entity ActorBuilder::createPlayer(
         entity,
         0,
         std::vector<Weapon> { WeaponBuilder::createWeapon(
-                                  ActorKind::Player,
+                                  EntityKind::Player,
                                   { loadout.weapon1Modules[0],
                                     loadout.weapon1Modules[1],
                                     loadout.weapon1Modules[2] }),
                               WeaponBuilder::createWeapon(
-                                  ActorKind::Player,
+                                  EntityKind::Player,
                                   { loadout.weapon2Modules[0],
                                     loadout.weapon2Modules[1],
                                     loadout.weapon2Modules[2] }) });
@@ -71,7 +71,7 @@ entt::entity ActorBuilder::createNpc(
         actors.emplace<Skin>(
             entity,
             Skin {
-                .kind = ActorKind::Npc,
+                .kind = EntityKind::Npc,
                 .skinType = skin,
                 .animation = dgm::Animation(
                     atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
@@ -84,7 +84,7 @@ entt::entity ActorBuilder::createNpc(
             entity,
             0,
             std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-                ActorKind::Npc, BASE_MELEE_DAMAGE / 2) });
+                EntityKind::Npc, BASE_MELEE_DAMAGE / 2) });
     }
     else if (skin == SkinType::ScuttlebugBlue)
     {
@@ -96,7 +96,7 @@ entt::entity ActorBuilder::createNpc(
         actors.emplace<Skin>(
             entity,
             Skin {
-                .kind = ActorKind::Npc,
+                .kind = EntityKind::Npc,
                 .skinType = skin,
                 .animation = dgm::Animation(
                     atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
@@ -109,7 +109,7 @@ entt::entity ActorBuilder::createNpc(
             entity,
             0,
             std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-                ActorKind::Npc, BASE_MELEE_DAMAGE / 2) });
+                EntityKind::Npc, BASE_MELEE_DAMAGE / 2) });
     }
     else if (skin == SkinType::Bighead)
     {
@@ -120,7 +120,7 @@ entt::entity ActorBuilder::createNpc(
         actors.emplace<Skin>(
             entity,
             Skin {
-                .kind = ActorKind::Npc,
+                .kind = EntityKind::Npc,
                 .skinType = skin,
                 .animation = dgm::Animation(
                     atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
@@ -133,7 +133,7 @@ entt::entity ActorBuilder::createNpc(
             entity,
             0,
             std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-                ActorKind::Npc, BASE_MELEE_DAMAGE) });
+                EntityKind::Npc, BASE_MELEE_DAMAGE) });
     }
     else if (skin == SkinType::Beholder)
     {
@@ -145,7 +145,7 @@ entt::entity ActorBuilder::createNpc(
         actors.emplace<Skin>(
             entity,
             Skin {
-                .kind = ActorKind::Npc,
+                .kind = EntityKind::Npc,
                 .skinType = skin,
                 .animation = dgm::Animation(
                     atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
@@ -158,7 +158,7 @@ entt::entity ActorBuilder::createNpc(
             entity,
             0,
             std::vector<Weapon> {
-                WeaponBuilder::createWeapon(ActorKind::Npc, {}) });
+                WeaponBuilder::createWeapon(EntityKind::Npc, {}) });
     }
     else
     {
@@ -261,7 +261,7 @@ entt::entity ActorBuilder::createProp(
     if (!isPropPassable(propId)) actors.emplace<PhysicsBody>(entity);
     actors.emplace<Skin>(
         entity,
-        ActorKind::Prop,
+        EntityKind::Prop,
         SkinType::Prop,
         dgm::Animation(
             atlas.getSkinAnimationStates(SkinType::Prop), BASE_ANIMATION_FPS),
@@ -344,7 +344,7 @@ entt::entity ActorBuilder::createProjectile(
     actors.emplace<Skin>(
         entity,
         Skin {
-            .kind = ActorKind::Projectile,
+            .kind = EntityKind::Projectile,
             .skinType = weapon.projectileSkin,
             .animation = std::move(animation),
             .scale = sizeFactor,
@@ -439,7 +439,7 @@ entt::entity ActorBuilder::createEffect(
         actors.emplace<Skin>(
             entity,
             Skin {
-                .kind = ActorKind::Effect,
+                .kind = EntityKind::Effect,
                 .skinType = SkinType::BigBullet,
                 .animation = dgm::Animation(
                     atlas.getSkinAnimationStates(SkinType::BigBullet),
@@ -451,7 +451,7 @@ entt::entity ActorBuilder::createEffect(
         actors.emplace<Skin>(
             entity,
             Skin {
-                .kind = ActorKind::Effect,
+                .kind = EntityKind::Effect,
                 .skinType = SkinType::Explosion,
                 .animation = dgm::Animation(
                     atlas.getSkinAnimationStates(SkinType::Explosion),
@@ -486,7 +486,7 @@ entt::entity ActorBuilder::createDoor(
     actors.emplace<Skin>(
         entity,
         Skin {
-            .kind = ActorKind::Door,
+            .kind = EntityKind::Door,
             .skinType = SkinType::DoorHorizontal,
             .animation = dgm::Animation(
                 atlas.getSkinAnimationStates(SkinType::DoorHorizontal),
