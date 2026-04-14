@@ -162,8 +162,9 @@ entt::entity ActorBuilder::createNpc(
     }
     else
     {
-        throw std::runtime_error(uni::format(
-            "Invalid skin type {} for NPC", std::to_underlying(skin)));
+        throw std::runtime_error(
+            uni::format(
+                "Invalid skin type {} for NPC", std::to_underlying(skin)));
     }
 
     auto input = std::make_unique<NpcInput>();
@@ -174,6 +175,8 @@ entt::entity ActorBuilder::createNpc(
         NpcBlackboard {
             .ownerEntity = entity,
             .input = dynamic_cast<NpcInput&>(*underlyingInput),
+            .kind =
+                skin == SkinType::Beholder ? NpcKind::Ranged : NpcKind::Melee,
         });
     actors.emplace<ZIndex>(entity, 1);
 

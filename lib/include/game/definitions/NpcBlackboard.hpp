@@ -1,5 +1,6 @@
 #pragma once
 
+#include "game/enums/NpcKind.hpp"
 #include "game/input/NpcInput.hpp"
 #include <SFML/System/Vector2.hpp>
 #include <fsm/Types.hpp>
@@ -8,6 +9,7 @@ struct [[nodiscard]] NpcBlackboard final : public fsm::BlackboardBase
 {
     entt::entity ownerEntity = entt::null;
     NpcInput& input;
+    NpcKind kind = NpcKind::Melee;
     entt::entity targetEntity = entt::null;
     sf::Vector2f waypoint;
 };
@@ -30,8 +32,9 @@ struct std::formatter<NpcBlackboard, CharT>
     {
         return std::format_to(
             ctx.out(),
-            "[ waypoint: {} ]",
-            dgm::Utility::to_string(bb.waypoint));
+            "[ waypoint: {} | kind: {} ]",
+            dgm::Utility::to_string(bb.waypoint),
+            std::to_underlying(bb.kind));
     }
 };
 
