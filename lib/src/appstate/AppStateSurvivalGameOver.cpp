@@ -1,6 +1,7 @@
 #include "appstate/AppStateSurvivalGameOver.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
+#include "gui/Icon.hpp"
 
 void AppStateSurvivalGameOver::input()
 {
