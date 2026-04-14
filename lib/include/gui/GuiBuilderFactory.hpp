@@ -71,6 +71,15 @@ public:
             player);
     };
 
+    tgui::Button::Ptr createTextButton(StringId textId, auto&& callback)
+    {
+        return WidgetBuilder::createButton(
+            strings.getString(textId),
+            std::forward<decltype(callback)>(callback),
+            sizer,
+            player);
+    }
+
 private:
     const dgm::ResourceManager& resmgr;
     const Sizer& sizer;

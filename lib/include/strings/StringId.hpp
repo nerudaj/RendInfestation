@@ -78,6 +78,8 @@ enum class [[nodiscard]] StringId
 
     // Survival progression
     NewWeaponModuleUnlocked,
+    GameOver,
+    GameScore,
 
     MaxId, // Make sure this one is always the last!
 };

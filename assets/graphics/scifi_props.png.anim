@@ -11,17 +11,17 @@
     },
     "states": [
         {
-            "name": "labtube-full",
+            "name": "pc-active",
             "bounds": {
                 "left": 2,
                 "top": 2,
-                "width": 64,
+                "width": 394,
                 "height": 64
             },
-            "nframes": 1
+            "nframes": 6
         },
         {
-            "name": "labtube",
+            "name": "labtube-full",
             "bounds": {
                 "left": 2,
                 "top": 68,
@@ -31,10 +31,20 @@
             "nframes": 1
         },
         {
+            "name": "labtube",
+            "bounds": {
+                "left": 68,
+                "top": 68,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
             "name": "small-table",
             "bounds": {
-                "left": 2,
-                "top": 134,
+                "left": 134,
+                "top": 68,
                 "width": 64,
                 "height": 64
             },
@@ -43,8 +53,8 @@
         {
             "name": "cantina-table",
             "bounds": {
-                "left": 2,
-                "top": 200,
+                "left": 200,
+                "top": 68,
                 "width": 64,
                 "height": 64
             },
@@ -53,8 +63,8 @@
         {
             "name": "green-carcass",
             "bounds": {
-                "left": 2,
-                "top": 266,
+                "left": 266,
+                "top": 68,
                 "width": 64,
                 "height": 64
             },
@@ -63,18 +73,8 @@
         {
             "name": "blue-carcass",
             "bounds": {
-                "left": 2,
-                "top": 332,
-                "width": 64,
-                "height": 64
-            },
-            "nframes": 1
-        },
-        {
-            "name": "pc",
-            "bounds": {
-                "left": 2,
-                "top": 398,
+                "left": 332,
+                "top": 68,
                 "width": 64,
                 "height": 64
             },
@@ -84,17 +84,47 @@
             "name": "blood-puddle-a",
             "bounds": {
                 "left": 2,
-                "top": 464,
+                "top": 134,
                 "width": 64,
                 "height": 64
             },
             "nframes": 1
         },
         {
-            "name": "unused",
+            "name": "pc",
             "bounds": {
-                "left": 2,
-                "top": 530,
+                "left": 68,
+                "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "cactus-pot",
+            "bounds": {
+                "left": 134,
+                "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "cactus-pot-destroyed",
+            "bounds": {
+                "left": 200,
+                "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "crate",
+            "bounds": {
+                "left": 266,
+                "top": 134,
                 "width": 64,
                 "height": 64
             },

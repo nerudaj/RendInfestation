@@ -1,5 +1,6 @@
 #include "appstate/AppStateGame.hpp"
 #include "appstate/AppStatePause.hpp"
+#include "appstate/AppStateSurvivalGameOver.hpp"
 #include "appstate/Messaging.hpp"
 
 void AppStateGame::input()
@@ -50,6 +51,11 @@ void AppStateGame::update()
     janitor.cleanScene(scene);
 
     ++scene.tick;
+
+    if (scene.status.finished)
+    {
+        app.pushState<AppStateSurvivalGameOver>(dic, scene.status);
+    }
 }
 
 void AppStateGame::draw()

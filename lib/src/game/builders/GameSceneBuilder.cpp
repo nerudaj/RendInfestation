@@ -45,7 +45,7 @@ GameScene GameSceneBuilder::createScene(
     for (auto&& prop : level.objectLayer.objects)
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
-        auto entity =
+        std::ignore =
             ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
     }
 

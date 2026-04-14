@@ -84,4 +84,6 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
 
     // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },
+    { GameOver, "Game Over" },
+    { GameScore, "Your Score" },
 };

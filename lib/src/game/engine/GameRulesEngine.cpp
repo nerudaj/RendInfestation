@@ -129,10 +129,12 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
     if (skin && skin->kind == EntityKind::Npc)
     {
         ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
+        scene.status.score +=
+            getScoreForEnemy(*skin) * scene.survivalSpawnerContext.wave;
     }
     else if (skin && skin->kind == EntityKind::Player)
     {
-        // TODO: this
+        scene.status.finished = true;
     }
 }
 
@@ -410,4 +412,17 @@ void GameRulesEngine::handleTriggerToActorCollision(
         targetSkin.animation.setState(
             DOOR_OPENING_ANIMATION_STATE, "looping"_false);
     }
+}
+
+int GameRulesEngine::getScoreForEnemy(const Skin& skin) const
+{
+    if (skin.skinType == SkinType::Scuttlebug)
+        return 1;
+    else if (skin.skinType == SkinType::ScuttlebugBlue)
+        return 2;
+    else if (skin.skinType == SkinType::Bighead)
+        return 4;
+    else if (skin.skinType == SkinType::Beholder)
+        return 8;
+    return 0;
 }

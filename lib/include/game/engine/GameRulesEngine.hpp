@@ -89,6 +89,8 @@ private:
         scene.hudMessage.displayTime = sf::seconds(3.f);
     }
 
+    int getScoreForEnemy(const Skin& skin) const;
+
 private:
     EventQueue<GameEvent>& eventQueue;
     GameScene& scene;

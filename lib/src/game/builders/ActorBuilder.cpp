@@ -277,7 +277,7 @@ const std::array<Prop, 9u> PROP_DEFINITIONS = {
         .isSolid = false,
     },
     Prop {
-        .animationStateName = "pc",
+        .animationStateName = "pc-active",
         .getCollider =
             [](const sf::Vector2f& origin)
         {

@@ -52,8 +52,15 @@ struct [[nodiscard]] HudMessage final
     sf::Time displayTime = sf::Time::Zero;
 };
 
+struct [[nodiscard]] GameStatus final
+{
+    bool finished = false;
+    int score = 0;
+};
+
 struct [[nodiscard]] GameScene final
 {
+    GameStatus status;
     entt::registry actors;
     entt::entity playerEntity;
     dgm::Mesh levelMesh;
