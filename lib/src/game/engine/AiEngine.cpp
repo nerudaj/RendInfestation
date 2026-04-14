@@ -19,11 +19,9 @@ void AiEngine::update(const dgm::Time& time)
 
 void AiEngine::waitTillAttackFinishes(NpcBlackboard& blackboard)
 {
-    blackboard.input.setAimDirection(
-        dgm::Math::toUnit(
-            scene.actors.get<Collider>(blackboard.targetEntity).getPosition()
-            - scene.actors.get<Collider>(blackboard.ownerEntity)
-                  .getPosition()));
+    blackboard.input.setAimDirection(dgm::Math::toUnit(
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition()
+        - scene.actors.get<Collider>(blackboard.ownerEntity).getPosition()));
 }
 
 void AiEngine::attack(NpcBlackboard& blackboard)
@@ -91,7 +89,7 @@ AiEngine::getDirectionToTarget(const NpcBlackboard& blackboard) const
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
     const auto targetPosition =
         scene.actors.get<Collider>(scene.playerEntity).getPosition();
-    return dgm::Math::toUnit(targetPosition - position);
+    return targetPosition - position;
 }
 
 #define CONDITION(x) [&](const NpcBlackboard& b) -> bool { return self.x(b); }
