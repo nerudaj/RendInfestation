@@ -17,6 +17,7 @@ enum class [[nodiscard]] SkinType : unsigned char
     Landmine,
     Hyperbeam,
     Spikes,
+    PinkFireball,
 
     // Props
     Prop,

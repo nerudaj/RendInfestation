@@ -170,7 +170,11 @@ entt::entity ActorBuilder::createNpc(
             entity,
             0,
             std::vector<Weapon> {
-                WeaponBuilder::createWeapon(EntityKind::Npc, {}) });
+                WeaponBuilder::createRangedWeapon(
+                    EntityKind::Npc,
+                    SkinType::PinkFireball,
+                    BASE_RANGED_DAMAGE),
+            });
     }
     else
     {

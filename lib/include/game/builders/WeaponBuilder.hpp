@@ -17,4 +17,7 @@ public:
     createWeapon(EntityKind ownerKind, std::vector<WeaponModule> modules);
 
     static Weapon createMeleeWeapon(EntityKind ownerKind, int damage);
+
+    static Weapon
+    createRangedWeapon(EntityKind ownerKind, SkinType bulletSkin, int damage);
 };

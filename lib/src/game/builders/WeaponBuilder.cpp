@@ -140,3 +140,21 @@ Weapon WeaponBuilder::createMeleeWeapon(EntityKind ownerKind, int damage)
             },
     };
 }
+
+Weapon WeaponBuilder::createRangedWeapon(
+    EntityKind ownerKind, SkinType bulletSkin, int damage)
+{
+    return Weapon {
+        .soundId = SoundId::Click,
+        .cooldown = sf::seconds(1.5f),
+        .projectileLifetime = BASE_PROJECTILE_LIFETIME,
+        .kickback = 10.f,
+        .projectileSpeed = BASE_PROJECTILE_SPEED / 3.f,
+        .projectileSkin = bulletSkin,
+        .defaultProjectileInventory =
+            ProjectileInventory {
+                .damage = damage,
+                .originator = ownerKind,
+            },
+    };
+}

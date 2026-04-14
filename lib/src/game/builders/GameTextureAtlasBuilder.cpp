@@ -141,6 +141,14 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                     "projectile_hyperbeam.png.anim"))
             .value());
 
+    skins.emplace(
+        SkinType::PinkFireball,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("pink_fireball.png"),
+                resmgr.get<dgm::AnimationStates>("pink_fireball.png.anim"))
+            .value());
+
     auto crosshairs = atlas
                           .addTileset(
                               resmgr.get<sf::Texture>("crosshairs.png"),
