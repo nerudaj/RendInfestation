@@ -257,7 +257,7 @@ void GameRulesEngine::updateSpawner(const dgm::Time& time)
             ++context.wave;
             context.enemiesSpawnedInCurrentWave = 0;
             context.enemiesKilledInCurrentWave = 0;
-            context.enemiesInCurrentWave = context.wave * 10;
+            context.enemiesInCurrentWave = context.wave * 25;
             context.state = SurvivalModeState::SpawningEnemies;
         }
     }

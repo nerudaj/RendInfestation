@@ -63,7 +63,7 @@ bool AiEngine::isTargetInMeleeRange(const NpcBlackboard& blackboard) const
 
 bool AiEngine::isTargetInShootingRange(const NpcBlackboard& blackboard) const
 {
-    return getDirectionToTarget(blackboard).length() <= 200.f;
+    return getDirectionToTarget(blackboard).length() <= 160.f;
 }
 
 bool AiEngine::isOwnerIdleOrWalking(const NpcBlackboard& blackboard) const

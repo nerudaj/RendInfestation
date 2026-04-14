@@ -37,7 +37,7 @@ constexpr const sf::Color COLOR_MUTED_YELLOW = sf::Color { 0xf3, 0xef, 0x7d };
 constexpr const sf::Color COLOR_PURPLE = sf::Color { 0x83, 0x76, 0x9c };
 
 // Other
-constexpr const sf::Time SPAWNER_SPAWN_DELAY = sf::seconds(1.f);
+constexpr const sf::Time SPAWNER_SPAWN_DELAY = sf::seconds(0.3f);
 const static inline auto INTERNAL_GAME_RESOLUTION =
     sf::Vector2f { 576.f, 324.f } / 1.5f;
 constexpr float CAMERA_SHAKE_MAGNITUDE = 8.f;
