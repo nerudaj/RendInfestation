@@ -41,6 +41,8 @@ private: // Actions
 
     void moveTowardsWaypoint(NpcBlackboard& blackboard);
 
+    void moveTowardsTarget(NpcBlackboard& blackboard);
+
     void generateWaypoint(NpcBlackboard& blackboard);
 
     void chooseTarget(NpcBlackboard&) {}
@@ -48,6 +50,8 @@ private: // Actions
     void doNothing(NpcBlackboard&) {}
 
 private: // Predicates
+    bool isTargetVisible(const NpcBlackboard& blackboard) const;
+
     bool isTargetInMeleeRange(const NpcBlackboard& blackboard) const;
 
     bool isTargetInShootingRange(const NpcBlackboard& blackboard) const;
@@ -63,6 +67,9 @@ private: // Predicates
 
 private: // Utils
     sf::Vector2f getDirectionToTarget(const NpcBlackboard& blackboard) const;
+
+    void
+    moveInDirection(NpcBlackboard& blackboard, const sf::Vector2f& direction);
 
     static fsm::Fsm<NpcBlackboard> buildFsmForMeleeNpc(AiEngine& self);
 

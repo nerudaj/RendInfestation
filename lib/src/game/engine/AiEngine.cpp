@@ -1,4 +1,5 @@
 #include "game/engine/AiEngine.hpp"
+#include <DGM/classes/Raycaster.hpp>
 #include <fsm/Builder.hpp>
 
 void AiEngine::update(const dgm::Time& time)
@@ -34,9 +35,13 @@ void AiEngine::moveTowardsWaypoint(NpcBlackboard& blackboard)
     const auto position =
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
     const auto direction = dgm::Math::toUnit(blackboard.waypoint - position);
+    moveInDirection(blackboard, direction);
+}
 
-    blackboard.input.setForward(direction);
-    blackboard.input.setAimDirection(direction);
+void AiEngine::moveTowardsTarget(NpcBlackboard& blackboard)
+{
+    const auto direction = getDirectionToTarget(blackboard);
+    moveInDirection(blackboard, direction);
 }
 
 void AiEngine::generateWaypoint(NpcBlackboard& blackboard)
@@ -53,6 +58,14 @@ void AiEngine::generateWaypoint(NpcBlackboard& blackboard)
 // ==========
 // PREDICATES
 // ==========
+
+bool AiEngine::isTargetVisible(const NpcBlackboard& blackboard) const
+{
+    return dgm::Raycaster::hasDirectVisibility(
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition(),
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition(),
+        scene.levelMesh);
+}
 
 bool AiEngine::isTargetInMeleeRange(const NpcBlackboard& blackboard) const
 {
@@ -92,6 +105,14 @@ AiEngine::getDirectionToTarget(const NpcBlackboard& blackboard) const
     return targetPosition - position;
 }
 
+void AiEngine::moveInDirection(
+    NpcBlackboard& blackboard, const sf::Vector2f& direction)
+{
+    const auto unitDirection = dgm::Math::toUnit(direction);
+    blackboard.input.setForward(unitDirection);
+    blackboard.input.setAimDirection(unitDirection);
+}
+
 #define CONDITION(x) [&](const NpcBlackboard& b) -> bool { return self.x(b); }
 
 #define NOT(x) [&](const NpcBlackboard& b) -> bool { return !self.x(b); }
@@ -107,9 +128,18 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForMeleeNpc(AiEngine& self)
             .withEntryState("Start")
                 .when(CONDITION(isTargetInMeleeRange))
                     .goToState("Attack")
+                .orWhen(CONDITION(isTargetVisible))
+                    .goToState("MoveTowardsTarget")
                 .orWhen(CONDITION(hasNpcReachedWaypoint))
                     .goToState("GenerateWaypoint")
                 .otherwiseExec(ACTION(moveTowardsWaypoint))
+                .andLoop()
+            .withState("MoveTowardsTarget")
+                .when(CONDITION(isTargetInMeleeRange))
+                    .goToState("Attack")
+                .orWhen(NOT(isTargetVisible))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(moveTowardsTarget))
                 .andLoop()
             .withState("GenerateWaypoint")
                 .exec(ACTION(generateWaypoint))
@@ -136,9 +166,18 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForRangedNpc(AiEngine& self)
             .withEntryState("Start")
                 .when(CONDITION(isTargetInShootingRange))
                     .goToState("Attack")
+                .orWhen(CONDITION(isTargetVisible))
+                    .goToState("MoveTowardsTarget")
                 .orWhen(CONDITION(hasNpcReachedWaypoint))
                     .goToState("GenerateWaypoint")
                 .otherwiseExec(ACTION(moveTowardsWaypoint))
+                .andLoop()
+            .withState("MoveTowardsTarget")
+                .when(CONDITION(isTargetInMeleeRange))
+                    .goToState("Attack")
+                .orWhen(NOT(isTargetVisible))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(moveTowardsTarget))
                 .andLoop()
             .withState("GenerateWaypoint")
                 .exec(ACTION(generateWaypoint))
