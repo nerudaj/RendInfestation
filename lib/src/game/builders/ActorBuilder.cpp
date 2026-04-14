@@ -63,7 +63,10 @@ entt::entity ActorBuilder::createNpc(
 
     if (skin == SkinType::Scuttlebug)
     {
-        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<Collider>(
+            entity,
+            dgm::Circle(spawnPosition, 8.f),
+            ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
             PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED * 1.2f,
@@ -88,7 +91,10 @@ entt::entity ActorBuilder::createNpc(
     }
     else if (skin == SkinType::ScuttlebugBlue)
     {
-        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<Collider>(
+            entity,
+            dgm::Circle(spawnPosition, 8.f),
+            ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
             PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED * 1.5f,
@@ -113,7 +119,10 @@ entt::entity ActorBuilder::createNpc(
     }
     else if (skin == SkinType::Bighead)
     {
-        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<Collider>(
+            entity,
+            dgm::Circle(spawnPosition, 8.f),
+            ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
             PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED, .friction = 0.8f });
@@ -137,7 +146,10 @@ entt::entity ActorBuilder::createNpc(
     }
     else if (skin == SkinType::Beholder)
     {
-        actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+        actors.emplace<Collider>(
+            entity,
+            dgm::Circle(spawnPosition, 8.f),
+            ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
             PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED / 2.f,
@@ -162,9 +174,8 @@ entt::entity ActorBuilder::createNpc(
     }
     else
     {
-        throw std::runtime_error(
-            uni::format(
-                "Invalid skin type {} for NPC", std::to_underlying(skin)));
+        throw std::runtime_error(uni::format(
+            "Invalid skin type {} for NPC", std::to_underlying(skin)));
     }
 
     auto input = std::make_unique<NpcInput>();

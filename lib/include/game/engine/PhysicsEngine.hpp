@@ -32,7 +32,10 @@ public:
     template<class T>
         requires std::same_as<T, dgm::Circle> || std::same_as<T, dgm::Rect>
     void performEntityCollisionDetection(
-        entt::entity entity, T& collider, sf::Vector2f& moment);
+        entt::entity entity,
+        T& collider,
+        sf::Vector2f& moment,
+        bool isSemighost);
 
 private:
     GameScene& scene;

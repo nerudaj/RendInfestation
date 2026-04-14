@@ -69,7 +69,8 @@ void PhysicsEngine::updateForConcreteCollider(
     {
         // If this assert fails, then we risk missing a collision event
         assert(!options.reportActorCollisions);
-        performEntityCollisionDetection(entity, collider, moment);
+        performEntityCollisionDetection(
+            entity, collider, moment, options.semighost);
     }
 
     collider.move(moment);
@@ -80,13 +81,14 @@ void PhysicsEngine::updateForConcreteCollider(
 template<class T>
     requires std::same_as<T, dgm::Circle> || std::same_as<T, dgm::Rect>
 void PhysicsEngine::performEntityCollisionDetection(
-    entt::entity entity, T& collider, sf::Vector2f& moment)
+    entt::entity entity, T& collider, sf::Vector2f& moment, bool isSemighost)
 {
     spatialIndex.removeFromLookup(entity, collider);
 
     for (auto&& candidate : spatialIndex.getOverlapCandidates(collider))
     {
         auto&& candidateCollider = scene.actors.get<Collider>(candidate);
+        if (isSemighost && candidateCollider.options.semighost) continue;
 
         const auto hasCollision = [&]
         {
