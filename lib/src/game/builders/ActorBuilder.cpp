@@ -28,8 +28,8 @@ entt::entity ActorBuilder::createPlayer(
             BASE_ANIMATION_FPS),
         sf::Vector2f { 0.f, -10.f });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-    actors.emplace<Health>(entity, 10000);
-    actors.emplace<ZIndex>(entity, 1);
+    actors.emplace<Health>(entity, 100);
+    actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
     actors.emplace<WeaponInventory>(
         entity,
         0,
@@ -189,7 +189,7 @@ entt::entity ActorBuilder::createNpc(
             .kind =
                 skin == SkinType::Beholder ? NpcKind::Ranged : NpcKind::Melee,
         });
-    actors.emplace<ZIndex>(entity, 1);
+    actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
 
     actors.get<Skin>(entity).animation.setState(
         IDLE_ANIMATION_STATE, "looping"_true);
@@ -197,68 +197,112 @@ entt::entity ActorBuilder::createNpc(
     return entity;
 }
 
-static Collider getPropCollider(const sf::Vector2f& origin, const size_t propId)
+struct [[nodiscard]] Prop final
 {
-    if (propId == 0 || propId == 1) // labtubes
-    {
-        return Collider { dgm::Circle(
-            { origin.x + 32.f, origin.y - 16.f }, 13.f) };
-    }
-    else if (propId == 2) // Small table
-    {
-        return Collider { dgm::Rect(
-            { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
-    }
-    else if (propId == 4 || propId == 5) // dead bodies
-        return Collider {
-            dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
-            ColliderOptions { .nonblocking = true, .disabled = true }
-        };
-    else if (propId == 6)
-        return Collider {
-            dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
-            ColliderOptions { .nonblocking = true, .disabled = true }
-        };
-    else if (propId == 7)
-        return Collider {
-            dgm::Rect({ origin.x, origin.y - 64.f }, { 24.f, 14.f }),
-            ColliderOptions { .nonblocking = true, .disabled = true }
-        };
+    std::string animationStateName;
+    std::function<Collider(const sf::Vector2f&)> getCollider;
+    sf::Vector2f spriteOffset = { 0.f, 0.f };
+    bool isSolid = true;
+    std::optional<BoundLightEmitter> boundLightEmitter = std::nullopt;
+};
 
-    // Cantina table
-    return Collider { dgm::Rect(
-        { origin.x, origin.y - 64.f }, { 64.f, 56.f }) };
-}
-
-static sf::Vector2f getPropSpriteOffset(const size_t propId)
-{
-    if (propId == 0 || propId == 1)
-    {
-        return { 0.f, -16.f };
-    }
-    else if (propId == 2)
-    {
-        return { 0.f, 0.f };
-    }
-    else if (propId == 4 || propId == 5)
-        return { 16.f, 16.f };
-    else if (propId == 6)
-        return { 22.f, 25.f };
-    else if (propId == 7)
-        return { 20.f, 25.f };
-
-    return { 0.f, -4.f };
-}
-
-static bool isPropPassable(const size_t propId)
-{
-    return propId == 4 || propId == 5 || propId == 6 || propId == 7;
-}
-
-static bool isPropLabtune(const size_t propId)
-{
-    return propId == 0 || propId == 1;
-}
+const std::array<Prop, 9u> PROP_DEFINITIONS = {
+    Prop {
+        .animationStateName = "labtube-full",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Circle({ origin.x + 32.f, origin.y - 16.f }, 13.f),
+            };
+        },
+        .spriteOffset = { 0.f, -16.f },
+        .boundLightEmitter = BoundLightEmitter { COLOR_GREEN, 7 },
+    },
+    Prop {
+        .animationStateName = "labtube",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Circle({ origin.x + 32.f, origin.y - 16.f }, 13.f),
+            };
+        },
+        .spriteOffset = { 0.f, -16.f },
+        .boundLightEmitter = BoundLightEmitter { COLOR_GREEN, 7 },
+    },
+    Prop {
+        .animationStateName = "small-table",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider { dgm::Rect(
+                { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
+        },
+    },
+    Prop {
+        .animationStateName = "cantina-table",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider { dgm::Rect(
+                { origin.x, origin.y - 64.f }, { 64.f, 56.f }) };
+        },
+        .spriteOffset = { 0.f, -4.f },
+    },
+    Prop {
+        .animationStateName = "green-carcass",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
+                ColliderOptions { .nonblocking = true, .disabled = true }
+            };
+        },
+        .spriteOffset = { 16.f, 16.f },
+        .isSolid = false,
+    },
+    Prop {
+        .animationStateName = "blue-carcass",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
+                ColliderOptions { .nonblocking = true, .disabled = true }
+            };
+        },
+        .spriteOffset = { 16.f, 16.f },
+        .isSolid = false,
+    },
+    Prop {
+        .animationStateName = "pc",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
+                ColliderOptions { .nonblocking = true, .disabled = true }
+            };
+        },
+        .spriteOffset = { 22.f, 25.f },
+        .isSolid = true,
+    },
+    Prop {
+        .animationStateName = "blood-puddle-a",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 24.f, 14.f }),
+                ColliderOptions { .nonblocking = true, .disabled = true }
+            };
+        },
+        .spriteOffset = { 22.f, 25.f },
+        .isSolid = false,
+    },
+};
 
 entt::entity ActorBuilder::createProp(
     entt::registry& actors,
@@ -267,46 +311,29 @@ entt::entity ActorBuilder::createProp(
     const GameTextureAtlas& atlas)
 {
     auto entity = actors.create();
-    actors.emplace<Collider>(entity, getPropCollider(origin, propId));
+    assert(propId < PROP_DEFINITIONS.size());
+    const auto& propDef = PROP_DEFINITIONS[propId];
 
-    if (!isPropPassable(propId)) actors.emplace<PhysicsBody>(entity);
+    actors.emplace<Collider>(entity, propDef.getCollider(origin));
+
+    if (propDef.isSolid) actors.emplace<PhysicsBody>(entity);
     actors.emplace<Skin>(
         entity,
         EntityKind::Prop,
         SkinType::Prop,
         dgm::Animation(
             atlas.getSkinAnimationStates(SkinType::Prop), BASE_ANIMATION_FPS),
-        getPropSpriteOffset(propId));
-
-    auto stateName = [](size_t id)
-    {
-        if (id == 0)
-            return "labtube-full";
-        else if (id == 1)
-            return "labtube";
-        else if (id == 2)
-            return "small-table";
-        else if (id == 3)
-            return "cantina-table";
-        else if (id == 4)
-            return "green-carcass";
-        else if (id == 5)
-            return "blue-carcass";
-        else if (id == 6)
-            return "pc";
-        else if (id == 7)
-            return "blood-puddle-a";
-        return "--error--";
-    };
+        propDef.spriteOffset);
 
     actors.get<Skin>(entity).animation.setState(
-        stateName(propId), "looping"_true);
-    actors.emplace<ZIndex>(entity, isPropPassable(propId) ? 0 : 1);
+        propDef.animationStateName, "looping"_true);
+    actors.emplace<ZIndex>(
+        entity, propDef.isSolid ? ZINDEX_COMMON : ZINDEX_FLOOR_DECOR);
 
-    if (isPropLabtune(propId))
+    if (propDef.boundLightEmitter.has_value())
     {
         actors.emplace<BoundLightEmitter>(
-            entity, BoundLightEmitter { COLOR_GREEN, 7 });
+            entity, propDef.boundLightEmitter.value());
     }
 
     return entity;
@@ -346,7 +373,7 @@ entt::entity ActorBuilder::createProjectile(
             .useAltMesh = true,
         });
     actors.emplace<Lifetime>(entity, weapon.projectileLifetime);
-    actors.emplace<ZIndex>(entity, 50);
+    actors.emplace<ZIndex>(entity, ZINDEX_PROJECTILES);
 
     auto animation = dgm::Animation(
         atlas.getSkinAnimationStates(weapon.projectileSkin),
@@ -475,12 +502,9 @@ entt::entity ActorBuilder::createEffect(
         assert(false && "Invalid effect type");
     }
 
-    actors.emplace<ZIndex>(entity, 100);
+    actors.emplace<ZIndex>(entity, ZINDEX_PROJECTILES);
     auto&& animation = actors.get<Skin>(entity).animation;
     animation.setState(DEATH_ANIMATION_STATE, "looping"_false);
-    /*    actors.get<Lifetime>(entity) = sf::seconds(
-            static_cast<float>(animation.getCurrentStateFrameCount()) /
-       BASE_ANIMATION_FPS);*/
 
     return entity;
 }

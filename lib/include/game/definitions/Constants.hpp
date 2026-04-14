@@ -46,3 +46,9 @@ constexpr float FALL_SPEED = 0.75f; // percent per second
 
 constexpr const char* FONT_NAME = "PublicPixel-rv0pA.ttf";
 constexpr const unsigned FONT_BASE_HEIGHT = 8u;
+
+// Z-indices
+constexpr const int ZINDEX_FLOOR_DECOR = 0;
+constexpr const int ZINDEX_COMMON = 1;
+constexpr const int ZINDEX_PROJECTILES = 100;
+constexpr const int ZINDEX_FOREGROUND_DECOR = 200;
