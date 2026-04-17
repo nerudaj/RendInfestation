@@ -595,3 +595,27 @@ entt::entity ActorBuilder::createDoor(
 
     return entity;
 }
+
+entt::entity ActorBuilder::createParticleSystem(
+    entt::registry& actors,
+    const sf::Vector2f& origin,
+    const sf::Vector2f& direction)
+{
+    auto entity = actors.create();
+
+    actors.emplace<ParticleEmitter>(
+        entity,
+        ParticleEmitter {
+            .emissionInterval = sf::seconds(0.f),
+            .emissionTimer = sf::seconds(0.f),
+            .particlesToEmit = 16,
+            .position = origin,
+            .direction = direction,
+            .spread = sf::degrees(180),
+        });
+
+    actors.emplace<ParticleSystem>(
+        entity, ParticleSystem { .lifetime = sf::seconds(0.3f) });
+
+    return entity;
+}

@@ -34,8 +34,8 @@
             "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 996.5,
-                "y": 961
+                "x": 997,
+                "y": 960
             }
         },
         "survival-02.tmx": {
@@ -45,8 +45,8 @@
             "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 986.9999999999999,
-                "y": 1024
+                "x": 960,
+                "y": 960
             }
         }
     },

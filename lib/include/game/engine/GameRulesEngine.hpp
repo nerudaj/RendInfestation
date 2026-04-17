@@ -91,6 +91,8 @@ private:
 
     int getScoreForEnemy(const Skin& skin) const;
 
+    sf::Vector2f pickEnemySpawnPosition() const;
+
 private:
     EventQueue<GameEvent>& eventQueue;
     GameScene& scene;

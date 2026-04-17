@@ -27,6 +27,9 @@ public:
         const sf::Vector2f& scale = sf::Vector2f { 1.f, 1.f },
         const sf::Color color = sf::Color::White);
 
+    void addQuad(
+        const sf::Vector2f& origin, const float size, const sf::Color color);
+
     void renderTo(dgm::Window& window)
     {
         window.getSfmlWindowContext().draw(vertices, renderStates);

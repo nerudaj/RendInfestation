@@ -94,6 +94,39 @@ void ShadeableRenderingPipeline2D::addFace(
     currentVertexIdx += 6;
 }
 
+void ShadeableRenderingPipeline2D::addQuad(
+    const sf::Vector2f& origin, const float size, const sf::Color color)
+{
+    resizeVertexArrayIfNeeded();
+    const auto texSizeHalf = sf::Vector2f { size, size } / 2.f;
+
+    vertices[currentVertexIdx + 0].position = origin - texSizeHalf;
+    vertices[currentVertexIdx + 0].color = color;
+
+    vertices[currentVertexIdx + 1].position =
+        origin + sf::Vector2f(texSizeHalf.x, -texSizeHalf.y);
+    vertices[currentVertexIdx + 1].color = color;
+
+    vertices[currentVertexIdx + 2].position = origin + texSizeHalf;
+    vertices[currentVertexIdx + 2].color = color;
+
+    // same as 0
+    vertices[currentVertexIdx + 3].position =
+        vertices[currentVertexIdx + 0].position;
+    vertices[currentVertexIdx + 3].color = color;
+
+    // same as 2
+    vertices[currentVertexIdx + 4].position =
+        vertices[currentVertexIdx + 2].position;
+    vertices[currentVertexIdx + 4].color = color;
+
+    vertices[currentVertexIdx + 5].position =
+        origin + sf::Vector2f(-texSizeHalf.x, texSizeHalf.y);
+    vertices[currentVertexIdx + 5].color = color;
+
+    currentVertexIdx += 6;
+}
+
 void ShadeableRenderingPipeline2D::resizeVertexArrayIfNeeded()
 {
     if (vertices.getVertexCount() < currentVertexIdx + 6)

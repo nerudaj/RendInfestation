@@ -15,6 +15,7 @@ constexpr sf::Time BASE_PROJECTILE_LIFETIME = sf::seconds(50.f);
 constexpr float BASE_EXPLOSION_RADIUS = 18.f;
 constexpr int EFFECT_FPS = 8;
 constexpr int BASE_ANIMATION_FPS = 8;
+constexpr float MIN_ENEMY_SPAWN_DISTANCE = 256.f;
 
 // Animation states
 constexpr const char* IDLE_ANIMATION_STATE = "idle";

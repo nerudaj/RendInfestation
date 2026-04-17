@@ -57,4 +57,9 @@ public:
         entt::registry& actors,
         const sf::Vector2f& position,
         const GameTextureAtlas& atlas);
+
+    static entt::entity createParticleSystem(
+        entt::registry& actors,
+        const sf::Vector2f& origin,
+        const sf::Vector2f& direction);
 };

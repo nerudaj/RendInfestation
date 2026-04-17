@@ -115,6 +115,29 @@ struct [[nodiscard]] Interval final
     sf::Time delay = sf::Time::Zero;
 };
 
+struct [[nodiscard]] ParticleEmitter final
+{
+    sf::Time emissionInterval = sf::Time::Zero;
+    sf::Time emissionTimer = sf::Time::Zero;
+    int particlesToEmit = 0;
+    sf::Vector2f position;
+    sf::Vector2f direction;
+    sf::Angle spread;
+};
+
+struct [[nodiscard]] Particle final
+{
+    sf::Vector2f position;
+    sf::Vector2f velocity;
+    sf::Color color;
+};
+
+struct [[nodiscard]] ParticleSystem final
+{
+    std::vector<Particle> particles;
+    sf::Time lifetime = sf::Time::Zero;
+};
+
 // ===========
 // INVENTORIES
 // ===========
