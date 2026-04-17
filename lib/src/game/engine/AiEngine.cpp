@@ -13,8 +13,7 @@ void AiEngine::update(const dgm::Time& time)
         if (blackboard.targetEntity == entt::null)
             blackboard.targetEntity = scene.playerEntity;
         blackboard.input.clearInputs();
-
-        fsmsByKind.at(blackboard.kind).tick(blackboard);
+        fsmsByKind.at(std::to_underlying(blackboard.kind)).tick(blackboard);
     }
 }
 

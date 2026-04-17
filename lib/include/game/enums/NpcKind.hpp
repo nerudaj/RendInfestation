@@ -4,5 +4,7 @@ enum class [[nodiscard]] NpcKind
 {
     Melee,
     Ranged,
-    Turret
+    Turret,
+
+    Max
 };

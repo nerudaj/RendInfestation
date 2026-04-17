@@ -4,9 +4,14 @@
 #include "game/definitions/NpcBlackboard.hpp"
 #include "game/enums/NpcKind.hpp"
 #include <DGM/classes/Time.hpp>
+#include <array>
 #include <fsm/Fsm.hpp>
 #include <fsm/logging/CsvLogger.hpp>
 #include <map>
+
+#ifdef _DEBUG
+#define FSM_LOGGING_ENABLED 1
+#endif
 
 class [[nodiscard]] AiEngine final
 {
@@ -14,19 +19,15 @@ public:
     AiEngine(GameScene& _scene)
         : scene(_scene)
         , navMesh(scene.levelMesh.clone())
-#ifdef _DEBUG
+#ifdef FSM_LOGGING_ENABLED
         , logger("ai_log.csv")
 #endif
+        , fsmsByKind(std::array { buildFsmForMeleeNpc(*this),
+                                  buildFsmForRangedNpc(*this),
+                                  buildFsmForTurretNpc(*this) })
     {
-        fsmsByKind.emplace(
-            NpcKind::Melee, std::move(buildFsmForMeleeNpc(*this)));
-        fsmsByKind.emplace(
-            NpcKind::Ranged, std::move(buildFsmForRangedNpc(*this)));
-        fsmsByKind.emplace(
-            NpcKind::Turret, std::move(buildFsmForTurretNpc(*this)));
-
-#ifdef _DEBUG
-        for (auto& [_, fsm] : fsmsByKind)
+#ifdef FSM_LOGGING_ENABLED
+        for (auto& fsm : fsmsByKind)
             fsm.setLogger(logger);
 #endif
     }
@@ -80,9 +81,10 @@ private: // Utils
 private:
     GameScene& scene;
     dgm::WorldNavMesh navMesh;
-#ifdef _DEBUG
+#ifdef FSM_LOGGING_ENABLED
     fsm::CsvLogger logger;
 #endif
 
-    std::map<NpcKind, fsm::Fsm<NpcBlackboard>> fsmsByKind;
+    std::array<fsm::Fsm<NpcBlackboard>, static_cast<size_t>(NpcKind::Max)>
+        fsmsByKind;
 };
