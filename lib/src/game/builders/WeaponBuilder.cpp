@@ -127,7 +127,7 @@ Weapon WeaponBuilder::createWeapon(
 Weapon WeaponBuilder::createMeleeWeapon(EntityKind ownerKind, int damage)
 {
     return Weapon {
-        .soundId = SoundId::Click,
+        .soundId = SoundId::BigheadAttack,
         .cooldown = sf::seconds(0.5f),
         .projectileLifetime = sf::seconds(0.f),
         .kickback = 20.f,
@@ -145,7 +145,7 @@ Weapon WeaponBuilder::createRangedWeapon(
     EntityKind ownerKind, SkinType bulletSkin, int damage)
 {
     return Weapon {
-        .soundId = SoundId::Click,
+        .soundId = SoundId::BehemothAttack,
         .cooldown = sf::seconds(1.5f),
         .projectileLifetime = BASE_PROJECTILE_LIFETIME,
         .kickback = 10.f,

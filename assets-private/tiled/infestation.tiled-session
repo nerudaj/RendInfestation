@@ -17,6 +17,9 @@
             "scaleInEditor": 1
         },
         "demo-01.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
@@ -36,11 +39,14 @@
             }
         },
         "survival-02.tmx": {
-            "scale": 1,
-            "selectedLayer": 1,
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 1.5,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 990.5,
-                "y": 901
+                "x": 986.9999999999999,
+                "y": 1024
             }
         }
     },
@@ -54,11 +60,13 @@
         "Core Tiles.tsx",
         "demo-01.tmx",
         "Props.tsx",
-        "survival-01.tmx"
+        "survival-01.tmx",
+        "survival-02.tmx"
     ],
     "project": "infestation.tiled-project",
     "recentFiles": [
         "Core Tiles.tsx",
+        "survival-02.tmx",
         "survival-01.tmx",
         "Props.tsx",
         "demo-01.tmx"

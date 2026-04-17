@@ -131,6 +131,14 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
         ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
         scene.status.score +=
             getScoreForEnemy(*skin) * scene.survivalSpawnerContext.wave;
+
+        if (skin->skinType == SkinType::Scuttlebug)
+            soundPlayer.playAttenuatedSound(
+                SoundChannel::Enemy,
+                SoundId::ScuttlebugDeath,
+                (scene.actors.get<Collider>(e.entity).getPosition()
+                 - scene.actors.get<Collider>(scene.playerEntity).getPosition())
+                    .length());
     }
     else if (skin && skin->kind == EntityKind::Player)
     {
