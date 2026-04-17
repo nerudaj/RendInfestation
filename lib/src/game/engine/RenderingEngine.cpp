@@ -135,21 +135,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
         sf::FloatRect {
             atlas.atlas.getClip(atlas.crosshairsLocation).getFrame(0) });
 
-    for (auto&& [entity, system] : scene.actors.view<ParticleSystem>().each())
-    {
-        for (auto&& particle : system.particles)
-        {
-            pipeline.addFace(
-                particle.position,
-                sf::FloatRect {
-                    { 50.f, 775.f },
-                    { 1.f, 1.f },
-                },
-                sf::degrees(0.f),
-                { 2.f, 2.f },
-                particle.color);
-        }
-    }
+    addParticlesToPipeline();
 
     pipeline.renderTo(window);
 
@@ -178,6 +164,25 @@ void RenderingEngine::addLevelFacesToPipeline()
                 pos,
                 sf::FloatRect(
                     tilesClip.getFrame(std::abs(scene.decorationsMesh[idx]))));
+        }
+    }
+}
+
+void RenderingEngine::addParticlesToPipeline()
+{
+    for (auto&& [entity, system] : scene.actors.view<ParticleSystem>().each())
+    {
+        for (auto&& particle : system.particles)
+        {
+            pipeline.addFace(
+                particle.position,
+                sf::FloatRect {
+                    { 50.f, 775.f },
+                    { 1.f, 1.f },
+                },
+                sf::degrees(0.f),
+                particle.size,
+                particle.color);
         }
     }
 }

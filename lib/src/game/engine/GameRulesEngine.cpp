@@ -135,7 +135,8 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
         ActorBuilder::createParticleSystem(
             scene.actors,
             scene.actors.get<Collider>(e.entity).getPosition(),
-            sf::Vector2f { 0.f, -1.f });
+            sf::Vector2f { 0.f, -1.f },
+            ParticleSystemKind::BloodSpatter);
 
         if (skin->skinType == SkinType::Scuttlebug)
             soundPlayer.playAttenuatedSound(
@@ -149,11 +150,6 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
     {
         scene.status.finished = true;
     }
-}
-
-static float randomFloat(float min, float max)
-{
-    return (rand() % static_cast<int>(max - min) * 100) / 100.f + min;
 }
 
 void GameRulesEngine::update(const dgm::Time& time)
@@ -178,38 +174,6 @@ void GameRulesEngine::update(const dgm::Time& time)
 
     if (scene.hudMessage.displayTime > sf::Time::Zero)
         scene.hudMessage.displayTime -= time.getElapsed();
-
-    for (auto&& [entity, emitter, system] :
-         scene.actors.view<ParticleEmitter, ParticleSystem>().each())
-    {
-        emitter.emissionTimer -= time.getElapsed();
-        if (emitter.emissionTimer <= sf::Time::Zero
-            && emitter.particlesToEmit > 0)
-        {
-            emitter.emissionTimer = emitter.emissionInterval;
-            --emitter.particlesToEmit;
-
-            const auto angle = sf::degrees(randomFloat(
-                -emitter.spread.asDegrees(), emitter.spread.asDegrees()));
-            system.particles.emplace_back(Particle {
-                .position = emitter.position,
-                .velocity = emitter.direction.rotatedBy(angle)
-                            * randomFloat(20.f, 40.f),
-                .color = COLOR_WHITE,
-            });
-        }
-
-        system.lifetime -= time.getElapsed();
-        if (system.lifetime <= sf::Time::Zero)
-        {
-            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
-        }
-
-        for (auto&& particle : system.particles)
-        {
-            particle.position += particle.velocity * time.getDeltaTime();
-        }
-    }
 }
 
 void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)

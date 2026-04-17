@@ -122,20 +122,24 @@ struct [[nodiscard]] ParticleEmitter final
     int particlesToEmit = 0;
     sf::Vector2f position;
     sf::Vector2f direction;
-    sf::Angle spread;
+    sf::Angle directionVariance;
+    std::array<sf::Color, 2u> colors;
+    float maxProjectileSize;
+    float speed;
+    float speedVariance;
 };
 
 struct [[nodiscard]] Particle final
 {
     sf::Vector2f position;
     sf::Vector2f velocity;
+    sf::Vector2f size;
     sf::Color color;
 };
 
 struct [[nodiscard]] ParticleSystem final
 {
     std::vector<Particle> particles;
-    sf::Time lifetime = sf::Time::Zero;
 };
 
 // ===========

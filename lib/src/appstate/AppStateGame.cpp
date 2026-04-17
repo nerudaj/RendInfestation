@@ -44,6 +44,7 @@ void AppStateGame::update()
     gameRulesEngine.update(app.time);
     animationEngine.update(app.time);
     physicsEngine.update(app.time);
+    particleEngine.update(app.time);
     renderingEngine.update(app.time);
 
     gameEvents.processEvents(

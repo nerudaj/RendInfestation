@@ -47,6 +47,8 @@ private:
 
     void addLevelFacesToPipeline();
 
+    void addParticlesToPipeline();
+
     void renderColliders(dgm::Window& window);
 
     void renderLights(dgm::Window& window);

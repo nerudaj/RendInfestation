@@ -11,17 +11,29 @@ void AnimationEngine::operator()(const event::ActorFiredWeapon& e)
 
 void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
 {
-    auto&& [collider, inventory] =
-        scene.actors.get<Collider, ProjectileInventory>(e.projectileEntity);
+    auto&& [collider, body, inventory] =
+        scene.actors.get<Collider, PhysicsBody, ProjectileInventory>(
+            e.projectileEntity);
 
-    ActorBuilder::createEffect(
-        scene.actors,
-        collider.getPosition(),
-        inventory.traits & ProjectileTraits::Explosive
-            ? EffectType::Explosion
-            : EffectType::BulletDeath,
-        atlas,
-        inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
+    if (inventory.traits & ProjectileTraits::Explosive)
+    {
+        ActorBuilder::createEffect(
+            scene.actors,
+            collider.getPosition(),
+            inventory.traits & ProjectileTraits::Explosive
+                ? EffectType::Explosion
+                : EffectType::BulletDeath,
+            atlas,
+            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
+    }
+    else
+    {
+        ActorBuilder::createParticleSystem(
+            scene.actors,
+            collider.getPosition(),
+            dgm::Math::toUnit(body.forward),
+            ParticleSystemKind::ProjectileImpact);
+    }
 }
 
 void AnimationEngine::operator()(const event::ActorStartedAttack& e)

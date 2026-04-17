@@ -596,26 +596,90 @@ entt::entity ActorBuilder::createDoor(
     return entity;
 }
 
+struct [[nodiscard]] ParticleSystemDefinition final
+{
+    sf::Time emissionInterval;
+    sf::Time lifetime;
+    int particlesToEmit;
+    sf::Angle directionVariance;
+    std::array<sf::Color, 2> colors;
+    float maxProjectileSize;
+    float speed;
+    float speedVariance;
+};
+
+const std::map<ParticleSystemKind, ParticleSystemDefinition>
+    PARTICLE_SYSTEM_DEF = {
+        {
+            ParticleSystemKind::BloodSpatter,
+            ParticleSystemDefinition {
+                .emissionInterval = sf::Time::Zero,
+                .lifetime = sf::seconds(0.5f),
+                .particlesToEmit = 16,
+                .directionVariance = sf::degrees(100),
+                .colors = { COLOR_RED, COLOR_DARK_RED },
+                .maxProjectileSize = 4.f,
+                .speed = 30.f,
+                .speedVariance = 10.f,
+            },
+        },
+        {
+            ParticleSystemKind::ProjectileImpact,
+            ParticleSystemDefinition {
+                .emissionInterval = sf::Time::Zero,
+                .lifetime = sf::seconds(0.25f),
+                .particlesToEmit = 10,
+                .directionVariance = sf::degrees(15),
+                .colors = { COLOR_ORANGE, COLOR_YELLOW },
+                .maxProjectileSize = 1.f,
+                .speed = 60.f,
+                .speedVariance = 10.f,
+            },
+        },
+        {
+            ParticleSystemKind::CactusSpatter,
+            ParticleSystemDefinition {
+                .emissionInterval = sf::Time::Zero,
+                .lifetime = sf::seconds(0.5f),
+                .particlesToEmit = 16,
+                .directionVariance = sf::degrees(100),
+                .colors = { COLOR_GREEN, COLOR_DARK_GREEN },
+                .maxProjectileSize = 4.f,
+                .speed = 30.f,
+                .speedVariance = 10.f,
+            },
+        },
+    };
+
 entt::entity ActorBuilder::createParticleSystem(
     entt::registry& actors,
     const sf::Vector2f& origin,
-    const sf::Vector2f& direction)
+    const sf::Vector2f& direction,
+    ParticleSystemKind kind)
+
 {
     auto entity = actors.create();
+
+    const auto& def = PARTICLE_SYSTEM_DEF.at(kind);
 
     actors.emplace<ParticleEmitter>(
         entity,
         ParticleEmitter {
-            .emissionInterval = sf::seconds(0.f),
+            .emissionInterval = def.emissionInterval,
             .emissionTimer = sf::seconds(0.f),
-            .particlesToEmit = 16,
+            .particlesToEmit = def.particlesToEmit,
             .position = origin,
             .direction = direction,
-            .spread = sf::degrees(180),
+            .directionVariance = def.directionVariance,
+            .colors = def.colors,
+            .maxProjectileSize = def.maxProjectileSize,
+            .speed = def.speed,
+            .speedVariance = def.speedVariance,
+
         });
 
-    actors.emplace<ParticleSystem>(
-        entity, ParticleSystem { .lifetime = sf::seconds(0.3f) });
+    actors.emplace<ParticleSystem>(entity);
+    actors.emplace<Lifetime>(entity, def.lifetime);
 
     return entity;
 }

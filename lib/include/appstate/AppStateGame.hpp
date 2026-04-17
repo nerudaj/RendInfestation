@@ -9,6 +9,7 @@
 #include "game/engine/AiEngine.hpp"
 #include "game/engine/AnimationEngine.hpp"
 #include "game/engine/GameRulesEngine.hpp"
+#include "game/engine/ParticleEngine.hpp"
 #include "game/engine/PhysicsEngine.hpp"
 #include "game/engine/RenderingEngine.hpp"
 #include "misc/DependencyContainer.hpp"
@@ -39,6 +40,7 @@ public:
         , gameRulesEngine(gameEvents, scene, atlas, dic.input, dic.soundPlayer)
         , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
+        , particleEngine(scene)
         , renderingEngine(
               dic.resmgr, scene, atlas, dic.settings, dic.touchController)
     {
@@ -63,6 +65,7 @@ private:
     GameRulesEngine gameRulesEngine;
     AnimationEngine animationEngine;
     PhysicsEngine physicsEngine;
+    ParticleEngine particleEngine;
     RenderingEngine renderingEngine;
     Janitor janitor;
 };

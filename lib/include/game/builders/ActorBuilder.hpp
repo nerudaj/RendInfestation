@@ -4,6 +4,7 @@
 #include "game/definitions/GameScene.hpp"
 #include "game/definitions/GameTextureAtlas.hpp"
 #include "game/enums/EffectType.hpp"
+#include "game/enums/ParticleSystemKind.hpp"
 #include "game/enums/ProjectileKind.hpp"
 #include "game/enums/SkinType.hpp"
 #include "input/Input.hpp"
@@ -61,5 +62,6 @@ public:
     static entt::entity createParticleSystem(
         entt::registry& actors,
         const sf::Vector2f& origin,
-        const sf::Vector2f& direction);
+        const sf::Vector2f& direction,
+        ParticleSystemKind kind);
 };
