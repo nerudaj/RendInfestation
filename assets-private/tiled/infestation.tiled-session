@@ -18,10 +18,10 @@
         },
         "demo-01.tmx": {
             "scale": 1,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": -43.5,
-                "y": 184
+                "x": -34.5,
+                "y": 838
             }
         },
         "survival-01.tmx": {
@@ -32,7 +32,15 @@
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 996.5,
-                "y": 960.5
+                "y": 961
+            }
+        },
+        "survival-02.tmx": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 990.5,
+                "y": 901
             }
         }
     },

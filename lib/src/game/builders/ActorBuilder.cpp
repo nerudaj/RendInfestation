@@ -210,7 +210,7 @@ struct [[nodiscard]] Prop final
     std::optional<BoundLightEmitter> boundLightEmitter = std::nullopt;
 };
 
-const std::array<Prop, 9u> PROP_DEFINITIONS = {
+const std::array<Prop, 12u> PROP_DEFINITIONS = {
     Prop {
         .animationStateName = "labtube-full",
         .getCollider =
@@ -281,6 +281,32 @@ const std::array<Prop, 9u> PROP_DEFINITIONS = {
         .isSolid = false,
     },
     Prop {
+        .animationStateName = "blood-puddle-a",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 24.f, 14.f }),
+                ColliderOptions { .nonblocking = true, .disabled = true }
+            };
+        },
+        .spriteOffset = { 22.f, 25.f },
+        .isSolid = false,
+    },
+    Prop {
+        .animationStateName = "pc",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
+                ColliderOptions { .nonblocking = true, .disabled = true }
+            };
+        },
+        .spriteOffset = { 22.f, 25.f },
+        .isSolid = true,
+    },
+    Prop {
         .animationStateName = "pc-active",
         .getCollider =
             [](const sf::Vector2f& origin)
@@ -294,17 +320,37 @@ const std::array<Prop, 9u> PROP_DEFINITIONS = {
         .isSolid = true,
     },
     Prop {
-        .animationStateName = "blood-puddle-a",
+        .animationStateName = "cactus-pot",
         .getCollider =
             [](const sf::Vector2f& origin)
         {
-            return Collider {
-                dgm::Rect({ origin.x, origin.y - 64.f }, { 24.f, 14.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
-            };
+            return Collider { dgm::Rect(
+                { origin.x, origin.y - 56.f }, { 15.f, 10.f }) };
         },
-        .spriteOffset = { 22.f, 25.f },
-        .isSolid = false,
+        .spriteOffset = { 25.f, 18.f },
+        .isSolid = true,
+    },
+    Prop {
+        .animationStateName = "cactus-pot-destroyed",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider { dgm::Rect(
+                { origin.x, origin.y - 56.f }, { 15.f, 10.f }) };
+        },
+        .spriteOffset = { 25.f, 18.f },
+        .isSolid = true,
+    },
+    Prop {
+        .animationStateName = "crate",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider { dgm::Rect(
+                { origin.x, origin.y - 64.f }, { 11.f, 10.f }) };
+        },
+        .spriteOffset = { 26.f, 23.f },
+        .isSolid = true,
     },
 };
 

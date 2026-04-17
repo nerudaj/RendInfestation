@@ -107,7 +107,7 @@ void AppStateMainMenu::onSurvival()
         dic,
         GameModeProperties {
             .mode = GameMode::Survival,
-            .mapName = "survival-01.json",
+            .mapName = "survival-02.json",
         });
 }
 
