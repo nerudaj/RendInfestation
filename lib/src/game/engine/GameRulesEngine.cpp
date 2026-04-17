@@ -328,11 +328,12 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
 
 void GameRulesEngine::tryUnlockRandomModule()
 {
-    constexpr std::array<WeaponModule, 7> ALL_NON_NONE_MODULES = {
-        WeaponModule::SpreadBarrel_x4, WeaponModule::CadenceBarrel,
-        WeaponModule::ExplosiveAmmo,   WeaponModule::Ricochet,
-        WeaponModule::PassthruAmmo,    WeaponModule::BigBullet,
-        WeaponModule::Spikes,
+    constexpr std::array<WeaponModule, 9> ALL_NON_NONE_MODULES = {
+        WeaponModule::SpreadBarrel_x4, WeaponModule::SpreadBarrel_x2,
+        WeaponModule::CadenceBarrel,   WeaponModule::ExplosiveAmmo,
+        WeaponModule::Ricochet,        WeaponModule::PassthruAmmo,
+        WeaponModule::BigBullet,       WeaponModule::Spikes,
+        WeaponModule::Splitter,
     };
 
     auto& unlocked = scene.loadout.unlockedModules;

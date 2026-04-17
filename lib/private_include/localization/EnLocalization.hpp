@@ -74,13 +74,15 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModuleSlot2, "Module 2" },
     { WeaponModuleSlot3, "Module 3" },
     { WeaponModule_None, "None" },
-    { WeaponModule_SpreadBarrel, "Spread Barrel" },
+    { WeaponModule_SpreadBarrelx2, "Spread x2" },
+    { WeaponModule_SpreadBarrel, "Spread x4" },
     { WeaponModule_CadenceBarrel, "Cadence Barrel" },
     { WeaponModule_ExplosiveAmmo, "Explosive Ammo" },
     { WeaponModule_Ricochet, "Ricochet" },
     { WeaponModule_PassthruAmmo, "Passthru Ammo" },
     { WeaponModule_BigBullet, "Big Bullet" },
     { WeaponModule_Spikes, "Spikes" },
+    { WeaponModule_Splitter, "Splitter" },
 
     // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },

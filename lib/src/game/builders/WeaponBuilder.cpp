@@ -18,7 +18,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             return props;
         };
 
-    case SpreadBarrel_x4:
+    case SpreadBarrel_x2:
         return [](WeaponProperties props)
         {
             props.soundId = SoundId::Shotgun;
@@ -27,6 +27,18 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.kickback += 100.f;
             props.fireDelay *= 2.f;
             props.spread *= 4;
+            return props;
+        };
+
+    case SpreadBarrel_x4:
+        return [](WeaponProperties props)
+        {
+            props.soundId = SoundId::Shotgun;
+            props.numShots *= 4;
+            // props.baseProjectileDamage /= 2;
+            props.kickback += 100.f;
+            props.fireDelay *= 2.f;
+            props.spread *= 8;
             return props;
         };
 

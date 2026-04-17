@@ -67,6 +67,7 @@ enum class [[nodiscard]] StringId
     WeaponModuleSlot2,
     WeaponModuleSlot3,
     WeaponModule_None,
+    WeaponModule_SpreadBarrelx2,
     WeaponModule_SpreadBarrel,
     WeaponModule_CadenceBarrel,
     WeaponModule_ExplosiveAmmo,

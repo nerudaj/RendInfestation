@@ -13,16 +13,22 @@
 namespace
 {
 
-    constexpr std::array<WeaponModule, 9> ALL_MODULES = {
-        WeaponModule::None,          WeaponModule::SpreadBarrel_x4,
-        WeaponModule::CadenceBarrel, WeaponModule::ExplosiveAmmo,
-        WeaponModule::Ricochet,      WeaponModule::PassthruAmmo,
-        WeaponModule::BigBullet,     WeaponModule::Spikes,
+    constexpr std::array<WeaponModule, 10> ALL_MODULES = {
+        WeaponModule::None,
+        WeaponModule::SpreadBarrel_x2,
+        WeaponModule::SpreadBarrel_x4,
+        WeaponModule::CadenceBarrel,
+        WeaponModule::ExplosiveAmmo,
+        WeaponModule::Ricochet,
+        WeaponModule::PassthruAmmo,
+        WeaponModule::BigBullet,
+        WeaponModule::Spikes,
         WeaponModule::Splitter,
     };
 
-    constexpr std::array<StringId, 9> MODULE_STRING_IDS = {
+    constexpr std::array<StringId, 10> MODULE_STRING_IDS = {
         StringId::WeaponModule_None,
+        StringId::WeaponModule_SpreadBarrelx2,
         StringId::WeaponModule_SpreadBarrel,
         StringId::WeaponModule_CadenceBarrel,
         StringId::WeaponModule_ExplosiveAmmo,
