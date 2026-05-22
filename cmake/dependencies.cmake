@@ -1,46 +1,16 @@
 include ( "${CMAKE_CURRENT_LIST_DIR}/add-catch.cmake" )
 
+set ( DGM_ENGINE_CORE_LIB_VERSION "main" )
 set ( CXXOPTS_VERSION "3.3.1" )
-set ( NLOHMANN_VERSION "3.12.0" )
-set ( SFML_VERSION "master" )
-set ( DGM_LIB_VERSION "main" )
 set ( FSM_LIB_VERSION "main" )
-set ( TGUI_VERSION "1.x" )
 set ( CATCH2_VERSION "v3.8.0" )
-set ( RANGEV3_VERSION "master" )
-set ( FMTLIB_VERSION "12.1.0" )
 set ( ENTT_VERSION "3.16.0" )
 
+set ( ENABLE_LEGACY_ANIMATION OFF )
+
+CPMAddPackage("gh:nerudaj/dgm-engine-core-lib#${DGM_ENGINE_CORE_LIB_VERSION}")
 CPMAddPackage("gh:jarro2783/cxxopts#v${CXXOPTS_VERSION}")
 CPMAddPackage("gh:nlohmann/json#v${NLOHMANN_VERSION}")
 CPMAddPackage("gh:skypjack/entt@${ENTT_VERSION}")
-
-if ( "${CMAKE_SYSTEM_NAME}" STREQUAL "Android" )
-	set ( BUILD_SHARED_LIBS ON )
-endif ()
-set ( SFML_STATIC_LIBRARIES ${USE_SFML_TGUI_STATIC_LINKAGE} )
-CPMAddPackage("gh:SFML/SFML#${SFML_VERSION}")
-
-set ( TGUI_BACKEND SFML_GRAPHICS )
-set ( TGUI_STATIC_LIBRARIES ${USE_SFML_TGUI_STATIC_LINKAGE} )
-CPMAddPackage("gh:texus/TGUI#${TGUI_VERSION}")
-
-CPMAddPackage(
-    NAME dgm-lib
-    GIT_TAG ${DGM_LIB_VERSION}
-    GITHUB_REPOSITORY "nerudaj/dgm-lib"
-    OPTIONS "ENABLE_LEGACY_ANIMATION OFF ENABLE_LINTER=OFF"
-)
 CPMAddPackage("gh:nerudaj/fsm-lib#${FSM_LIB_VERSION}") 
 AddCatch( "${CATCH2_VERSION}" )
-
-if ( "${CMAKE_SYSTEM_NAME}" STREQUAL "Android" )
-    CPMAddPackage("gh:fmtlib/fmt#${FMTLIB_VERSION}")
-    
-    CPMAddPackage(
-        NAME range-v3
-        GITHUB_REPOSITORY ericniebler/range-v3
-        GIT_TAG ${RANGEV3_VERSION}
-        GIT_SUBMODULES "test"
-    )
-endif ()

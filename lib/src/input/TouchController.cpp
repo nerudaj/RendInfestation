@@ -14,8 +14,8 @@ void TouchInput::reset()
         touchPosition = touchArea.getPosition();
 }
 
-static std::array<TouchInput, 4u>
-createTouchObjects(const sf::Vector2u& windowSize)
+std::array<TouchInput, 4u>
+TouchModel::computeLayout(const sf::Vector2u& windowSize)
 {
     const float joystickRadius = windowSize.x * 0.1f;
     const auto windowsSizeF = sf::Vector2f(windowSize);
@@ -39,7 +39,7 @@ createTouchObjects(const sf::Vector2u& windowSize)
 }
 
 TouchModel::TouchModel(const sf::Vector2u& windowSize)
-    : objects(createTouchObjects(windowSize))
+    : objects(computeLayout(windowSize))
 {
 }
 

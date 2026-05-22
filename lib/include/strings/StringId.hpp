@@ -4,6 +4,8 @@
 
 enum class [[nodiscard]] StringId
 {
+    GameTitle,
+
     PlayButton,
     SurvivalButton,
     Options,

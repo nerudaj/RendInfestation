@@ -2,6 +2,7 @@
 #include "filesystem/AppStorage.hpp"
 #include "filesystem/TiledLoader.hpp"
 #include "gui/TguiHelper.hpp"
+#include "misc/CMakeVars.hpp"
 #include "misc/Compatibility.hpp"
 #include <SFML/Audio/Music.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -184,7 +185,7 @@ ResourceLoader::loadResources(const std::filesystem::path& assetDir)
 AppSettingsStorageModel
 ResourceLoader::loadSettings(const std::filesystem::path& file)
 {
-    auto settingsJson = AppStorage::loadFile(file);
+    auto settingsJson = AppStorage::loadFile(CMakeVars::TITLE, file);
 
     if (settingsJson)
     {

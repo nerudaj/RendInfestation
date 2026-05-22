@@ -196,7 +196,7 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
         }
 
         const auto direction = controller->getAimDirection();
-        if (direction.length() > 0.f) lookDirection = direction;
+        if (direction.length() > 0.f) lookDirection = LookDirection(direction);
 
         auto&& weapon = getActiveWeapon(weaponInventory);
         if (controller->isShootPressed()
@@ -452,7 +452,7 @@ sf::Vector2f GameRulesEngine::pickEnemySpawnPosition() const
         | std::views::filter(
             [&playerPos](const auto& spawn)
             { return (spawn - playerPos).length() > MIN_ENEMY_SPAWN_DISTANCE; })
-        | uniranges::to<std::vector>();
+        | uni::ranges::to<std::vector>();
 
     return filtered[rand() % filtered.size()];
 }

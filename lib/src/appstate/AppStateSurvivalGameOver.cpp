@@ -27,19 +27,17 @@ void AppStateSurvivalGameOver::buildLayout()
     auto& builderFactory = dic.guiBuilderFactory;
 
     dic.gui.rebuildWith(
-        builderFactory.createDefaultLayoutBuiler()
-            .withNoBackgroundImage()
-            .withTitle(
-                dic.strings.getString(StringId::GameOver), HeadingLevel::H1)
+        builderFactory.createDefaultLayoutBuilder()
+            .withNoBackground()
+            .withTitle(StringId::GameOver, HeadingLevel::H1)
             .withContent(buildContent())
             .withNoTopLeftButton()
             .withNoTopRightButton()
 #ifdef ANDROID
-            .withBottomLeftButton(builderFactory.createIconButton(
-                Icon::Exit, [&] { onBackToMenu(); }))
+            .withBottomLeftButton(
+                dic.getIcon(Icon::Exit), [&] { onBackToMenu(); })
 #else
-            .withBottomLeftButton(builderFactory.createTextButton(
-                StringId::BackToMenu, [&] { onBackToMenu(); }))
+            .withBottomLeftButton(StringId::BackToMenu, [&] { onBackToMenu(); })
 #endif
             .withNoBottomRightButton()
             .build());

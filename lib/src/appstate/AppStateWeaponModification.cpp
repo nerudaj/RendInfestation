@@ -186,20 +186,14 @@ void AppStateWeaponModification::buildLayout()
         StringId::Weapon2Title, scene.loadout.weapon2Modules));
 
     dic.gui.rebuildWith(
-        dic.guiBuilderFactory.createDefaultLayoutBuiler()
-            .withNoBackgroundImage()
-            .withTitle(
-                dic.strings.getString(StringId::WeaponModification),
-                HeadingLevel::H1)
+        dic.guiBuilderFactory.createDefaultLayoutBuilder()
+            .withNoBackground()
+            .withTitle(StringId::WeaponModification, HeadingLevel::H1)
             .withContent(twoColumns)
             .withNoTopLeftButton()
             .withNoTopRightButton()
             .withNoBottomLeftButton()
-            .withBottomRightButton(WidgetBuilder::createButton(
-                dic.strings.getString(StringId::Resume),
-                [&] { onResume(); },
-                dic.sizer,
-                dic.soundPlayer))
+            .withBottomRightButton(StringId::Resume, [&] { onResume(); })
             .build());
 }
 

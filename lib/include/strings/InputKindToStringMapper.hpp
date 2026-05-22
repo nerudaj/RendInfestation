@@ -7,7 +7,7 @@
 class [[nodiscard]] InputKindToStringMapper final
 {
 public:
-    explicit InputKindToStringMapper(const StringProvider& strings)
+    explicit InputKindToStringMapper(const StringProvider<StringId>& strings)
         : strings(strings)
     {
     }
@@ -64,5 +64,5 @@ public:
     }
 
 private:
-    const StringProvider& strings;
+    const StringProvider<StringId>& strings;
 };

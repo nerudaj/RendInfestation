@@ -64,6 +64,16 @@ public:
     explicit TouchModel(const sf::Vector2u& windowSize);
 
 public:
+    void recomputeLayoutAfterWindowResize(const sf::Vector2u& windowSize)
+    {
+        objects = computeLayout(windowSize);
+    }
+
+private:
+    static std::array<TouchInput, 4u>
+    computeLayout(const sf::Vector2u& windowSize);
+
+public:
     std::array<TouchInput, 4u> objects;
     std::map<unsigned, size_t>
         fingerToTouchObject = {}; ///< Each event has finger index associated
@@ -85,6 +95,11 @@ public:
     }
 
 public:
+    void recomputeLayoutAfterWindowResize(const sf::Vector2u& windowSize)
+    {
+        model.recomputeLayoutAfterWindowResize(windowSize);
+    }
+
     void processEvent(const std::optional<sf::Event>& e);
 
     [[nodiscard]] constexpr const TouchModel& getTouchModel() const noexcept

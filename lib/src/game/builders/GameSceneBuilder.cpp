@@ -83,7 +83,7 @@ GameScene GameSceneBuilder::createScene(
                                    ? TRANSPARENT_TILE_ID
                                    : tile - 1;
                     })
-                | uniranges::to<std::vector>(),
+                | uni::ranges::to<std::vector>(),
             level.dataSize,
             level.voxelSize),
         .decorationsMesh = dgm::Mesh(
@@ -95,7 +95,7 @@ GameScene GameSceneBuilder::createScene(
                                    ? TRANSPARENT_TILE_ID
                                    : tile - 1;
                     })
-                | uniranges::to<std::vector>(),
+                | uni::ranges::to<std::vector>(),
             level.dataSize,
             level.voxelSize),
         .altLevelMesh = dgm::Mesh(
@@ -107,7 +107,7 @@ GameScene GameSceneBuilder::createScene(
                                    ? isAbyssTile(tile - 1) ? -(tile - 1) : 0
                                    : (tile - 1);
                     })
-                | uniranges::to<std::vector>(),
+                | uni::ranges::to<std::vector>(),
             level.dataSize,
             level.voxelSize),
         .levelBounds = dgm::Rect(

@@ -23,7 +23,7 @@ void AppStatePause::buildLayout()
     auto& builderFactory = dic.guiBuilderFactory;
 
     auto createDesktopLayout =
-        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
+        [&](priv::LayoutBuilderWithBackgroundAndTitle<StringId>& builder)
     {
         return builder
             .withContent(
@@ -40,7 +40,7 @@ void AppStatePause::buildLayout()
     };
 
     auto createAndroidLayout =
-        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
+        [&](priv::LayoutBuilderWithBackgroundAndTitle<StringId>& builder)
     {
         return builder
             .withContent(builderFactory.createButtonListBuilder()
@@ -49,20 +49,17 @@ void AppStatePause::buildLayout()
                                  [&] { onWeaponModification(); })
                              .addButton(StringId::ExitButton, [&] { onExit(); })
                              .build())
-            .withTopLeftButton(builderFactory.createIconButton(
-                Icon::Exit, [&] { onBackToMenu(); }))
-            .withTopRightButton(builderFactory.createIconButton(
-                Icon::Settings, [&] { onOptions(); }))
-            .withBottomLeftButton(builderFactory.createIconButton(
-                Icon::Play2, [&] { onResume(); }))
+            .withTopLeftButton(dic.getIcon(Icon::Exit), [&] { onBackToMenu(); })
+            .withTopRightButton(
+                dic.getIcon(Icon::Settings), [&] { onOptions(); })
+            .withBottomLeftButton(dic.getIcon(Icon::Play2), [&] { onResume(); })
             .withNoBottomRightButton();
     };
 
     auto&& builderWithTitle =
-        builderFactory.createDefaultLayoutBuiler()
+        builderFactory.createDefaultLayoutBuilder()
             .withBackgroundImage(dic.resmgr.get<tgui::Texture>("darken.png"))
-            .withTitle(
-                dic.strings.getString(StringId::PauseTitle), HeadingLevel::H1);
+            .withTitle(StringId::PauseTitle, HeadingLevel::H1);
 
     dic.gui.rebuildWith(
 #ifdef ANDROID

@@ -23,7 +23,7 @@ static std::vector<std::string> getResolutionStrings()
                [](const sf::VideoMode& mode) -> sf::Vector2u
                { return mode.size; })
            | std::views::transform(resolutionToString)
-           | uniranges::to<std::vector<std::string>>();
+           | uni::ranges::to<std::vector<std::string>>();
 }
 
 static std::string intValueFormatter(float val)
@@ -66,10 +66,9 @@ void AppStateOptions::draw()
 void AppStateOptions::buildLayout()
 {
     dic.gui.rebuildWith(
-        DefaultLayoutBuilder(dic.sizer)
-            .withNoBackgroundImage()
-            .withTitle(
-                dic.strings.getString(StringId::Options), HeadingLevel::H1)
+        dic.guiBuilderFactory.createDefaultLayoutBuilder()
+            .withNoBackground()
+            .withTitle(StringId::Options, HeadingLevel::H1)
             .withContent(dic.guiBuilderFactory.createTabbedLayoutBuilder()
                              .addTab(
                                  StringId::VideoOptionsTab,
@@ -94,11 +93,7 @@ void AppStateOptions::buildLayout()
                              }))
             .withNoTopLeftButton()
             .withNoTopRightButton()
-            .withBottomLeftButton(WidgetBuilder::createButton(
-                dic.strings.getString(StringId::Back),
-                [&] { onBack(); },
-                dic.sizer,
-                dic.soundPlayer))
+            .withBottomLeftButton(StringId::Back, [&] { onBack(); })
             .withNoBottomRightButton()
             .build());
 }

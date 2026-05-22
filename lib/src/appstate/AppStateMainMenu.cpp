@@ -45,7 +45,7 @@ void AppStateMainMenu::buildLayout()
     auto& builderFactory = dic.guiBuilderFactory;
 
     auto createDesktopLayout =
-        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
+        [&](priv::LayoutBuilderWithBackgroundAndTitle<StringId>& builder)
     {
         return builder
             .withContent(
@@ -62,7 +62,7 @@ void AppStateMainMenu::buildLayout()
     };
 
     auto createAndroidLayout =
-        [&](priv::LayoutBuilderWithBackgroundAndTitle& builder)
+        [&](priv::LayoutBuilderWithBackgroundAndTitle<StringId>& builder)
     {
         return builder
             .withContent(
@@ -71,16 +71,16 @@ void AppStateMainMenu::buildLayout()
                     .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
                     .build())
             .withNoTopLeftButton()
-            .withTopRightButton(builderFactory.createIconButton(
-                Icon::Settings, [&] { onOptions(); }))
+            .withTopRightButton(
+                dic.getIcon(Icon::Settings), [&] { onOptions(); })
             .withNoBottomLeftButton()
             .withNoBottomRightButton();
     };
 
     auto&& builderWithTitle =
-        builderFactory.createDefaultLayoutBuiler()
-            .withNoBackgroundImage()
-            .withTitle(CMakeVars::TITLE, HeadingLevel::H1);
+        builderFactory.createDefaultLayoutBuilder()
+            .withNoBackground()
+            .withTitle(StringId::GameTitle, HeadingLevel::H1);
 
     dic.gui.rebuildWith(
 #ifdef ANDROID
