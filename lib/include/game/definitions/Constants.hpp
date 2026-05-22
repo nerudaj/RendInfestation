@@ -42,6 +42,7 @@ constexpr const sf::Color COLOR_DARK_RED = sf::Color { 0x7e, 0x25, 0x53 };
 constexpr const sf::Color COLOR_DARK_GREEN = sf::Color { 0x00, 0x87, 0x51 };
 constexpr const sf::Color COLOR_ORANGE = sf::Color { 0xff, 0xa3, 0x00 };
 constexpr const sf::Color COLOR_BROWN = sf::Color { 0xab, 0x52, 0x36 };
+constexpr const sf::Color COLOR_PINK = sf::Color { 0xff, 0x77, 0xa8 };
 
 // Other
 constexpr const sf::Time SPAWNER_SPAWN_DELAY = sf::seconds(0.3f);
