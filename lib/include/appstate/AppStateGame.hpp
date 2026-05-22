@@ -26,11 +26,7 @@ public:
         dgm::App& app,
         DependencyContainer& dic,
         const GameModeProperties& gameModeProperties)
-        : dgm::AppState(
-              app,
-              dgm::AppStateConfig {
-                  .clearColor = sf::Color { 0xff, 0xaa, 0x88 },
-              })
+        : dgm::AppState(app)
         , dic(dic)
         , atlas(GameTextureAtlasBuilder::createTextureAtlas(
               dic.resmgr, { 1024, 1024 }))
