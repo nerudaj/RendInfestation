@@ -70,6 +70,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
 
     // WeaponModification
     { WeaponModification, "Weapon Modification" },
+    { SelectModule, "Pick module to install" },
     { Weapon1Title, "Weapon 1" },
     { Weapon2Title, "Weapon 2" },
     { WeaponModuleSlot1, "Module 1" },

@@ -63,6 +63,7 @@ enum class [[nodiscard]] StringId
 
     // WeaponModification
     WeaponModification,
+    SelectModule,
     Weapon1Title,
     Weapon2Title,
     WeaponModuleSlot1,

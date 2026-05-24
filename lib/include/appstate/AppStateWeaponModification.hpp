@@ -17,11 +17,21 @@ public:
     void update() override;
     void draw() override;
 
+private:
     void renderWorkbench();
 
-private:
+    void
+    renderWeapon(float xOffset, const std::array<WeaponModule, 3>& loadout);
+
     void buildLayout();
-    void _buildLayout();
+
+    tgui::ChildWindow::Ptr
+    createModuleSelectModal(StringId titleStringId, tgui::Layout2d size) const;
+
+    tgui::Button::Ptr createModuleSelectButton(
+        WeaponModule module,
+        std::function<void(void)>&& callback,
+        bool disabled) const;
 
     std::array<WeaponModule, 3>& getCurrentLoadout()
     {
@@ -46,6 +56,11 @@ private:
     [[nodiscard]] static size_t moduleToIndex(WeaponModule module) noexcept;
     [[nodiscard]] static WeaponModule indexToModule(size_t index) noexcept;
 
+    bool isTransitioning() const
+    {
+        return animationTimer > sf::Time::Zero;
+    }
+
 private:
     DependencyContainer& dic;
     GameScene& scene;
@@ -62,4 +77,6 @@ private:
     sf::Sprite moduleIconSprite;
 
     int currentWeaponIdx = 0;
+    sf::Time animationTimer = sf::Time::Zero;
+    const sf::Time ANIMATION_DURATION = sf::seconds(0.5f);
 };
