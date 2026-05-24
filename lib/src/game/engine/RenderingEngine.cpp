@@ -174,10 +174,13 @@ void RenderingEngine::addParticlesToPipeline()
     {
         for (auto&& particle : system.particles)
         {
+            // if particles stop rendering then it is because atlas texture
+            // clanged and the white pixel is no longer at the same coords.
+
             pipeline.addFace(
                 particle.position,
                 sf::FloatRect {
-                    { 50.f, 775.f },
+                    { 197.f, 198.f },
                     { 1.f, 1.f },
                 },
                 sf::degrees(0.f),

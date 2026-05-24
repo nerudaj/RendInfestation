@@ -210,7 +210,7 @@ struct [[nodiscard]] Prop final
     std::optional<BoundLightEmitter> boundLightEmitter = std::nullopt;
 };
 
-const std::array<Prop, 12u> PROP_DEFINITIONS = {
+const std::array<Prop, 13u> PROP_DEFINITIONS = {
     Prop {
         .animationStateName = "labtube-full",
         .getCollider =
@@ -351,6 +351,15 @@ const std::array<Prop, 12u> PROP_DEFINITIONS = {
         },
         .spriteOffset = { 26.f, 23.f },
         .isSolid = true,
+    },
+    Prop {
+        .animationStateName = "workbench",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider { dgm::Rect(
+                { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
+        },
     },
 };
 

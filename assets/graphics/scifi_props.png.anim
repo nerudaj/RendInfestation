@@ -11,10 +11,20 @@
     },
     "states": [
         {
-            "name": "pc-active",
+            "name": "workbench",
             "bounds": {
                 "left": 2,
                 "top": 2,
+                "width": 526,
+                "height": 64
+            },
+            "nframes": 8
+        },
+        {
+            "name": "pc-active",
+            "bounds": {
+                "left": 2,
+                "top": 68,
                 "width": 394,
                 "height": 64
             },
@@ -23,7 +33,7 @@
         {
             "name": "labtube-full",
             "bounds": {
-                "left": 2,
+                "left": 398,
                 "top": 68,
                 "width": 64,
                 "height": 64
@@ -33,7 +43,7 @@
         {
             "name": "labtube",
             "bounds": {
-                "left": 68,
+                "left": 464,
                 "top": 68,
                 "width": 64,
                 "height": 64
@@ -43,46 +53,6 @@
         {
             "name": "small-table",
             "bounds": {
-                "left": 134,
-                "top": 68,
-                "width": 64,
-                "height": 64
-            },
-            "nframes": 1
-        },
-        {
-            "name": "cantina-table",
-            "bounds": {
-                "left": 200,
-                "top": 68,
-                "width": 64,
-                "height": 64
-            },
-            "nframes": 1
-        },
-        {
-            "name": "green-carcass",
-            "bounds": {
-                "left": 266,
-                "top": 68,
-                "width": 64,
-                "height": 64
-            },
-            "nframes": 1
-        },
-        {
-            "name": "blue-carcass",
-            "bounds": {
-                "left": 332,
-                "top": 68,
-                "width": 64,
-                "height": 64
-            },
-            "nframes": 1
-        },
-        {
-            "name": "blood-puddle-a",
-            "bounds": {
                 "left": 2,
                 "top": 134,
                 "width": 64,
@@ -91,7 +61,7 @@
             "nframes": 1
         },
         {
-            "name": "pc",
+            "name": "cantina-table",
             "bounds": {
                 "left": 68,
                 "top": 134,
@@ -101,7 +71,7 @@
             "nframes": 1
         },
         {
-            "name": "cactus-pot",
+            "name": "green-carcass",
             "bounds": {
                 "left": 134,
                 "top": 134,
@@ -111,7 +81,7 @@
             "nframes": 1
         },
         {
-            "name": "cactus-pot-destroyed",
+            "name": "blue-carcass",
             "bounds": {
                 "left": 200,
                 "top": 134,
@@ -121,10 +91,50 @@
             "nframes": 1
         },
         {
-            "name": "crate",
+            "name": "blood-puddle-a",
             "bounds": {
                 "left": 266,
                 "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "pc",
+            "bounds": {
+                "left": 332,
+                "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "cactus-pot",
+            "bounds": {
+                "left": 398,
+                "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "cactus-pot-destroyed",
+            "bounds": {
+                "left": 464,
+                "top": 134,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "crate",
+            "bounds": {
+                "left": 2,
+                "top": 200,
                 "width": 64,
                 "height": 64
             },
