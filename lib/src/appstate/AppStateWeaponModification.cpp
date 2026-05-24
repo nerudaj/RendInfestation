@@ -153,12 +153,25 @@ void AppStateWeaponModification::buildLayout()
         };
     };
 
-    auto&& createButton = [](auto&& callback)
+    auto&& createButton = [&](const std::string& textureName, auto&& callback)
     {
         auto&& button = tgui::Button::create();
-        button->getRenderer()->setBackgroundColor(sf::Color::Transparent);
-        button->getRenderer()->setBackgroundColorHover(
-            tgui::Color::Transparent);
+
+        if (textureName.empty())
+        {
+            button->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+            button->getRenderer()->setBackgroundColorHover(
+                sf::Color::Transparent);
+        }
+        else
+        {
+            button->getRenderer()->setTexture(
+                dic.resmgr.get<tgui::Texture>(textureName + ".png"));
+            button->getRenderer()->setTextureHover(
+                dic.resmgr.get<tgui::Texture>(textureName + "-hover.png"));
+            assert(!button->getRenderer()->getTexture().isSmooth());
+        }
+
         button->getRenderer()->setBorders(0u);
         button->setSize({ "100%", "100%" });
         button->onClick(std::forward<decltype(callback)>(callback));
@@ -168,43 +181,39 @@ void AppStateWeaponModification::buildLayout()
     auto&& resumeButtonLayout = tgui::Group::create();
     resumeButtonLayout->setSize(toLayout(24, 24));
     resumeButtonLayout->setPosition(toLayout(346, 178));
-    resumeButtonLayout->add(createButton([&] { onResume(); }));
+    resumeButtonLayout->add(
+        createButton("button-confirm", [&] { onResume(); }));
     dic.gui.add(resumeButtonLayout);
 
     auto&& cancelButtonLayout = tgui::Group::create();
     cancelButtonLayout->setSize(toLayout(24, 24));
     cancelButtonLayout->setPosition(toLayout(16, 16));
-    cancelButtonLayout->add(createButton([&] { onBack(); }));
+    cancelButtonLayout->add(createButton("button-cancel", [&] { onBack(); }));
     dic.gui.add(cancelButtonLayout);
 
-    auto&& cycleLeftLayout = tgui::Group::create();
-    cycleLeftLayout->setSize(toLayout(19, 47));
-    cycleLeftLayout->setPosition(toLayout(17, 85));
-    cycleLeftLayout->add(createButton([&] { onCycle(); }));
-    dic.gui.add(cycleLeftLayout);
-
-    auto&& cycleRightLayout = tgui::Group::create();
-    cycleRightLayout->setSize(toLayout(19, 47));
-    cycleRightLayout->setPosition(toLayout(348, 85));
-    cycleRightLayout->add(createButton([&] { onCycle(); }));
-    dic.gui.add(cycleRightLayout);
+    auto&& swapWeaponLayout = tgui::Group::create();
+    swapWeaponLayout->setSize(toLayout(23, 47));
+    swapWeaponLayout->setPosition(toLayout(344, 85));
+    swapWeaponLayout->add(
+        createButton("button-swap-weapon", [&] { onCycle(); }));
+    dic.gui.add(swapWeaponLayout);
 
     auto&& modSelect1Layout = tgui::Group::create();
     modSelect1Layout->setSize(toLayout(18, 18));
     modSelect1Layout->setPosition(toLayout(35, 163));
-    modSelect1Layout->add(createButton([&] { onModSelected(0); }));
+    modSelect1Layout->add(createButton("", [&] { onModSelected(0); }));
     dic.gui.add(modSelect1Layout);
 
     auto&& modSelect2Layout = tgui::Group::create();
     modSelect2Layout->setSize(toLayout(18, 18));
     modSelect2Layout->setPosition(toLayout(58, 163));
-    modSelect2Layout->add(createButton([&] { onModSelected(1); }));
+    modSelect2Layout->add(createButton("", [&] { onModSelected(1); }));
     dic.gui.add(modSelect2Layout);
 
     auto&& modSelect3Layout = tgui::Group::create();
     modSelect3Layout->setSize(toLayout(18, 18));
     modSelect3Layout->setPosition(toLayout(81, 163));
-    modSelect3Layout->add(createButton([&] { onModSelected(2); }));
+    modSelect3Layout->add(createButton("", [&] { onModSelected(2); }));
     dic.gui.add(modSelect3Layout);
 }
 

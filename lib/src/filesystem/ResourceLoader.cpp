@@ -86,6 +86,8 @@ static dgm::ExpectedSuccess loadTguiIcons(
 dgm::ResourceManager
 ResourceLoader::loadResources(const std::filesystem::path& assetDir)
 {
+    tgui::Texture::setDefaultSmooth(false);
+
     dgm::ResourceManager resmgr;
     auto&& loader = Loader(resmgr, assetDir);
 
