@@ -16,6 +16,9 @@ enum class [[nodiscard]] WorkbenchSpriteId
     LongBarrel,
     BaseGun,
     Table,
+    Ammo,
+    Mine,
+    Spikes
 };
 
 AppStateWeaponModification::AppStateWeaponModification(

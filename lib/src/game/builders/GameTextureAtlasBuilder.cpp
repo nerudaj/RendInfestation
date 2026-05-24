@@ -69,8 +69,8 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         SkinType::ScuttlebugBlue,
         atlas
             .addSpritesheet(
-                resmgr.get<sf::Texture>("scuttlebug_blue.png"),
-                resmgr.get<dgm::AnimationStates>("scuttlebug_blue.png.anim"))
+                resmgr.get<sf::Texture>("scuttlebug_blue2.png"),
+                resmgr.get<dgm::AnimationStates>("scuttlebug_blue2.png.anim"))
             .value());
 
     skins.emplace(
