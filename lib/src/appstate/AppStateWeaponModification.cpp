@@ -5,6 +5,7 @@
 #include "game/definitions/Components.hpp"
 #include "gui/builders/FormBuilder.hpp"
 #include "gui/builders/WidgetBuilder.hpp"
+#include "rendering/CameraFactory.hpp"
 #include "strings/StringId.hpp"
 #include <array>
 
@@ -21,19 +22,27 @@ enum class [[nodiscard]] WorkbenchSpriteId
     Spikes
 };
 
+static sf::Vector2f resolutionTo16by9(const sf::Vector2f& resolution)
+{
+    assert(resolution.x > resolution.y);
+    assert(resolution.x / resolution.y >= 16.f / 9.f);
+
+    return sf::Vector2f {
+        resolution.y * 16.f / 9.f,
+        resolution.y,
+    };
+}
+
 AppStateWeaponModification::AppStateWeaponModification(
     dgm::App& app, DependencyContainer& dic, GameScene& scene)
     : dgm::AppState(app)
     , dic(dic)
     , scene(scene)
-    , renderCamera(
-          sf::FloatRect { sf::Vector2f { 0.f, 0.f },
-                          sf::Vector2f { 1.f, 1.f } },
-          INTERNAL_GAME_RESOLUTION)
-    , guiCamera(
-          sf::FloatRect { sf::Vector2f { 0.f, 0.f },
-                          sf::Vector2f { 1.f, 1.f } },
-          sf::Vector2f(app.window.getSize()))
+    , renderCamera(CameraFactory::createFullscreenCamera(
+          sf::Vector2f(app.window.getSize()), INTERNAL_GAME_RESOLUTION))
+    , guiCamera(CameraFactory::createFullscreenCamera(
+          sf::Vector2f(app.window.getSize()),
+          resolutionTo16by9(sf::Vector2f(app.window.getSize()))))
     , workbenchTexture(dic.resmgr.get<sf::Texture>("workbench.png"))
     , workbenchClip(dic.resmgr.get<dgm::Clip>("workbench.png.clip"))
     , workbenchSprite(workbenchTexture)
@@ -312,7 +321,6 @@ void AppStateWeaponModification::onCycle()
 
 void AppStateWeaponModification::onModSelected(size_t moduleIdx)
 {
-
     auto&& modal =
         createModuleSelectModal(StringId::SelectModule, { "80%", "80%" });
 
@@ -373,7 +381,6 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
 
 namespace
 {
-
     constexpr std::array<WeaponModule, 10> ALL_MODULES = {
         WeaponModule::None,
         WeaponModule::SpreadBarrel_x2,
