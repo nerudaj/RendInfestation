@@ -33,7 +33,7 @@ static float easeInOut(float x)
 void Renderer::renderWorkbench(
     dgm::Window& window, const AnimationTimer& timer, size_t currentWeaponIdx)
 {
-    auto getCurrentLoadout = [&]()
+    auto getCurrentLoadout = [&]() -> std::array<WeaponModule, 3u>&
     { return scene.loadout.weapons[currentWeaponIdx].modules; };
 
     workbenchSprite.setPosition({ 0.f, 0.f });
