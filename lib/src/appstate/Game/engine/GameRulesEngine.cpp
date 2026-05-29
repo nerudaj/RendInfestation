@@ -217,8 +217,10 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
 
 void GameRulesEngine::updateTriggers(const dgm::Time& time)
 {
+    scene.interactionTrigger.reset();
+
     for (auto&& [entity, inventory] :
-         scene.actors.view<TriggerInventory>().each())
+         scene.actors.view<DelayedOnLeaveTriggerInventory>().each())
     {
         // if (inventory.delay <= sf::Time::Zero) continue;
         inventory.delay -= time.getElapsed();
@@ -412,20 +414,27 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
 void GameRulesEngine::handleTriggerToActorCollision(
     entt::entity triggerIdx, entt::entity actorIdx)
 {
-    auto&& inventory = scene.actors.try_get<TriggerInventory>(triggerIdx);
-    if (!inventory) return;
-
-    // Nobody except for the player can open the doors
+    // Nobody except for the player can interact with stuff
     auto skin = scene.actors.try_get<Skin>(actorIdx);
     if (!skin || skin->kind != EntityKind::Player) return;
 
-    inventory->delay = BASE_DOOR_CLOSE_DELAY;
-    auto&& targetSkin = scene.actors.get<Skin>(inventory->targetEntity);
-
-    if (targetSkin.animation.getStateName() == DOOR_CLOSED_ANIMATION_STATE)
+    if (auto&& inventory =
+            scene.actors.try_get<DelayedOnLeaveTriggerInventory>(triggerIdx))
     {
-        targetSkin.animation.setState(
-            DOOR_OPENING_ANIMATION_STATE, "looping"_false);
+        inventory->delay = BASE_DOOR_CLOSE_DELAY;
+        auto&& targetSkin = scene.actors.get<Skin>(inventory->targetEntity);
+
+        if (targetSkin.animation.getStateName() == DOOR_CLOSED_ANIMATION_STATE)
+        {
+            targetSkin.animation.setState(
+                DOOR_OPENING_ANIMATION_STATE, "looping"_false);
+        }
+    }
+    else if (
+        auto&& inventory2 =
+            scene.actors.try_get<InteractionTriggerInventory>(triggerIdx))
+    {
+        scene.interactionTrigger = *inventory2;
     }
 }
 

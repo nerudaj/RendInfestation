@@ -5,12 +5,13 @@ here.
 
 #pragma once
 
-#include "audio/SoundId.hpp"
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/enums/EntityKind.hpp"
+#include "appstate/Game/enums/InteractionTriggerType.hpp"
 #include "appstate/Game/enums/ProjectileTraits.hpp"
 #include "appstate/Game/enums/SkinType.hpp"
 #include "appstate/Game/input/InputInterface.hpp"
+#include "audio/SoundId.hpp"
 #include "types/BrandedType.hpp"
 #include "types/Overloads.hpp"
 #include <DGM/classes/Animation.hpp>
@@ -151,10 +152,15 @@ struct [[nodiscard]] BoundLightEmitter final
     unsigned lightSpriteId;
 };
 
-struct [[nodiscard]] TriggerInventory final
+struct [[nodiscard]] DelayedOnLeaveTriggerInventory final
 {
     sf::Time delay = sf::Time::Zero;
     entt::entity targetEntity;
+};
+
+struct [[nodiscard]] InteractionTriggerInventory final
+{
+    InteractionTriggerType type = InteractionTriggerType::Workbench;
 };
 
 struct [[nodiscard]] DamageMarkerInventory final

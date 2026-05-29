@@ -599,8 +599,8 @@ entt::entity ActorBuilder::createDoor(
             .reportActorCollisions = true,
             .nonblocking = true,
         });
-    actors.emplace<TriggerInventory>(
-        trigger, TriggerInventory { .targetEntity = entity });
+    actors.emplace<DelayedOnLeaveTriggerInventory>(
+        trigger, DelayedOnLeaveTriggerInventory { .targetEntity = entity });
 
     return entity;
 }

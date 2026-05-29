@@ -75,4 +75,6 @@ struct [[nodiscard]] GameScene final
     WeaponLoadout loadout;
     SurvivalSpawnerContext survivalSpawnerContext;
     HudMessage hudMessage;
+    std::optional<InteractionTriggerInventory> interactionTrigger =
+        std::nullopt;
 };
