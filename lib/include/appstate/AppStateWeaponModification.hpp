@@ -1,8 +1,8 @@
 #pragma once
 
+#include "appstate/Game/definitions/GameScene.hpp"
 #include "appstate/WeaponModification/AnimationTimer.hpp"
 #include "appstate/WeaponModification/Renderer.hpp"
-#include "game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
 #include <DGM/dgm.hpp>
 #include <string>

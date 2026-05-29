@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game/definitions/GameScene.hpp"
+#include "appstate/Game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
 #include "settings/AppSettings.hpp"
 #include <DGM/dgm.hpp>

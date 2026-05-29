@@ -1,7 +1,7 @@
 #pragma once
 
 #include "appstate/WeaponModification/AnimationTimer.hpp"
-#include "game/definitions/GameScene.hpp"
+#include "appstate/Game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
 #include <DGM/classes/Clip.hpp>
 #include <DGM/classes/Window.hpp>

@@ -2,7 +2,7 @@
 #include "appstate/AppStateGame.hpp"
 #include "appstate/AppStateOptions.hpp"
 #include "appstate/CommonHandler.hpp"
-#include "game/definitions/GameMode.hpp"
+#include "appstate/Game/definitions/GameMode.hpp"
 #include "gui/Icon.hpp"
 #include "misc/CMakeVars.hpp"
 #include "strings/StringProvider.hpp"

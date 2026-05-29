@@ -3,7 +3,7 @@
 #include "audio/Jukebox.hpp"
 #include "audio/SoundPlayer.hpp"
 #include "filesystem/ResourceLoader.hpp"
-#include "game/definitions/Constants.hpp"
+#include "appstate/Game/definitions/Constants.hpp"
 #include "gui/Icon.hpp"
 #include "input/Input.hpp"
 #include "input/TouchController.hpp"
