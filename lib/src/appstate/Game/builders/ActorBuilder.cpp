@@ -373,7 +373,8 @@ entt::entity ActorBuilder::createProp(
     assert(propId < PROP_DEFINITIONS.size());
     const auto& propDef = PROP_DEFINITIONS[propId];
 
-    actors.emplace<Collider>(entity, propDef.getCollider(origin));
+    auto&& collider = propDef.getCollider(origin);
+    actors.emplace<Collider>(entity, collider);
 
     if (propDef.isSolid) actors.emplace<PhysicsBody>(entity);
     actors.emplace<Skin>(
@@ -393,6 +394,22 @@ entt::entity ActorBuilder::createProp(
     {
         actors.emplace<BoundLightEmitter>(
             entity, propDef.boundLightEmitter.value());
+    }
+
+    if (propDef.animationStateName == "workbench")
+    {
+        const auto triggerHalf =
+            sf::Vector2f { collider.getRadius(), collider.getRadius() };
+        auto trigger = actors.create();
+        actors.emplace<Collider>(
+            trigger,
+            dgm::Rect(collider.getPosition() - triggerHalf, triggerHalf * 2.f),
+            ColliderOptions {
+                .reportActorCollisions = true,
+                .nonblocking = true,
+            });
+        actors.emplace<InteractionTriggerInventory>(
+            trigger, InteractionTriggerType::Workbench);
     }
 
     return entity;

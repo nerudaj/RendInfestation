@@ -38,7 +38,12 @@ public:
         , physicsEngine(scene, gameEvents)
         , particleEngine(scene)
         , renderingEngine(
-              dic.resmgr, scene, atlas, dic.settings, dic.touchController)
+              dic.resmgr,
+              scene,
+              atlas,
+              dic.settings,
+              dic.touchController,
+              dic.strings)
     {
     }
 

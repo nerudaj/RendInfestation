@@ -10,11 +10,13 @@ RenderingEngine::RenderingEngine(
     GameScene& scene,
     const GameTextureAtlas& atlas,
     const AppSettings& settings,
-    const TouchController& touchController) noexcept
+    const TouchController& touchController,
+    const StringProvider<StringId>& strings) noexcept
     : scene(scene)
     , atlas(atlas)
     , settings(settings)
     , touchController(touchController)
+    , strings(strings)
     , resmgr(resmgr)
     , worldCamera(CameraFactory::createFullscreenCamera(
           sf::Vector2f(settings.video.resolution), INTERNAL_GAME_RESOLUTION))
@@ -95,8 +97,12 @@ void RenderingEngine::renderWorld(dgm::Window& window)
             face.rotation,
             face.scale);
 
+    // Render crosshair
+    const auto playerPosition =
+        scene.actors.get<Collider>(scene.playerEntity).getPosition();
+
     pipeline.addFace(
-        scene.actors.get<Collider>(scene.playerEntity).getPosition()
+        playerPosition
             + scene.actors.get<LookDirection>(scene.playerEntity).get(),
         sf::FloatRect {
             atlas.atlas.getClip(atlas.crosshairsLocation).getFrame(0) });
@@ -106,6 +112,16 @@ void RenderingEngine::renderWorld(dgm::Window& window)
     pipeline.renderTo(window);
 
     renderLights(window);
+
+    // Render interact prompt
+    if (scene.interactionTrigger)
+    {
+        text.setString(strings.getString(StringId::Interact));
+        text.setPosition(
+            playerPosition - text.getGlobalBounds().size / 2.f
+            - sf::Vector2f(0.f, 25.f));
+        window.draw(text);
+    }
 
     if (settings.video.renderColliders) renderColliders(window);
 }

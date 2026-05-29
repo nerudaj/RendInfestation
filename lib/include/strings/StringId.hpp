@@ -81,6 +81,9 @@ enum class [[nodiscard]] StringId
     WeaponModule_Spikes,
     WeaponModule_Splitter,
 
+    // Game
+    Interact,
+
     // Survival progression
     NewWeaponModuleUnlocked,
     GameOver,

@@ -88,6 +88,9 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModule_Spikes, "Spikes" },
     { WeaponModule_Splitter, "Splitter" },
 
+    // Game
+    { Interact, "[interact]" },
+
     // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },
     { GameOver, "Game Over" },

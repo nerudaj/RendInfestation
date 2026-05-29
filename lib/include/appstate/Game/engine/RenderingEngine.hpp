@@ -7,7 +7,9 @@
 #include "misc/FpsCounter.hpp"
 #include "misc/ShadeableRenderingPipeline2D.hpp"
 #include "settings/AppSettings.hpp"
+#include "strings/StringId.hpp"
 #include <DGM/dgm.hpp>
+#include <strings/StringProvider.hpp>
 
 class [[nodiscard]] RenderingEngine final
 {
@@ -17,7 +19,8 @@ public:
         GameScene& scene,
         const GameTextureAtlas& atlas,
         const AppSettings& settings,
-        const TouchController& touchController) noexcept;
+        const TouchController& touchController,
+        const StringProvider<StringId>& strings) noexcept;
 
     RenderingEngine(RenderingEngine&&) = delete;
     RenderingEngine(const RenderingEngine&) = delete;
@@ -76,6 +79,7 @@ private:
     const GameTextureAtlas& atlas;
     const AppSettings& settings;
     const TouchController& touchController;
+    const StringProvider<StringId>& strings;
     const dgm::ResourceManager& resmgr;
     dgm::Camera worldCamera;
     dgm::Camera hudCamera;
