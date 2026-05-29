@@ -69,8 +69,11 @@ entt::entity ActorBuilder::createNpc(
             ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
-            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED * 1.2f,
-                          .friction = 0.8f });
+            PhysicsBody {
+                .maxSpeed = BASE_ENEMY_SPEED * 1.2f,
+                .friction = 0.8f,
+                .useAltMesh = true,
+            });
         actors.emplace<Skin>(
             entity,
             Skin {
@@ -97,8 +100,11 @@ entt::entity ActorBuilder::createNpc(
             ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
-            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED * 1.5f,
-                          .friction = 0.8f });
+            PhysicsBody {
+                .maxSpeed = BASE_ENEMY_SPEED * 1.5f,
+                .friction = 0.8f,
+                .useAltMesh = true,
+            });
         actors.emplace<Skin>(
             entity,
             Skin {
@@ -125,7 +131,11 @@ entt::entity ActorBuilder::createNpc(
             ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
-            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED, .friction = 0.8f });
+            PhysicsBody {
+                .maxSpeed = BASE_ENEMY_SPEED,
+                .friction = 0.8f,
+                .useAltMesh = true,
+            });
         actors.emplace<Skin>(
             entity,
             Skin {
@@ -152,8 +162,12 @@ entt::entity ActorBuilder::createNpc(
             ColliderOptions { .semighost = true });
         actors.emplace<PhysicsBody>(
             entity,
-            PhysicsBody { .maxSpeed = BASE_ENEMY_SPEED / 2.f,
-                          .friction = 0.8f });
+            PhysicsBody {
+                .maxSpeed = BASE_ENEMY_SPEED / 2.f,
+                .friction = 0.8f,
+                .useAltMesh = true,
+                .canFall = false,
+            });
         actors.emplace<Skin>(
             entity,
             Skin {
@@ -161,7 +175,7 @@ entt::entity ActorBuilder::createNpc(
                 .skinType = skin,
                 .animation = dgm::Animation(
                     atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
-                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, 0.f },
             });
         actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
         actors.emplace<Health>(entity, 120);
@@ -447,6 +461,8 @@ entt::entity ActorBuilder::createProjectile(
                             ? 0.02f
                             : 0.f,
             .useAltMesh = true,
+            .canFall = weapon.defaultProjectileInventory.traits
+                       & ProjectileTraits::Shrapnels,
         });
     actors.emplace<Lifetime>(entity, weapon.projectileLifetime);
     actors.emplace<ZIndex>(entity, ZINDEX_PROJECTILES);

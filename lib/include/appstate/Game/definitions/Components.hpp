@@ -89,6 +89,7 @@ struct [[nodiscard]] PhysicsBody final
     float bounciness = 0.f;
     float friction = 0.5f;
     bool useAltMesh = false;
+    bool canFall = true;
 };
 
 struct [[nodiscard]] Skin final

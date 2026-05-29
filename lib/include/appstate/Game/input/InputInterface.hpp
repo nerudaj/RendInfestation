@@ -17,4 +17,6 @@ public:
     [[nodiscard]] virtual bool isSwapWeaponsPressed() const = 0;
 
     [[nodiscard]] virtual bool isInteractPressed() const = 0;
+
+    [[nodiscard]] virtual void freeze() = 0;
 };

@@ -58,7 +58,7 @@ void PhysicsEngine::updateForConcreteCollider(
         const auto tile =
             scene.altLevelMesh
                 [tilePos.y * scene.altLevelMesh.getDataSize().x + tilePos.x];
-        if (tile < 0)
+        if (tile < 0 && body.canFall)
         {
             eventQueue.pushEvent<event::ActorIsFalling>(
                 entity, time.getDeltaTime());

@@ -121,6 +121,11 @@ void GameRulesEngine::operator()(const event::ActorIsFalling& e)
         skin.scale = 0.f;
         eventQueue.pushEvent<event::ObjectDestroyed>(e.entity);
     }
+
+    if (auto&& einput = scene.actors.try_get<EntityInput>(e.entity))
+    {
+        einput->get()->freeze();
+    }
 }
 
 void GameRulesEngine::operator()(const event::ObjectDestroyed& e)

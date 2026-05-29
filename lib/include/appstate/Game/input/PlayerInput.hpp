@@ -34,6 +34,8 @@ public:
         return input.isInteractPressed();
     }
 
+    void freeze() override {}
+
 private:
     Input& input;
 };

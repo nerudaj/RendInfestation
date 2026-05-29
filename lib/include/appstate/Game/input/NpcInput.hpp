@@ -8,6 +8,7 @@ class NpcInput final : public InputInterface
 public:
     void setForward(const sf::Vector2f& newForward)
     {
+        if (frozen) return;
         forward = newForward;
     }
 
@@ -46,6 +47,11 @@ public:
         return false;
     }
 
+    void freeze() override
+    {
+        frozen = true;
+    }
+
     void clearInputs()
     {
         forward = {};
@@ -57,4 +63,5 @@ private:
     sf::Vector2f forward = {};
     sf::Vector2f aimDirection = {};
     bool shooting = false;
+    bool frozen = false;
 };
