@@ -69,6 +69,11 @@ if ( ${BUILD_ANDROID} )
         "${CMAKE_CURRENT_SOURCE_DIR}/android/infiles/AndroidManifest.xml.in"
         "${CMAKE_CURRENT_BINARY_DIR}/app/src/main/AndroidManifest.xml"
     )
+
+    configure_file (
+        "${CMAKE_CURRENT_SOURCE_DIR}/android/infiles/styles.xml.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/app/src/main/res/values/styles.xml"
+    )
     
     install (
         FILES

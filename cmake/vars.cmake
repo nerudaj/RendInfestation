@@ -18,3 +18,6 @@ set ( ANDROID_NDK_VERSION "27.0.12077973" )
 set ( ANDROID_MIN_SDK "22" )
 set ( ANDROID_TARGET_SDK "33" )
 set ( ANDROID_ENFORCED_ORIENTATION "landscape" ) # landscape | portrait
+
+## shortEdges mean that the app will render into camera cutout area
+set ( ANDROID_WINDOW_LAYOUT_IN_DISPLAY_CUTOUT_MODE "shortEdges" ) # shortEdges | never

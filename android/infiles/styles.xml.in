@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <!-- Allow content in the display cutout area -->
+        <item name="android:windowLayoutInDisplayCutoutMode">@ANDROID_WINDOW_LAYOUT_IN_DISPLAY_CUTOUT_MODE@</item>
+
+        <!-- Make the app fullscreen so the cutout is actually used -->
+        <item name="android:windowFullscreen">true</item>
+
+        <!-- Ensure system bars overlay instead of resizing the window -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+    </style>
+</resources>
