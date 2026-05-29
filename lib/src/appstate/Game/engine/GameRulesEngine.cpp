@@ -208,6 +208,14 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
         {
             weaponInventory.activeWeapon = 1 - weaponInventory.activeWeapon;
         }
+        else if (controller->isInteractPressed() && scene.interactionTrigger)
+        {
+            if (scene.interactionTrigger->type
+                == InteractionTriggerType::Workbench)
+            {
+                eventQueue.pushEvent<event::WorkbenchOpened>();
+            }
+        }
 
         weapon.timeTillFire -= time.getElapsed();
         if (weapon.timeTillFire < sf::Time::Zero)

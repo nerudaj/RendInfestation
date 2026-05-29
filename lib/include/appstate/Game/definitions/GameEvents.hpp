@@ -104,6 +104,10 @@ namespace event
 
         explicit ActorStopped(entt::entity entity) : entity(entity) {}
     };
+
+    struct [[nodiscard]] WorkbenchOpened final
+    {
+    };
 } // namespace event
 
 using GameEvent = std::variant<
@@ -118,4 +122,5 @@ using GameEvent = std::variant<
     event::DoorStartsClosing,
     event::ActorIsFalling,
     event::ActorMoved,
-    event::ActorStopped>;
+    event::ActorStopped,
+    event::WorkbenchOpened>;

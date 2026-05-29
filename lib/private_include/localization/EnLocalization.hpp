@@ -70,7 +70,6 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { BackToMenu, "Back to main menu" },
 
     // WeaponModification
-    { WeaponModification, "Weapon Modification" },
     { SelectModule, "Pick module to install" },
     { Weapon1Title, "Weapon 1" },
     { Weapon2Title, "Weapon 2" },

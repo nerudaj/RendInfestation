@@ -1,6 +1,7 @@
 #include "appstate/AppStateGame.hpp"
 #include "appstate/AppStatePause.hpp"
 #include "appstate/AppStateSurvivalGameOver.hpp"
+#include "appstate/AppStateWeaponModification.hpp"
 #include "appstate/Messaging.hpp"
 
 void AppStateGame::input()
@@ -48,7 +49,13 @@ void AppStateGame::update()
     renderingEngine.update(app.time);
 
     gameEvents.processEvents(
-        gameRulesEngine, animationEngine, physicsEngine, janitor);
+        gameRulesEngine,
+        animationEngine,
+        physicsEngine,
+        janitor,
+        overloads { [&](event::WorkbenchOpened& e)
+                    { app.pushState<AppStateWeaponModification>(dic, scene); },
+                    [&](auto&&) {} });
     janitor.cleanScene(scene);
 
     ++scene.tick;
