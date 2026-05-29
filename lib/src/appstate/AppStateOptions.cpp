@@ -93,7 +93,7 @@ void AppStateOptions::buildLayout()
                              }))
             .withNoTopLeftButton()
             .withNoTopRightButton()
-            .withBottomLeftButton(StringId::Back, [&] { onBack(); })
+            .withBottomLeftButton(dic.getIcon(Icon::Back), [&] { onBack(); })
             .withNoBottomRightButton()
             .build());
 }

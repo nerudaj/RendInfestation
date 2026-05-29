@@ -15,6 +15,8 @@ enum class [[nodiscard]] Icon
     Exit,
     Star,
     Lock,
+    Back,
+    Forward,
     PlayFill,
     PauseFill,
     StopFill,

@@ -33,12 +33,8 @@ void AppStateSurvivalGameOver::buildLayout()
             .withContent(buildContent())
             .withNoTopLeftButton()
             .withNoTopRightButton()
-#ifdef ANDROID
             .withBottomLeftButton(
-                dic.getIcon(Icon::Exit), [&] { onBackToMenu(); })
-#else
-            .withBottomLeftButton(StringId::BackToMenu, [&] { onBackToMenu(); })
-#endif
+                dic.getIcon(Icon::Back), [&] { onBackToMenu(); })
             .withNoBottomRightButton()
             .build());
 }
