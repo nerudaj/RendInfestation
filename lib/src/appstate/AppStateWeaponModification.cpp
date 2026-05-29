@@ -9,19 +9,6 @@
 #include "strings/StringId.hpp"
 #include <array>
 
-enum class [[nodiscard]] WorkbenchSpriteId
-{
-    Ui,
-    BigMag,
-    BigNozzle,
-    LongBarrel,
-    BaseGun,
-    Table,
-    Ammo,
-    Mine,
-    Spikes
-};
-
 static sf::Vector2f resolutionTo16by9(const sf::Vector2f& resolution)
 {
     assert(resolution.x > resolution.y);
@@ -43,12 +30,7 @@ AppStateWeaponModification::AppStateWeaponModification(
     , guiCamera(CameraFactory::createFullscreenCamera(
           sf::Vector2f(app.window.getSize()),
           resolutionTo16by9(sf::Vector2f(app.window.getSize()))))
-    , workbenchTexture(dic.resmgr.get<sf::Texture>("workbench.png"))
-    , workbenchClip(dic.resmgr.get<dgm::Clip>("workbench.png.clip"))
-    , workbenchSprite(workbenchTexture)
-    , moduleIconTexture(dic.resmgr.get<sf::Texture>("infestation_modules.png"))
-    , moduleIconClip(dic.resmgr.get<dgm::Clip>("infestation_modules.png.clip"))
-    , moduleIconSprite(moduleIconTexture)
+    , renderer(scene, dic)
 {
     buildLayout();
 }
@@ -70,87 +52,15 @@ void AppStateWeaponModification::update()
 void AppStateWeaponModification::draw()
 {
     app.window.setViewFromCamera(renderCamera);
-    renderWorkbench();
+    renderer.renderWorkbench(
+        app.window,
+        1.f - animationTimer / ANIMATION_DURATION,
+        currentWeaponIdx);
 
     app.window.setViewFromCamera(guiCamera);
 
     dic.gui.draw();
     dic.virtualCursor.draw();
-}
-
-static float easeInOut(float x)
-{
-    return x < 0.5f ? 4 * std::pow(x, 3.f) : 1 - std::pow(-2 * x + 2, 3.f) / 2;
-}
-
-void AppStateWeaponModification::renderWorkbench()
-{
-    workbenchSprite.setPosition({ 0.f, 0.f });
-    workbenchSprite.setTextureRect(
-        workbenchClip.getFrame(WorkbenchSpriteId::Table));
-    app.window.draw(workbenchSprite);
-
-    if (isTransitioning())
-    {
-        const float factor = 1.f - animationTimer / ANIMATION_DURATION;
-        const float offset = easeInOut(factor) * INTERNAL_GAME_RESOLUTION.x;
-        renderWeapon(
-            offset,
-            currentWeaponIdx == 0 ? scene.loadout.weapon2Modules
-                                  : scene.loadout.weapon1Modules);
-        renderWeapon(offset - INTERNAL_GAME_RESOLUTION.x, getCurrentLoadout());
-    }
-    else
-    {
-        renderWeapon(0.f, getCurrentLoadout());
-    }
-
-    // Don't render UI buttons while transitioning
-    if (isTransitioning()) return;
-
-    workbenchSprite.setTextureRect(
-        workbenchClip.getFrame(WorkbenchSpriteId::Ui));
-    app.window.draw(workbenchSprite);
-
-    for (auto&& [idx, module] : uni::views::enumerate(getCurrentLoadout()))
-    {
-        if (module == WeaponModule::None) continue;
-        moduleIconSprite.setTextureRect(moduleIconClip.getFrame(module));
-        moduleIconSprite.setPosition({ 36.f + idx * 23.f, 164.f });
-        app.window.draw(moduleIconSprite);
-    }
-}
-
-void AppStateWeaponModification::renderWeapon(
-    float xOffset, const std::array<WeaponModule, 3>& loadout)
-{
-    workbenchSprite.setPosition({ xOffset, 0.f });
-
-    workbenchSprite.setTextureRect(
-        workbenchClip.getFrame(WorkbenchSpriteId::BaseGun));
-    app.window.draw(workbenchSprite);
-
-    if (uni::ranges::contains(loadout, WeaponModule::BigBullet))
-    {
-        workbenchSprite.setTextureRect(
-            workbenchClip.getFrame(WorkbenchSpriteId::BigMag));
-        app.window.draw(workbenchSprite);
-    }
-
-    if (uni::ranges::contains(loadout, WeaponModule::CadenceBarrel))
-    {
-        workbenchSprite.setTextureRect(
-            workbenchClip.getFrame(WorkbenchSpriteId::LongBarrel));
-        app.window.draw(workbenchSprite);
-    }
-
-    if (uni::ranges::contains(loadout, WeaponModule::SpreadBarrel_x2)
-        || uni::ranges::contains(loadout, WeaponModule::SpreadBarrel_x4))
-    {
-        workbenchSprite.setTextureRect(
-            workbenchClip.getFrame(WorkbenchSpriteId::BigNozzle));
-        app.window.draw(workbenchSprite);
-    }
 }
 
 void AppStateWeaponModification::buildLayout()

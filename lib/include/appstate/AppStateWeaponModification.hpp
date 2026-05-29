@@ -1,5 +1,6 @@
 #pragma once
 
+#include "appstate/WeaponModification/Renderer.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
 #include <DGM/dgm.hpp>
@@ -67,14 +68,7 @@ private:
 
     dgm::Camera renderCamera;
     dgm::Camera guiCamera;
-
-    const sf::Texture& workbenchTexture;
-    const dgm::Clip& workbenchClip;
-    sf::Sprite workbenchSprite;
-
-    const sf::Texture& moduleIconTexture;
-    const dgm::Clip& moduleIconClip;
-    sf::Sprite moduleIconSprite;
+    Renderer renderer;
 
     int currentWeaponIdx = 0;
     sf::Time animationTimer = sf::Time::Zero;
