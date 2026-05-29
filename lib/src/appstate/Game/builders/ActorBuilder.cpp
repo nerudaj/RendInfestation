@@ -1,7 +1,9 @@
 #include "appstate/Game/builders/ActorBuilder.hpp"
 #include "appstate/Game/builders/WeaponBuilder.hpp"
 #include "appstate/Game/definitions/Constants.hpp"
+#include "appstate/Game/definitions/EnemyConstants.hpp"
 #include "appstate/Game/definitions/NpcBlackboard.hpp"
+#include "appstate/Game/definitions/PropConstants.hpp"
 #include "appstate/Game/input/NpcInput.hpp"
 #include "appstate/Game/input/PlayerInput.hpp"
 #include "types/SemanticTypes.hpp"
@@ -60,140 +62,55 @@ entt::entity ActorBuilder::createNpc(
     const GameTextureAtlas& atlas)
 {
     auto entity = actors.create();
+    assert(ENEMY_CONFIGS.contains(skin));
+    const auto& config = ENEMY_CONFIGS.at(skin);
 
-    if (skin == SkinType::Scuttlebug)
+    actors.emplace<Collider>(
+        entity,
+        dgm::Circle(spawnPosition, config.colliderRadius),
+        ColliderOptions { .semighost = true });
+
+    actors.emplace<PhysicsBody>(
+        entity,
+        PhysicsBody {
+            .maxSpeed = config.speed,
+            .friction = 0.8f,
+            .useAltMesh = true,
+            .canFall = config.canFall,
+        });
+
+    actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+
+    actors.emplace<Skin>(
+        entity,
+        Skin {
+            .kind = EntityKind::Npc,
+            .skinType = skin,
+            .animation = dgm::Animation(
+                atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
+            .spriteOriginOffsetFromCollider =
+                config.spriteOriginOffsetFromCollider,
+        });
+
+    actors.emplace<Health>(entity, config.health);
+
+    if (config.isRanged)
     {
-        actors.emplace<Collider>(
-            entity,
-            dgm::Circle(spawnPosition, 8.f),
-            ColliderOptions { .semighost = true });
-        actors.emplace<PhysicsBody>(
-            entity,
-            PhysicsBody {
-                .maxSpeed = BASE_ENEMY_SPEED * 1.2f,
-                .friction = 0.8f,
-                .useAltMesh = true,
-            });
-        actors.emplace<Skin>(
-            entity,
-            Skin {
-                .kind = EntityKind::Npc,
-                .skinType = skin,
-                .animation = dgm::Animation(
-                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
-                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-            });
-        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-        actors.emplace<Health>(entity, 50);
-
-        actors.emplace<WeaponInventory>(
-            entity,
-            0,
-            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-                EntityKind::Npc, BASE_MELEE_DAMAGE / 2) });
-    }
-    else if (skin == SkinType::ScuttlebugBlue)
-    {
-        actors.emplace<Collider>(
-            entity,
-            dgm::Circle(spawnPosition, 8.f),
-            ColliderOptions { .semighost = true });
-        actors.emplace<PhysicsBody>(
-            entity,
-            PhysicsBody {
-                .maxSpeed = BASE_ENEMY_SPEED * 1.5f,
-                .friction = 0.8f,
-                .useAltMesh = true,
-            });
-        actors.emplace<Skin>(
-            entity,
-            Skin {
-                .kind = EntityKind::Npc,
-                .skinType = skin,
-                .animation = dgm::Animation(
-                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
-                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-            });
-        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-        actors.emplace<Health>(entity, 65);
-
-        actors.emplace<WeaponInventory>(
-            entity,
-            0,
-            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-                EntityKind::Npc, BASE_MELEE_DAMAGE / 2) });
-    }
-    else if (skin == SkinType::Bighead)
-    {
-        actors.emplace<Collider>(
-            entity,
-            dgm::Circle(spawnPosition, 8.f),
-            ColliderOptions { .semighost = true });
-        actors.emplace<PhysicsBody>(
-            entity,
-            PhysicsBody {
-                .maxSpeed = BASE_ENEMY_SPEED,
-                .friction = 0.8f,
-                .useAltMesh = true,
-            });
-        actors.emplace<Skin>(
-            entity,
-            Skin {
-                .kind = EntityKind::Npc,
-                .skinType = skin,
-                .animation = dgm::Animation(
-                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
-                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
-            });
-        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-        actors.emplace<Health>(entity, 100);
-
-        actors.emplace<WeaponInventory>(
-            entity,
-            0,
-            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-                EntityKind::Npc, BASE_MELEE_DAMAGE) });
-    }
-    else if (skin == SkinType::Beholder)
-    {
-        actors.emplace<Collider>(
-            entity,
-            dgm::Circle(spawnPosition, 8.f),
-            ColliderOptions { .semighost = true });
-        actors.emplace<PhysicsBody>(
-            entity,
-            PhysicsBody {
-                .maxSpeed = BASE_ENEMY_SPEED / 2.f,
-                .friction = 0.8f,
-                .useAltMesh = true,
-                .canFall = false,
-            });
-        actors.emplace<Skin>(
-            entity,
-            Skin {
-                .kind = EntityKind::Npc,
-                .skinType = skin,
-                .animation = dgm::Animation(
-                    atlas.getSkinAnimationStates(skin), BASE_ANIMATION_FPS),
-                .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, 0.f },
-            });
-        actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-        actors.emplace<Health>(entity, 120);
-
         actors.emplace<WeaponInventory>(
             entity,
             0,
             std::vector<Weapon> {
                 WeaponBuilder::createRangedWeapon(
-                    EntityKind::Npc,
-                    SkinType::PinkFireball,
-                    BASE_RANGED_DAMAGE),
+                    EntityKind::Npc, SkinType::PinkFireball, config.damage),
             });
     }
     else
     {
-        throw std::runtime_error(uni::format(
-            "Invalid skin type {} for NPC", std::to_underlying(skin)));
+        actors.emplace<WeaponInventory>(
+            entity,
+            0,
+            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
+                EntityKind::Npc, config.damage) });
     }
 
     auto input = std::make_unique<NpcInput>();
@@ -204,8 +121,7 @@ entt::entity ActorBuilder::createNpc(
         NpcBlackboard {
             .ownerEntity = entity,
             .input = dynamic_cast<NpcInput&>(*underlyingInput),
-            .kind =
-                skin == SkinType::Beholder ? NpcKind::Ranged : NpcKind::Melee,
+            .kind = config.isRanged ? NpcKind::Ranged : NpcKind::Melee,
         });
     actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
 
@@ -214,168 +130,6 @@ entt::entity ActorBuilder::createNpc(
 
     return entity;
 }
-
-struct [[nodiscard]] Prop final
-{
-    std::string animationStateName;
-    std::function<Collider(const sf::Vector2f&)> getCollider;
-    sf::Vector2f spriteOffset = { 0.f, 0.f };
-    bool isSolid = true;
-    std::optional<BoundLightEmitter> boundLightEmitter = std::nullopt;
-};
-
-const std::array<Prop, 13u> PROP_DEFINITIONS = {
-    Prop {
-        .animationStateName = "labtube-full",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider {
-                dgm::Circle({ origin.x + 32.f, origin.y - 16.f }, 13.f),
-            };
-        },
-        .spriteOffset = { 0.f, -16.f },
-        .boundLightEmitter = BoundLightEmitter { COLOR_GREEN, 7 },
-    },
-    Prop {
-        .animationStateName = "labtube",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider {
-                dgm::Circle({ origin.x + 32.f, origin.y - 16.f }, 13.f),
-            };
-        },
-        .spriteOffset = { 0.f, -16.f },
-        .boundLightEmitter = BoundLightEmitter { COLOR_GREEN, 7 },
-    },
-    Prop {
-        .animationStateName = "small-table",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider { dgm::Rect(
-                { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
-        },
-    },
-    Prop {
-        .animationStateName = "cantina-table",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider { dgm::Rect(
-                { origin.x, origin.y - 64.f }, { 64.f, 56.f }) };
-        },
-        .spriteOffset = { 0.f, -4.f },
-    },
-    Prop {
-        .animationStateName = "green-carcass",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider {
-                dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
-            };
-        },
-        .spriteOffset = { 16.f, 16.f },
-        .isSolid = false,
-    },
-    Prop {
-        .animationStateName = "blue-carcass",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider {
-                dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
-            };
-        },
-        .spriteOffset = { 16.f, 16.f },
-        .isSolid = false,
-    },
-    Prop {
-        .animationStateName = "blood-puddle-a",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider {
-                dgm::Rect({ origin.x, origin.y - 64.f }, { 24.f, 14.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
-            };
-        },
-        .spriteOffset = { 22.f, 25.f },
-        .isSolid = false,
-    },
-    Prop {
-        .animationStateName = "pc",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider {
-                dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
-            };
-        },
-        .spriteOffset = { 22.f, 25.f },
-        .isSolid = true,
-    },
-    Prop {
-        .animationStateName = "pc-active",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider {
-                dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
-            };
-        },
-        .spriteOffset = { 22.f, 25.f },
-        .isSolid = true,
-    },
-    Prop {
-        .animationStateName = "cactus-pot",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider { dgm::Rect(
-                { origin.x, origin.y - 56.f }, { 15.f, 10.f }) };
-        },
-        .spriteOffset = { 25.f, 18.f },
-        .isSolid = true,
-    },
-    Prop {
-        .animationStateName = "cactus-pot-destroyed",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider { dgm::Rect(
-                { origin.x, origin.y - 56.f }, { 15.f, 10.f }) };
-        },
-        .spriteOffset = { 25.f, 18.f },
-        .isSolid = true,
-    },
-    Prop {
-        .animationStateName = "crate",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider { dgm::Rect(
-                { origin.x, origin.y - 64.f }, { 11.f, 10.f }) };
-        },
-        .spriteOffset = { 26.f, 23.f },
-        .isSolid = true,
-    },
-    Prop {
-        .animationStateName = "workbench",
-        .getCollider =
-            [](const sf::Vector2f& origin)
-        {
-            return Collider { dgm::Rect(
-                { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
-        },
-    },
-};
 
 entt::entity ActorBuilder::createProp(
     entt::registry& actors,
