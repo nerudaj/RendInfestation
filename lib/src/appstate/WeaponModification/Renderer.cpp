@@ -31,7 +31,7 @@ static float easeInOut(float x)
 }
 
 void Renderer::renderWorkbench(
-    dgm::Window& window, const float animationFactor, size_t currentWeaponIdx)
+    dgm::Window& window, const AnimationTimer& timer, size_t currentWeaponIdx)
 {
     auto getCurrentLoadout = [&]()
     {
@@ -44,11 +44,14 @@ void Renderer::renderWorkbench(
         workbenchClip.getFrame(WorkbenchSpriteId::Table));
     window.draw(workbenchSprite);
 
-    if (animationFactor > 0.f)
+    if (timer.isFinished())
     {
-        // const float factor = 1.f - animationTimer / ANIMATION_DURATION;
+        renderWeapon(window, 0.f, getCurrentLoadout());
+    }
+    else
+    {
         const float offset =
-            easeInOut(animationFactor) * INTERNAL_GAME_RESOLUTION.x;
+            easeInOut(timer.getFactor()) * INTERNAL_GAME_RESOLUTION.x;
         renderWeapon(
             window,
             offset,
@@ -57,13 +60,9 @@ void Renderer::renderWorkbench(
         renderWeapon(
             window, offset - INTERNAL_GAME_RESOLUTION.x, getCurrentLoadout());
     }
-    else
-    {
-        renderWeapon(window, 0.f, getCurrentLoadout());
-    }
 
     // Don't render UI buttons while transitioning
-    if (animationFactor > 0.f) return;
+    if (!timer.isFinished()) return;
 
     workbenchSprite.setTextureRect(
         workbenchClip.getFrame(WorkbenchSpriteId::Ui));

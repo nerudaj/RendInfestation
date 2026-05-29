@@ -31,6 +31,7 @@ AppStateWeaponModification::AppStateWeaponModification(
           sf::Vector2f(app.window.getSize()),
           resolutionTo16by9(sf::Vector2f(app.window.getSize()))))
     , renderer(scene, dic)
+    , animationTimer(sf::seconds(0.5f))
 {
     buildLayout();
 }
@@ -42,20 +43,13 @@ void AppStateWeaponModification::input()
 
 void AppStateWeaponModification::update()
 {
-    if (animationTimer > sf::Time::Zero)
-    {
-        animationTimer -= app.time.getElapsed();
-        if (animationTimer < sf::Time::Zero) animationTimer = sf::Time::Zero;
-    }
+    animationTimer.update(app.time.getElapsed());
 }
 
 void AppStateWeaponModification::draw()
 {
     app.window.setViewFromCamera(renderCamera);
-    renderer.renderWorkbench(
-        app.window,
-        1.f - animationTimer / ANIMATION_DURATION,
-        currentWeaponIdx);
+    renderer.renderWorkbench(app.window, animationTimer, currentWeaponIdx);
 
     app.window.setViewFromCamera(guiCamera);
 
@@ -226,7 +220,7 @@ void AppStateWeaponModification::onBack()
 void AppStateWeaponModification::onCycle()
 {
     currentWeaponIdx = (currentWeaponIdx + 1) % 2;
-    animationTimer = ANIMATION_DURATION;
+    animationTimer.restart();
 }
 
 void AppStateWeaponModification::onModSelected(size_t moduleIdx)

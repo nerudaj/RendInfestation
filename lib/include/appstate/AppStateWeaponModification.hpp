@@ -1,5 +1,6 @@
 #pragma once
 
+#include "appstate/WeaponModification/AnimationTimer.hpp"
 #include "appstate/WeaponModification/Renderer.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
@@ -19,11 +20,6 @@ public:
     void draw() override;
 
 private:
-    void renderWorkbench();
-
-    void
-    renderWeapon(float xOffset, const std::array<WeaponModule, 3>& loadout);
-
     void buildLayout();
 
     tgui::ChildWindow::Ptr
@@ -57,11 +53,6 @@ private:
     [[nodiscard]] static size_t moduleToIndex(WeaponModule module) noexcept;
     [[nodiscard]] static WeaponModule indexToModule(size_t index) noexcept;
 
-    bool isTransitioning() const
-    {
-        return animationTimer > sf::Time::Zero;
-    }
-
 private:
     DependencyContainer& dic;
     GameScene& scene;
@@ -71,6 +62,5 @@ private:
     Renderer renderer;
 
     int currentWeaponIdx = 0;
-    sf::Time animationTimer = sf::Time::Zero;
-    const sf::Time ANIMATION_DURATION = sf::seconds(0.5f);
+    AnimationTimer animationTimer;
 };

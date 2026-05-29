@@ -1,5 +1,6 @@
 #pragma once
 
+#include "appstate/WeaponModification/AnimationTimer.hpp"
 #include "game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
 #include <DGM/classes/Clip.hpp>
@@ -14,7 +15,7 @@ public:
 public:
     void renderWorkbench(
         dgm::Window& window,
-        const float animationFactor,
+        const AnimationTimer& timer,
         size_t currentWeaponIdx);
 
 private:
