@@ -19,6 +19,7 @@ public:
     AiEngine(GameScene& _scene)
         : scene(_scene)
         , navMesh(scene.levelMesh.clone())
+        , altNavMesh(scene.altLevelMesh.clone())
 #ifdef FSM_LOGGING_ENABLED
         , logger("ai_log.csv")
 #endif
@@ -81,6 +82,7 @@ private: // Utils
 private:
     GameScene& scene;
     dgm::WorldNavMesh navMesh;
+    dgm::WorldNavMesh altNavMesh;
 #ifdef FSM_LOGGING_ENABLED
     fsm::CsvLogger logger;
 #endif

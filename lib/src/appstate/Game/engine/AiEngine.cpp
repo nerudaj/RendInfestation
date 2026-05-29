@@ -47,9 +47,13 @@ void AiEngine::generateWaypoint(NpcBlackboard& blackboard)
 {
     const auto position =
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
+    const auto isBeholder =
+        scene.actors.get<Skin>(blackboard.ownerEntity).skinType
+        == SkinType::Beholder;
     const auto targetPosition =
         scene.actors.get<Collider>(scene.playerEntity).getPosition();
-    auto path = navMesh.computePath(position, targetPosition);
+    dgm::WorldNavMesh& mesh = (isBeholder ? altNavMesh : navMesh);
+    auto path = mesh.computePath(position, targetPosition);
 
     if (!path.isTraversed()) blackboard.waypoint = path.getCurrentPoint().coord;
 }

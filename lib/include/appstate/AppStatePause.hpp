@@ -29,7 +29,6 @@ public:
 private:
     void buildLayout();
     void onResume();
-    void onWeaponModification();
     void onOptions();
     void onBackToMenu();
     void onExit();
