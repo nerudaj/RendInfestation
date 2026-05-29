@@ -70,11 +70,11 @@ public:
     }
 
 private:
-    static std::array<TouchInput, 4u>
+    static std::array<TouchInput, 5u>
     computeLayout(const sf::Vector2u& windowSize);
 
 public:
-    std::array<TouchInput, 4u> objects;
+    std::array<TouchInput, 5u> objects;
     std::map<unsigned, size_t>
         fingerToTouchObject = {}; ///< Each event has finger index associated
                                   ///< with it so we can pair touch begin, touch
@@ -85,6 +85,7 @@ public:
     TouchInput& rightJoystick = objects[1];
     TouchInput& pauseButton = objects[2];
     TouchInput& swapWeaponButton = objects[3];
+    TouchInput& interactButton = objects[4];
 };
 
 class [[nodiscard]] TouchController final
@@ -114,6 +115,8 @@ public:
     [[nodiscard]] bool isBackPressed() const;
 
     [[nodiscard]] bool isSwitchWeaponsPressed() const;
+
+    [[nodiscard]] bool isInteractPressed() const;
 
 private:
     void processEvent(const sf::Event::TouchBegan& e);

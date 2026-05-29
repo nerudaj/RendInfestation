@@ -63,6 +63,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { InputKind_AimDown, "Aim down" },
     { InputKind_Shoot, "Shoot" },
     { InputKind_SwitchWeapons, "Switch weapons" },
+    { InputKind_Interact, "Interact" },
 
     // Pause
     { Resume, "Resume game" },

@@ -41,6 +41,11 @@ public:
         return false;
     }
 
+    [[nodiscard]] bool isInteractPressed() const override
+    {
+        return false;
+    }
+
     void clearInputs()
     {
         forward = {};

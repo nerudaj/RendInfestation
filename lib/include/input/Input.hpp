@@ -41,6 +41,8 @@ public:
 
     [[nodiscard]] bool isSwapWeaponsPressed() const;
 
+    [[nodiscard]] bool isInteractPressed() const;
+
     [[nodiscard]] bool isMenuCycleLeftPressed() const;
 
     [[nodiscard]] bool isMenuCycleRightPressed() const;

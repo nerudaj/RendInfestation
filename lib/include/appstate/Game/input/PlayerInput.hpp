@@ -29,6 +29,11 @@ public:
         return input.isSwapWeaponsPressed();
     }
 
+    [[nodiscard]] bool isInteractPressed() const override
+    {
+        return input.isInteractPressed();
+    }
+
 private:
     Input& input;
 };

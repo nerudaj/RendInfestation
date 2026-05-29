@@ -14,7 +14,7 @@ void TouchInput::reset()
         touchPosition = touchArea.getPosition();
 }
 
-std::array<TouchInput, 4u>
+std::array<TouchInput, 5u>
 TouchModel::computeLayout(const sf::Vector2u& windowSize)
 {
     const float joystickRadius = windowSize.x * 0.1f;
@@ -34,6 +34,11 @@ TouchModel::computeLayout(const sf::Vector2u& windowSize)
             TouchObjectKind::Button,
             windowsSizeF
                 - 2.f * sf::Vector2f { joystickRadius, joystickRadius },
+            60.f),
+        TouchInput(
+            TouchObjectKind::Button,
+            windowsSizeF
+                - sf::Vector2f { joystickRadius, 2.f * joystickRadius },
             60.f),
     };
 }
@@ -74,6 +79,13 @@ bool TouchController::isSwitchWeaponsPressed() const
 {
     const auto value = model.swapWeaponButton.readButton();
     if (value) model.swapWeaponButton.reset();
+    return value;
+}
+
+bool TouchController::isInteractPressed() const
+{
+    const auto value = model.interactButton.readButton();
+    if (value) model.interactButton.reset();
     return value;
 }
 

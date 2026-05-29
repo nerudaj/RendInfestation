@@ -58,6 +58,8 @@ public:
             return strings.getString(StringId::InputKind_Shoot);
         case InputKind::SwitchWeapons:
             return strings.getString(StringId::InputKind_SwitchWeapons);
+        case InputKind::Interact:
+            return strings.getString(StringId::InputKind_Interact);
         default:
             return "--error--";
         }

@@ -15,4 +15,6 @@ public:
     [[nodiscard]] virtual bool isShootPressed() const = 0;
 
     [[nodiscard]] virtual bool isSwapWeaponsPressed() const = 0;
+
+    [[nodiscard]] virtual bool isInteractPressed() const = 0;
 };

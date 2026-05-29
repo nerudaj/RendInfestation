@@ -56,6 +56,7 @@ enum class [[nodiscard]] StringId
     InputKind_AimDown,
     InputKind_Shoot,
     InputKind_SwitchWeapons,
+    InputKind_Interact,
 
     // Pause
     Resume,

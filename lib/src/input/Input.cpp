@@ -55,6 +55,12 @@ bool Input::isSwapWeaponsPressed() const
            || touchController.isSwitchWeaponsPressed();
 }
 
+bool Input::isInteractPressed() const
+{
+    return readAndRelease(InputKind::Interact)
+           || touchController.isInteractPressed();
+}
+
 [[nodiscard]] bool Input::isMenuCycleLeftPressed() const
 {
     return readAndRelease(InputKind::MenuCycleLeft);
