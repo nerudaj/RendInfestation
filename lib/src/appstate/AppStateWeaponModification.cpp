@@ -185,7 +185,12 @@ tgui::Button::Ptr AppStateWeaponModification::createModuleSelectButton(
     button->setSize(toLayout(18, 18));
     button->setPosition(
         { "parent.width / 2 - width / 2", "parent.height / 2 - height  / 2" });
-    button->onClick(callback);
+    button->onClick(
+        [&, callback = std::move(callback)]
+        {
+            dic.soundPlayer.playPovSound(SoundId::Crafting);
+            callback();
+        });
 
     return button;
 }

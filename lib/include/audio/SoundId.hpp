@@ -13,4 +13,5 @@ namespace SoundId
     const IdType ScuttlebugDeath = "infestation_scuttlebug_death.wav";
     const IdType BigheadAttack = "infestation_bighead_attack.wav";
     const IdType BehemothAttack = "infestation_behemoth_attack.wav";
+    const IdType Crafting = "crafting.wav";
 } // namespace SoundId
