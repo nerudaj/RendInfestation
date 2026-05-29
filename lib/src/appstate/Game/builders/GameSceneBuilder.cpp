@@ -116,6 +116,7 @@ GameScene GameSceneBuilder::createScene(
         .enemySpawns = std::move(artifact.enemySpawns),
         .lights = std::move(artifact.lights),
         .loadout = std::move(artifact.loadout),
+        .unlockedModules = std::move(artifact.unlockedModules),
         .survivalSpawnerContext =
             SurvivalSpawnerContext {
                 .wave = gameModeProperties.mode == GameMode::Survival ? 0 : -1,

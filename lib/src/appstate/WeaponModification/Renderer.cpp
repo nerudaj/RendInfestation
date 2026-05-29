@@ -98,11 +98,40 @@ void Renderer::renderWeapon(
         window.draw(workbenchSprite);
     }
 
+    // TODO: reposition
     if (uni::ranges::contains(loadout, WeaponModule::SpreadBarrel_x2)
         || uni::ranges::contains(loadout, WeaponModule::SpreadBarrel_x4))
     {
         workbenchSprite.setTextureRect(
             workbenchClip.getFrame(WorkbenchSpriteId::BigNozzle));
+
+        if (!uni::ranges::contains(loadout, WeaponModule::CadenceBarrel))
+        {
+            workbenchSprite.setPosition({ xOffset + 40.f, 0.f });
+        }
+
         window.draw(workbenchSprite);
+        workbenchSprite.setPosition({ xOffset, 0.f });
     }
+
+    if (uni::ranges::contains(loadout, WeaponModule::Spikes))
+    {
+        if (uni::ranges::contains(loadout, WeaponModule::ExplosiveAmmo))
+        {
+            workbenchSprite.setTextureRect(
+                workbenchClip.getFrame(WorkbenchSpriteId::Mine));
+        }
+        else
+        {
+            workbenchSprite.setTextureRect(
+                workbenchClip.getFrame(WorkbenchSpriteId::Spikes));
+        }
+    }
+    else
+    {
+        workbenchSprite.setTextureRect(
+            workbenchClip.getFrame(WorkbenchSpriteId::Ammo));
+    }
+
+    window.draw(workbenchSprite);
 }
