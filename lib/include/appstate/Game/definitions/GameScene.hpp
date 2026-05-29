@@ -3,23 +3,13 @@
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/Constants.hpp"
+#include "appstate/Game/definitions/WeaponLoadout.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
 #include <DGM/dgm.hpp>
 #include <array>
 #include <entt/entt.hpp>
 #include <set>
 #include <vector>
-
-struct [[nodiscard]] WeaponLoadout final
-{
-    std::array<WeaponModule, 3> weapon1Modules = { WeaponModule::None,
-                                                   WeaponModule::None,
-                                                   WeaponModule::None };
-    std::array<WeaponModule, 3> weapon2Modules = { WeaponModule::None,
-                                                   WeaponModule::None,
-                                                   WeaponModule::None };
-    std::set<WeaponModule> unlockedModules = {};
-};
 
 struct [[nodiscard]] LightSource final
 {
@@ -73,6 +63,7 @@ struct [[nodiscard]] GameScene final
     const sf::Time spawnDelay = sf::seconds(1.f);
     const std::vector<LightSource> lights;
     WeaponLoadout loadout;
+    std::set<WeaponModule> unlockedModules = {};
     SurvivalSpawnerContext survivalSpawnerContext;
     HudMessage hudMessage;
     std::optional<InteractionTriggerInventory> interactionTrigger =

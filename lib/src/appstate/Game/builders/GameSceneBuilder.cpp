@@ -54,7 +54,7 @@ GameScene GameSceneBuilder::createScene(
     // Initialize unlocked modules based on game mode
     if (gameModeProperties.mode == GameMode::Story)
     {
-        artifact.loadout.unlockedModules = {
+        artifact.unlockedModules = {
             WeaponModule::SpreadBarrel_x2, WeaponModule::SpreadBarrel_x4,
             WeaponModule::CadenceBarrel,   WeaponModule::ExplosiveAmmo,
             WeaponModule::Ricochet,        WeaponModule::PassthruAmmo,
@@ -64,9 +64,9 @@ GameScene GameSceneBuilder::createScene(
     }
     else
     { // Survival
-        artifact.loadout.unlockedModules = {
+        artifact.unlockedModules = {
             WeaponModule::SpreadBarrel_x4,
-            WeaponModule::CadenceBarrel,
+            WeaponModule::Spikes,
         };
     }
 
@@ -158,16 +158,7 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
     const GameTextureAtlas& atlas,
     Input& input)
 {
-    LevelCreationArtifact result {
-        .loadout = {
-            .weapon1Modules = { WeaponModule::CadenceBarrel,
-                                WeaponModule::None,
-                                WeaponModule::None },
-            .weapon2Modules = { WeaponModule::SpreadBarrel_x4,
-                                WeaponModule::None,
-                                WeaponModule::None },
-        },
-    };
+    LevelCreationArtifact result;
 
     auto tileCoordToWorld = [&](unsigned x, unsigned y)
     {

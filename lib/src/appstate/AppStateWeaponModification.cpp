@@ -1,8 +1,8 @@
 #include "appstate/AppStateWeaponModification.hpp"
 #include "appstate/CommonHandler.hpp"
-#include "appstate/Messaging.hpp"
 #include "appstate/Game/builders/WeaponBuilder.hpp"
 #include "appstate/Game/definitions/Components.hpp"
+#include "appstate/Messaging.hpp"
 #include "gui/builders/FormBuilder.hpp"
 #include "gui/builders/WidgetBuilder.hpp"
 #include "rendering/CameraFactory.hpp"
@@ -194,20 +194,9 @@ void AppStateWeaponModification::onResume()
 {
     auto& inv = scene.actors.get<WeaponInventory>(scene.playerEntity);
 
-    inv.weapons[0] = WeaponBuilder::createWeapon(
-        EntityKind::Player,
-        {
-            scene.loadout.weapon1Modules[0],
-            scene.loadout.weapon1Modules[1],
-            scene.loadout.weapon1Modules[2],
-        });
-    inv.weapons[1] = WeaponBuilder::createWeapon(
-        EntityKind::Player,
-        {
-            scene.loadout.weapon2Modules[0],
-            scene.loadout.weapon2Modules[1],
-            scene.loadout.weapon2Modules[2],
-        });
+    for (int i = 0; i < inv.weapons.size(); ++i)
+        inv.weapons[i] = WeaponBuilder::createWeapon(
+            EntityKind::Player, scene.loadout.weapons[i]);
 
     app.popState(Messaging::serialize<PopIfNotGame>());
 }
@@ -252,8 +241,9 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
     {
         const bool isInUse =
             module != WeaponModule::None
-            && (uni::ranges::contains(scene.loadout.weapon1Modules, module)
-                || uni::ranges::contains(scene.loadout.weapon2Modules, module));
+            && (uni::ranges::contains(scene.loadout.weapons[0].modules, module)
+                || uni::ranges::contains(
+                    scene.loadout.weapons[1].modules, module));
 
         auto cellLayout = tgui::Group::create(
             { uni::format("{}%", BUTTON_SIZE).c_str(), "width" });
@@ -338,7 +328,7 @@ AppStateWeaponModification::getAvailableModuleNames() const
     names.push_back(dic.strings.getString(StringId::WeaponModule_None));
     for (size_t i = 1; i < ALL_MODULES.size(); ++i)
     {
-        if (scene.loadout.unlockedModules.contains(ALL_MODULES[i]))
+        if (scene.unlockedModules.contains(ALL_MODULES[i]))
             names.push_back(dic.strings.getString(MODULE_STRING_IDS[i]));
     }
     return names;
@@ -352,7 +342,7 @@ AppStateWeaponModification::getAvailableModules() const
     modules.push_back(WeaponModule::None);
     for (size_t i = 1; i < ALL_MODULES.size(); ++i)
     {
-        if (scene.loadout.unlockedModules.contains(ALL_MODULES[i]))
+        if (scene.unlockedModules.contains(ALL_MODULES[i]))
             modules.push_back(ALL_MODULES[i]);
     }
     return modules;

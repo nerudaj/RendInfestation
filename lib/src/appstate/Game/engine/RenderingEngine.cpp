@@ -275,10 +275,10 @@ void RenderingEngine::renderHudReloadTimeAndModules(
     window.draw(reloadShape);
 
     // Render used modules:
-    const auto& loadout = weaponInventory.activeWeapon
-                              ? scene.loadout.weapon2Modules
-                              : scene.loadout.weapon1Modules;
-    for (auto&& [idx, module] : std::views::enumerate(loadout))
+    const auto& activeWeaponConfig =
+        scene.loadout.weapons[weaponInventory.activeWeapon];
+    for (auto&& [idx, module] :
+         std::views::enumerate(activeWeaponConfig.modules))
     {
         if (module == WeaponModule::None) continue;
         hudSprite.setTextureRect(

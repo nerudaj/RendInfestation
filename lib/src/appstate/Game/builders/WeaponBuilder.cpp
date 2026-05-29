@@ -24,8 +24,8 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.soundId = SoundId::Shotgun;
             props.numShots *= 2;
             // props.baseProjectileDamage /= 2;
-            props.kickback += 100.f;
-            props.fireDelay *= 2.f;
+            props.kickback += 50.f;
+            props.fireDelay *= 1.25f;
             props.spread *= 4;
             return props;
         };
@@ -37,7 +37,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.numShots *= 4;
             // props.baseProjectileDamage /= 2;
             props.kickback += 100.f;
-            props.fireDelay *= 2.f;
+            props.fireDelay *= 1.5f;
             props.spread *= 8;
             return props;
         };
@@ -47,8 +47,8 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
         {
             props.projectileSpeed /= 2.f;
             props.baseProjectileDamage *= 1.5f;
-            props.kickback += 100.f;
-            props.fireDelay *= 2.f;
+            props.kickback += 150.f;
+            props.fireDelay *= 1.75f;
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Big;
             return props;
@@ -106,13 +106,12 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     }
 }
 
-Weapon WeaponBuilder::createWeapon(
-    EntityKind ownerKind, std::vector<WeaponModule> modules)
+Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
 {
-    std::ranges::sort(modules);
+    std::ranges::sort(config.modules);
 
     auto properties = WeaponProperties();
-    for (auto module : modules)
+    for (auto module : config.modules)
     {
         properties = createWeaponModuleTransformer(module)(properties);
     }

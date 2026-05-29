@@ -34,10 +34,7 @@ void Renderer::renderWorkbench(
     dgm::Window& window, const AnimationTimer& timer, size_t currentWeaponIdx)
 {
     auto getCurrentLoadout = [&]()
-    {
-        return currentWeaponIdx == 0 ? scene.loadout.weapon1Modules
-                                     : scene.loadout.weapon2Modules;
-    };
+    { return scene.loadout.weapons[currentWeaponIdx].modules; };
 
     workbenchSprite.setPosition({ 0.f, 0.f });
     workbenchSprite.setTextureRect(
@@ -55,8 +52,7 @@ void Renderer::renderWorkbench(
         renderWeapon(
             window,
             offset,
-            currentWeaponIdx == 0 ? scene.loadout.weapon2Modules
-                                  : scene.loadout.weapon1Modules);
+            scene.loadout.weapons[1 - currentWeaponIdx].modules);
         renderWeapon(
             window, offset - INTERNAL_GAME_RESOLUTION.x, getCurrentLoadout());
     }

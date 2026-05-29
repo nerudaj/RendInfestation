@@ -32,14 +32,12 @@ private:
 
     std::array<WeaponModule, 3>& getCurrentLoadout()
     {
-        return currentWeaponIdx == 0 ? scene.loadout.weapon1Modules
-                                     : scene.loadout.weapon2Modules;
+        return scene.loadout.weapons[currentWeaponIdx].modules;
     }
 
     const std::array<WeaponModule, 3>& getCurrentLoadout() const
     {
-        return currentWeaponIdx == 0 ? scene.loadout.weapon1Modules
-                                     : scene.loadout.weapon2Modules;
+        return scene.loadout.weapons[currentWeaponIdx].modules;
     }
 
     void onResume();

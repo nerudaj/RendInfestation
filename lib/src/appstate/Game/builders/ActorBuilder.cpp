@@ -35,19 +35,13 @@ entt::entity ActorBuilder::createPlayer(
     actors.emplace<WeaponInventory>(
         entity,
         0,
-        std::vector<Weapon> { WeaponBuilder::createWeapon(
-                                  EntityKind::Player,
-                                  { loadout.weapon1Modules[0],
-                                    loadout.weapon1Modules[1],
-                                    loadout.weapon1Modules[2] }),
-                              WeaponBuilder::createWeapon(
-                                  EntityKind::Player,
-                                  { loadout.weapon2Modules[0],
-                                    loadout.weapon2Modules[1],
-                                    loadout.weapon2Modules[2] }) });
+        std::vector<Weapon> {
+            WeaponBuilder::createWeapon(EntityKind::Player, loadout.weapons[0]),
+            WeaponBuilder::createWeapon(
+                EntityKind::Player, loadout.weapons[1]) });
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
     actors.emplace<BoundLightEmitter>(
-        entity, BoundLightEmitter { COLOR_WHITE, 10u });
+        entity, BoundLightEmitter { sf::Color::Black, 10u });
 
     actors.get<Skin>(entity).animation.setState(
         IDLE_ANIMATION_STATE, "looping"_true);

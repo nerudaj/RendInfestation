@@ -288,7 +288,7 @@ void GameRulesEngine::updateSpawner(const dgm::Time& time)
             ++context.wave;
             context.enemiesSpawnedInCurrentWave = 0;
             context.enemiesKilledInCurrentWave = 0;
-            context.enemiesInCurrentWave = context.wave * 25;
+            context.enemiesInCurrentWave = context.wave * 10;
             context.state = SurvivalModeState::SpawningEnemies;
         }
     }
@@ -351,7 +351,7 @@ void GameRulesEngine::tryUnlockRandomModule()
         WeaponModule::Splitter,
     };
 
-    auto& unlocked = scene.loadout.unlockedModules;
+    auto& unlocked = scene.unlockedModules;
 
     // Collect modules that are not yet unlocked
     std::vector<WeaponModule> locked;

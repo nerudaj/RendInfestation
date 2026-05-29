@@ -1,8 +1,8 @@
-#include "filesystem/models/TiledModels.hpp"
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/GameMode.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
+#include "filesystem/models/TiledModels.hpp"
 #include "input/Input.hpp"
 #include "misc/Compatibility.hpp"
 #include "types/SemanticTypes.hpp"
@@ -33,6 +33,7 @@ private:
         std::vector<LightSource> lights = {};
         std::vector<sf::Vector2f> enemySpawns = {};
         WeaponLoadout loadout = {};
+        std::set<WeaponModule> unlockedModules = {};
     };
 
 private:

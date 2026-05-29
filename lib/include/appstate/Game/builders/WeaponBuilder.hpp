@@ -1,6 +1,7 @@
 #pragma once
 
 #include "appstate/Game/definitions/Components.hpp"
+#include "appstate/Game/definitions/WeaponLoadout.hpp"
 #include "appstate/Game/definitions/WeaponProperties.hpp"
 #include "appstate/Game/enums/EntityKind.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
@@ -13,8 +14,7 @@ public:
     static std::function<WeaponProperties(WeaponProperties)>
     createWeaponModuleTransformer(WeaponModule module);
 
-    static Weapon
-    createWeapon(EntityKind ownerKind, std::vector<WeaponModule> modules);
+    static Weapon createWeapon(EntityKind ownerKind, WeaponConfig config);
 
     static Weapon createMeleeWeapon(EntityKind ownerKind, int damage);
 
