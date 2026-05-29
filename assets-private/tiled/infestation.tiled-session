@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Props.tsx",
+    "activeFile": "survival-02.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -42,11 +42,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1,
-            "selectedLayer": 2,
+            "scale": 1.5,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 864.5,
-                "y": 989
+                "x": 936.3333333333333,
+                "y": 777.3333333333333
             }
         }
     },
@@ -67,9 +67,9 @@
     "recentFiles": [
         "Core Tiles.tsx",
         "demo-01.tmx",
-        "survival-02.tmx",
+        "Props.tsx",
         "survival-01.tmx",
-        "Props.tsx"
+        "survival-02.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 2,
