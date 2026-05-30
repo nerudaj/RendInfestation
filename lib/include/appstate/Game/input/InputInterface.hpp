@@ -18,5 +18,5 @@ public:
 
     [[nodiscard]] virtual bool isInteractPressed() const = 0;
 
-    [[nodiscard]] virtual void freeze() = 0;
+    virtual void freeze() = 0;
 };
