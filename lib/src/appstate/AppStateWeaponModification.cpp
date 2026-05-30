@@ -34,6 +34,13 @@ AppStateWeaponModification::AppStateWeaponModification(
     , animationTimer(sf::seconds(0.5f))
 {
     buildLayout();
+
+    const auto&& windowSize = sf::Vector2f(app.window.getSize());
+    auto&& sfmlViewport = guiCamera.getCurrentView().getViewport();
+    auto&& tguiViewport = tgui::FloatRect(
+        tgui::Vector2f(sfmlViewport.position.componentWiseMul(windowSize)),
+        tgui::Vector2f(sfmlViewport.size.componentWiseMul(windowSize)));
+    dic.gui.getTguiHandle().setAbsoluteViewport(tguiViewport);
 }
 
 void AppStateWeaponModification::input()
@@ -203,11 +210,13 @@ void AppStateWeaponModification::onResume()
         inv.weapons[i] = WeaponBuilder::createWeapon(
             EntityKind::Player, scene.loadout.weapons[i]);
 
+    restoreGuiViewport();
     app.popState(Messaging::serialize<PopIfNotGame>());
 }
 
 void AppStateWeaponModification::onBack()
 {
+    restoreGuiViewport();
     app.popState();
 }
 
@@ -276,6 +285,12 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
             y++;
         }
     }
+}
+
+void AppStateWeaponModification::restoreGuiViewport()
+{
+    dic.gui.getTguiHandle().setAbsoluteViewport(tgui::FloatRect(
+        { 0.f, 0.f }, tgui::Vector2f(sf::Vector2f(app.window.getSize()))));
 }
 
 namespace

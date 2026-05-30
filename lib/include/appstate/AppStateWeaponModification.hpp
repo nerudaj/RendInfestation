@@ -45,6 +45,8 @@ private:
     void onCycle();
     void onModSelected(size_t moduleIdx);
 
+    void restoreGuiViewport();
+
     [[nodiscard]] std::vector<std::string> getModuleNames() const;
     [[nodiscard]] std::vector<std::string> getAvailableModuleNames() const;
     [[nodiscard]] std::vector<WeaponModule> getAvailableModules() const;
