@@ -6,7 +6,8 @@
     <application android:label="@THE_PROJECT_NAME@"
                  android:icon="@drawable/app_logo"
                  android:hasCode="false"
-                 android:allowBackup="true">
+                 android:allowBackup="true"
+		         android:theme="@style/AppTheme">
 
     <activity android:name="android.app.NativeActivity"
               android:icon="@drawable/app_logo"
