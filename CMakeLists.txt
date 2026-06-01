@@ -93,6 +93,7 @@ else ()
 
     add_subdirectory ( "lib" )
     add_subdirectory ( "bin-windows" )
+    add_subdirectory ( "tools/navmesh-debugger" )
 
     if ( ${BUILD_TESTS} )
         enable_testing()
