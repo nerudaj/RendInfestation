@@ -95,7 +95,7 @@ entt::entity ActorBuilder::createNpc(
             0,
             std::vector<Weapon> {
                 WeaponBuilder::createRangedWeapon(
-                    EntityKind::Npc, SkinType::PinkFireball, config.damage),
+                    EntityKind::Npc, SkinType::Fireball, config.damage),
             });
     }
     else
@@ -115,7 +115,7 @@ entt::entity ActorBuilder::createNpc(
         NpcBlackboard {
             .ownerEntity = entity,
             .input = dynamic_cast<NpcInput&>(*underlyingInput),
-            .kind = config.isRanged ? NpcKind::Ranged : NpcKind::Melee,
+            .kind = config.npcKind,
         });
     actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
 

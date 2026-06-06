@@ -43,19 +43,55 @@ void AiEngine::moveTowardsTarget(NpcBlackboard& blackboard)
     moveInDirection(blackboard, direction);
 }
 
-void AiEngine::generateWaypoint(NpcBlackboard& blackboard)
+void AiEngine::generateWaypointInFrontOfTarget(NpcBlackboard& blackboard)
 {
-    const auto position =
-        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
-    const auto isBeholder =
-        scene.actors.get<Skin>(blackboard.ownerEntity).skinType
-        == SkinType::Beholder;
     const auto targetPosition =
-        scene.actors.get<Collider>(scene.playerEntity).getPosition();
-    dgm::WorldNavMesh& mesh = (isBeholder ? altNavMesh : navMesh);
-    auto path = mesh.computePath(position, targetPosition);
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition();
+    const auto targetDirection =
+        scene.actors.get<LookDirection>(blackboard.targetEntity).get();
 
-    if (!path.isTraversed()) blackboard.waypoint = path.getCurrentPoint().coord;
+    const auto raycasterResult = dgm::Raycaster::raycast(
+        targetPosition, targetDirection, scene.levelMesh);
+    const auto directionToHit = raycasterResult.hitLocation - targetPosition;
+
+    // NOTE: multiplying by 0.9f so the target location doesn't lie in a solid
+    // wall
+    computePathAndUpdateWaypoint(
+        targetPosition + directionToHit * 0.9f, navMesh, blackboard);
+}
+
+void AiEngine::generateWaypointBehindOfTarget(NpcBlackboard& blackboard)
+{
+    const auto targetPosition =
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition();
+    const auto targetDirection =
+        scene.actors.get<LookDirection>(blackboard.targetEntity).get();
+
+    // NOTE: Inverted targetDirection
+    const auto raycasterResult = dgm::Raycaster::raycast(
+        targetPosition, -targetDirection, scene.levelMesh);
+    const auto directionToHit = raycasterResult.hitLocation - targetPosition;
+
+    // NOTE: multiplying by 0.9f so the target location doesn't lie in a solid
+    // wall
+    computePathAndUpdateWaypoint(
+        targetPosition + directionToHit * 0.9f, navMesh, blackboard);
+}
+
+void AiEngine::generateWaypointShortestPath(NpcBlackboard& blackboard)
+{
+    computePathAndUpdateWaypoint(
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition(),
+        navMesh,
+        blackboard);
+}
+
+void AiEngine::generateWaypointForFlyingNpc(NpcBlackboard& blackboard)
+{
+    computePathAndUpdateWaypoint(
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition(),
+        altNavMesh,
+        blackboard);
 }
 
 // ==========
@@ -104,7 +140,7 @@ AiEngine::getDirectionToTarget(const NpcBlackboard& blackboard) const
     const auto position =
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
     const auto targetPosition =
-        scene.actors.get<Collider>(scene.playerEntity).getPosition();
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition();
     return targetPosition - position;
 }
 
@@ -116,13 +152,24 @@ void AiEngine::moveInDirection(
     blackboard.input.setAimDirection(unitDirection);
 }
 
+void AiEngine::computePathAndUpdateWaypoint(
+    const sf::Vector2f& targetPosition,
+    dgm::WorldNavMesh& navigationMesh,
+    NpcBlackboard& blackboard)
+{
+    const auto position =
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
+    auto path = navigationMesh.computePath(position, targetPosition);
+    if (!path.isTraversed()) blackboard.waypoint = path.getCurrentPoint().coord;
+}
+
 #define CONDITION(x) [&](const NpcBlackboard& b) -> bool { return self.x(b); }
 
 #define NOT(x) [&](const NpcBlackboard& b) -> bool { return !self.x(b); }
 
 #define ACTION(x) [&](NpcBlackboard& b) { self.x(b); }
 
-fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForMeleeNpc(AiEngine& self)
+fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForScuttlebug(AiEngine& self)
 {
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
@@ -145,7 +192,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForMeleeNpc(AiEngine& self)
                 .otherwiseExec(ACTION(moveTowardsTarget))
                 .andLoop()
             .withState("GenerateWaypoint")
-                .exec(ACTION(generateWaypoint))
+                .exec(ACTION(generateWaypointInFrontOfTarget))
                 .andGoToState("Start")
             .withState("Attack")
                 .exec(ACTION(attack))
@@ -160,7 +207,83 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForMeleeNpc(AiEngine& self)
     // clang-format on
 }
 
-fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForRangedNpc(AiEngine& self)
+fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForGreaterScuttlebug(AiEngine& self)
+{
+    // clang-format off
+    return fsm::Builder<NpcBlackboard>()
+        .withNoErrorMachine()
+        .withMainMachine()
+            .withEntryState("Start")
+                .when(CONDITION(isTargetInMeleeRange))
+                    .goToState("Attack")
+                .orWhen(CONDITION(isTargetVisible))
+                    .goToState("MoveTowardsTarget")
+                .orWhen(CONDITION(hasNpcReachedWaypoint))
+                    .goToState("GenerateWaypoint")
+                .otherwiseExec(ACTION(moveTowardsWaypoint))
+                .andLoop()
+            .withState("MoveTowardsTarget")
+                .when(CONDITION(isTargetInMeleeRange))
+                    .goToState("Attack")
+                .orWhen(NOT(isTargetVisible))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(moveTowardsTarget))
+                .andLoop()
+            .withState("GenerateWaypoint")
+                .exec(ACTION(generateWaypointBehindOfTarget))
+                .andGoToState("Start")
+            .withState("Attack")
+                .exec(ACTION(attack))
+                .andGoToState("WaitUntilAttackFinishes")
+            .withState("WaitUntilAttackFinishes")
+                .when(CONDITION(isOwnerIdleOrWalking))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(waitTillAttackFinishes))
+                .andLoop()
+        .done()
+    .build();
+    // clang-format on
+}
+
+fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBighead(AiEngine& self)
+{
+    // clang-format off
+    return fsm::Builder<NpcBlackboard>()
+        .withNoErrorMachine()
+        .withMainMachine()
+            .withEntryState("Start")
+                .when(CONDITION(isTargetInMeleeRange))
+                    .goToState("Attack")
+                .orWhen(CONDITION(isTargetVisible))
+                    .goToState("MoveTowardsTarget")
+                .orWhen(CONDITION(hasNpcReachedWaypoint))
+                    .goToState("GenerateWaypoint")
+                .otherwiseExec(ACTION(moveTowardsWaypoint))
+                .andLoop()
+            .withState("MoveTowardsTarget")
+                .when(CONDITION(isTargetInMeleeRange))
+                    .goToState("Attack")
+                .orWhen(NOT(isTargetVisible))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(moveTowardsTarget))
+                .andLoop()
+            .withState("GenerateWaypoint")
+                .exec(ACTION(generateWaypointShortestPath))
+                .andGoToState("Start")
+            .withState("Attack")
+                .exec(ACTION(attack))
+                .andGoToState("WaitUntilAttackFinishes")
+            .withState("WaitUntilAttackFinishes")
+                .when(CONDITION(isOwnerIdleOrWalking))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(waitTillAttackFinishes))
+                .andLoop()
+        .done()
+    .build();
+    // clang-format on
+}
+
+fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
 {
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
@@ -176,14 +299,14 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForRangedNpc(AiEngine& self)
                 .otherwiseExec(ACTION(moveTowardsWaypoint))
                 .andLoop()
             .withState("MoveTowardsTarget")
-                .when(CONDITION(isTargetInMeleeRange))
+                .when(CONDITION(isTargetInShootingRange))
                     .goToState("Attack")
                 .orWhen(NOT(isTargetVisible))
                     .goToState("Start")
                 .otherwiseExec(ACTION(moveTowardsTarget))
                 .andLoop()
             .withState("GenerateWaypoint")
-                .exec(ACTION(generateWaypoint))
+                .exec(ACTION(generateWaypointForFlyingNpc))
                 .andGoToState("Start")
             .withState("Attack")
                 .exec(ACTION(attack))

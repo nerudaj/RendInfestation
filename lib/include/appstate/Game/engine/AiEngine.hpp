@@ -23,8 +23,10 @@ public:
 #ifdef FSM_LOGGING_ENABLED
         , logger("ai_log.csv")
 #endif
-        , fsmsByKind(std::array { buildFsmForMeleeNpc(*this),
-                                  buildFsmForRangedNpc(*this),
+        , fsmsByKind(std::array { buildFsmForScuttlebug(*this),
+                                  buildFsmForGreaterScuttlebug(*this),
+                                  buildFsmForBighead(*this),
+                                  buildFsmForBeholder(*this),
                                   buildFsmForTurretNpc(*this) })
     {
 #ifdef FSM_LOGGING_ENABLED
@@ -45,7 +47,13 @@ private: // Actions
 
     void moveTowardsTarget(NpcBlackboard& blackboard);
 
-    void generateWaypoint(NpcBlackboard& blackboard);
+    void generateWaypointInFrontOfTarget(NpcBlackboard& blackboard);
+
+    void generateWaypointBehindOfTarget(NpcBlackboard& blackboard);
+
+    void generateWaypointShortestPath(NpcBlackboard& blackboard);
+
+    void generateWaypointForFlyingNpc(NpcBlackboard& blackboard);
 
     void chooseTarget(NpcBlackboard&) {}
 
@@ -73,9 +81,18 @@ private: // Utils
     void
     moveInDirection(NpcBlackboard& blackboard, const sf::Vector2f& direction);
 
-    static fsm::Fsm<NpcBlackboard> buildFsmForMeleeNpc(AiEngine& self);
+    void computePathAndUpdateWaypoint(
+        const sf::Vector2f& targetPosition,
+        dgm::WorldNavMesh& navigationMesh,
+        NpcBlackboard& blackboard);
 
-    static fsm::Fsm<NpcBlackboard> buildFsmForRangedNpc(AiEngine& self);
+    static fsm::Fsm<NpcBlackboard> buildFsmForScuttlebug(AiEngine& self);
+
+    static fsm::Fsm<NpcBlackboard> buildFsmForGreaterScuttlebug(AiEngine& self);
+
+    static fsm::Fsm<NpcBlackboard> buildFsmForBighead(AiEngine& self);
+
+    static fsm::Fsm<NpcBlackboard> buildFsmForBeholder(AiEngine& self);
 
     static fsm::Fsm<NpcBlackboard> buildFsmForTurretNpc(AiEngine& self);
 

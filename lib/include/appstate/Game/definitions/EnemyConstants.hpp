@@ -1,6 +1,7 @@
 #pragma once
 
 #include "appstate/Game/definitions/Constants.hpp"
+#include "appstate/Game/enums/NpcKind.hpp"
 #include "appstate/Game/enums/SkinType.hpp"
 #include <map>
 
@@ -13,6 +14,7 @@ struct [[nodiscard]] EnemyConfig final
     sf::Vector2f spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, 0.f };
     bool canFall = true;
     bool isRanged = false;
+    NpcKind npcKind = {};
 };
 
 const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
@@ -23,6 +25,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .damage = BASE_MELEE_DAMAGE,
             .speed = BASE_ENEMY_SPEED * 1.5f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+            .npcKind = NpcKind::Scuttlebug,
         },
     },
     {
@@ -32,6 +35,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .damage = static_cast<int>(BASE_MELEE_DAMAGE * 1.5f),
             .speed = BASE_ENEMY_SPEED * 1.1f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+            .npcKind = NpcKind::GreaterScuttlebug,
         },
     },
     {
@@ -41,6 +45,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .damage = BASE_MELEE_DAMAGE * 2,
             .speed = BASE_ENEMY_SPEED * 0.8f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
+            .npcKind = NpcKind::Bighead,
         },
     },
     {
@@ -52,6 +57,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .colliderRadius = 10.f,
             .canFall = false,
             .isRanged = true,
+            .npcKind = NpcKind::Beholder,
         },
     }
 };

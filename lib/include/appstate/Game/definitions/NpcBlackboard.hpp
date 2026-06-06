@@ -9,7 +9,7 @@ struct [[nodiscard]] NpcBlackboard final : public fsm::BlackboardBase
 {
     entt::entity ownerEntity = entt::null;
     NpcInput& input;
-    NpcKind kind = NpcKind::Melee;
+    NpcKind kind = {};
     entt::entity targetEntity = entt::null;
     sf::Vector2f waypoint;
 };

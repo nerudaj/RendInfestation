@@ -2,8 +2,10 @@
 
 enum class [[nodiscard]] NpcKind
 {
-    Melee,
-    Ranged,
+    Scuttlebug,
+    GreaterScuttlebug,
+    Bighead,
+    Beholder,
     Turret,
 
     Max
