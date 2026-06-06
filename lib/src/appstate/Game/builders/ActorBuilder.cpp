@@ -337,6 +337,19 @@ entt::entity ActorBuilder::createEffect(
                 .scale = scale,
             });
     }
+    else if (type == EffectType::FireballDecay)
+    {
+        actors.emplace<Skin>(
+            entity,
+            Skin {
+                .kind = EntityKind::Effect,
+                .skinType = SkinType::Fireball,
+                .animation = dgm::Animation(
+                    atlas.getSkinAnimationStates(SkinType::Fireball),
+                    BASE_ANIMATION_FPS),
+                .scale = scale,
+            });
+    }
     else
     {
         assert(false && "Invalid effect type");

@@ -149,6 +149,31 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                 resmgr.get<dgm::AnimationStates>("pink_fireball.png.anim"))
             .value());
 
+    skins.emplace(
+        SkinType::Fireball,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("projectile_fireball.png"),
+                resmgr.get<dgm::AnimationStates>(
+                    "projectile_fireball.png.anim"))
+            .value());
+
+    skins.emplace(
+        SkinType::Rocket,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("projectile_rocket.png"),
+                resmgr.get<dgm::AnimationStates>("projectile_rocket.png.anim"))
+            .value());
+
+    skins.emplace(
+        SkinType::Freeze,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("projectile_freeze.png"),
+                resmgr.get<dgm::AnimationStates>("projectile_freeze.png.anim"))
+            .value());
+
     auto crosshairs = atlas
                           .addTileset(
                               resmgr.get<sf::Texture>("crosshairs.png"),

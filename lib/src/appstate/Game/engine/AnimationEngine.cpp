@@ -11,8 +11,8 @@ void AnimationEngine::operator()(const event::ActorFiredWeapon& e)
 
 void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
 {
-    auto&& [collider, body, inventory] =
-        scene.actors.get<Collider, PhysicsBody, ProjectileInventory>(
+    auto&& [collider, body, inventory, skin] =
+        scene.actors.get<Collider, PhysicsBody, ProjectileInventory, Skin>(
             e.projectileEntity);
 
     if (inventory.traits & ProjectileTraits::Explosive)
@@ -20,9 +20,16 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
         ActorBuilder::createEffect(
             scene.actors,
             collider.getPosition(),
-            inventory.traits & ProjectileTraits::Explosive
-                ? EffectType::Explosion
-                : EffectType::BulletDeath,
+            EffectType::Explosion,
+            atlas,
+            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
+    }
+    else if (skin.skinType == SkinType::Fireball)
+    {
+        ActorBuilder::createEffect(
+            scene.actors,
+            collider.getPosition(),
+            EffectType::FireballDecay,
             atlas,
             inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
     }

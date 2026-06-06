@@ -18,6 +18,9 @@ enum class [[nodiscard]] SkinType : unsigned char
     Hyperbeam,
     Spikes,
     PinkFireball,
+    Fireball,
+    Rocket,
+    Freeze,
 
     // Props
     Prop,

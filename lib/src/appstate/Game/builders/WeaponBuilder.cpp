@@ -90,6 +90,11 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
                 props.projectileTraits | ProjectileTraits::Explosive;
             if (props.projectileSkin == SkinType::Spikes)
                 props.projectileSkin = SkinType::Landmine;
+            else
+            {
+                props.projectileSkin = SkinType::Rocket;
+                props.projectileSpeed /= 2.f;
+            }
             props.kickback += 100.f;
             props.fireDelay *= 2.f;
             props.baseProjectileDamage *= 4;
