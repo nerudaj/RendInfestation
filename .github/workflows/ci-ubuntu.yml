@@ -7,9 +7,6 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-env:
-  BUILD_DIR: ${{github.workspace}}/_build
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,13 +40,12 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B "${{env.BUILD_DIR}}" . -G Ninja -D CMAKE_C_COMPILER=clang-${{ matrix.clang }} -D CMAKE_CXX_COMPILER=clang++-${{ matrix.clang }} -DCMAKE_CXX_FLAGS=-stdlib='libc++'
+        cmake --preset clang-debug
       shell: bash
 
     - name: Build
-      working-directory: ${{env.BUILD_DIR}}
       run: |
-        cmake --build .
+        cmake --build --preset clang-debug-build
       shell: bash
 
     # NOTE: No tests because X server is returning errors
