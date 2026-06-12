@@ -6,7 +6,7 @@ set ( FSM_LIB_VERSION "main" )
 set ( CATCH2_VERSION "v3.8.0" )
 set ( ENTT_VERSION "3.16.0" )
 
-set ( ENABLE_LEGACY_ANIMATION OFF )
+set ( DGM_ENABLE_LEGACY_ANIMATION OFF )
 
 CPMAddPackage("gh:nerudaj/dgm-engine-core-lib#${DGM_ENGINE_CORE_LIB_VERSION}")
 CPMAddPackage("gh:jarro2783/cxxopts#v${CXXOPTS_VERSION}")

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  BUILD_DIR: ${{ github.workspace }}/_build
+  BUILD_DIR: ${{ github.workspace }}/_build-msvc
 
 jobs:
   build:
@@ -24,15 +24,13 @@ jobs:
 
     - name: Configure CMake
       run: |
-        mkdir "${{ env.BUILD_DIR }}"
-        cd "${{ env.BUILD_DIR }}"
-        cmake -D USE_NSIS=ON ..
+        cmake --preset msvc -D USE_NSIS=ON
       shell: cmd
 
     - name: Build
       working-directory: ${{env.BUILD_DIR}}
       run: |
-        cmake --build . --config Release
+        cmake --build --preset build-msvc-release
       shell: cmd
 
     - name: Pack
