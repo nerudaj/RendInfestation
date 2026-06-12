@@ -20,8 +20,6 @@ public:
 
 int main(int, char**)
 {
-    const auto cwd = std::filesystem::current_path().string();
-
     auto&& window = dgm::Window(dgm::WindowSettings {
         .resolution = { 1280u, 720u },
         .title = "navmesh-debugger",
