@@ -27,7 +27,7 @@ jobs:
       run: |
         mkdir "${{ env.BUILD_DIR }}"
         cd "${{ env.BUILD_DIR }}"
-        cmake -D ENABLE_LINTER=ON ..
+        cmake -D ENABLE_LINTER=ON -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_GENERATOR_PLATFORM=x64 ..
       shell: cmd
 
     - name: Build
