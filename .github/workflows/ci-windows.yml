@@ -31,7 +31,6 @@ jobs:
       shell: cmd
 
     - name: Build
-      working-directory: ${{env.BUILD_DIR}}
       run: |
         cmake --build --preset build-msvc-debug
       shell: cmd
