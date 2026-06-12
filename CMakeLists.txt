@@ -1,5 +1,7 @@
 cmake_minimum_required ( VERSION 3.26 )
 
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
+
 include ( "cmake/vars.cmake" )
 include ( "cmake/cpp-init.cmake" )
 
@@ -8,6 +10,7 @@ get_version_from_git (
     PROJECT_VERSION_VARIABLE GIT_PROJECT_VERSION
     FULL_VERSION_VARIABLE FULL_PROJECT_VERSION
 )
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
 
 option ( BUILD_ANDROID "Build for Android platform" OFF )
 option ( ENABLE_LINTER "Enable clang-tidy" OFF )
@@ -15,12 +18,14 @@ option ( BUILD_TESTS "Build unit testing target" ON )
 option ( USE_NSIS "Use NSIS for packaging" OFF )
 
 project ( ${THE_PROJECT_NAME} VERSION ${GIT_PROJECT_VERSION} )
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
 
 set ( OUTPUT_FILE_NAME "${THE_PROJECT_NAME}-v${CMAKE_PROJECT_VERSION}" )
 
 if ( ${BUILD_ANDROID} AND ${USE_NSIS} )
     message ( FATAL_ERROR "Cannot use NSIS for Android build! Exiting." )
 endif ()
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
 
 if ( ${BUILD_ANDROID} )
     message ( "Configuring for Android build" )
@@ -89,12 +94,14 @@ else ()
 
     set ( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Compiled" )
 
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
     include ( "cmake/dependencies.cmake" )
 
     add_subdirectory ( "lib" )
     add_subdirectory ( "bin-windows" )
     add_subdirectory ( "tools/navmesh-debugger" )
 
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
     if ( ${BUILD_TESTS} )
         enable_testing()
         add_subdirectory ( "tests" )
@@ -106,6 +113,7 @@ else ()
     )
 endif ()
 
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
 if ( ${USE_NSIS} )
     include ( InstallRequiredSystemLibraries )
     set ( CPACK_GENERATOR "NSIS" )
@@ -131,4 +139,5 @@ else ()
 endif ()
 set ( CPACK_PACKAGE_FILE_NAME "${OUTPUT_FILE_NAME}" )
 
+message ( "PROBE-COMPILER: ${CMAKE_CXX_COMPILER}" )
 include ( CPack )

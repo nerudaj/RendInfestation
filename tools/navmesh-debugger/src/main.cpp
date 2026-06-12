@@ -3,6 +3,20 @@
 #include "misc/DependencyContainer.hpp"
 #include <DGM/classes/Window.hpp>
 
+class InspectableNavMesh final : public dgm::WorldNavMesh
+{
+public:
+    InspectableNavMesh(auto&& levelMesh)
+    : dgm::WorldNavMesh(std::forward<decltype(levelMesh)>(levelMesh))
+    {}
+
+public:
+    const auto& getJumpPointConnections() const
+    {
+        return jumpPointConnections;
+    }
+};
+
 int main(int, char**)
 {
     auto&& window = dgm::Window(dgm::WindowSettings {
@@ -21,7 +35,6 @@ int main(int, char**)
     auto&& canvas = tgui::CanvasSFML::create();
     auto&& panel = tgui::Panel::create();
     panel->add(canvas);
-    // canvas->setScale({ 1.f, -1.f });
 
     auto&& atlas =
         GameTextureAtlasBuilder::createTextureAtlas(dic.resmgr, { 1024, 1024 });
@@ -51,7 +64,8 @@ int main(int, char**)
 
     canvas->onClick([&](tgui::Vector2f pos) { startDot.setPosition(pos); });
     canvas->onRightClick([&](tgui::Vector2f pos) { endDot.setPosition(pos); });
-    auto&& navmesh = dgm::WorldNavMesh(scene.levelMesh.clone());
+
+    auto&& navmesh = InspectableNavMesh(scene.levelMesh.clone());
 
     dic.gui.rebuildWith(dic.guiBuilderFactory.createNavbarLayoutBuilder()
                             .withNavbarWidget(WidgetBuilder::createButton(
@@ -76,7 +90,7 @@ int main(int, char**)
 
         canvas->draw(tilemap);
 
-        for (auto&& [point, connections] : navmesh.jumpPointConnections)
+        for (auto&& [point, connections] : navmesh.getJumpPointConnections())
         {
             const auto worldPoint = sf::Vector2f(
                 point.componentWiseMul(scene.levelMesh.getVoxelSize()));
