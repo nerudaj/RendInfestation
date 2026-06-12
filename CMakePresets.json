@@ -48,11 +48,9 @@
 			"displayName": "MSVC - Visual Studio generator (MSBuild)",
 			"description": "Configure using Visual Studio generator (selects MSBuild).",
 			"generator": "Visual Studio 17 2022",
-			"architecture": "x64",
 			"binaryDir": "${sourceDir}/_build-${presetName}",
 			"cacheVariables": {
-				"CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDLL",
-				"CMAKE_POSITION_INDEPENDENT_CODE": "OFF"
+				"CMAKE_GENERATOR_PLATFORM": "x64"
 			}
 		}
 	],
