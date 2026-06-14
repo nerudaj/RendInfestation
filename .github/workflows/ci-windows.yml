@@ -27,7 +27,7 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake --build msvc
+        cmake --preset msvc
       shell: cmd
 
     - name: Build
