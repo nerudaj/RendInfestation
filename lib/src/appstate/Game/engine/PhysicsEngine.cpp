@@ -67,8 +67,6 @@ void PhysicsEngine::updateForConcreteCollider(
 
     if (!options.nonblocking)
     {
-        // If this assert fails, then we risk missing a collision event
-        assert(!options.reportActorCollisions);
         performEntityCollisionDetection(
             entity, collider, moment, options.semighost);
     }

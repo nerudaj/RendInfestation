@@ -38,6 +38,12 @@ public:
         const GameTextureAtlas& atlas,
         const Weapon& weapon);
 
+    static entt::entity createTurret(
+        entt::registry& actors,
+        const sf::Vector2f& origin,
+        const GameTextureAtlas& atlas,
+        const ProjectileInventory& inventory);
+
     static void
     shatterProjectile(entt::registry& actors, entt::entity projectile);
 

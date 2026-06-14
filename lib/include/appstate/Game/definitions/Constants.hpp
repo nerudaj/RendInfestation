@@ -17,6 +17,7 @@ constexpr float BASE_EXPLOSION_RADIUS = 18.f;
 constexpr int EFFECT_FPS = 8;
 constexpr int BASE_ANIMATION_FPS = 8;
 constexpr float MIN_ENEMY_SPAWN_DISTANCE = 256.f;
+constexpr int BASE_TURRET_HEALTH = BASE_PROJECTILE_DAMAGE * 10;
 
 // Animation states
 constexpr const char* IDLE_ANIMATION_STATE = "idle";

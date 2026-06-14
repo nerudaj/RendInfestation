@@ -187,27 +187,34 @@ entt::entity ActorBuilder::createProjectile(
     const float sizeFactor =
         weapon.defaultProjectileInventory.traits & ProjectileTraits::Big ? 2.f
                                                                          : 1.f;
+    const float speedVariance = static_cast<float>(rand() % 200 - 100) / 100.f
+                                * weapon.projectileSpeedVariance;
+
+    const auto hasShrapnelsTrait =
+        weapon.defaultProjectileInventory.traits & ProjectileTraits::Shrapnels;
+    const auto hasTurretTrait =
+        weapon.defaultProjectileInventory.traits & ProjectileTraits::Turret;
+    const auto friction = hasShrapnelsTrait || hasTurretTrait ? 0.02f : 0.f;
+    const auto reportMeshCollisions = !hasShrapnelsTrait && !hasTurretTrait;
+    const auto nonblocking =
+        !(weapon.defaultProjectileInventory.traits & ProjectileTraits::Turret);
 
     auto entity = actors.create();
     actors.emplace<Collider>(
         entity,
         dgm::Circle(origin, 3.f * sizeFactor),
-        "reportMeshCollisions"_true,
+        reportMeshCollisions,
         "reportActorCollisions"_true,
-        "nonblocking"_true);
-
-    const float speedVariance = static_cast<float>(rand() % 200 - 100) / 100.f
-                                * weapon.projectileSpeedVariance;
-
+        nonblocking);
     actors.emplace<PhysicsBody>(
         entity,
         PhysicsBody {
             .forward = direction * (weapon.projectileSpeed + speedVariance),
-            .bounciness = 0.8f,
-            .friction = weapon.defaultProjectileInventory.traits
-                                & ProjectileTraits::Shrapnels
-                            ? 0.02f
-                            : 0.f,
+            .bounciness = weapon.defaultProjectileInventory.traits
+                                  & ProjectileTraits::Bouncy
+                              ? 0.8f
+                              : 0.f,
+            .friction = friction,
             .useAltMesh = true,
             .canFall = weapon.defaultProjectileInventory.traits
                        & ProjectileTraits::Shrapnels,
@@ -236,6 +243,79 @@ entt::entity ActorBuilder::createProjectile(
         actors.emplace<Interval>(
             entity, Interval { .delay = sf::milliseconds(30) });
     }
+    return entity;
+}
+
+entt::entity ActorBuilder::createTurret(
+    entt::registry& actors,
+    const sf::Vector2f& origin,
+    const GameTextureAtlas& atlas,
+    const ProjectileInventory& inventory)
+{
+    auto entity = actors.create();
+
+    actors.emplace<Collider>(
+        entity,
+        dgm::Circle(origin, 8.f),
+        ColliderOptions {
+            .nonblocking = true,
+            .semighost = true,
+        });
+
+    actors.emplace<PhysicsBody>(
+        entity,
+        PhysicsBody {
+            .maxSpeed = 0.0f,
+            .friction = 0.5f,
+            .useAltMesh = true,
+            .canFall = true,
+        });
+
+    actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+
+    actors.emplace<Skin>(
+        entity,
+        Skin {
+            .kind = EntityKind::Player,
+            .skinType = SkinType::Turret,
+            .animation = dgm::Animation(
+                atlas.getSkinAnimationStates(SkinType::Turret),
+                BASE_ANIMATION_FPS),
+        });
+
+    actors.emplace<Health>(entity, BASE_TURRET_HEALTH);
+
+    auto weaponConfig = WeaponConfig {};
+    for (auto&& idx : uni::views::iota(
+             0u,
+             std::min(
+                 weaponConfig.modules.size(), inventory.spawnerDef.size())))
+    {
+        weaponConfig.modules[idx] = inventory.spawnerDef[idx];
+    }
+
+    actors.emplace<WeaponInventory>(
+        entity,
+        0,
+        std::vector<Weapon> {
+            WeaponBuilder::createWeapon(EntityKind::Player, weaponConfig),
+        });
+
+    auto input = std::make_unique<NpcInput>();
+    auto underlyingInput = input.get();
+    actors.emplace<EntityInput>(entity, std::move(input));
+    actors.emplace<NpcBlackboard>(
+        entity,
+        NpcBlackboard {
+            .ownerEntity = entity,
+            .input = dynamic_cast<NpcInput&>(*underlyingInput),
+            .kind = NpcKind::Turret,
+        });
+    actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
+
+    actors.get<Skin>(entity).animation.setState(
+        IDLE_ANIMATION_STATE, "looping"_true);
+
     return entity;
 }
 

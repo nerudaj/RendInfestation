@@ -1,4 +1,5 @@
 #include "appstate/Game/builders/WeaponBuilder.hpp"
+#include "misc/Compatibility.hpp"
 
 std::function<WeaponProperties(WeaponProperties)>
 WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
@@ -121,10 +122,12 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
         {
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Turret;
-            props.projectileSkin = SkinType::Turret;
+            props.projectileSkin = SkinType::TurretSpawner;
             props.kickback += 20.f;
             props.fireDelay *= 3.f;
             props.baseProjectileDamage /= 1.5f;
+            props.projectileLifetime = sf::seconds(1.f);
+            props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
             return props;
         };
     }
@@ -143,7 +146,7 @@ Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
     return Weapon {
         .soundId = properties.soundId,
         .cooldown = properties.fireDelay,
-        .projectileLifetime = BASE_PROJECTILE_LIFETIME,
+        .projectileLifetime = properties.projectileLifetime,
         .kickback = properties.kickback,
         .projectileSpeed = properties.projectileSpeed,
         .projectileSpeedVariance = properties.projectileSpeedVariance,
@@ -155,6 +158,11 @@ Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
                 .damage = properties.baseProjectileDamage,
                 .traits = properties.projectileTraits,
                 .originator = ownerKind,
+                .spawnerDef = config.modules
+                              | uni::views::filter(
+                                  [](WeaponModule mod)
+                                  { return mod != WeaponModule::Turret; })
+                              | uni::ranges::to<std::vector>(),
             },
     };
 }

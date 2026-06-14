@@ -95,6 +95,14 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
             .value();
 
     skins.emplace(
+        SkinType::Turret,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("scifi_turret.png"),
+                resmgr.get<dgm::AnimationStates>("scifi_turret.png.anim"))
+            .value());
+
+    skins.emplace(
         SkinType::Explosion,
         atlas
             .addSpritesheet(
@@ -175,11 +183,12 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
             .value());
 
     skins.emplace(
-        SkinType::Turret,
+        SkinType::TurretSpawner,
         atlas
             .addSpritesheet(
-                resmgr.get<sf::Texture>("scifi_turret.png"),
-                resmgr.get<dgm::AnimationStates>("scifi_turret.png.anim"))
+                resmgr.get<sf::Texture>("projectile_turret_spawner.png"),
+                resmgr.get<dgm::AnimationStates>(
+                    "projectile_turret_spawner.png.anim"))
             .value());
 
     auto crosshairs = atlas

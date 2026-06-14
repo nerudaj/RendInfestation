@@ -340,16 +340,19 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
     for (auto&& [entity, lifetime] : scene.actors.view<Lifetime>().each())
     {
         lifetime.get() -= time.getElapsed();
-        if (lifetime.get() <= sf::Time::Zero)
-        {
-            if (auto inventory =
-                    scene.actors.try_get<ProjectileInventory>(entity))
-            {
-                createDamageMarkerForProjectile(entity, inventory);
-            }
+        if (lifetime.get() > sf::Time::Zero) continue;
 
-            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        auto inventory = scene.actors.try_get<ProjectileInventory>(entity);
+        if (inventory && inventory->traits & ProjectileTraits::Turret)
+        {
+            ActorBuilder::createTurret(
+                scene.actors,
+                scene.actors.get<Collider>(entity).getPosition(),
+                atlas,
+                *inventory);
         }
+
+        eventQueue.pushEvent<event::ObjectDestroyed>(entity);
     }
 }
 
@@ -443,13 +446,14 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
     auto callback = scene.actors.emplace<TimedScript>(
         future,
         sf::seconds(0.5f),
-        [&, bodyCopy = *body, entity = actor]
+        [&, friction = body->friction, entity = actor]
         {
             auto body = scene.actors.try_get<PhysicsBody>(entity);
             if (!body) return;
 
             // Turn back original physics body behavior
-            *body = bodyCopy;
+            body->ragdoll = false;
+            body->friction = friction;
         });
 
     // Turn the body into ragdoll

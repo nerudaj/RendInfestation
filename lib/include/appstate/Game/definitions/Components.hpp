@@ -10,6 +10,7 @@ here.
 #include "appstate/Game/enums/InteractionTriggerType.hpp"
 #include "appstate/Game/enums/ProjectileTraits.hpp"
 #include "appstate/Game/enums/SkinType.hpp"
+#include "appstate/Game/enums/WeaponModule.hpp"
 #include "appstate/Game/input/InputInterface.hpp"
 #include "audio/SoundId.hpp"
 #include "types/BrandedType.hpp"
@@ -17,6 +18,7 @@ here.
 #include <DGM/classes/Animation.hpp>
 #include <DGM/classes/Collision.hpp>
 #include <DGM/classes/Objects.hpp>
+#include <array>
 #include <memory>
 #include <optional>
 #include <variant>
@@ -29,8 +31,8 @@ struct [[nodiscard]] ColliderOptions final
     bool nonblocking = false;
     bool disabled = false;
     bool semighost =
-        false; // If true, doesn't collide with other semighost entities, but
-               // does collide with non-semighost ones
+        false; ///< If true, doesn't collide with other semighost entities, but
+               ///< does collide with non-semighost ones
 };
 
 struct [[nodiscard]] Collider final
@@ -179,6 +181,9 @@ struct [[nodiscard]] ProjectileInventory final
     int damage = 0;
     ProjectileTraits traits = ProjectileTraits::None;
     EntityKind originator = {};
+    // This is just solely for the Turret to know what weapon it should
+    // get
+    std::vector<WeaponModule> spawnerDef;
 };
 
 struct [[nodiscard]] Weapon final

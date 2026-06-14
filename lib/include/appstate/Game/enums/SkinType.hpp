@@ -22,6 +22,7 @@ enum class [[nodiscard]] SkinType : unsigned char
     Fireball,
     Rocket,
     Freeze,
+    TurretSpawner,
 
     // Props
     Prop,
