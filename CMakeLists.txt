@@ -3,7 +3,7 @@ cmake_minimum_required ( VERSION 3.26 )
 include ( "cmake/vars.cmake" )
 include ( "cmake/cpp-init.cmake" )
 
-cpp_init()
+bootstrap_cpm()
 get_version_from_git (
     PROJECT_VERSION_VARIABLE GIT_PROJECT_VERSION
     FULL_VERSION_VARIABLE FULL_PROJECT_VERSION
