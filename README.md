@@ -59,7 +59,7 @@ Configure cmake:
 
 ```sh
 # of USE_NSIS=ON, configures cpack to use NSIS instead of zip (generates installer)
-cmake -B _build . [-D USE_NSIS=ON]
+cmake -B _build . [-D USE_NSIS=ON] -DCMAKE_CXX_STANDARD=23 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_GENERATOR_PLATFORM=x64
 ```
 
 This will generate a `<project-name>.sln` file inside `_build`. You can open it in Visual Studio and work from there. When you use `-D USE_NSIS=ON`, then CPack would use NSIS (must be installed) instead of Zip for packaging.
@@ -113,7 +113,7 @@ The supported compiler is Clang 18 (and presumably anything newer will work). Ho
 First, make sure you have package `libc++-dev` installed, then select it during configuration:
 
 ```sh
-cmake -B _build . -D CMAKE_C_COMPILER=clang-18 -D CMAKE_CXX_COMPILER=clang++-18 -D CMAKE_CXX_FLAGS=-stdlib=libc++
+cmake -B _build . -D CMAKE_C_COMPILER=clang-18 -D CMAKE_CXX_COMPILER=clang++-18 -D CMAKE_CXX_FLAGS=-stdlib=libc++ -DCMAKE_CXX_STANDARD=23 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF
 ```
 
 ## Known issues
