@@ -173,6 +173,17 @@ void GameRulesEngine::update(const dgm::Time& time)
         }
     }
 
+    for (auto&& [entity, script] : scene.actors.view<TimedScript>().each())
+    {
+        if (script.timer > sf::Time::Zero)
+            script.timer -= time.getElapsed();
+        else
+        {
+            script.callback();
+            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        }
+    }
+
     updateHealth();
 
     updateTriggers(time);
@@ -189,6 +200,7 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
              .each())
     {
         auto&& forwardImpulse = controller->getForward();
+        if (body.ragdoll) forwardImpulse = sf::Vector2f {};
         body.forward += forwardImpulse * body.maxSpeed;
 
         if (forwardImpulse.length() == 0.f)
@@ -396,6 +408,7 @@ void GameRulesEngine::createDamageMarkerForProjectile(
 
     ActorBuilder::createDamageMarker(
         scene.actors,
+        dgm::Math::toUnit(scene.actors.get<PhysicsBody>(projectile).forward),
         scene.actors.get<Collider>(projectile).getPosition(),
         (inventory->traits & ProjectileTraits::Explosive
              ? BASE_EXPLOSION_RADIUS
@@ -415,13 +428,34 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
     auto inventory = scene.actors.try_get<DamageMarkerInventory>(marker);
     if (!inventory) return;
 
-    auto [skin, health] = scene.actors.try_get<Skin, Health>(actor);
-    if (!skin || !health) return;
+    auto [skin, health, body, controller] =
+        scene.actors.try_get<Skin, Health, PhysicsBody, EntityInput>(actor);
+    if (!skin || !health || !body || !controller) return;
 
     if (skin->kind == inventory->originator) return;
 
     health->get() -= inventory->damage;
     skin->animation.setState(HURT_ANIMATION_STATE, "looping"_false);
+
+    if (inventory->impactForceImpulse.length() == 0.f) return;
+
+    auto future = scene.actors.create();
+    auto callback = scene.actors.emplace<TimedScript>(
+        future,
+        sf::seconds(0.5f),
+        [&, bodyCopy = *body, entity = actor]
+        {
+            auto body = scene.actors.try_get<PhysicsBody>(entity);
+            if (!body) return;
+
+            // Turn back original physics body behavior
+            *body = bodyCopy;
+        });
+
+    // Turn the body into ragdoll
+    body->forward += inventory->impactForceImpulse;
+    body->ragdoll = true;
+    body->friction = 0.1f;
 }
 
 void GameRulesEngine::handleTriggerToActorCollision(

@@ -295,7 +295,7 @@ void AppStateWeaponModification::restoreGuiViewport()
 
 namespace
 {
-    constexpr std::array<WeaponModule, 10> ALL_MODULES = {
+    constexpr std::array<WeaponModule, 12> ALL_MODULES = {
         WeaponModule::None,
         WeaponModule::SpreadBarrel_x2,
         WeaponModule::SpreadBarrel_x4,
@@ -306,9 +306,11 @@ namespace
         WeaponModule::BigBullet,
         WeaponModule::Spikes,
         WeaponModule::Splitter,
+        WeaponModule::Push,
+        WeaponModule::Turret,
     };
 
-    constexpr std::array<StringId, 10> MODULE_STRING_IDS = {
+    constexpr std::array<StringId, 12> MODULE_STRING_IDS = {
         StringId::WeaponModule_None,
         StringId::WeaponModule_SpreadBarrelx2,
         StringId::WeaponModule_SpreadBarrel,
@@ -319,12 +321,8 @@ namespace
         StringId::WeaponModule_BigBullet,
         StringId::WeaponModule_Spikes,
         StringId::WeaponModule_Splitter,
-    };
-
-    constexpr std::array<StringId, 3> SLOT_LABEL_IDS = {
-        StringId::WeaponModuleSlot1,
-        StringId::WeaponModuleSlot2,
-        StringId::WeaponModuleSlot3,
+        StringId::WeaponModule_Push,
+        StringId::WeaponModule_Turret,
     };
 
 } // namespace
@@ -333,14 +331,13 @@ namespace
 
 std::vector<std::string> AppStateWeaponModification::getModuleNames() const
 {
-    std::vector<std::string> names;
-    names.reserve(MODULE_STRING_IDS.size());
-    for (auto id : MODULE_STRING_IDS)
-        names.push_back(dic.strings.getString(id));
-    return names;
+    return MODULE_STRING_IDS
+           | uni::views::transform([&](StringId id)
+                                   { return dic.strings.getString(id); })
+           | std::ranges::to<std::vector<std::string>>();
 }
 
-std::vector<std::string>
+/*std::vector<std::string>
 AppStateWeaponModification::getAvailableModuleNames() const
 {
     std::vector<std::string> names;
@@ -352,7 +349,7 @@ AppStateWeaponModification::getAvailableModuleNames() const
             names.push_back(dic.strings.getString(MODULE_STRING_IDS[i]));
     }
     return names;
-}
+}*/
 
 // Build the subset of available modules (None + unlocked)
 std::vector<WeaponModule>
@@ -368,6 +365,7 @@ AppStateWeaponModification::getAvailableModules() const
     return modules;
 }
 
+/*
 size_t AppStateWeaponModification::moduleToIndex(WeaponModule module) noexcept
 {
     for (size_t i = 0; i < ALL_MODULES.size(); ++i)
@@ -380,3 +378,4 @@ WeaponModule AppStateWeaponModification::indexToModule(size_t index) noexcept
     if (index < ALL_MODULES.size()) return ALL_MODULES[index];
     return WeaponModule::None;
 }
+*/

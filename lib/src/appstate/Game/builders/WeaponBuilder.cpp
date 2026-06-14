@@ -83,6 +83,13 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
             return props;
         };
+    case Push:
+        return [](WeaponProperties props)
+        {
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Push;
+            return props;
+        };
     case ExplosiveAmmo:
         return [](WeaponProperties props)
         {
@@ -106,6 +113,18 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
         {
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::SplitOnHit;
+            return props;
+        };
+
+    case Turret:
+        return [](WeaponProperties props)
+        {
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Turret;
+            props.projectileSkin = SkinType::Turret;
+            props.kickback += 20.f;
+            props.fireDelay *= 3.f;
+            props.baseProjectileDamage /= 1.5f;
             return props;
         };
     }

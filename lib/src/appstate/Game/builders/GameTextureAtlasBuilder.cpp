@@ -174,6 +174,14 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                 resmgr.get<dgm::AnimationStates>("projectile_freeze.png.anim"))
             .value());
 
+    skins.emplace(
+        SkinType::Turret,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("scifi_turret.png"),
+                resmgr.get<dgm::AnimationStates>("scifi_turret.png.anim"))
+            .value());
+
     auto crosshairs = atlas
                           .addTileset(
                               resmgr.get<sf::Texture>("crosshairs.png"),

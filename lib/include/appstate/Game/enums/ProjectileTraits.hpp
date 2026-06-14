@@ -12,6 +12,8 @@ enum class [[nodiscard]] ProjectileTraits
     Big = 16,        // should have twice the scale
     Attractive = 32, // for dummy who attracks enemies
     SplitOnHit = 64, // splits into multiple projectiles on hit
+    Turret = 128,
+    Push = 256,
 };
 
 constexpr ProjectileTraits operator|(ProjectileTraits a, ProjectileTraits b)
@@ -29,5 +31,6 @@ constexpr bool operator&(ProjectileTraits base, ProjectileTraits question)
 constexpr ProjectileTraits operator-(ProjectileTraits a, ProjectileTraits b)
 {
     using T = std::underlying_type_t<ProjectileTraits>;
-    return static_cast<ProjectileTraits>(T(static_cast<T>(a) | static_cast<T>(b)) ^ static_cast<T>(b));
+    return static_cast<ProjectileTraits>(
+        T(static_cast<T>(a) | static_cast<T>(b)) ^ static_cast<T>(b));
 }

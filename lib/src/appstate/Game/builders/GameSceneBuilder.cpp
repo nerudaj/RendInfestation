@@ -67,6 +67,8 @@ GameScene GameSceneBuilder::createScene(
         artifact.unlockedModules = {
             WeaponModule::SpreadBarrel_x4,
             WeaponModule::Spikes,
+            WeaponModule::Push,
+            WeaponModule::Turret,
         };
     }
 

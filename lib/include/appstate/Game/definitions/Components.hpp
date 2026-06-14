@@ -90,6 +90,9 @@ struct [[nodiscard]] PhysicsBody final
     float friction = 0.5f;
     bool useAltMesh = false;
     bool canFall = true;
+    // prevents controllers from using the object
+    // used in Push weapon module
+    bool ragdoll = false;
 };
 
 struct [[nodiscard]] Skin final
@@ -166,8 +169,9 @@ struct [[nodiscard]] InteractionTriggerInventory final
 
 struct [[nodiscard]] DamageMarkerInventory final
 {
-    EntityKind originator;
-    int damage;
+    EntityKind originator = {};
+    int damage = {};
+    sf::Vector2f impactForceImpulse = {};
 };
 
 struct [[nodiscard]] ProjectileInventory final

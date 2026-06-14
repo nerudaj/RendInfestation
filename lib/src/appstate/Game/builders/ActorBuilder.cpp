@@ -273,10 +273,16 @@ void ActorBuilder::shatterProjectile(
 
 entt::entity ActorBuilder::createDamageMarker(
     entt::registry& actors,
+    const sf::Vector2f& projectileDirection,
     const sf::Vector2f& origin,
     const float radius,
     const ProjectileInventory& inventory)
 {
+    const auto pushForce =
+        (inventory.traits & ProjectileTraits::Push ? BASE_PROJECTILE_PUSH_IMPACT
+                                                   : 0.f)
+        * (inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
+
     auto entity = actors.create();
     actors.emplace<Collider>(
         entity,
@@ -290,6 +296,7 @@ entt::entity ActorBuilder::createDamageMarker(
         DamageMarkerInventory {
             .originator = inventory.originator,
             .damage = inventory.damage,
+            .impactForceImpulse = projectileDirection * pushForce,
         });
     actors.emplace<Lifetime>(entity, sf::Time::Zero);
 

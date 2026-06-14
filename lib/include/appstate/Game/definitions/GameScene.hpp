@@ -11,6 +11,12 @@
 #include <set>
 #include <vector>
 
+struct [[nodiscard]] TimedScript final
+{
+    sf::Time timer = {};
+    std::function<void()> callback;
+};
+
 struct [[nodiscard]] LightSource final
 {
     sf::Vector2f position;

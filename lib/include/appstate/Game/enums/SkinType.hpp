@@ -10,6 +10,7 @@ enum class [[nodiscard]] SkinType : unsigned char
     Scuttlebug,
     ScuttlebugBlue,
     Beholder,
+    Turret,
 
     // Projectiles
     SmallBullet,

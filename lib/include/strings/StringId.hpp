@@ -79,6 +79,8 @@ enum class [[nodiscard]] StringId
     WeaponModule_BigBullet,
     WeaponModule_Spikes,
     WeaponModule_Splitter,
+    WeaponModule_Push,
+    WeaponModule_Turret,
 
     // Game
     Interact,

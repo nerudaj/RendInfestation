@@ -6,6 +6,7 @@
 constexpr float BASE_PLAYER_SPEED = 128_px_per_second;
 constexpr float BASE_ENEMY_SPEED = BASE_PLAYER_SPEED * 0.5f;
 constexpr float BASE_PROJECTILE_SPEED = BASE_PLAYER_SPEED * 4.f;
+constexpr float BASE_PROJECTILE_PUSH_IMPACT = 356.f;
 constexpr int BASE_PROJECTILE_DAMAGE = 25;
 constexpr int BASE_MELEE_DAMAGE = 4;
 constexpr int BASE_RANGED_DAMAGE = 8;

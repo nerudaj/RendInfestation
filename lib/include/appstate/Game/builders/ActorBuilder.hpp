@@ -43,6 +43,7 @@ public:
 
     static entt::entity createDamageMarker(
         entt::registry& actors,
+        const sf::Vector2f& projectileDirection,
         const sf::Vector2f& origin,
         const float radius,
         const ProjectileInventory& inventory);

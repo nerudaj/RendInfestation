@@ -14,4 +14,5 @@ enum class [[nodiscard]] WeaponModule
     Push,
     Dummy,
     ExplosiveAmmo,
+    Turret,
 };
