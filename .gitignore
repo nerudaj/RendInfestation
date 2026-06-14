@@ -1,4 +1,4 @@
-_build
+_build*
 _build-windows
 _build-android
 lib/include/misc/CMakeVars.hpp
