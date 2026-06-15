@@ -55,7 +55,9 @@ private: // Actions
 
     void generateWaypointForFlyingNpc(NpcBlackboard& blackboard);
 
-    void chooseTarget(NpcBlackboard&) {}
+    void lookAtTarget(NpcBlackboard& blackboard);
+
+    void chooseTarget(NpcBlackboard& blackboard);
 
     void doNothing(NpcBlackboard&) {}
 
@@ -72,8 +74,16 @@ private: // Predicates
 
     bool hasValidTarget(const NpcBlackboard& blackboard) const
     {
-        return blackboard.targetEntity != entt::null;
+        return blackboard.targetEntity != entt::null
+               && scene.actors.valid(blackboard.targetEntity);
     }
+
+    bool isTargetVisibleForShooting(const NpcBlackboard& blackboard) const;
+
+    bool isGunReady(const NpcBlackboard& blackboard) const;
+
+    bool isTargetValidAndVisibleAndInShootingRange(
+        const NpcBlackboard& blackboard) const;
 
 private: // Utils
     sf::Vector2f getDirectionToTarget(const NpcBlackboard& blackboard) const;

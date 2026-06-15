@@ -138,9 +138,18 @@ Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
     std::ranges::sort(config.modules);
 
     auto properties = WeaponProperties();
-    for (auto module : config.modules)
+
+    if (uni::ranges::contains(config.modules, WeaponModule::Turret))
     {
-        properties = createWeaponModuleTransformer(module)(properties);
+        properties =
+            createWeaponModuleTransformer(WeaponModule::Turret)(properties);
+    }
+    else
+    {
+        for (auto module : config.modules)
+        {
+            properties = createWeaponModuleTransformer(module)(properties);
+        }
     }
 
     return Weapon {

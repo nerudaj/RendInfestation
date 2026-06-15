@@ -194,7 +194,9 @@ entt::entity ActorBuilder::createProjectile(
         weapon.defaultProjectileInventory.traits & ProjectileTraits::Shrapnels;
     const auto hasTurretTrait =
         weapon.defaultProjectileInventory.traits & ProjectileTraits::Turret;
-    const auto friction = hasShrapnelsTrait || hasTurretTrait ? 0.02f : 0.f;
+    const auto friction = hasShrapnelsTrait ? 0.02f
+                          : hasTurretTrait  ? 0.1f
+                                            : 0.f;
     const auto reportMeshCollisions = !hasShrapnelsTrait && !hasTurretTrait;
     const auto nonblocking =
         !(weapon.defaultProjectileInventory.traits & ProjectileTraits::Turret);
@@ -313,8 +315,7 @@ entt::entity ActorBuilder::createTurret(
         });
     actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
 
-    actors.get<Skin>(entity).animation.setState(
-        IDLE_ANIMATION_STATE, "looping"_true);
+    actors.get<Skin>(entity).animation.setState("spawn", "looping"_false);
 
     return entity;
 }

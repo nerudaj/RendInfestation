@@ -32,7 +32,7 @@ struct std::formatter<NpcBlackboard, CharT>
     {
         return std::format_to(
             ctx.out(),
-            "[ waypoint: {} | kind: {} ]",
+            "\"[ waypoint: {} | kind: {} ]\"",
             dgm::Utility::to_string(bb.waypoint),
             std::to_underlying(bb.kind));
     }

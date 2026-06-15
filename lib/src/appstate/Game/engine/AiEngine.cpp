@@ -1,4 +1,5 @@
 #include "appstate/Game/engine/AiEngine.hpp"
+#include "misc/Compatibility.hpp"
 #include <DGM/classes/Raycaster.hpp>
 #include <fsm/Builder.hpp>
 
@@ -10,7 +11,8 @@ void AiEngine::update(const dgm::Time& time)
 
     for (auto&& [_, blackboard] : scene.actors.view<NpcBlackboard>().each())
     {
-        if (blackboard.targetEntity == entt::null)
+        if (blackboard.targetEntity == entt::null
+            && blackboard.kind != NpcKind::Turret)
             blackboard.targetEntity = scene.playerEntity;
         blackboard.input.clearInputs();
         fsmsByKind.at(std::to_underlying(blackboard.kind)).tick(blackboard);
@@ -94,6 +96,41 @@ void AiEngine::generateWaypointForFlyingNpc(NpcBlackboard& blackboard)
         blackboard);
 }
 
+void AiEngine::lookAtTarget(NpcBlackboard& blackboard)
+{
+    waitTillAttackFinishes(blackboard);
+}
+
+void AiEngine::chooseTarget(NpcBlackboard& blackboard)
+{
+    using EntityPositionPair = std::pair<entt::entity, sf::Vector2f>;
+
+    auto&& targets = std::vector<EntityPositionPair>();
+    auto&& view = scene.actors.view<Collider, Skin>().each();
+
+    for (auto&& [entity, collider, skin] :
+         scene.actors.view<Collider, Skin>().each())
+    {
+        if (skin.kind != EntityKind::Npc || entity == blackboard.ownerEntity)
+            continue;
+
+        targets.push_back({ entity, collider.getPosition() });
+    }
+
+    const auto ownerPosition =
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
+    uni::ranges::sort(
+        targets,
+        [&](const EntityPositionPair& a, const EntityPositionPair& b) -> bool
+        {
+            const auto aDist = (a.second - ownerPosition).lengthSquared();
+            const auto bDist = (b.second - ownerPosition).lengthSquared();
+            return aDist < bDist;
+        });
+
+    if (!targets.empty()) blackboard.targetEntity = targets.front().first;
+}
+
 // ==========
 // PREDICATES
 // ==========
@@ -129,6 +166,31 @@ bool AiEngine::hasNpcReachedWaypoint(const NpcBlackboard& blackboard) const
     const auto position =
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
     return (position - blackboard.waypoint).length() <= 1.f;
+}
+
+bool AiEngine::isTargetVisibleForShooting(const NpcBlackboard& blackboard) const
+{
+    return dgm::Raycaster::hasDirectVisibility(
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition(),
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition(),
+        scene.altLevelMesh);
+}
+
+bool AiEngine::isGunReady(const NpcBlackboard& blackboard) const
+{
+    auto&& weaponInventory =
+        scene.actors.try_get<WeaponInventory>(blackboard.ownerEntity);
+    if (!weaponInventory) return false;
+
+    return weaponInventory->weapons[weaponInventory->activeWeapon].timeTillFire
+           <= sf::Time::Zero;
+}
+
+bool AiEngine::isTargetValidAndVisibleAndInShootingRange(
+    const NpcBlackboard& blackboard) const
+{
+    return hasValidTarget(blackboard) && isTargetVisibleForShooting(blackboard)
+           && isTargetInShootingRange(blackboard);
 }
 
 // =====
@@ -325,26 +387,41 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForTurretNpc(AiEngine& self)
 {
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
-        .withNoErrorMachine()
+        .withErrorMachine()
+            .useGlobalEntryCondition(NOT(hasValidTarget))
+                .withEntryState("Sink")
+                    .exec(ACTION(chooseTarget))
+                    .andRestart()
+            .done()
         .withMainMachine()
             .withEntryState("Start")
-                .when(NOT(hasValidTarget))
-                    .goToState("PickTarget")
-                .orWhen(CONDITION(isTargetInShootingRange))
-                    .goToState("Attack")
-                .otherwiseExec(ACTION(doNothing))
-                .andLoop()
-            .withState("PickTarget")
                 .exec(ACTION(chooseTarget))
-                .andGoToState("Start")
-            .withState("Attack")
-                .exec(ACTION(attack))
-                .andGoToState("WaitUntilAttackFinishes")
-            .withState("WaitUntilAttackFinishes")
+                .andGoToState("WaitingForSpawnToFinish")
+            .withState("WaitingForSpawnToFinish")
                 .when(CONDITION(isOwnerIdleOrWalking))
-                    .goToState("Start")
+                    .goToState("Idle")
                 .otherwiseExec(ACTION(doNothing))
                 .andLoop()
+            .withState("Idle")
+                .when(NOT(isTargetValidAndVisibleAndInShootingRange))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(lookAtTarget))
+                .andGoToState("WaitForGunReady")
+            .withState("WaitForGunReady")
+                .when(NOT(isTargetValidAndVisibleAndInShootingRange))
+                    .goToState("Start")
+                .orWhen(CONDITION(isGunReady))
+                    .goToState("Attack")
+                .otherwiseExec(ACTION(lookAtTarget))
+                .andLoop()
+            .withState("Attack")
+            .exec(ACTION(attack))
+            .andGoToState("WaitUntilAttackFinishes")
+        .withState("WaitUntilAttackFinishes")
+            .when(CONDITION(isOwnerIdleOrWalking))
+                .goToState("Idle")
+            .otherwiseExec(ACTION(lookAtTarget))
+            .andLoop()
         .done()
     .build();
     // clang-format on
