@@ -20,7 +20,10 @@ entt::entity ActorBuilder::createPlayer(
     actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
     actors.emplace<PhysicsBody>(
         entity,
-        PhysicsBody { .maxSpeed = BASE_PLAYER_SPEED, .friction = 0.8f });
+        PhysicsBody {
+            .maxSpeed = BASE_PLAYER_SPEED,
+            .friction = ACTOR_FRICTION,
+        });
     actors.emplace<Skin>(
         entity,
         EntityKind::Player,
@@ -68,7 +71,7 @@ entt::entity ActorBuilder::createNpc(
         entity,
         PhysicsBody {
             .maxSpeed = config.speed,
-            .friction = 0.8f,
+            .friction = ACTOR_FRICTION,
             .useAltMesh = true,
             .canFall = config.canFall,
         });
@@ -218,11 +221,11 @@ entt::entity ActorBuilder::createProjectile(
                               : 0.f,
             .friction = friction,
             .useAltMesh = true,
-            .canFall = weapon.defaultProjectileInventory.traits
-                       & ProjectileTraits::Shrapnels,
+            .canFall = hasShrapnelsTrait,
         });
     actors.emplace<Lifetime>(entity, weapon.projectileLifetime);
-    actors.emplace<ZIndex>(entity, ZINDEX_PROJECTILES);
+    actors.emplace<ZIndex>(
+        entity, hasShrapnelsTrait ? ZINDEX_FLOOR_DECOR : ZINDEX_PROJECTILES);
 
     auto animation = dgm::Animation(
         atlas.getSkinAnimationStates(weapon.projectileSkin),

@@ -442,24 +442,27 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
 
     if (inventory->impactForceImpulse.length() == 0.f) return;
 
-    auto future = scene.actors.create();
-    auto callback = scene.actors.emplace<TimedScript>(
-        future,
-        sf::seconds(0.5f),
-        [&, friction = body->friction, entity = actor]
-        {
-            auto body = scene.actors.try_get<PhysicsBody>(entity);
-            if (!body) return;
+    if (!body->ragdoll)
+    {
+        auto future = scene.actors.create();
+        auto callback = scene.actors.emplace<TimedScript>(
+            future,
+            sf::seconds(0.5f),
+            [&, entity = actor]
+            {
+                auto body2 = scene.actors.try_get<PhysicsBody>(entity);
+                if (!body2) return;
 
-            // Turn back original physics body behavior
-            body->ragdoll = false;
-            body->friction = friction;
-        });
+                // Turn back original physics body behavior
+                body2->ragdoll = false;
+                body2->friction = ACTOR_FRICTION;
+            });
+    }
 
     // Turn the body into ragdoll
     body->forward += inventory->impactForceImpulse;
     body->ragdoll = true;
-    body->friction = 0.1f;
+    body->friction = RAGDOLL_FRICTION;
 }
 
 void GameRulesEngine::handleTriggerToActorCollision(

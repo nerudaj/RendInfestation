@@ -3,6 +3,8 @@
 #include "types/SemanticTypes.hpp"
 #include <DGM/classes/Animation.hpp>
 
+constexpr float ACTOR_FRICTION = 0.8f;
+constexpr float RAGDOLL_FRICTION = 0.1f;
 constexpr float BASE_PLAYER_SPEED = 128_px_per_second;
 constexpr float BASE_ENEMY_SPEED = BASE_PLAYER_SPEED * 0.5f;
 constexpr float BASE_PROJECTILE_SPEED = BASE_PLAYER_SPEED * 4.f;
