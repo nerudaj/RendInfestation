@@ -33,7 +33,7 @@ entt::entity ActorBuilder::createPlayer(
             BASE_ANIMATION_FPS),
         sf::Vector2f { 0.f, -10.f });
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
-    actors.emplace<Health>(entity, 100);
+    actors.emplace<Health>(entity, BASE_PLAYER_HEALTH);
     actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
     actors.emplace<WeaponInventory>(
         entity,

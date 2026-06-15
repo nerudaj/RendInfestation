@@ -130,15 +130,18 @@ AppStateChooseBonus::generatePickerSelection()
     // Out-of-line progression
     if (scene.unlockedModules.contains(WeaponModule::SpreadBarrel_x2))
         draftPool.insert(WeaponModule::SpreadBarrel_x4);
+
     if (scene.unlockedModules.contains(WeaponModule::Spikes)
         || scene.unlockedModules.contains(WeaponModule::BigBullet))
     {
         draftPool.insert(WeaponModule::ExplosiveAmmo);
     }
+
     if (scene.unlockedModules.contains(WeaponModule::CadenceBarrel))
     {
         draftPool.insert(WeaponModule::Turret);
     }
+
     if (scene.unlockedModules.size() >= 3 && scene.loadout.weapons.size() == 1)
     {
         draftPool.insert(WeaponModule::ExtraGun);
@@ -158,6 +161,12 @@ AppStateChooseBonus::generatePickerSelection()
     uni::ranges::shuffle(sortablePool, gen);
 
     assert(sortablePool.size() >= 2);
+    if (scene.actors.get<Health>(scene.playerEntity).get()
+        < scene.playerMaxHealth / 2)
+    {
+        sortablePool[1] = WeaponModule::ExtraHealth;
+    }
+
     return { sortablePool[0], sortablePool[1] };
 }
 
@@ -166,6 +175,12 @@ void AppStateChooseBonus::onSubmit(WeaponModule module)
     if (module == WeaponModule::ExtraGun)
     {
         scene.loadout.weapons.push_back(WeaponConfig {});
+    }
+    else if (module == WeaponModule::ExtraHealth)
+    {
+        scene.playerMaxHealth += 10;
+        scene.actors.get<Health>(scene.playerEntity) =
+            Health(scene.playerMaxHealth);
     }
     else
     {
