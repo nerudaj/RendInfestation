@@ -293,89 +293,16 @@ void AppStateWeaponModification::restoreGuiViewport()
         { 0.f, 0.f }, tgui::Vector2f(sf::Vector2f(app.window.getSize()))));
 }
 
-namespace
-{
-    constexpr std::array<WeaponModule, 12> ALL_MODULES = {
-        WeaponModule::None,
-        WeaponModule::SpreadBarrel_x2,
-        WeaponModule::SpreadBarrel_x4,
-        WeaponModule::CadenceBarrel,
-        WeaponModule::ExplosiveAmmo,
-        WeaponModule::Ricochet,
-        WeaponModule::PassthruAmmo,
-        WeaponModule::BigBullet,
-        WeaponModule::Spikes,
-        WeaponModule::Splitter,
-        WeaponModule::Push,
-        WeaponModule::Turret,
-    };
-
-    constexpr std::array<StringId, 12> MODULE_STRING_IDS = {
-        StringId::WeaponModule_None,
-        StringId::WeaponModule_SpreadBarrelx2,
-        StringId::WeaponModule_SpreadBarrel,
-        StringId::WeaponModule_CadenceBarrel,
-        StringId::WeaponModule_ExplosiveAmmo,
-        StringId::WeaponModule_Ricochet,
-        StringId::WeaponModule_PassthruAmmo,
-        StringId::WeaponModule_BigBullet,
-        StringId::WeaponModule_Spikes,
-        StringId::WeaponModule_Splitter,
-        StringId::WeaponModule_Push,
-        StringId::WeaponModule_Turret,
-    };
-
-} // namespace
-
-// ---- AppStateWeaponModification ---------------------------------------------
-
-std::vector<std::string> AppStateWeaponModification::getModuleNames() const
-{
-    return MODULE_STRING_IDS
-           | uni::views::transform([&](StringId id)
-                                   { return dic.strings.getString(id); })
-           | std::ranges::to<std::vector<std::string>>();
-}
-
-/*std::vector<std::string>
-AppStateWeaponModification::getAvailableModuleNames() const
-{
-    std::vector<std::string> names;
-    // None is always available
-    names.push_back(dic.strings.getString(StringId::WeaponModule_None));
-    for (size_t i = 1; i < ALL_MODULES.size(); ++i)
-    {
-        if (scene.unlockedModules.contains(ALL_MODULES[i]))
-            names.push_back(dic.strings.getString(MODULE_STRING_IDS[i]));
-    }
-    return names;
-}*/
-
 // Build the subset of available modules (None + unlocked)
 std::vector<WeaponModule>
 AppStateWeaponModification::getAvailableModules() const
 {
     std::vector<WeaponModule> modules;
     modules.push_back(WeaponModule::None);
-    for (size_t i = 1; i < ALL_MODULES.size(); ++i)
+    for (size_t i = 1; i < ALLOWED_MODULES.size(); ++i)
     {
-        if (scene.unlockedModules.contains(ALL_MODULES[i]))
-            modules.push_back(ALL_MODULES[i]);
+        if (scene.unlockedModules.contains(ALLOWED_MODULES[i]))
+            modules.push_back(ALLOWED_MODULES[i]);
     }
     return modules;
 }
-
-/*
-size_t AppStateWeaponModification::moduleToIndex(WeaponModule module) noexcept
-{
-    for (size_t i = 0; i < ALL_MODULES.size(); ++i)
-        if (ALL_MODULES[i] == module) return i;
-    return 0; // fallback: None
-}
-
-WeaponModule AppStateWeaponModification::indexToModule(size_t index) noexcept
-{
-    if (index < ALL_MODULES.size()) return ALL_MODULES[index];
-    return WeaponModule::None;
-}
-*/

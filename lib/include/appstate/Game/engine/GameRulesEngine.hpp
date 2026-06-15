@@ -1,11 +1,11 @@
 #pragma once
 
-#include "audio/SoundPlayer.hpp"
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/definitions/GameEvents.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
+#include "audio/SoundPlayer.hpp"
 #include "input/Input.hpp"
 #include "misc/EventQueue.hpp"
 
@@ -63,8 +63,6 @@ private:
     void updateSpawner(const dgm::Time& time);
 
     void updateLifetimes(const dgm::Time& time);
-
-    void tryUnlockRandomModule();
 
     Weapon& getActiveWeapon(WeaponInventory& inventory) const
     {

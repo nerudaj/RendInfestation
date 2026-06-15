@@ -108,6 +108,10 @@ namespace event
     struct [[nodiscard]] WorkbenchOpened final
     {
     };
+
+    struct [[nodiscard]] WaveEnded final
+    {
+    };
 } // namespace event
 
 using GameEvent = std::variant<
@@ -123,4 +127,5 @@ using GameEvent = std::variant<
     event::ActorIsFalling,
     event::ActorMoved,
     event::ActorStopped,
-    event::WorkbenchOpened>;
+    event::WorkbenchOpened,
+    event::WaveEnded>;

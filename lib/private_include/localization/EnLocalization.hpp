@@ -70,6 +70,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { BackToMenu, "Back to main menu" },
 
     // WeaponModification
+    { ChooseBonus, "Pick a bonus" },
     { SelectModule, "Pick module to install" },
     { Weapon1Title, "Weapon 1" },
     { Weapon2Title, "Weapon 2" },
@@ -86,6 +87,31 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModule_BigBullet, "Big Bullet" },
     { WeaponModule_Spikes, "Spikes" },
     { WeaponModule_Splitter, "Splitter" },
+    { WeaponModule_ExtraHealth, "Extra health" },
+    { WeaponModule_ExtraGun, "Extra gun" },
+
+    // WeaponModDec
+    { WeaponModuleDesc_None, "No description" },
+    { WeaponModuleDesc_SpreadBarrelx4, "Shoot 4 projectiles at once." },
+    { WeaponModuleDesc_SpreadBarrelx2, "Shoot 2 projectiles at once." },
+    { WeaponModuleDesc_CadenceBarrel,
+      "Decreases delay between shots, decreases damage of each projectile." },
+    { WeaponModuleDesc_Ricochet, "Projectile ricochets off the walls." },
+    { WeaponModuleDesc_PassthruAmmo, "Projectile penetrates through enemies." },
+    { WeaponModuleDesc_BigBullet,
+      "Projectile gets bigger, slower, and more powerful. Delay between shots "
+      "is also increased." },
+    { WeaponModuleDesc_Splitter, "Projectile shatters upon impact." },
+    { WeaponModuleDesc_Spikes,
+      "Shoot trip spikes instead of regular bullets." },
+    { WeaponModuleDesc_Push,
+      "Projectiles pack high impact force, pushing enemies into pits." },
+    { WeaponModuleDesc_ExplosiveAmmo, "Projectile explodes upon impact." },
+    { WeaponModuleDesc_Turret,
+      "Instead of regular projectiles, shoot mobile turrets." },
+    { WeaponModuleDesc_ExtraHealth,
+      "Heal to full health. Increases max health." },
+    { WeaponModuleDesc_ExtraGun, "Gain extra weapon slot." },
 
     // Game
     { Interact, "[interact]" },

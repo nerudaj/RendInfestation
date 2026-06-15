@@ -53,8 +53,10 @@ void AppStateGame::update()
         animationEngine,
         physicsEngine,
         janitor,
-        overloads { [&](event::WorkbenchOpened& e)
+        overloads { [&](event::WorkbenchOpened&)
                     { app.pushState<AppStateWeaponModification>(dic, scene); },
+                    [&](event::WaveEnded&)
+                    { app.pushState<AppStateChooseBonus>(dic, scene); },
                     [&](auto&&) {} });
     janitor.cleanScene(scene);
 

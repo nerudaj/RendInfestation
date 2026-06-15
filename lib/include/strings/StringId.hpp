@@ -63,6 +63,7 @@ enum class [[nodiscard]] StringId
     BackToMenu,
 
     // WeaponModification
+    ChooseBonus,
     SelectModule,
     Weapon1Title,
     Weapon2Title,
@@ -81,6 +82,24 @@ enum class [[nodiscard]] StringId
     WeaponModule_Splitter,
     WeaponModule_Push,
     WeaponModule_Turret,
+    WeaponModule_ExtraHealth,
+    WeaponModule_ExtraGun,
+
+    // WeaponModificationDesc
+    WeaponModuleDesc_None,
+    WeaponModuleDesc_SpreadBarrelx2,
+    WeaponModuleDesc_SpreadBarrelx4,
+    WeaponModuleDesc_CadenceBarrel,
+    WeaponModuleDesc_ExplosiveAmmo,
+    WeaponModuleDesc_Ricochet,
+    WeaponModuleDesc_PassthruAmmo,
+    WeaponModuleDesc_BigBullet,
+    WeaponModuleDesc_Spikes,
+    WeaponModuleDesc_Splitter,
+    WeaponModuleDesc_Push,
+    WeaponModuleDesc_Turret,
+    WeaponModuleDesc_ExtraHealth,
+    WeaponModuleDesc_ExtraGun,
 
     // Game
     Interact,

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "appstate/AppStateChooseBonus.hpp"
 #include "appstate/Game/Janitor.hpp"
 #include "appstate/Game/builders/GameSceneBuilder.hpp"
 #include "appstate/Game/builders/GameTextureAtlasBuilder.hpp"
@@ -45,6 +46,7 @@ public:
               dic.touchController,
               dic.strings)
     {
+        gameEvents.pushEvent<event::WaveEnded>();
     }
 
 public:
