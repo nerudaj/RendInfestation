@@ -25,7 +25,7 @@ void AppStateChooseBonus::draw()
 tgui::Layout2d AppStateChooseBonus::getCoreLayoutSize()
 {
 #ifdef ANDROID
-    { "60%", "50%" };
+    return { "60%", "50%" };
 #else
     return { "40%", "40%" };
 #endif
