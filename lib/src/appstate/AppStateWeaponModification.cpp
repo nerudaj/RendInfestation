@@ -114,12 +114,15 @@ void AppStateWeaponModification::buildLayout()
     cancelButtonLayout->add(createButton("button-cancel", [&] { onBack(); }));
     dic.gui.add(cancelButtonLayout);
 
-    auto&& swapWeaponLayout = tgui::Group::create();
-    swapWeaponLayout->setSize(toLayout(23, 47));
-    swapWeaponLayout->setPosition(toLayout(344, 85));
-    swapWeaponLayout->add(
-        createButton("button-swap-weapon", [&] { onCycle(); }));
-    dic.gui.add(swapWeaponLayout);
+    if (scene.loadout.weapons.size() > 1)
+    {
+        auto&& swapWeaponLayout = tgui::Group::create();
+        swapWeaponLayout->setSize(toLayout(23, 47));
+        swapWeaponLayout->setPosition(toLayout(344, 85));
+        swapWeaponLayout->add(
+            createButton("button-swap-weapon", [&] { onCycle(); }));
+        dic.gui.add(swapWeaponLayout);
+    }
 
     auto&& modSelect1Layout = tgui::Group::create();
     modSelect1Layout->setSize(toLayout(18, 18));
@@ -204,12 +207,7 @@ tgui::Button::Ptr AppStateWeaponModification::createModuleSelectButton(
 
 void AppStateWeaponModification::onResume()
 {
-    auto& inv = scene.actors.get<WeaponInventory>(scene.playerEntity);
-
-    for (int i = 0; i < inv.weapons.size(); ++i)
-        inv.weapons[i] = WeaponBuilder::createWeapon(
-            EntityKind::Player, scene.loadout.weapons[i]);
-
+    scene.updatePlayerLoadout();
     restoreGuiViewport();
     app.popState(Messaging::serialize<PopIfNotGame>());
 }
@@ -238,6 +236,15 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
         modal->close();
     };
 
+    auto&& anyWeaponContains = [&](WeaponModule module)
+    {
+        for (auto&& weapon : scene.loadout.weapons)
+        {
+            if (uni::ranges::contains(weapon.modules, module)) return true;
+        }
+        return false;
+    };
+
     auto&& background = tgui::Panel::create();
     background->getRenderer()->setBackgroundColor({ 0, 0, 0, 128 });
     background->onClick(close);
@@ -253,11 +260,7 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
     int y = 0;
     for (auto&& module : getAvailableModules())
     {
-        const bool isInUse =
-            module != WeaponModule::None
-            && (uni::ranges::contains(scene.loadout.weapons[0].modules, module)
-                || uni::ranges::contains(
-                    scene.loadout.weapons[1].modules, module));
+        const bool isInUse = anyWeaponContains(module);
 
         auto cellLayout = tgui::Group::create(
             { uni::format("{}%", BUTTON_SIZE).c_str(), "width" });

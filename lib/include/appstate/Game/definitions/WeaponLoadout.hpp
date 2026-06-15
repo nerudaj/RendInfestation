@@ -14,5 +14,5 @@ struct [[nodiscard]] WeaponConfig final
 
 struct [[nodiscard]] WeaponLoadout final
 {
-    std::array<WeaponConfig, 2u> weapons = {};
+    std::vector<WeaponConfig> weapons = { WeaponConfig {} };
 };

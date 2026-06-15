@@ -223,7 +223,7 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
         }
         else if (controller->isSwapWeaponsPressed())
         {
-            weaponInventory.activeWeapon = 1 - weaponInventory.activeWeapon;
+            weaponInventory.swapWeapon();
         }
         else if (controller->isInteractPressed() && scene.interactionTrigger)
         {
@@ -234,9 +234,13 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
             }
         }
 
-        weapon.timeTillFire -= time.getElapsed();
-        if (weapon.timeTillFire < sf::Time::Zero)
-            weapon.timeTillFire = sf::Time::Zero;
+        // Reload all weapons at once
+        for (auto&& w : weaponInventory.weapons)
+        {
+            w.timeTillFire -= time.getElapsed();
+            if (w.timeTillFire < sf::Time::Zero)
+                w.timeTillFire = sf::Time::Zero;
+        }
     }
 }
 

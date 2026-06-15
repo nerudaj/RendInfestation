@@ -105,6 +105,7 @@ AppStateChooseBonus::generatePickerSelection()
 {
     std::set<WeaponModule> draftPool;
 
+    // Base unlock progression
     if (scene.unlockedModules.size() <= 3)
     {
         draftPool.insert(WeaponModule::SpreadBarrel_x2);
@@ -126,11 +127,24 @@ AppStateChooseBonus::generatePickerSelection()
         draftPool.insert(WeaponModule::Turret);
     }
 
+    // Out-of-line progression
     if (scene.unlockedModules.contains(WeaponModule::SpreadBarrel_x2))
         draftPool.insert(WeaponModule::SpreadBarrel_x4);
-    else if (scene.unlockedModules.contains(WeaponModule::Spikes))
+    if (scene.unlockedModules.contains(WeaponModule::Spikes)
+        || scene.unlockedModules.contains(WeaponModule::BigBullet))
+    {
         draftPool.insert(WeaponModule::ExplosiveAmmo);
+    }
+    if (scene.unlockedModules.contains(WeaponModule::CadenceBarrel))
+    {
+        draftPool.insert(WeaponModule::Turret);
+    }
+    if (scene.unlockedModules.size() >= 3 && scene.loadout.weapons.size() == 1)
+    {
+        draftPool.insert(WeaponModule::ExtraGun);
+    }
 
+    // Clear already unlocked modules
     for (auto&& unlocked : scene.unlockedModules)
     {
         if (draftPool.contains(unlocked))
@@ -139,19 +153,36 @@ AppStateChooseBonus::generatePickerSelection()
         }
     }
 
-    // TODO: There has to be something to always return on higher ranks
-
     auto sortablePool = draftPool | uni::ranges::to<std::vector>();
     std::mt19937 gen { static_cast<unsigned>(rand()) };
     uni::ranges::shuffle(sortablePool, gen);
 
     assert(sortablePool.size() >= 2);
-
     return { sortablePool[0], sortablePool[1] };
 }
 
 void AppStateChooseBonus::onSubmit(WeaponModule module)
 {
-    scene.unlockedModules.insert(module);
+    if (module == WeaponModule::ExtraGun)
+    {
+        scene.loadout.weapons.push_back(WeaponConfig {});
+    }
+    else
+    {
+        scene.unlockedModules.insert(module);
+        if (scene.unlockedModules.size() <= 3)
+        {
+            for (auto& modInWeapon : scene.loadout.weapons.front().modules)
+            {
+                if (modInWeapon == WeaponModule::None)
+                {
+                    modInWeapon = module;
+                    break;
+                }
+            }
+        }
+    }
+
+    scene.updatePlayerLoadout();
     app.popState();
 }

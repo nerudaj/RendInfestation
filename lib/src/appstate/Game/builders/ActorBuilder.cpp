@@ -38,10 +38,14 @@ entt::entity ActorBuilder::createPlayer(
     actors.emplace<WeaponInventory>(
         entity,
         0,
-        std::vector<Weapon> {
-            WeaponBuilder::createWeapon(EntityKind::Player, loadout.weapons[0]),
-            WeaponBuilder::createWeapon(
-                EntityKind::Player, loadout.weapons[1]) });
+        loadout.weapons
+            | uni::views::transform(
+                [&](const WeaponConfig& config) -> Weapon
+                {
+                    return WeaponBuilder::createWeapon(
+                        EntityKind::Player, config);
+                })
+            | uni::ranges::to<std::vector>());
     actors.emplace<EntityInput>(entity, std::make_unique<PlayerInput>(input));
     actors.emplace<BoundLightEmitter>(
         entity, BoundLightEmitter { sf::Color::Black, 10u });

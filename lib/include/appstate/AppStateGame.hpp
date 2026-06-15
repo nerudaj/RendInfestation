@@ -46,6 +46,7 @@ public:
               dic.touchController,
               dic.strings)
     {
+        srand(time(nullptr));
         gameEvents.pushEvent<event::WaveEnded>();
     }
 

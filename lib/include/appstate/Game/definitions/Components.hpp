@@ -205,4 +205,9 @@ struct [[nodiscard]] WeaponInventory final
 {
     int activeWeapon = 0;
     std::vector<Weapon> weapons;
+
+    void swapWeapon()
+    {
+        activeWeapon = (activeWeapon + 1) % weapons.size();
+    }
 };

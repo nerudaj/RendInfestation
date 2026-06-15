@@ -74,4 +74,6 @@ struct [[nodiscard]] GameScene final
     HudMessage hudMessage;
     std::optional<InteractionTriggerInventory> interactionTrigger =
         std::nullopt;
+
+    void updatePlayerLoadout();
 };

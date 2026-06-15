@@ -49,7 +49,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.projectileSpeed /= 2.f;
             props.baseProjectileDamage *= 1.5f;
             props.kickback += 150.f;
-            props.fireDelay *= 1.75f;
+            props.fireDelay *= 1.4f;
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Big;
             return props;
