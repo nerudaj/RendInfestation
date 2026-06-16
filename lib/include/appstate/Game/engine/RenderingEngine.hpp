@@ -74,6 +74,16 @@ private:
 
     std::vector<Face> getActorFaces() const;
 
+    bool isObjectVisible(const dgm::Circle& o) const
+    {
+        return dgm::Collision::basic(viewportCollider, o);
+    }
+
+    bool isObjectVisible(const dgm::Rect& o) const
+    {
+        return dgm::Collision::basic(viewportCollider, o);
+    }
+
 private:
     GameScene& scene;
     const GameTextureAtlas& atlas;
@@ -84,6 +94,7 @@ private:
     dgm::Camera worldCamera;
     dgm::Camera hudCamera;
     dgm::Camera touchInputCamera;
+    dgm::Rect viewportCollider;
 
     FpsCounter fpsCounter;
     sf::Text text;

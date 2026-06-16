@@ -26,6 +26,9 @@ RenderingEngine::RenderingEngine(
     , touchInputCamera(
           sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
           sf::Vector2f(settings.video.resolution))
+    , viewportCollider(
+          { 0.f, 0.f },
+          INTERNAL_GAME_RESOLUTION + sf::Vector2f({ 128.f, 128.f }))
     , text(resmgr.get<sf::Font>(FONT_NAME))
     , hudSprite(atlas.atlas.getTexture())
     , pipeline(atlas.atlas.getTexture())
@@ -65,6 +68,8 @@ void RenderingEngine::updateCameraPosition(const dgm::Time& time)
         * std::clamp(directionToNew.length(), 0.f, 512.f * time.getDeltaTime());
 
     worldCamera.setPosition(cameraPosition);
+    viewportCollider.setPosition(
+        cameraPosition - viewportCollider.getSize() / 2.f);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
@@ -135,7 +140,7 @@ void RenderingEngine::addLevelFacesToPipeline()
             auto pos = sf::Vector2f(scene.levelMesh.getVoxelSize()) / 2.f
                        + sf::Vector2f(x, y).componentWiseMul(
                            sf::Vector2f(scene.levelMesh.getVoxelSize()));
-            if (!worldCamera.isObjectVisible(dgm::Circle(pos, 16.f))) continue;
+            if (!isObjectVisible(dgm::Circle(pos, 16.f))) continue;
 
             pipeline.addFace(
                 pos,
@@ -385,13 +390,13 @@ std::vector<Face> RenderingEngine::getActorFaces() const
             overloads {
                 [&](const dgm::Circle& c) -> std::optional<sf::Vector2f>
                 {
-                    if (!worldCamera.isObjectVisible(c)) return std::nullopt;
+                    if (!isObjectVisible(c)) return std::nullopt;
                     return c.getPosition()
                            + skin.spriteOriginOffsetFromCollider;
                 },
                 [&](const dgm::Rect& r) -> std::optional<sf::Vector2f>
                 {
-                    if (!worldCamera.isObjectVisible(r)) return std::nullopt;
+                    if (!isObjectVisible(r)) return std::nullopt;
                     return r.getCenter() + skin.spriteOriginOffsetFromCollider;
                 },
             },
