@@ -1,10 +1,20 @@
 #include "appstate/AppStateChooseBonus.hpp"
+#include "appstate/AppStatePause.hpp"
 #include "appstate/CommonHandler.hpp"
+#include "appstate/Messaging.hpp"
 #include <misc/Compatibility.hpp>
 #include <random>
 
 void AppStateChooseBonus::input()
 {
+    if (dic.input.isPauseButtonPressed())
+    {
+        app.pushState<AppStatePause>(dic, scene);
+        // If pause button is the same as back button, we need
+        // to release it to prevent pause menu from immediately closing again
+        dic.input.forceRelease(InputKind::BackButton);
+    }
+
     CommonHandler::handleInput(
         app,
         dic,
@@ -20,6 +30,21 @@ void AppStateChooseBonus::draw()
 {
     dic.gui.draw();
     dic.virtualCursor.draw();
+}
+
+void AppStateChooseBonus::restoreFocusImpl(const std::string& msg)
+{
+    if (auto message = Messaging::deserialize(msg))
+    {
+        std::visit(
+            overloads {
+                [&](PopIfNotMenu&) { app.popState(msg); },
+                [&](PopIfNotGame&) {},
+            },
+            *message);
+    }
+
+    buildLayout();
 }
 
 tgui::Layout2d AppStateChooseBonus::getCoreLayoutSize()

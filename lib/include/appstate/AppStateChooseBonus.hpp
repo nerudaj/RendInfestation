@@ -26,6 +26,9 @@ public:
     void update() override;
     void draw() override;
 
+protected:
+    void restoreFocusImpl(const std::string& msg) override;
+
 private:
     static tgui::Layout2d getCoreLayoutSize();
     void buildLayout();
