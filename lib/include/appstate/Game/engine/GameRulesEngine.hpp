@@ -1,5 +1,6 @@
 #pragma once
 
+#include "appstate/Game/SurvivalGameDirector.hpp"
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/definitions/GameEvents.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"
@@ -23,6 +24,7 @@ public:
         , atlas(atlas)
         , input(input)
         , soundPlayer(player)
+        , survivalDirector(eventQueue, scene.survivalSpawnerContext)
     {
     }
 
@@ -48,6 +50,8 @@ public:
 
     void operator()(const event::ObjectDestroyed& e);
 
+    void operator()(const event::SurvivalSpawnerTimerHit& e);
+
     void operator()(const auto&) {}
 
 public:
@@ -60,8 +64,6 @@ public:
     void updateHealth();
 
 private:
-    void updateSpawner(const dgm::Time& time);
-
     void updateLifetimes(const dgm::Time& time);
 
     Weapon& getActiveWeapon(WeaponInventory& inventory) const
@@ -87,8 +89,6 @@ private:
         scene.hudMessage.displayTime = sf::seconds(3.f);
     }
 
-    int getScoreForEnemy(const Skin& skin) const;
-
     sf::Vector2f pickEnemySpawnPosition() const;
 
 private:
@@ -97,4 +97,5 @@ private:
     const GameTextureAtlas& atlas;
     Input& input;
     SoundPlayer& soundPlayer;
+    SurvivalGameDirector survivalDirector;
 };

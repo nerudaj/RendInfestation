@@ -3,6 +3,8 @@
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/Constants.hpp"
+#include "appstate/Game/definitions/LightSource.hpp"
+#include "appstate/Game/definitions/SurvivalSpawnerContext.hpp"
 #include "appstate/Game/definitions/WeaponLoadout.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
 #include <DGM/dgm.hpp>
@@ -15,31 +17,6 @@ struct [[nodiscard]] TimedScript final
 {
     sf::Time timer = {};
     std::function<void()> callback;
-};
-
-struct [[nodiscard]] LightSource final
-{
-    sf::Vector2f position;
-    size_t spriteId;
-    sf::Color color;
-};
-
-enum class SurvivalModeState
-{
-    WaitingForNextWave,
-    SpawningEnemies,
-    WaitingForEnemiesToDie,
-};
-
-struct [[nodiscard]] SurvivalSpawnerContext final
-{
-    int wave = -1;
-    int enemiesInCurrentWave = 10;
-    int enemiesSpawnedInCurrentWave = 0;
-    int enemiesKilledInCurrentWave = 0;
-    sf::Time timeTillNextWave = sf::seconds(5.f);
-    sf::Time timeTillNextSpawn = SPAWNER_SPAWN_DELAY;
-    SurvivalModeState state = SurvivalModeState::WaitingForNextWave;
 };
 
 struct [[nodiscard]] HudMessage final

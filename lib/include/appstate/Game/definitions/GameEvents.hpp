@@ -1,6 +1,7 @@
 #pragma once
 
 #include "appstate/Game/Types.hpp"
+#include "appstate/Game/definitions/Components.hpp"
 #include <entt/entt.hpp>
 #include <variant>
 
@@ -112,6 +113,16 @@ namespace event
     struct [[nodiscard]] WaveEnded final
     {
     };
+
+    struct [[nodiscard]] SurvivalSpawnerTimerHit final
+    {
+        SkinType typeToSpawn;
+
+        constexpr explicit SurvivalSpawnerTimerHit(SkinType typeToSpawn)
+            : typeToSpawn(typeToSpawn)
+        {
+        }
+    };
 } // namespace event
 
 using GameEvent = std::variant<
@@ -128,4 +139,5 @@ using GameEvent = std::variant<
     event::ActorMoved,
     event::ActorStopped,
     event::WorkbenchOpened,
-    event::WaveEnded>;
+    event::WaveEnded,
+    event::SurvivalSpawnerTimerHit>;

@@ -134,8 +134,8 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
     if (skin && skin->kind == EntityKind::Npc)
     {
         ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
-        scene.status.score +=
-            getScoreForEnemy(*skin) * scene.survivalSpawnerContext.wave;
+        scene.status.score += survivalDirector.getScoreForEnemy(*skin)
+                              * scene.survivalSpawnerContext.wave;
 
         ActorBuilder::createParticleSystem(
             scene.actors,
@@ -160,9 +160,17 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
     }
 }
 
+void GameRulesEngine::operator()(const event::SurvivalSpawnerTimerHit& e)
+{
+    ActorBuilder::createNpc(
+        scene.actors, pickEnemySpawnPosition(), e.typeToSpawn, atlas);
+}
+
 void GameRulesEngine::update(const dgm::Time& time)
 {
-    updateSpawner(time);
+    // -1 means Story mode
+    if (scene.survivalSpawnerContext.wave != -1)
+        survivalDirector.update(time.getElapsed());
 
     updateEntitiesWithInput(time);
 
@@ -308,57 +316,6 @@ static SkinType getNpcToSpawn(int currentWave, int enemiesSpawnedInThisWave)
     return SkinType::ScuttlebugBlue;
 }
 
-void GameRulesEngine::updateSpawner(const dgm::Time& time)
-{
-    auto& context = scene.survivalSpawnerContext;
-
-    // wave == -1 means Story mode, skip survival spawner logic
-    if (context.wave == -1) return;
-
-    if (context.state == SurvivalModeState::WaitingForNextWave)
-    {
-        context.timeTillNextWave -= time.getElapsed();
-        if (context.timeTillNextWave <= sf::Time::Zero)
-        {
-            ++context.wave;
-            context.enemiesSpawnedInCurrentWave = 0;
-            context.enemiesKilledInCurrentWave = 0;
-            context.enemiesInCurrentWave = context.wave * 10;
-            context.state = SurvivalModeState::SpawningEnemies;
-        }
-    }
-    else if (context.state == SurvivalModeState::SpawningEnemies)
-    {
-        context.timeTillNextSpawn -= time.getElapsed();
-        if (context.timeTillNextSpawn <= sf::Time::Zero)
-        {
-            context.timeTillNextSpawn = SPAWNER_SPAWN_DELAY;
-            ++context.enemiesSpawnedInCurrentWave;
-            ActorBuilder::createNpc(
-                scene.actors,
-                pickEnemySpawnPosition(),
-                getNpcToSpawn(
-                    context.wave, context.enemiesSpawnedInCurrentWave),
-                atlas);
-
-            if (context.enemiesInCurrentWave
-                == context.enemiesSpawnedInCurrentWave)
-            {
-                context.state = SurvivalModeState::WaitingForEnemiesToDie;
-            }
-        }
-    }
-    else if (context.state == SurvivalModeState::WaitingForEnemiesToDie)
-    {
-        if (context.enemiesKilledInCurrentWave == context.enemiesInCurrentWave)
-        {
-            context.state = SurvivalModeState::WaitingForNextWave;
-            context.timeTillNextWave = sf::seconds(5.f);
-            eventQueue.pushEvent<event::WaveEnded>();
-        }
-    }
-}
-
 void GameRulesEngine::updateLifetimes(const dgm::Time& time)
 {
     for (auto&& [entity, lifetime] : scene.actors.view<Lifetime>().each())
@@ -488,19 +445,6 @@ void GameRulesEngine::handleTriggerToActorCollision(
     {
         scene.interactionTrigger = *inventory2;
     }
-}
-
-int GameRulesEngine::getScoreForEnemy(const Skin& skin) const
-{
-    if (skin.skinType == SkinType::Scuttlebug)
-        return 1;
-    else if (skin.skinType == SkinType::ScuttlebugBlue)
-        return 2;
-    else if (skin.skinType == SkinType::Bighead)
-        return 4;
-    else if (skin.skinType == SkinType::Beholder)
-        return 8;
-    return 0;
 }
 
 sf::Vector2f GameRulesEngine::pickEnemySpawnPosition() const
