@@ -79,14 +79,14 @@ void PhysicsEngine::updateForConcreteCollider(
 template<class T>
     requires std::same_as<T, dgm::Circle> || std::same_as<T, dgm::Rect>
 void PhysicsEngine::performEntityCollisionDetection(
-    entt::entity entity, T& collider, sf::Vector2f& moment, bool isSemighost)
+    entt::entity entity, T& collider, sf::Vector2f& moment, int semighostFlags)
 {
     spatialIndex.removeFromLookup(entity, collider);
 
     for (auto&& candidate : spatialIndex.getOverlapCandidates(collider))
     {
         auto&& candidateCollider = scene.actors.get<Collider>(candidate);
-        if (isSemighost && candidateCollider.options.semighost) continue;
+        if (semighostFlags & candidateCollider.options.semighost) continue;
 
         const auto hasCollision = [&]
         {

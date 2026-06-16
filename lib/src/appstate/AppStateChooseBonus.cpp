@@ -137,24 +137,21 @@ AppStateChooseBonus::generatePickerSelection()
     std::set<WeaponModule> draftPool;
 
     // Base unlock progression
-    if (scene.unlockedModules.size() <= 3)
-    {
-        draftPool.insert(WeaponModule::SpreadBarrel_x2);
-        draftPool.insert(WeaponModule::BigBullet);
-        draftPool.insert(WeaponModule::Spikes);
-        draftPool.insert(WeaponModule::Ricochet);
-        draftPool.insert(WeaponModule::PassthruAmmo);
-        draftPool.insert(WeaponModule::Push);
-    }
+    draftPool.insert(WeaponModule::SpreadBarrel_x2);
+    draftPool.insert(WeaponModule::BigBullet);
+    draftPool.insert(WeaponModule::Spikes);
+    draftPool.insert(WeaponModule::Ricochet);
+    draftPool.insert(WeaponModule::PassthruAmmo);
+    draftPool.insert(WeaponModule::Push);
 
-    if (scene.unlockedModules.size() <= 6)
+    if (scene.unlockedModules.size() >= 3)
     {
         draftPool.insert(WeaponModule::CadenceBarrel);
         draftPool.insert(WeaponModule::SpreadBarrel_x4);
         draftPool.insert(WeaponModule::Splitter);
     }
 
-    if (scene.unlockedModules.size() > 6)
+    if (scene.unlockedModules.size() >= 6)
     {
         draftPool.insert(WeaponModule::ExplosiveAmmo);
         draftPool.insert(WeaponModule::Turret);

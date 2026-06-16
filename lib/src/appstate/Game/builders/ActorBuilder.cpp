@@ -17,7 +17,12 @@ entt::entity ActorBuilder::createPlayer(
     const WeaponLoadout& loadout)
 {
     auto entity = actors.create();
-    actors.emplace<Collider>(entity, dgm::Circle(spawnPosition, 8.f));
+    actors.emplace<Collider>(
+        entity,
+        dgm::Circle(spawnPosition, 8.f),
+        ColliderOptions {
+            .semighost = SEMIGHOST_PLAYER,
+        });
     actors.emplace<PhysicsBody>(
         entity,
         PhysicsBody {
@@ -69,7 +74,9 @@ entt::entity ActorBuilder::createNpc(
     actors.emplace<Collider>(
         entity,
         dgm::Circle(spawnPosition, config.colliderRadius),
-        ColliderOptions { .semighost = true });
+        ColliderOptions {
+            .semighost = SEMIGHOST_NPC,
+        });
 
     actors.emplace<PhysicsBody>(
         entity,
@@ -205,8 +212,9 @@ entt::entity ActorBuilder::createProjectile(
                           : hasTurretTrait  ? 0.1f
                                             : 0.f;
     const auto reportMeshCollisions = !hasShrapnelsTrait && !hasTurretTrait;
-    const auto nonblocking =
-        !(weapon.defaultProjectileInventory.traits & ProjectileTraits::Turret);
+    // const auto nonblocking =
+    //     !(weapon.defaultProjectileInventory.traits &
+    //     ProjectileTraits::Turret);
 
     auto entity = actors.create();
     actors.emplace<Collider>(
@@ -214,7 +222,7 @@ entt::entity ActorBuilder::createProjectile(
         dgm::Circle(origin, 3.f * sizeFactor),
         reportMeshCollisions,
         "reportActorCollisions"_true,
-        nonblocking);
+        "nonblocking"_true);
     actors.emplace<PhysicsBody>(
         entity,
         PhysicsBody {
@@ -267,8 +275,7 @@ entt::entity ActorBuilder::createTurret(
         entity,
         dgm::Circle(origin, 8.f),
         ColliderOptions {
-            .nonblocking = true,
-            .semighost = true,
+            .semighost = SEMIGHOST_PLAYER | SEMIGHOST_NPC,
         });
 
     actors.emplace<PhysicsBody>(

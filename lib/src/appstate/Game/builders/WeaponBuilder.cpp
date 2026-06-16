@@ -82,6 +82,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
                 props.projectileTraits | ProjectileTraits::Shrapnels;
             props.spread *= 4;
             props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
+            props.projectileLifetime = EXTENDED_PROJECTILE_LIFETIME;
             return props;
         };
     case Push:
@@ -126,7 +127,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.kickback += 20.f;
             props.fireDelay *= 3.f;
             props.baseProjectileDamage /= 1.5f;
-            props.projectileLifetime = sf::seconds(1.f);
+            props.projectileLifetime = sf::seconds(0.5f);
             props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
             return props;
         };

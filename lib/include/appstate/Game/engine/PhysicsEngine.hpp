@@ -35,7 +35,7 @@ public:
         entt::entity entity,
         T& collider,
         sf::Vector2f& moment,
-        bool isSemighost);
+        int semighostFlags);
 
 private:
     GameScene& scene;

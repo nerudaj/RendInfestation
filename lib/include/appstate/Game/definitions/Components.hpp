@@ -30,9 +30,8 @@ struct [[nodiscard]] ColliderOptions final
     bool reportActorCollisions = false;
     bool nonblocking = false;
     bool disabled = false;
-    bool semighost =
-        false; ///< If true, doesn't collide with other semighost entities, but
-               ///< does collide with non-semighost ones
+    int semighost = 0; ///< Doesn't collide with entities sharing at least one
+                       ///< bit of semighost flag
 };
 
 struct [[nodiscard]] Collider final
