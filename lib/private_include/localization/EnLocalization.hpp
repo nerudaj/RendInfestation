@@ -96,22 +96,27 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModuleDesc_SpreadBarrelx2, "Shoot 2 projectiles at once." },
     { WeaponModuleDesc_CadenceBarrel,
       "Decreases delay between shots, decreases damage of each projectile." },
-    { WeaponModuleDesc_Ricochet, "Projectile ricochets off the walls." },
-    { WeaponModuleDesc_PassthruAmmo, "Projectile penetrates through enemies." },
+    { WeaponModuleDesc_Ricochet, "Projectiles ricochet off the walls." },
+    { WeaponModuleDesc_PassthruAmmo,
+      "Projectiles penetrate through enemies. Hitting an enemy no longer "
+      "counts as impact." },
     { WeaponModuleDesc_BigBullet,
-      "Projectile gets bigger, slower, and more powerful. Delay between shots "
-      "is also increased." },
-    { WeaponModuleDesc_Splitter, "Projectile shatters upon impact." },
+      "Projectiles get bigger, slower, and more powerful. Delay between shots "
+      "is increased." },
+    { WeaponModuleDesc_Splitter,
+      "Projectiles shatter into smaller projectiles upon impact." },
     { WeaponModuleDesc_Spikes,
-      "Shoot trip spikes instead of regular bullets." },
+      "Projectiles transform into trip spikes that remain lying on the "
+      "floor." },
     { WeaponModuleDesc_Push,
-      "Projectiles pack high impact force, pushing enemies into pits." },
-    { WeaponModuleDesc_ExplosiveAmmo, "Projectile explodes upon impact." },
+      "Projectiles pack high kinetic force, pushing enemies into pits." },
+    { WeaponModuleDesc_ExplosiveAmmo, "Projectiles explode upon impact." },
     { WeaponModuleDesc_Turret,
-      "Instead of regular projectiles, shoot mobile turrets." },
+      "Projectiles transform into mobile turrets. All other equipped modules "
+      "affect the turret behavior." },
     { WeaponModuleDesc_ExtraHealth,
       "Heal to full health. Increases max health." },
-    { WeaponModuleDesc_ExtraGun, "Gain extra weapon slot." },
+    { WeaponModuleDesc_ExtraGun, "Gain an extra weapon slot." },
 
     // Game
     { Interact, "[interact]" },
