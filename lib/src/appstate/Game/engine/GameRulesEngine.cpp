@@ -151,7 +151,10 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
                  - scene.actors.get<Collider>(scene.playerEntity).getPosition())
                     .length());
     }
-    else if (skin && skin->kind == EntityKind::Player)
+    // turrets also have entity kind player
+    else if (
+        skin && skin->skinType == SkinType::PlayerDefault
+        && skin->kind == EntityKind::Player)
     {
         scene.status.finished = true;
     }

@@ -17,21 +17,33 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
 
     if (inventory.traits & ProjectileTraits::Explosive)
     {
-        ActorBuilder::createEffect(
+        ActorBuilder::createParticleSystem(
+            scene.actors,
+            collider.getPosition(),
+            sf::Vector2 { 1.f, 0.f },
+            inventory.traits & ProjectileTraits::Big
+                ? ParticleSystemKind::HugeExplosion
+                : ParticleSystemKind::Explosion);
+        /*ActorBuilder::createEffect(
             scene.actors,
             collider.getPosition(),
             EffectType::Explosion,
             atlas,
-            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
+            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);*/
     }
     else if (skin.skinType == SkinType::Fireball)
     {
-        ActorBuilder::createEffect(
+        ActorBuilder::createParticleSystem(
+            scene.actors,
+            collider.getPosition(),
+            dgm::Math::toUnit(body.forward),
+            ParticleSystemKind::FireballExplosion);
+        /*ActorBuilder::createEffect(
             scene.actors,
             collider.getPosition(),
             EffectType::FireballDecay,
             atlas,
-            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);
+            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);*/
     }
     else
     {

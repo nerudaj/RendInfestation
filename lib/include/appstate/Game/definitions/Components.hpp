@@ -129,7 +129,7 @@ struct [[nodiscard]] ParticleEmitter final
     sf::Vector2f position;
     sf::Vector2f direction;
     sf::Angle directionVariance;
-    std::array<sf::Color, 2u> colors;
+    std::vector<sf::Color> colors;
     float maxProjectileSize;
     float speed;
     float speedVariance;

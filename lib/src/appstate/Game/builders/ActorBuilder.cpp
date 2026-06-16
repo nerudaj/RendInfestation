@@ -300,6 +300,7 @@ entt::entity ActorBuilder::createTurret(
         });
 
     actors.emplace<Health>(entity, BASE_TURRET_HEALTH);
+    actors.emplace<Lifetime>(entity, EXTENDED_PROJECTILE_LIFETIME);
 
     auto weaponConfig = WeaponConfig {};
     for (auto&& idx : uni::views::iota(
@@ -507,8 +508,8 @@ struct [[nodiscard]] ParticleSystemDefinition final
     sf::Time lifetime;
     int particlesToEmit;
     sf::Angle directionVariance;
-    std::array<sf::Color, 2> colors;
-    float maxProjectileSize;
+    std::vector<sf::Color> colors;
+    float maxParticleSize;
     float speed;
     float speedVariance;
 };
@@ -523,7 +524,7 @@ const std::map<ParticleSystemKind, ParticleSystemDefinition>
                 .particlesToEmit = 16,
                 .directionVariance = sf::degrees(100),
                 .colors = { COLOR_RED, COLOR_DARK_RED },
-                .maxProjectileSize = 4.f,
+                .maxParticleSize = 4.f,
                 .speed = 30.f,
                 .speedVariance = 10.f,
             },
@@ -536,7 +537,7 @@ const std::map<ParticleSystemKind, ParticleSystemDefinition>
                 .particlesToEmit = 10,
                 .directionVariance = sf::degrees(15),
                 .colors = { COLOR_ORANGE, COLOR_YELLOW },
-                .maxProjectileSize = 1.f,
+                .maxParticleSize = 1.f,
                 .speed = 60.f,
                 .speedVariance = 10.f,
             },
@@ -549,9 +550,54 @@ const std::map<ParticleSystemKind, ParticleSystemDefinition>
                 .particlesToEmit = 16,
                 .directionVariance = sf::degrees(100),
                 .colors = { COLOR_GREEN, COLOR_DARK_GREEN },
-                .maxProjectileSize = 4.f,
+                .maxParticleSize = 4.f,
                 .speed = 30.f,
                 .speedVariance = 10.f,
+            },
+        },
+        {
+            ParticleSystemKind::Explosion,
+            ParticleSystemDefinition {
+                .emissionInterval = sf::Time::Zero,
+                .lifetime = sf::seconds(0.35f),
+                .particlesToEmit = 48,
+                .directionVariance = sf::degrees(360),
+                .colors = { COLOR_DARK_GREY,
+                            COLOR_ORANGE,
+                            COLOR_YELLOW,
+                            COLOR_WHITE },
+                .maxParticleSize = 7.f,
+                .speed = 60.f,
+                .speedVariance = 30.f,
+            },
+        },
+        {
+            ParticleSystemKind::HugeExplosion,
+            ParticleSystemDefinition {
+                .emissionInterval = sf::Time::Zero,
+                .lifetime = sf::seconds(0.5f),
+                .particlesToEmit = 48,
+                .directionVariance = sf::degrees(360),
+                .colors = { COLOR_DARK_GREY,
+                            COLOR_ORANGE,
+                            COLOR_YELLOW,
+                            COLOR_WHITE },
+                .maxParticleSize = 10.f,
+                .speed = 60.f,
+                .speedVariance = 30.f,
+            },
+        },
+        {
+            ParticleSystemKind::FireballExplosion,
+            ParticleSystemDefinition {
+                .emissionInterval = sf::Time::Zero,
+                .lifetime = sf::seconds(0.4f),
+                .particlesToEmit = 24,
+                .directionVariance = sf::degrees(360),
+                .colors = { COLOR_RED, COLOR_ORANGE },
+                .maxParticleSize = 6.f,
+                .speed = 60.f,
+                .speedVariance = 0.f,
             },
         },
     };
@@ -561,7 +607,6 @@ entt::entity ActorBuilder::createParticleSystem(
     const sf::Vector2f& origin,
     const sf::Vector2f& direction,
     ParticleSystemKind kind)
-
 {
     auto entity = actors.create();
 
@@ -577,7 +622,7 @@ entt::entity ActorBuilder::createParticleSystem(
             .direction = direction,
             .directionVariance = def.directionVariance,
             .colors = def.colors,
-            .maxProjectileSize = def.maxProjectileSize,
+            .maxProjectileSize = def.maxParticleSize,
             .speed = def.speed,
             .speedVariance = def.speedVariance,
 

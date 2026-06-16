@@ -52,6 +52,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.fireDelay *= 1.4f;
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Big;
+            props.projectileLifetime *= 2.f;
             return props;
         };
 
