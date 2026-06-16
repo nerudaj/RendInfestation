@@ -146,13 +146,15 @@ AppStateChooseBonus::generatePickerSelection()
         draftPool.insert(WeaponModule::PassthruAmmo);
         draftPool.insert(WeaponModule::Push);
     }
-    else if (scene.unlockedModules.size() <= 6)
+
+    if (scene.unlockedModules.size() <= 6)
     {
         draftPool.insert(WeaponModule::CadenceBarrel);
         draftPool.insert(WeaponModule::SpreadBarrel_x4);
         draftPool.insert(WeaponModule::Splitter);
     }
-    else
+
+    if (scene.unlockedModules.size() > 6)
     {
         draftPool.insert(WeaponModule::ExplosiveAmmo);
         draftPool.insert(WeaponModule::Turret);
