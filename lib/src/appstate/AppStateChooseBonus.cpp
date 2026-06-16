@@ -37,13 +37,19 @@ void AppStateChooseBonus::buildLayout()
     content->setPosition(
         { "parent.width / 2 - width / 2", "parent.height / 2 - height / 2" });
     auto panel = tgui::Panel::create();
+    panel->setRenderer(tgui::Theme::getDefault()->getRenderer("TexturedPanel"));
+
+    auto inside = tgui::Group::create({ "90%", "90%" });
+    inside->setPosition(
+        { "parent.width / 2 - width / 2", "parent.height / 2 - height / 2" });
+    panel->add(inside);
 
     auto innerLayout = tgui::Group::create({ "100%", "10%" });
     innerLayout->add(WidgetBuilder::createTextLabel(
         dic.strings.getString(StringId::ChooseBonus),
         dic.sizer,
         "justify"_true));
-    panel->add(innerLayout);
+    inside->add(innerLayout);
 
     auto modulesToPick = generatePickerSelection();
 
@@ -51,13 +57,13 @@ void AppStateChooseBonus::buildLayout()
     leftBox->setPosition({ "0%", "10%" });
     leftBox->add(createPickerBox(modulesToPick.first));
     leftBox->onClick([&, module = modulesToPick.first] { onSubmit(module); });
-    panel->add(leftBox);
+    inside->add(leftBox);
 
     auto rightBox = createSelectablePanel({ "50%", "90%" });
     rightBox->setPosition({ "50%", "10%" });
     rightBox->add(createPickerBox(modulesToPick.second));
     rightBox->onClick([&, module = modulesToPick.second] { onSubmit(module); });
-    panel->add(rightBox);
+    inside->add(rightBox);
     content->add(panel);
 
     dic.gui.rebuildWith(content);
@@ -88,8 +94,8 @@ tgui::Container::Ptr AppStateChooseBonus::createPickerBox(WeaponModule module)
         uni::format("ModuleIcon-{}", std::to_underlying(module))));
     imageLayout->add(image);
 
-    auto descriptionLayout = tgui::Group::create({ "90%", "55%" });
-    descriptionLayout->setPosition({ "5%", "40%" });
+    auto descriptionLayout = tgui::Group::create({ "90%", "45%" });
+    descriptionLayout->setPosition({ "5%", "50%" });
     content->add(descriptionLayout);
 
     auto text = WidgetBuilder::createTextLabel(

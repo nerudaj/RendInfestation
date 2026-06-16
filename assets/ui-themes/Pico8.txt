@@ -19,6 +19,11 @@ Panel
     Borders = 2;
 }
 
+TexturedPanel
+{
+    TextureBackground = "../tgui-graphics/panel-bgr.png" Part(0, 0, 25, 25) Middle(7, 7, 11, 11);
+}
+
 ScrollablePanel
 {
     BackgroundColor = rgba(95, 87, 79, 255);
