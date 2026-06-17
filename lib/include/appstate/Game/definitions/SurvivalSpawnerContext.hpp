@@ -7,7 +7,7 @@
 struct [[nodiscard]] SurvivalSpawnerContext final
 {
     int wave = 0;
-    int enemiesInCurrentWave = 10;
+    int enemiesInCurrentWave = 0;
     int enemiesSpawnedInCurrentWave = 0;
     int enemiesKilledInCurrentWave = 0;
     sf::Time timeTillNextWave = sf::seconds(5.f);

@@ -73,10 +73,7 @@ int SurvivalGameDirector::getScoreForEnemy(const Skin& skin) const
 
 SurvivalSpawnerContext SurvivalGameDirector::createInitialContext()
 {
-    return SurvivalSpawnerContext {
-        .wave = 1,
-        .enemiesInCurrentWave = getEnemyCountForWave(1),
-    };
+    return SurvivalSpawnerContext {};
 }
 
 SkinType SurvivalGameDirector::getEnemyToSpawn() const
@@ -111,5 +108,7 @@ SkinType SurvivalGameDirector::getEnemyToSpawn() const
 
 int SurvivalGameDirector::getEnemyCountForWave(int wave)
 {
-    return wave * 10;
+    if (wave <= 6) return wave * 10;
+    if (wave <= 13) return wave * 15;
+    return wave * 20;
 }
