@@ -14,6 +14,7 @@ struct [[nodiscard]] Prop final
     sf::Vector2f spriteOffset = { 0.f, 0.f };
     bool isSolid = true;
     std::optional<BoundLightEmitter> boundLightEmitter = std::nullopt;
+    std::optional<Health> health = std::nullopt;
 };
 
 const std::array<Prop, 13u> PROP_DEFINITIONS = {
@@ -46,8 +47,12 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         .getCollider =
             [](const sf::Vector2f& origin)
         {
-            return Collider { dgm::Rect(
-                { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
+            return Collider {
+                dgm::Rect({ origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }),
+                ColliderOptions {
+                    .semighost = SEMIGHOST_PROJECTILE,
+                }
+            };
         },
     },
     Prop {
@@ -55,8 +60,12 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         .getCollider =
             [](const sf::Vector2f& origin)
         {
-            return Collider { dgm::Rect(
-                { origin.x, origin.y - 64.f }, { 64.f, 56.f }) };
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 64.f, 56.f }),
+                ColliderOptions {
+                    .semighost = SEMIGHOST_PROJECTILE,
+                }
+            };
         },
         .spriteOffset = { 0.f, -4.f },
     },
@@ -123,7 +132,6 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             };
         },
         .spriteOffset = { 22.f, 25.f },
-        .isSolid = true,
     },
     Prop {
         .animationStateName = "cactus-pot",
@@ -134,37 +142,47 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
                 { origin.x, origin.y - 56.f }, { 15.f, 10.f }) };
         },
         .spriteOffset = { 25.f, 18.f },
-        .isSolid = true,
+        .health = Health(50),
     },
     Prop {
         .animationStateName = "cactus-pot-destroyed",
         .getCollider =
             [](const sf::Vector2f& origin)
         {
-            return Collider { dgm::Rect(
-                { origin.x, origin.y - 56.f }, { 15.f, 10.f }) };
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 56.f }, { 15.f, 10.f }),
+                ColliderOptions {
+                    .semighost = SEMIGHOST_PROJECTILE,
+                }
+            };
         },
         .spriteOffset = { 25.f, 18.f },
-        .isSolid = true,
     },
     Prop {
         .animationStateName = "crate",
         .getCollider =
             [](const sf::Vector2f& origin)
         {
-            return Collider { dgm::Rect(
-                { origin.x, origin.y - 64.f }, { 11.f, 10.f }) };
+            return Collider {
+                dgm::Rect({ origin.x, origin.y - 64.f }, { 11.f, 10.f }),
+                ColliderOptions {
+                    .semighost = SEMIGHOST_PROJECTILE,
+                }
+            };
         },
         .spriteOffset = { 26.f, 23.f },
-        .isSolid = true,
     },
     Prop {
         .animationStateName = "workbench",
         .getCollider =
             [](const sf::Vector2f& origin)
         {
-            return Collider { dgm::Rect(
-                { origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }) };
+            return Collider {
+                dgm::Rect({ origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }),
+                ColliderOptions {
+                    .semighost = SEMIGHOST_PROJECTILE,
+                }
+            };
         },
     },
 };

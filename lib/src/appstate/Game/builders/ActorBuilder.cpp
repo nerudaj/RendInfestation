@@ -188,6 +188,11 @@ entt::entity ActorBuilder::createProp(
             trigger, InteractionTriggerType::Workbench);
     }
 
+    if (propDef.health)
+    {
+        actors.emplace<Health>(entity, *propDef.health);
+    }
+
     return entity;
 }
 
@@ -220,9 +225,12 @@ entt::entity ActorBuilder::createProjectile(
     actors.emplace<Collider>(
         entity,
         dgm::Circle(origin, 3.f * sizeFactor),
-        reportMeshCollisions,
-        "reportActorCollisions"_true,
-        "nonblocking"_true);
+        ColliderOptions {
+            .reportMeshCollisions = reportMeshCollisions,
+            .reportActorCollisions = true,
+            .nonblocking = true,
+            .semighost = hasShrapnelsTrait ? 0 : SEMIGHOST_PROJECTILE,
+        });
     actors.emplace<PhysicsBody>(
         entity,
         PhysicsBody {

@@ -3,7 +3,7 @@
 #include <DGM/classes/Raycaster.hpp>
 #include <fsm/Builder.hpp>
 
-void AiEngine::update(const dgm::Time& time)
+void AiEngine::update(const dgm::Time&)
 {
     // loop over all npcs (they have NpcInputs)
     // throw their logic into some FSM
@@ -106,7 +106,6 @@ void AiEngine::chooseTarget(NpcBlackboard& blackboard)
     using EntityPositionPair = std::pair<entt::entity, sf::Vector2f>;
 
     auto&& targets = std::vector<EntityPositionPair>();
-    auto&& view = scene.actors.view<Collider, Skin>().each();
 
     for (auto&& [entity, collider, skin] :
          scene.actors.view<Collider, Skin>().each())

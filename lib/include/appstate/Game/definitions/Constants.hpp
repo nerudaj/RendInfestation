@@ -24,6 +24,7 @@ constexpr int BASE_TURRET_HEALTH = BASE_PROJECTILE_DAMAGE * 10;
 constexpr int BASE_PLAYER_HEALTH = 100;
 constexpr int SEMIGHOST_PLAYER = 1;
 constexpr int SEMIGHOST_NPC = 2;
+constexpr int SEMIGHOST_PROJECTILE = 4;
 
 // Animation states
 constexpr const char* IDLE_ANIMATION_STATE = "idle";

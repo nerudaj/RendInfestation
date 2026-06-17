@@ -29,6 +29,8 @@ public:
 
     void operator()(const event::ActorStopped& e);
 
+    void operator()(const event::ActorDamaged& e);
+
     void operator()(const auto&) {}
 
 public:

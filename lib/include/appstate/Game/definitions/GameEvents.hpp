@@ -106,6 +106,21 @@ namespace event
         explicit ActorStopped(entt::entity entity) : entity(entity) {}
     };
 
+    struct [[nodiscard]] ActorDamaged final
+    {
+        entt::entity entity;
+        int damageAmount;
+        sf::Vector2f impactForce;
+
+        ActorDamaged(
+            entt::entity entity, int damageAmount, sf::Vector2f impactForce)
+            : entity(entity)
+            , damageAmount(damageAmount)
+            , impactForce(impactForce)
+        {
+        }
+    };
+
     struct [[nodiscard]] WorkbenchOpened final
     {
     };
@@ -138,6 +153,7 @@ using GameEvent = std::variant<
     event::ActorIsFalling,
     event::ActorMoved,
     event::ActorStopped,
+    event::ActorDamaged,
     event::WorkbenchOpened,
     event::WaveEnded,
     event::SurvivalSpawnerTimerHit>;

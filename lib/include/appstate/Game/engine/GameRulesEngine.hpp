@@ -52,6 +52,8 @@ public:
 
     void operator()(const event::SurvivalSpawnerTimerHit& e);
 
+    void operator()(const event::ActorDamaged& e);
+
     void operator()(const auto&) {}
 
 public:

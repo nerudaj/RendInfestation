@@ -130,7 +130,7 @@ void GameRulesEngine::operator()(const event::ActorIsFalling& e)
 
 void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
 {
-    const auto skin = scene.actors.try_get<Skin>(e.entity);
+    auto skin = scene.actors.try_get<Skin>(e.entity);
     if (skin && skin->kind == EntityKind::Npc)
     {
         ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
@@ -156,6 +156,7 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
         skin && skin->skinType == SkinType::PlayerDefault
         && skin->kind == EntityKind::Player)
     {
+        // todo: event
         scene.status.finished = true;
     }
 }
@@ -164,6 +165,37 @@ void GameRulesEngine::operator()(const event::SurvivalSpawnerTimerHit& e)
 {
     ActorBuilder::createNpc(
         scene.actors, pickEnemySpawnPosition(), e.typeToSpawn, atlas);
+}
+
+void GameRulesEngine::operator()(const event::ActorDamaged& e)
+{
+    auto&& [health, body] = scene.actors.get<Health, PhysicsBody>(e.entity);
+
+    health.get() -= e.damageAmount;
+
+    if (e.impactForce.length() == 0.f) return;
+
+    if (!body.ragdoll)
+    {
+        auto future = scene.actors.create();
+        auto callback = scene.actors.emplace<TimedScript>(
+            future,
+            sf::seconds(0.5f),
+            [&, entity = e.entity]
+            {
+                auto body2 = scene.actors.try_get<PhysicsBody>(entity);
+                if (!body2) return;
+
+                // Turn back original physics body behavior
+                body2->ragdoll = false;
+                body2->friction = ACTOR_FRICTION;
+            });
+    }
+
+    // Turn the body into ragdoll
+    body.forward += e.impactForce;
+    body.ragdoll = true;
+    body.friction = RAGDOLL_FRICTION;
 }
 
 void GameRulesEngine::update(const dgm::Time& time)
@@ -285,35 +317,24 @@ void GameRulesEngine::updateHealth()
     for (auto&& [entity, health] : scene.actors.view<Health>().each())
     {
         if (health.get() > 0) continue;
-        eventQueue.pushEvent<event::ObjectDestroyed>(entity);
-    }
-}
 
-static SkinType getNpcToSpawn(int currentWave, int enemiesSpawnedInThisWave)
-{
-    if (currentWave == 1)
-        return SkinType::Scuttlebug;
-    else if (currentWave == 2)
-    {
-        if (enemiesSpawnedInThisWave % 3 == 0) return SkinType::Bighead;
-        return SkinType::Scuttlebug;
+        auto skin = scene.actors.try_get<Skin>(entity);
+        if (skin && skin->kind == EntityKind::Prop
+            && skin->animation.getStateName() == "cactus-pot")
+        {
+            skin->animation.setState("cactus-pot-destroyed", "looping"_true);
+            ActorBuilder::createParticleSystem(
+                scene.actors,
+                scene.actors.get<Collider>(entity).getPosition(),
+                sf::Vector2f { 0.f, -1.f },
+                ParticleSystemKind::CactusSpatter);
+            scene.actors.remove<Health>(entity);
+        }
+        else
+        {
+            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        }
     }
-    else if (currentWave == 3)
-    {
-        if (enemiesSpawnedInThisWave % 2 == 0)
-            return SkinType::Scuttlebug;
-        else if (enemiesSpawnedInThisWave % 4 == 3)
-            return SkinType::ScuttlebugBlue;
-        return SkinType::Bighead;
-    }
-
-    if (enemiesSpawnedInThisWave % 2 == 0)
-        return SkinType::Scuttlebug;
-    else if (enemiesSpawnedInThisWave % 8 == 1)
-        return SkinType::Bighead;
-    else if (enemiesSpawnedInThisWave % 8 == 5)
-        return SkinType::Beholder;
-    return SkinType::ScuttlebugBlue;
 }
 
 void GameRulesEngine::updateLifetimes(const dgm::Time& time)
@@ -386,38 +407,11 @@ void GameRulesEngine::handleDamageMarkerToActorCollision(
     auto inventory = scene.actors.try_get<DamageMarkerInventory>(marker);
     if (!inventory) return;
 
-    auto [skin, health, body, controller] =
-        scene.actors.try_get<Skin, Health, PhysicsBody, EntityInput>(actor);
-    if (!skin || !health || !body || !controller) return;
+    auto [skin, health] = scene.actors.try_get<Skin, Health>(actor);
+    if (!skin || !health || skin->kind == inventory->originator) return;
 
-    if (skin->kind == inventory->originator) return;
-
-    health->get() -= inventory->damage;
-    skin->animation.setState(HURT_ANIMATION_STATE, "looping"_false);
-
-    if (inventory->impactForceImpulse.length() == 0.f) return;
-
-    if (!body->ragdoll)
-    {
-        auto future = scene.actors.create();
-        auto callback = scene.actors.emplace<TimedScript>(
-            future,
-            sf::seconds(0.5f),
-            [&, entity = actor]
-            {
-                auto body2 = scene.actors.try_get<PhysicsBody>(entity);
-                if (!body2) return;
-
-                // Turn back original physics body behavior
-                body2->ragdoll = false;
-                body2->friction = ACTOR_FRICTION;
-            });
-    }
-
-    // Turn the body into ragdoll
-    body->forward += inventory->impactForceImpulse;
-    body->ragdoll = true;
-    body->friction = RAGDOLL_FRICTION;
+    eventQueue.pushEvent<event::ActorDamaged>(
+        actor, inventory->damage, inventory->impactForceImpulse);
 }
 
 void GameRulesEngine::handleTriggerToActorCollision(
