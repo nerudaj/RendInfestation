@@ -173,7 +173,7 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
 
     health.get() -= e.damageAmount;
 
-    if (e.impactForce.length() == 0.f) return;
+    if (e.impactForce.length() == 0.f || body.pinned) return;
 
     if (!body.ragdoll)
     {

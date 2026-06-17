@@ -55,9 +55,12 @@ void PhysicsEngine::updateForConcreteCollider(
             sf::Vector2i(collider.getPosition().componentWiseDiv(
                 sf::Vector2f(scene.altLevelMesh.getVoxelSize())));
 
-        const auto tile =
-            scene.altLevelMesh
-                [tilePos.y * scene.altLevelMesh.getDataSize().x + tilePos.x];
+        auto&& meshData = scene.altLevelMesh.getRawConstData();
+        const auto tileIdx =
+            tilePos.y * scene.altLevelMesh.getDataSize().x + tilePos.x;
+        assert(tileIdx < meshData.size());
+
+        const auto tile = meshData[tileIdx];
         if (tile < 0 && body.canFall)
         {
             eventQueue.pushEvent<event::ActorIsFalling>(

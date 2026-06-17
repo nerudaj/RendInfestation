@@ -85,6 +85,7 @@ entt::entity ActorBuilder::createNpc(
             .friction = ACTOR_FRICTION,
             .useAltMesh = true,
             .canFall = config.canFall,
+            .pinned = false,
         });
 
     actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });

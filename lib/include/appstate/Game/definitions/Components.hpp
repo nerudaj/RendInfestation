@@ -94,6 +94,7 @@ struct [[nodiscard]] PhysicsBody final
     // prevents controllers from using the object
     // used in Push weapon module
     bool ragdoll = false;
+    bool pinned = true; // prevents ragdoll
 };
 
 struct [[nodiscard]] Skin final
