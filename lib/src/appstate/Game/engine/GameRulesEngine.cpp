@@ -380,17 +380,21 @@ void GameRulesEngine::createDamageMarkerForProjectile(
     auto interval = scene.actors.try_get<Interval>(projectile);
     if (interval && interval->timer > sf::Time::Zero) return;
 
+    const auto& skin = scene.actors.get<Skin>(projectile);
+    const auto& collider = scene.actors.get<Collider>(projectile);
     const float scaleFactor =
-        inventory->traits & ProjectileTraits::Explosive ? 2.f : 1.f;
+        (inventory->traits & ProjectileTraits::Big ? 2.f : 1.f) * skin.scale;
+
+    const float markerRadius =
+        inventory->traits & ProjectileTraits::Explosive ? BASE_EXPLOSION_RADIUS
+        : skin.skinType == SkinType::Fireball ? BASE_FIREBALL_BLAST_RADIUS
+                                              : collider.getRadius();
 
     ActorBuilder::createDamageMarker(
         scene.actors,
         dgm::Math::toUnit(scene.actors.get<PhysicsBody>(projectile).forward),
-        scene.actors.get<Collider>(projectile).getPosition(),
-        (inventory->traits & ProjectileTraits::Explosive
-             ? BASE_EXPLOSION_RADIUS
-             : scene.actors.get<Collider>(projectile).getRadius())
-            * scaleFactor,
+        collider.getPosition(),
+        markerRadius * scaleFactor,
         *inventory);
 
     if (interval)

@@ -17,6 +17,7 @@ constexpr sf::Time BASE_WEAPON_FIRE_DELAY = sf::seconds(0.5f);
 constexpr sf::Time BASE_PROJECTILE_LIFETIME = sf::seconds(3.f);
 constexpr sf::Time EXTENDED_PROJECTILE_LIFETIME = sf::seconds(30.f);
 constexpr float BASE_EXPLOSION_RADIUS = 18.f;
+constexpr float BASE_FIREBALL_BLAST_RADIUS = 12.f;
 constexpr int EFFECT_FPS = 8;
 constexpr int BASE_ANIMATION_FPS = 8;
 constexpr float MIN_ENEMY_SPAWN_DISTANCE = 256.f;
