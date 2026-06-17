@@ -150,6 +150,13 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
                 (scene.actors.get<Collider>(e.entity).getPosition()
                  - scene.actors.get<Collider>(scene.playerEntity).getPosition())
                     .length());
+        else if (skin->skinType == SkinType::Bighead)
+            soundPlayer.playAttenuatedSound(
+                SoundChannel::Enemy,
+                SoundId::BigheadDeath,
+                (scene.actors.get<Collider>(e.entity).getPosition()
+                 - scene.actors.get<Collider>(scene.playerEntity).getPosition())
+                    .length());
     }
     // turrets also have entity kind player
     else if (

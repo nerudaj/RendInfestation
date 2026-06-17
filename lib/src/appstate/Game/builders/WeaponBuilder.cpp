@@ -96,6 +96,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     case ExplosiveAmmo:
         return [](WeaponProperties props)
         {
+            props.soundId = SoundId::RocketLauncher;
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Explosive;
             if (props.projectileSkin == SkinType::Spikes)
