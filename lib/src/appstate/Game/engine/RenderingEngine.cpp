@@ -239,12 +239,6 @@ void RenderingEngine::renderHud(dgm::Window& window)
     renderHudBackgroundAndHealth(hudOrigin, window);
     renderHudReloadTimeAndModules(hudOrigin, window);
 
-#if defined(ANDROID) || defined(_DEBUG)
-    hudSprite.setTextureRect(iconsClip.getFrame(Icon::Pause2));
-    hudSprite.setPosition({ 2.f, 2.f });
-    window.draw(hudSprite);
-#endif
-
     renderHudStrings(window);
 }
 
@@ -297,9 +291,11 @@ void RenderingEngine::renderHudReloadTimeAndModules(
 void RenderingEngine::renderHudStrings(dgm::Window& window)
 {
     text.setCharacterSize(FONT_BASE_HEIGHT);
+#ifdef _DEBUG
     text.setPosition({ 10.f, 2.f });
     text.setString(fpsCounter.getText());
     window.draw(text);
+#endif
 
     if (scene.survivalGameDirector)
     {
@@ -353,15 +349,48 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
     auto& model = touchController.getTouchModel();
     dgm::Circle thumb({ 0.f, 0.f }, 16.f);
 
-    for (auto& object : model.objects)
+    // First two objects are joysticks
+    for (auto&& object : model.objects | uni::views::take(2))
     {
         object.touchArea.debugRender(window, sf::Color(128, 128, 128, 128));
-        if (object.kind == TouchObjectKind::Joystick)
-        {
-            thumb.setPosition(object.touchPosition);
-            thumb.debugRender(window, sf::Color(128, 128, 128));
-        }
+        thumb.setPosition(object.touchPosition);
+        thumb.debugRender(window, sf::Color(128, 128, 128));
     }
+
+    const auto buttonRadius = model.objects[2].touchArea.getRadius() * 0.8f;
+
+    const auto offset = sf::Vector2f { buttonRadius, buttonRadius };
+    const auto scale = 2 * buttonRadius / iconsClip.getFrameSize().x;
+    hudSprite.setScale({ scale, scale });
+
+    // Third is pause
+    hudSprite.setTextureRect(iconsClip.getFrame(Icon::Pause2));
+    hudSprite.setPosition(model.objects[2].touchArea.getPosition() - offset);
+    window.draw(hudSprite);
+
+    // Fourth is swap
+    if (scene.loadout.weapons.size() > 1)
+    {
+        model.objects[3].touchArea.debugRender(
+            window, sf::Color(128, 128, 128, 128));
+        hudSprite.setTextureRect(iconsClip.getFrame(Icon::Swap));
+        hudSprite.setPosition(
+            model.objects[3].touchArea.getPosition() - offset);
+        window.draw(hudSprite);
+    }
+
+    // Fifth is interact
+    if (scene.interactionTrigger)
+    {
+        model.objects[4].touchArea.debugRender(
+            window, sf::Color(128, 128, 128, 128));
+        hudSprite.setTextureRect(iconsClip.getFrame(Icon::Hand));
+        hudSprite.setPosition(
+            model.objects[4].touchArea.getPosition() - offset);
+        window.draw(hudSprite);
+    }
+
+    hudSprite.setScale({ 1.f, 1.f });
 }
 
 sf::Angle

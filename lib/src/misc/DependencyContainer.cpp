@@ -17,7 +17,7 @@ DependencyContainer::DependencyContainer(
           primaryLang,
           std::map<Language, Localization<StringId>> {
               { Language::English, EN_LOCALIZATION } })
-    , touchController(settingsSM.video.resolution)
+    , touchController(settingsSM.video.resolution, sizer)
     , input(settingsSM.bindings, touchController, window.getSfmlWindowContext())
     , virtualCursor(
           window.getSfmlWindowContext(),

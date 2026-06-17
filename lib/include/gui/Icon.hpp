@@ -17,6 +17,8 @@ enum class [[nodiscard]] Icon
     Lock,
     Back,
     Forward,
+    Swap,
+    Hand,
     PlayFill,
     PauseFill,
     StopFill,

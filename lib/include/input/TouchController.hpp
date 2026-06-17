@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gui/Sizers.hpp"
 #include <DGM/classes/Collision.hpp>
 #include <DGM/classes/Controller.hpp>
 #include <DGM/classes/Math.hpp>
@@ -61,19 +62,20 @@ public:
 struct [[nodiscard]] TouchModel final
 {
 public:
-    explicit TouchModel(const sf::Vector2u& windowSize);
+    TouchModel(const sf::Vector2u& windowSize, const Sizer& sizer);
 
 public:
     void recomputeLayoutAfterWindowResize(const sf::Vector2u& windowSize)
     {
-        objects = computeLayout(windowSize);
+        objects = computeLayout(windowSize, sizer);
     }
 
 private:
     static std::array<TouchInput, 5u>
-    computeLayout(const sf::Vector2u& windowSize);
+    computeLayout(const sf::Vector2u& windowSize, const Sizer& sizer);
 
 public:
+    const Sizer& sizer;
     std::array<TouchInput, 5u> objects;
     std::map<unsigned, size_t>
         fingerToTouchObject = {}; ///< Each event has finger index associated
@@ -91,7 +93,8 @@ public:
 class [[nodiscard]] TouchController final
 {
 public:
-    explicit TouchController(const sf::Vector2u& windowSize) : model(windowSize)
+    explicit TouchController(const sf::Vector2u& windowSize, const Sizer& sizer)
+        : model(windowSize, sizer)
     {
     }
 

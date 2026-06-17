@@ -15,10 +15,17 @@ void TouchInput::reset()
 }
 
 std::array<TouchInput, 5u>
-TouchModel::computeLayout(const sf::Vector2u& windowSize)
+TouchModel::computeLayout(const sf::Vector2u& windowSize, const Sizer& sizer)
 {
+    const float buttonRadius = sizer.getBaseContainerHeight();
     const float joystickRadius = windowSize.x * 0.1f;
     const auto windowsSizeF = sf::Vector2f(windowSize);
+
+    const auto rightJoystickOrigin =
+        sf::Vector2f { windowSize.x - joystickRadius,
+                       windowSize.y - joystickRadius };
+    const auto actionButtonBaseDir =
+        sf::Vector2f { 0.f, -joystickRadius - buttonRadius };
 
     return std::array {
         TouchInput(
@@ -26,25 +33,26 @@ TouchModel::computeLayout(const sf::Vector2u& windowSize)
             { joystickRadius, windowSize.y - joystickRadius },
             joystickRadius),
         TouchInput(
-            TouchObjectKind::Joystick,
-            { windowSize.x - joystickRadius, windowSize.y - joystickRadius },
-            joystickRadius),
-        TouchInput(TouchObjectKind::Button, { 100.f, 100.f }, 100.f),
-        TouchInput(
+            TouchObjectKind::Joystick, rightJoystickOrigin, joystickRadius),
+        TouchInput( // Pause
             TouchObjectKind::Button,
-            windowsSizeF
-                - 2.f * sf::Vector2f { joystickRadius, joystickRadius },
-            60.f),
-        TouchInput(
+            { buttonRadius, buttonRadius },
+            buttonRadius),
+        TouchInput( // Swap
             TouchObjectKind::Button,
-            windowsSizeF
-                - sf::Vector2f { joystickRadius, 2.f * joystickRadius },
-            60.f),
+            rightJoystickOrigin
+                + actionButtonBaseDir.rotatedBy(sf::degrees(-60)),
+            buttonRadius),
+        TouchInput( // Interact
+            TouchObjectKind::Button,
+            rightJoystickOrigin
+                + actionButtonBaseDir.rotatedBy(sf::degrees(-30)),
+            buttonRadius),
     };
 }
 
-TouchModel::TouchModel(const sf::Vector2u& windowSize)
-    : objects(computeLayout(windowSize))
+TouchModel::TouchModel(const sf::Vector2u& windowSize, const Sizer& sizer)
+    : sizer(sizer), objects(computeLayout(windowSize, sizer))
 {
 }
 
