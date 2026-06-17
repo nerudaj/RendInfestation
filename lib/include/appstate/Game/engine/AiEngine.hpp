@@ -104,7 +104,7 @@ private: // Utils
         dgm::WorldNavMesh& navigationMesh,
         NpcBlackboard& blackboard);
 
-    entt::entity chooseTarget(
+    std::optional<entt::entity> chooseTarget(
         EntityKind eligibleEntityKind, const sf::Vector2f& thisEntityPosition);
 
     static fsm::Fsm<NpcBlackboard> buildFsmForScuttlebug(AiEngine& self);

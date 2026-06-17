@@ -11,9 +11,6 @@ void AiEngine::update(const dgm::Time&)
 
     for (auto&& [_, blackboard] : scene.actors.view<NpcBlackboard>().each())
     {
-        if (blackboard.targetEntity == entt::null
-            && blackboard.kind != NpcKind::Turret)
-            blackboard.targetEntity = scene.playerEntity;
         blackboard.input.clearInputs();
         fsmsByKind.at(std::to_underlying(blackboard.kind)).tick(blackboard);
     }
@@ -109,16 +106,22 @@ void AiEngine::choosePlayerAsTarget(NpcBlackboard& blackboard)
 
 void AiEngine::chooseTargetForEnemyNpc(NpcBlackboard& blackboard)
 {
-    blackboard.targetEntity = chooseTarget(
-        EntityKind::Player,
-        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition());
+    if (auto entity = chooseTarget(
+            EntityKind::Player,
+            scene.actors.get<Collider>(blackboard.ownerEntity).getPosition()))
+    {
+        blackboard.targetEntity = *entity;
+    }
 }
 
 void AiEngine::chooseTargetForFriendlyNpc(NpcBlackboard& blackboard)
 {
-    blackboard.targetEntity = chooseTarget(
-        EntityKind::Npc,
-        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition());
+    if (auto entity = chooseTarget(
+            EntityKind::Npc,
+            scene.actors.get<Collider>(blackboard.ownerEntity).getPosition()))
+    {
+        blackboard.targetEntity = *entity;
+    }
 }
 
 void AiEngine::invalidateWaypoint(NpcBlackboard& blackboard)
@@ -230,7 +233,7 @@ void AiEngine::computePathAndUpdateWaypoint(
     if (!path.isTraversed()) blackboard.waypoint = path.getCurrentPoint().coord;
 }
 
-entt::entity AiEngine::chooseTarget(
+std::optional<entt::entity> AiEngine::chooseTarget(
     EntityKind eligibleEntityKind, const sf::Vector2f& thisEntityPosition)
 {
     using EntityPositionPair = std::pair<entt::entity, sf::Vector2f>;
@@ -254,7 +257,7 @@ entt::entity AiEngine::chooseTarget(
             return aDist < bDist;
         });
 
-    assert(!targets.empty());
+    if (targets.empty()) return std::nullopt;
     return targets.front().first;
 }
 
@@ -268,17 +271,25 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForScuttlebug(AiEngine& self)
 {
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
-        .withNoErrorMachine()
+        .withErrorMachine()
+            .useGlobalEntryCondition(NOT(hasValidTarget))
+                .withEntryState("Start")
+                    .exec(ACTION(chooseTargetForEnemyNpc))
+                    .andRestart()
+            .done()
         .withMainMachine()
             .withEntryState("Start")
                 .when(CONDITION(isTargetInMeleeRange))
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisible))
-                    .goToState("MoveTowardsTarget")
+                    .goToState("InvalidateWaypoint")
                 .orWhen(CONDITION(hasNpcReachedWaypoint))
                     .goToState("GenerateWaypoint")
                 .otherwiseExec(ACTION(moveTowardsWaypoint))
                 .andLoop()
+            .withState("InvalidateWaypoint")
+                .exec(ACTION(invalidateWaypoint))
+                .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
                 .when(CONDITION(isTargetInMeleeRange))
                     .goToState("Attack")
@@ -306,17 +317,25 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForGreaterScuttlebug(AiEngine& self)
 {
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
-        .withNoErrorMachine()
+        .withErrorMachine()
+            .useGlobalEntryCondition(NOT(hasValidTarget))
+                .withEntryState("Start")
+                    .exec(ACTION(chooseTargetForEnemyNpc))
+                    .andRestart()
+            .done()
         .withMainMachine()
             .withEntryState("Start")
                 .when(CONDITION(isTargetInMeleeRange))
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisible))
-                    .goToState("MoveTowardsTarget")
+                    .goToState("InvalidateWaypoint")
                 .orWhen(CONDITION(hasNpcReachedWaypoint))
                     .goToState("GenerateWaypoint")
                 .otherwiseExec(ACTION(moveTowardsWaypoint))
                 .andLoop()
+            .withState("InvalidateWaypoint")
+                .exec(ACTION(invalidateWaypoint))
+                .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
                 .when(CONDITION(isTargetInMeleeRange))
                     .goToState("Attack")
@@ -344,17 +363,25 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBighead(AiEngine& self)
 {
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
-        .withNoErrorMachine()
+        .withErrorMachine()
+            .useGlobalEntryCondition(NOT(hasValidTarget))
+                .withEntryState("Start")
+                    .exec(ACTION(choosePlayerAsTarget))
+                    .andRestart()
+            .done()
         .withMainMachine()
             .withEntryState("Start")
                 .when(CONDITION(isTargetInMeleeRange))
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisible))
-                    .goToState("MoveTowardsTarget")
+                    .goToState("InvalidateWaypoint")
                 .orWhen(CONDITION(hasNpcReachedWaypoint))
                     .goToState("GenerateWaypoint")
                 .otherwiseExec(ACTION(moveTowardsWaypoint))
                 .andLoop()
+            .withState("InvalidateWaypoint")
+                .exec(ACTION(invalidateWaypoint))
+                .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
                 .when(CONDITION(isTargetInMeleeRange))
                     .goToState("Attack")
