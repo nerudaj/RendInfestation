@@ -50,7 +50,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
                 }
             };
         },
@@ -63,7 +63,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 64.f, 56.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
                 }
             };
         },
@@ -76,7 +76,10 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
+                ColliderOptions {
+                    .nonblocking = true,
+                    .disabled = true,
+                }
             };
         },
         .spriteOffset = { 16.f, 16.f },
@@ -89,7 +92,10 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 32.f, 32.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
+                ColliderOptions {
+                    .nonblocking = true,
+                    .disabled = true,
+                }
             };
         },
         .spriteOffset = { 16.f, 16.f },
@@ -102,7 +108,10 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 24.f, 14.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
+                ColliderOptions {
+                    .nonblocking = true,
+                    .disabled = true,
+                }
             };
         },
         .spriteOffset = { 22.f, 25.f },
@@ -115,7 +124,10 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
+                ColliderOptions {
+                    .nonblocking = true,
+                    .disabled = true,
+                }
             };
         },
         .spriteOffset = { 22.f, 25.f },
@@ -128,7 +140,10 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 20.f, 14.f }),
-                ColliderOptions { .nonblocking = true, .disabled = true }
+                ColliderOptions {
+                    .nonblocking = true,
+                    .disabled = true,
+                }
             };
         },
         .spriteOffset = { 22.f, 25.f },
@@ -152,7 +167,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 56.f }, { 15.f, 10.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
                 }
             };
         },
@@ -166,7 +181,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 11.f, 10.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
                 }
             };
         },
@@ -180,7 +195,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
                 }
             };
         },

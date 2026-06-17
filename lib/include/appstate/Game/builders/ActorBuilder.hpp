@@ -31,6 +31,8 @@ public:
         size_t propId,
         const GameTextureAtlas& atlas);
 
+    static void destroyProp(entt::registry& actors, entt::entity entity);
+
     static entt::entity createProjectile(
         entt::registry& actors,
         const sf::Vector2f& origin,

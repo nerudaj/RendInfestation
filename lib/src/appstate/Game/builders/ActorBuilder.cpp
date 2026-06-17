@@ -75,7 +75,7 @@ entt::entity ActorBuilder::createNpc(
         entity,
         dgm::Circle(spawnPosition, config.colliderRadius),
         ColliderOptions {
-            .semighost = SEMIGHOST_NPC,
+            .semighost = config.semighostFlags,
         });
 
     actors.emplace<PhysicsBody>(
@@ -195,6 +195,25 @@ entt::entity ActorBuilder::createProp(
     }
 
     return entity;
+}
+
+void ActorBuilder::destroyProp(entt::registry& actors, entt::entity entity)
+{
+    auto& skin = actors.get<Skin>(entity);
+    if (skin.animation.getStateName() == "cactus-pot")
+    {
+        actors.remove<Health>(entity);
+
+        auto& collider = actors.get<Collider>(entity);
+        collider.options.semighost = SEMIGHOST_PROJECTILE;
+        skin.animation.setState("cactus-pot-destroyed", "looping"_true);
+
+        createParticleSystem(
+            actors,
+            collider.getPosition(),
+            sf::Vector2f { 1.f, 0.f },
+            ParticleSystemKind::CactusSpatter);
+    }
 }
 
 entt::entity ActorBuilder::createProjectile(

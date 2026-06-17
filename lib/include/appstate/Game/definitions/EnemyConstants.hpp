@@ -14,6 +14,7 @@ struct [[nodiscard]] EnemyConfig final
     sf::Vector2f spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, 0.f };
     bool canFall = true;
     bool isRanged = false;
+    int semighostFlags = SEMIGHOST_NPC;
     NpcKind npcKind = {};
 };
 
@@ -57,6 +58,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .colliderRadius = 10.f,
             .canFall = false,
             .isRanged = true,
+            .semighostFlags = SEMIGHOST_NPC | SEMIGHOST_FLYING_STUFF,
             .npcKind = NpcKind::Beholder,
         },
     }

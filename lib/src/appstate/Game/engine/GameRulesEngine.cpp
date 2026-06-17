@@ -318,16 +318,9 @@ void GameRulesEngine::updateHealth()
         if (health.get() > 0) continue;
 
         auto skin = scene.actors.try_get<Skin>(entity);
-        if (skin && skin->kind == EntityKind::Prop
-            && skin->animation.getStateName() == "cactus-pot")
+        if (skin && skin->kind == EntityKind::Prop)
         {
-            skin->animation.setState("cactus-pot-destroyed", "looping"_true);
-            ActorBuilder::createParticleSystem(
-                scene.actors,
-                scene.actors.get<Collider>(entity).getPosition(),
-                sf::Vector2f { 0.f, -1.f },
-                ParticleSystemKind::CactusSpatter);
-            scene.actors.remove<Health>(entity);
+            ActorBuilder::destroyProp(scene.actors, entity);
         }
         else
         {
