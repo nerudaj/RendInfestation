@@ -10,8 +10,6 @@ class [[nodiscard]] Janitor final
 public:
     void operator()(const event::ObjectDestroyed& e)
     {
-        std::cerr << "Object registered for cleanup: "
-                  << static_cast<size_t>(e.entity) << std::endl;
         objectsToClean.insert(e.entity);
     }
 
