@@ -4,6 +4,7 @@
 #include "appstate/Game/input/NpcInput.hpp"
 #include <SFML/System/Vector2.hpp>
 #include <fsm/Types.hpp>
+#include <optional>
 
 struct [[nodiscard]] NpcBlackboard final : public fsm::BlackboardBase
 {
@@ -11,7 +12,7 @@ struct [[nodiscard]] NpcBlackboard final : public fsm::BlackboardBase
     NpcInput& input;
     NpcKind kind = {};
     entt::entity targetEntity = entt::null;
-    sf::Vector2f waypoint;
+    std::optional<sf::Vector2f> waypoint = std::nullopt;
 };
 
 #ifndef ANDROID
@@ -33,7 +34,8 @@ struct std::formatter<NpcBlackboard, CharT>
         return std::format_to(
             ctx.out(),
             "\"[ waypoint: {} | kind: {} ]\"",
-            dgm::Utility::to_string(bb.waypoint),
+            bb.waypoint ? dgm::Utility::to_string(*bb.waypoint)
+                        : std::string("NONE"),
             std::to_underlying(bb.kind));
     }
 };

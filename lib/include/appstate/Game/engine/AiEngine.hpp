@@ -57,12 +57,20 @@ private: // Actions
 
     void lookAtTarget(NpcBlackboard& blackboard);
 
-    void chooseTarget(NpcBlackboard& blackboard);
+    void choosePlayerAsTarget(NpcBlackboard& blackboard);
+
+    void chooseTargetForEnemyNpc(NpcBlackboard& blackboard);
+
+    void chooseTargetForFriendlyNpc(NpcBlackboard& blackboard);
+
+    void invalidateWaypoint(NpcBlackboard& blackboard);
 
     void doNothing(NpcBlackboard&) {}
 
 private: // Predicates
     bool isTargetVisible(const NpcBlackboard& blackboard) const;
+
+    bool isTargetVisibleOnAltMesh(const NpcBlackboard& blackboard) const;
 
     bool isTargetInMeleeRange(const NpcBlackboard& blackboard) const;
 
@@ -95,6 +103,9 @@ private: // Utils
         const sf::Vector2f& targetPosition,
         dgm::WorldNavMesh& navigationMesh,
         NpcBlackboard& blackboard);
+
+    entt::entity chooseTarget(
+        EntityKind eligibleEntityKind, const sf::Vector2f& thisEntityPosition);
 
     static fsm::Fsm<NpcBlackboard> buildFsmForScuttlebug(AiEngine& self);
 

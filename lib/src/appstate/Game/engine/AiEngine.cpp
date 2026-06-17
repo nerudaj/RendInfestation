@@ -33,9 +33,10 @@ void AiEngine::attack(NpcBlackboard& blackboard)
 
 void AiEngine::moveTowardsWaypoint(NpcBlackboard& blackboard)
 {
+    assert(blackboard.waypoint);
     const auto position =
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
-    const auto direction = dgm::Math::toUnit(blackboard.waypoint - position);
+    const auto direction = dgm::Math::toUnit(*blackboard.waypoint - position);
     moveInDirection(blackboard, direction);
 }
 
@@ -101,33 +102,28 @@ void AiEngine::lookAtTarget(NpcBlackboard& blackboard)
     waitTillAttackFinishes(blackboard);
 }
 
-void AiEngine::chooseTarget(NpcBlackboard& blackboard)
+void AiEngine::choosePlayerAsTarget(NpcBlackboard& blackboard)
 {
-    using EntityPositionPair = std::pair<entt::entity, sf::Vector2f>;
+    blackboard.targetEntity = scene.playerEntity;
+}
 
-    auto&& targets = std::vector<EntityPositionPair>();
+void AiEngine::chooseTargetForEnemyNpc(NpcBlackboard& blackboard)
+{
+    blackboard.targetEntity = chooseTarget(
+        EntityKind::Player,
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition());
+}
 
-    for (auto&& [entity, collider, skin] :
-         scene.actors.view<Collider, Skin>().each())
-    {
-        if (skin.kind != EntityKind::Npc || entity == blackboard.ownerEntity)
-            continue;
+void AiEngine::chooseTargetForFriendlyNpc(NpcBlackboard& blackboard)
+{
+    blackboard.targetEntity = chooseTarget(
+        EntityKind::Npc,
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition());
+}
 
-        targets.push_back({ entity, collider.getPosition() });
-    }
-
-    const auto ownerPosition =
-        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
-    uni::ranges::sort(
-        targets,
-        [&](const EntityPositionPair& a, const EntityPositionPair& b) -> bool
-        {
-            const auto aDist = (a.second - ownerPosition).lengthSquared();
-            const auto bDist = (b.second - ownerPosition).lengthSquared();
-            return aDist < bDist;
-        });
-
-    if (!targets.empty()) blackboard.targetEntity = targets.front().first;
+void AiEngine::invalidateWaypoint(NpcBlackboard& blackboard)
+{
+    blackboard.waypoint.reset();
 }
 
 // ==========
@@ -140,6 +136,14 @@ bool AiEngine::isTargetVisible(const NpcBlackboard& blackboard) const
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition(),
         scene.actors.get<Collider>(blackboard.targetEntity).getPosition(),
         scene.levelMesh);
+}
+
+bool AiEngine::isTargetVisibleOnAltMesh(const NpcBlackboard& blackboard) const
+{
+    return dgm::Raycaster::hasDirectVisibility(
+        scene.actors.get<Collider>(blackboard.ownerEntity).getPosition(),
+        scene.actors.get<Collider>(blackboard.targetEntity).getPosition(),
+        scene.altLevelMesh);
 }
 
 bool AiEngine::isTargetInMeleeRange(const NpcBlackboard& blackboard) const
@@ -161,10 +165,12 @@ bool AiEngine::isOwnerIdleOrWalking(const NpcBlackboard& blackboard) const
 
 bool AiEngine::hasNpcReachedWaypoint(const NpcBlackboard& blackboard) const
 {
+    if (!blackboard.waypoint) return true;
+
     if (blackboard.waypoint == sf::Vector2f {}) return true;
     const auto position =
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
-    return (position - blackboard.waypoint).length() <= 1.f;
+    return (position - *blackboard.waypoint).length() <= 1.f;
 }
 
 bool AiEngine::isTargetVisibleForShooting(const NpcBlackboard& blackboard) const
@@ -222,6 +228,34 @@ void AiEngine::computePathAndUpdateWaypoint(
         scene.actors.get<Collider>(blackboard.ownerEntity).getPosition();
     auto path = navigationMesh.computePath(position, targetPosition);
     if (!path.isTraversed()) blackboard.waypoint = path.getCurrentPoint().coord;
+}
+
+entt::entity AiEngine::chooseTarget(
+    EntityKind eligibleEntityKind, const sf::Vector2f& thisEntityPosition)
+{
+    using EntityPositionPair = std::pair<entt::entity, sf::Vector2f>;
+
+    auto&& targets = std::vector<EntityPositionPair>();
+
+    for (auto&& [entity, collider, skin] :
+         scene.actors.view<Collider, Skin>().each())
+    {
+        if (skin.kind != eligibleEntityKind) continue;
+
+        targets.push_back({ entity, collider.getPosition() });
+    }
+
+    uni::ranges::sort(
+        targets,
+        [&](const EntityPositionPair& a, const EntityPositionPair& b) -> bool
+        {
+            const auto aDist = (a.second - thisEntityPosition).lengthSquared();
+            const auto bDist = (b.second - thisEntityPosition).lengthSquared();
+            return aDist < bDist;
+        });
+
+    assert(!targets.empty());
+    return targets.front().first;
 }
 
 #define CONDITION(x) [&](const NpcBlackboard& b) -> bool { return self.x(b); }
@@ -348,17 +382,25 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
 {
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
-        .withNoErrorMachine()
+        .withErrorMachine()
+            .useGlobalEntryCondition(NOT(hasValidTarget))
+                .withEntryState("Start")
+                    .exec(ACTION(choosePlayerAsTarget))
+                    .andRestart()
+            .done()
         .withMainMachine()
             .withEntryState("Start")
-                .when(CONDITION(isTargetInShootingRange))
+                .when(CONDITION(isTargetValidAndVisibleAndInShootingRange))
                     .goToState("Attack")
-                .orWhen(CONDITION(isTargetVisible))
-                    .goToState("MoveTowardsTarget")
+                .orWhen(CONDITION(isTargetVisibleOnAltMesh))
+                    .goToState("InvalidateWaypoint")
                 .orWhen(CONDITION(hasNpcReachedWaypoint))
                     .goToState("GenerateWaypoint")
                 .otherwiseExec(ACTION(moveTowardsWaypoint))
                 .andLoop()
+            .withState("InvalidateWaypoint")
+                .exec(ACTION(invalidateWaypoint))
+                .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
                 .when(CONDITION(isTargetInShootingRange))
                     .goToState("Attack")
@@ -389,12 +431,12 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForTurretNpc(AiEngine& self)
         .withErrorMachine()
             .useGlobalEntryCondition(NOT(hasValidTarget))
                 .withEntryState("Sink")
-                    .exec(ACTION(chooseTarget))
+                    .exec(ACTION(chooseTargetForFriendlyNpc))
                     .andRestart()
             .done()
         .withMainMachine()
             .withEntryState("Start")
-                .exec(ACTION(chooseTarget))
+                .exec(ACTION(chooseTargetForFriendlyNpc))
                 .andGoToState("WaitingForSpawnToFinish")
             .withState("WaitingForSpawnToFinish")
                 .when(CONDITION(isOwnerIdleOrWalking))
