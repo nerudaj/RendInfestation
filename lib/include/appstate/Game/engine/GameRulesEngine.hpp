@@ -53,6 +53,8 @@ public:
 
     void operator()(const event::ActorDamaged& e);
 
+    void operator()(const event::WaveEnded& e);
+
     void operator()(const auto&) {}
 
 public:
