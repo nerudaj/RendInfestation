@@ -17,19 +17,19 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
 
     if (inventory.traits & ProjectileTraits::Explosive)
     {
+        auto kind = [scale = skin.scale]
+        {
+            if (scale < 1.f)
+                return ParticleSystemKind::SmallExplosion;
+            else if (scale > 1.f)
+                return ParticleSystemKind::HugeExplosion;
+            return ParticleSystemKind::Explosion;
+        }();
         ActorBuilder::createParticleSystem(
             scene.actors,
             collider.getPosition(),
             sf::Vector2 { 1.f, 0.f },
-            inventory.traits & ProjectileTraits::Big
-                ? ParticleSystemKind::HugeExplosion
-                : ParticleSystemKind::Explosion);
-        /*ActorBuilder::createEffect(
-            scene.actors,
-            collider.getPosition(),
-            EffectType::Explosion,
-            atlas,
-            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);*/
+            kind);
     }
     else if (skin.skinType == SkinType::Fireball)
     {
@@ -38,12 +38,6 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
             collider.getPosition(),
             dgm::Math::toUnit(body.forward),
             ParticleSystemKind::FireballExplosion);
-        /*ActorBuilder::createEffect(
-            scene.actors,
-            collider.getPosition(),
-            EffectType::FireballDecay,
-            atlas,
-            inventory.traits & ProjectileTraits::Big ? 2.f : 1.f);*/
     }
     else
     {
