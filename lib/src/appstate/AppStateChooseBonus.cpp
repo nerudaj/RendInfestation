@@ -190,13 +190,18 @@ AppStateChooseBonus::generatePickerSelection()
     std::mt19937 gen { static_cast<unsigned>(rand()) };
     uni::ranges::shuffle(sortablePool, gen);
 
-    assert(sortablePool.size() >= 2);
+    while (sortablePool.size() < 2)
+    {
+        sortablePool.push_back(WeaponModule::ExtraHealth);
+    }
+
     if (scene.actors.get<Health>(scene.playerEntity).get()
         < scene.playerMaxHealth / 2)
     {
         sortablePool[1] = WeaponModule::ExtraHealth;
     }
 
+    assert(sortablePool.size() >= 2);
     return { sortablePool[0], sortablePool[1] };
 }
 
