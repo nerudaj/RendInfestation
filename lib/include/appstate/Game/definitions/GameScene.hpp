@@ -1,5 +1,6 @@
 #pragma once
 
+#include "appstate/Game/SurvivalGameDirector.hpp"
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/Constants.hpp"
@@ -47,7 +48,7 @@ struct [[nodiscard]] GameScene final
     const std::vector<LightSource> lights;
     WeaponLoadout loadout;
     std::set<WeaponModule> unlockedModules = {};
-    SurvivalSpawnerContext survivalSpawnerContext;
+    std::optional<SurvivalGameDirector> survivalGameDirector = std::nullopt;
     HudMessage hudMessage;
     std::optional<InteractionTriggerInventory> interactionTrigger =
         std::nullopt;

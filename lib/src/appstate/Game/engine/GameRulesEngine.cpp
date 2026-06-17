@@ -133,9 +133,9 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
     auto skin = scene.actors.try_get<Skin>(e.entity);
     if (skin && skin->kind == EntityKind::Npc)
     {
-        ++scene.survivalSpawnerContext.enemiesKilledInCurrentWave;
-        scene.status.score += survivalDirector.getScoreForEnemy(*skin)
-                              * scene.survivalSpawnerContext.wave;
+        if (scene.survivalGameDirector)
+            scene.status.score +=
+                scene.survivalGameDirector->markKilledEnemy(*skin);
 
         ActorBuilder::createParticleSystem(
             scene.actors,
@@ -200,9 +200,8 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
 
 void GameRulesEngine::update(const dgm::Time& time)
 {
-    // -1 means Story mode
-    if (scene.survivalSpawnerContext.wave != -1)
-        survivalDirector.update(time.getElapsed());
+    if (scene.survivalGameDirector)
+        scene.survivalGameDirector->update(time.getElapsed(), eventQueue);
 
     updateEntitiesWithInput(time);
 

@@ -6,7 +6,7 @@
 
 struct [[nodiscard]] SurvivalSpawnerContext final
 {
-    int wave = -1;
+    int wave = 0;
     int enemiesInCurrentWave = 10;
     int enemiesSpawnedInCurrentWave = 0;
     int enemiesKilledInCurrentWave = 0;

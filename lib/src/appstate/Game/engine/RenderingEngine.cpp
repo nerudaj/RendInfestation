@@ -301,15 +301,15 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
     text.setString(fpsCounter.getText());
     window.draw(text);
 
-    if (scene.survivalSpawnerContext.wave != -1)
+    if (scene.survivalGameDirector)
     {
-        if (scene.survivalSpawnerContext.state
-            == SurvivalModeState::WaitingForNextWave)
+        auto& context = scene.survivalGameDirector->getContext();
+
+        if (context.state == SurvivalModeState::WaitingForNextWave)
         {
             text.setString(uni::format(
                 "Next wave in: {}s",
-                std::ceil(scene.survivalSpawnerContext.timeTillNextWave
-                              .asSeconds())));
+                std::ceil(context.timeTillNextWave.asSeconds())));
             text.setPosition(
                 { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
                       / 2.f,
@@ -318,8 +318,7 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
         }
         else
         {
-            text.setString(
-                uni::format("Wave: {}", scene.survivalSpawnerContext.wave));
+            text.setString(uni::format("Wave: {}", context.wave));
             text.setPosition(
                 { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
                       / 2.f,
@@ -328,8 +327,8 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
 
             text.setString(uni::format(
                 "{} / {}",
-                scene.survivalSpawnerContext.enemiesKilledInCurrentWave,
-                scene.survivalSpawnerContext.enemiesInCurrentWave));
+                context.enemiesKilledInCurrentWave,
+                context.enemiesInCurrentWave));
             text.setPosition(
                 { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
                       / 2.f,

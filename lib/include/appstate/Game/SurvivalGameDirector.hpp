@@ -10,22 +10,28 @@
 class [[nodiscard]] SurvivalGameDirector final
 {
 public:
-    SurvivalGameDirector(
-        EventQueue<GameEvent>& eventQueue,
-        SurvivalSpawnerContext& context) noexcept
-        : eventQueue(eventQueue), context(context)
-    {
-    }
+    SurvivalGameDirector();
 
 public:
-    void update(const sf::Time& time);
+    void update(const sf::Time& time, EventQueue<GameEvent>& eventQueue);
 
+    /// <returns>Score for killing the enemy</returns>
+    int markKilledEnemy(const Skin& skin);
+
+    const SurvivalSpawnerContext& getContext() const noexcept
+    {
+        return context;
+    }
+
+    static SurvivalSpawnerContext createInitialContext();
+
+private:
     int getScoreForEnemy(const Skin& skin) const;
 
-private:
     SkinType getEnemyToSpawn() const;
 
+    static int getEnemyCountForWave(int wave);
+
 private:
-    EventQueue<GameEvent>& eventQueue;
-    SurvivalSpawnerContext& context;
+    SurvivalSpawnerContext context;
 };

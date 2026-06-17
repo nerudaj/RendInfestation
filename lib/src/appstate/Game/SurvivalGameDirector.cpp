@@ -1,6 +1,11 @@
 #include "appstate/Game/SurvivalGameDirector.hpp"
 
-void SurvivalGameDirector::update(const sf::Time& time)
+SurvivalGameDirector::SurvivalGameDirector() : context(createInitialContext())
+{
+}
+
+void SurvivalGameDirector::update(
+    const sf::Time& time, EventQueue<GameEvent>& eventQueue)
 {
     if (context.state == SurvivalModeState::WaitingForNextWave)
     {
@@ -10,7 +15,7 @@ void SurvivalGameDirector::update(const sf::Time& time)
             ++context.wave;
             context.enemiesSpawnedInCurrentWave = 0;
             context.enemiesKilledInCurrentWave = 0;
-            context.enemiesInCurrentWave = context.wave * 10;
+            context.enemiesInCurrentWave = getEnemyCountForWave(context.wave);
             context.state = SurvivalModeState::SpawningEnemies;
         }
     }
@@ -42,6 +47,12 @@ void SurvivalGameDirector::update(const sf::Time& time)
     }
 }
 
+int SurvivalGameDirector::markKilledEnemy(const Skin& skin)
+{
+    ++context.enemiesKilledInCurrentWave;
+    return getScoreForEnemy(skin);
+}
+
 int SurvivalGameDirector::getScoreForEnemy(const Skin& skin) const
 {
     auto score = [](const Skin& skin) -> int
@@ -58,6 +69,14 @@ int SurvivalGameDirector::getScoreForEnemy(const Skin& skin) const
     }(skin);
 
     return score * context.wave;
+}
+
+SurvivalSpawnerContext SurvivalGameDirector::createInitialContext()
+{
+    return SurvivalSpawnerContext {
+        .wave = 1,
+        .enemiesInCurrentWave = getEnemyCountForWave(1),
+    };
 }
 
 SkinType SurvivalGameDirector::getEnemyToSpawn() const
@@ -88,4 +107,9 @@ SkinType SurvivalGameDirector::getEnemyToSpawn() const
             return SkinType::Beholder;
         return SkinType::ScuttlebugBlue;
     }(context.wave, context.enemiesSpawnedInCurrentWave);
+}
+
+int SurvivalGameDirector::getEnemyCountForWave(int wave)
+{
+    return wave * 10;
 }

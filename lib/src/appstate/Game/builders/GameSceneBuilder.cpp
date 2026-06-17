@@ -64,7 +64,7 @@ GameScene GameSceneBuilder::createScene(
     }
     else
     { // Survival
-        artifact.unlockedModules = { WeaponModule::Turret,
+        artifact.unlockedModules = { WeaponModule::Push,
                                      WeaponModule::ExplosiveAmmo };
     }
 
@@ -115,12 +115,9 @@ GameScene GameSceneBuilder::createScene(
         .lights = std::move(artifact.lights),
         .loadout = std::move(artifact.loadout),
         .unlockedModules = std::move(artifact.unlockedModules),
-        .survivalSpawnerContext =
-            SurvivalSpawnerContext {
-                .wave = gameModeProperties.mode == GameMode::Survival ? 0 : -1,
-                .enemiesInCurrentWave =
-                    gameModeProperties.mode == GameMode::Survival ? 5 : 1000000,
-            },
+        .survivalGameDirector = gameModeProperties.mode == GameMode::Survival
+                                    ? std::make_optional<SurvivalGameDirector>()
+                                    : std::nullopt,
     };
 }
 

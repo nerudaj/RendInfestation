@@ -24,7 +24,6 @@ public:
         , atlas(atlas)
         , input(input)
         , soundPlayer(player)
-        , survivalDirector(eventQueue, scene.survivalSpawnerContext)
     {
     }
 
@@ -99,5 +98,4 @@ private:
     const GameTextureAtlas& atlas;
     Input& input;
     SoundPlayer& soundPlayer;
-    SurvivalGameDirector survivalDirector;
 };
