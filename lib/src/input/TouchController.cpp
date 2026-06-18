@@ -17,7 +17,7 @@ void TouchInput::reset()
 std::array<TouchInput, 5u>
 TouchModel::computeLayout(const sf::Vector2u& windowSize, const Sizer& sizer)
 {
-    const float buttonRadius = sizer.getBaseContainerHeight();
+    const float buttonRadius = sizer.getBaseContainerHeight() / 2.f;
     const float joystickRadius = windowSize.x * 0.1f;
     const auto windowsSizeF = sf::Vector2f(windowSize);
 

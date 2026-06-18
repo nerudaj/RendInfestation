@@ -179,37 +179,68 @@ Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
     };
 }
 
-Weapon WeaponBuilder::createMeleeWeapon(EntityKind ownerKind, int damage)
+Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
 {
-    return Weapon {
-        .soundId = SoundId::BigheadAttack,
-        .cooldown = sf::seconds(0.5f),
-        .projectileLifetime = sf::seconds(0.f),
-        .kickback = 20.f,
-        .projectileSpeed = 0.f,
-        .projectileSkin = SkinType::SmallBullet,
-        .defaultProjectileInventory =
-            ProjectileInventory {
-                .damage = damage,
-                .originator = ownerKind,
-            },
-    };
-}
+    switch (weaponKind)
+    {
+        using enum EnemyWeaponKind;
 
-Weapon WeaponBuilder::createRangedWeapon(
-    EntityKind ownerKind, SkinType bulletSkin, int damage)
-{
-    return Weapon {
-        .soundId = SoundId::BehemothAttack,
-        .cooldown = sf::seconds(1.5f),
-        .projectileLifetime = BASE_PROJECTILE_LIFETIME,
-        .kickback = 10.f,
-        .projectileSpeed = BASE_PROJECTILE_SPEED / 3.f,
-        .projectileSkin = bulletSkin,
-        .defaultProjectileInventory =
-            ProjectileInventory {
-                .damage = damage,
-                .originator = ownerKind,
-            },
-    };
+    case Slash:
+        return Weapon {
+            .soundId = SoundId::ScuttlebugAttack,
+            .cooldown = sf::seconds(0.5f),
+            .projectileLifetime = sf::Time::Zero,
+            .kickback = 20.f,
+            .projectileSpeed = 0.f,
+            .projectileSkin = SkinType::SmallBullet,
+            .defaultProjectileInventory =
+                ProjectileInventory {
+                    .damage = damage,
+                    .originator = EntityKind::Npc,
+                },
+        };
+    case Headbutt:
+        return Weapon {
+            .soundId = SoundId::BigheadAttack,
+            .cooldown = sf::seconds(0.5f),
+            .projectileLifetime = sf::Time::Zero,
+            .kickback = 20.f,
+            .projectileSpeed = 0.f,
+            .projectileSkin = SkinType::SmallBullet,
+            .defaultProjectileInventory =
+                ProjectileInventory {
+                    .damage = damage,
+                    .originator = EntityKind::Npc,
+                },
+        };
+    case BounceBall:
+        return Weapon {
+            .soundId = SoundId::BigheadRangedAttack,
+            .cooldown = sf::seconds(1.5f),
+            .projectileLifetime = BASE_PROJECTILE_LIFETIME,
+            .kickback = 50.f,
+            .projectileSpeed = BASE_PROJECTILE_SPEED / 2.f,
+            .projectileSkin = SkinType::PinkFireball,
+            .defaultProjectileInventory =
+                ProjectileInventory {
+                    .damage = damage,
+                    .traits = ProjectileTraits::Bouncy,
+                    .originator = EntityKind::Npc,
+                },
+        };
+    case Fireball:
+        return Weapon {
+            .soundId = SoundId::BehemothAttack,
+            .cooldown = sf::seconds(1.5f),
+            .projectileLifetime = BASE_PROJECTILE_LIFETIME,
+            .kickback = 10.f,
+            .projectileSpeed = BASE_PROJECTILE_SPEED / 3.f,
+            .projectileSkin = SkinType::Fireball,
+            .defaultProjectileInventory =
+                ProjectileInventory {
+                    .damage = damage,
+                    .originator = EntityKind::Npc,
+                },
+        };
+    }
 }

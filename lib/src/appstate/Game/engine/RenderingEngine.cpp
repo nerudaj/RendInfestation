@@ -249,7 +249,10 @@ void RenderingEngine::renderHudBackgroundAndHealth(
     hudSprite.setPosition(hudOrigin);
     window.draw(hudSprite);
 
-    const int health = scene.actors.get<Health>(scene.playerEntity).get();
+    const int health = std::clamp(
+        scene.actors.get<Health>(scene.playerEntity).get(),
+        0,
+        scene.playerMaxHealth);
     const auto tenth = (10 * (9 + health)) / scene.playerMaxHealth;
     hudSprite.setTextureRect(
         hudClip.getFrame(std::to_underlying(Hud::Health1) + tenth - 1));

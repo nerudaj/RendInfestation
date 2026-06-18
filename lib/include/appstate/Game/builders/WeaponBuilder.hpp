@@ -3,6 +3,7 @@
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/WeaponLoadout.hpp"
 #include "appstate/Game/definitions/WeaponProperties.hpp"
+#include "appstate/Game/enums/EnemyWeaponKind.hpp"
 #include "appstate/Game/enums/EntityKind.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
 #include <functional>
@@ -10,14 +11,12 @@
 
 class [[nodiscard]] WeaponBuilder final
 {
-public:
+private:
     static std::function<WeaponProperties(WeaponProperties)>
     createWeaponModuleTransformer(WeaponModule module);
 
+public:
     static Weapon createWeapon(EntityKind ownerKind, WeaponConfig config);
 
-    static Weapon createMeleeWeapon(EntityKind ownerKind, int damage);
-
-    static Weapon
-    createRangedWeapon(EntityKind ownerKind, SkinType bulletSkin, int damage);
+    static Weapon createEnemyWeapon(int damage, EnemyWeaponKind weaponKind);
 };

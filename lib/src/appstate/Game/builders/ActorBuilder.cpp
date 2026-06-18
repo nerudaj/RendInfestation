@@ -103,25 +103,7 @@ entt::entity ActorBuilder::createNpc(
         });
 
     actors.emplace<Health>(entity, config.health);
-
-    if (config.isRanged)
-    {
-        actors.emplace<WeaponInventory>(
-            entity,
-            0,
-            std::vector<Weapon> {
-                WeaponBuilder::createRangedWeapon(
-                    EntityKind::Npc, SkinType::Fireball, config.damage),
-            });
-    }
-    else
-    {
-        actors.emplace<WeaponInventory>(
-            entity,
-            0,
-            std::vector<Weapon> { WeaponBuilder::createMeleeWeapon(
-                EntityKind::Npc, config.damage) });
-    }
+    actors.emplace<WeaponInventory>(entity, 0, config.weapons);
 
     auto input = std::make_unique<NpcInput>();
     auto underlyingInput = input.get();
