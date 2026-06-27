@@ -3,6 +3,7 @@
 #include "appstate/Game/builders/WeaponBuilder.hpp"
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Messaging.hpp"
+#include "gui/GuiBuilderHelper.hpp"
 #include "gui/builders/FormBuilder.hpp"
 #include "gui/builders/WidgetBuilder.hpp"
 #include "rendering/CameraFactory.hpp"
@@ -247,9 +248,7 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
         return false;
     };
 
-    auto&& background = tgui::Panel::create();
-    background->setRenderer(
-        tgui::Theme::getDefault()->getRenderer("SemitransparentDarkPanel"));
+    auto&& background = GuiBuilderHelper::createSemitransparentBlackPanel();
     background->onClick(close);
     dic.gui.add(background, "ModalContainer");
     dic.gui.add(modal);

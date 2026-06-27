@@ -2,6 +2,7 @@
 #include "appstate/AppStatePause.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
+#include "gui/GuiBuilderHelper.hpp"
 #include <misc/Compatibility.hpp>
 #include <random>
 
@@ -52,44 +53,35 @@ tgui::Layout2d AppStateChooseBonus::getCoreLayoutSize()
 #ifdef ANDROID
     return { "60%", "50%" };
 #else
-    return { "40%", "40%" };
+    return { "60%", "50%" };
 #endif
 }
 
 void AppStateChooseBonus::buildLayout()
 {
     auto content = tgui::Group::create(getCoreLayoutSize());
-    content->setPosition(
-        { "parent.width / 2 - width / 2", "parent.height / 2 - height / 2" });
-    auto panel = tgui::Panel::create();
-    panel->setRenderer(tgui::Theme::getDefault()->getRenderer("TexturedPanel"));
+    GuiBuilderHelper::centerWidget(content);
 
-    auto inside = tgui::Group::create({ "90%", "90%" });
-    inside->setPosition(
-        { "parent.width / 2 - width / 2", "parent.height / 2 - height / 2" });
-    panel->add(inside);
-
-    auto innerLayout = tgui::Group::create({ "100%", "10%" });
-    innerLayout->add(WidgetBuilder::createTextLabel(
+    auto headingPanel = tgui::Panel::create({ "100%", "10%" });
+    content->add(headingPanel);
+    headingPanel->add(WidgetBuilder::createTextLabel(
         dic.strings.getString(StringId::ChooseBonus),
         dic.sizer,
         "justify"_true));
-    inside->add(innerLayout);
 
     auto modulesToPick = generatePickerSelection();
 
-    auto leftBox = createSelectablePanel({ "50%", "90%" });
-    leftBox->setPosition({ "0%", "10%" });
+    auto leftBox = createSelectablePanel({ "49%", "85%" });
+    leftBox->setPosition({ "0%", "15%" });
     leftBox->add(createPickerBox(modulesToPick.first));
     leftBox->onClick([&, module = modulesToPick.first] { onSubmit(module); });
-    inside->add(leftBox);
+    content->add(leftBox);
 
-    auto rightBox = createSelectablePanel({ "50%", "90%" });
-    rightBox->setPosition({ "50%", "10%" });
+    auto rightBox = createSelectablePanel({ "49%", "85%" });
+    rightBox->setPosition({ "51%", "15%" });
     rightBox->add(createPickerBox(modulesToPick.second));
     rightBox->onClick([&, module = modulesToPick.second] { onSubmit(module); });
-    inside->add(rightBox);
-    content->add(panel);
+    content->add(rightBox);
 
     dic.gui.rebuildWith(content);
 }
@@ -97,11 +89,20 @@ void AppStateChooseBonus::buildLayout()
 tgui::Panel::Ptr AppStateChooseBonus::createSelectablePanel(tgui::Layout2d size)
 {
     auto panel = tgui::Panel::create(size);
-    panel->getRenderer()->setBorders(0);
+    panel->setRenderer(
+        tgui::Theme::getDefault()->getRenderer("SelectablePanel"));
     panel->onMouseEnter(
-        [=] { panel->getRenderer()->setBackgroundColor(COLOR_LIGHT_GREY); });
+        [panel = panel, this]
+        {
+            panel->setRenderer(
+                tgui::Theme::getDefault()->getRenderer("SelectablePanelHover"));
+        });
     panel->onMouseLeave(
-        [=] { panel->getRenderer()->setBackgroundColor(COLOR_DARK_GREY); });
+        [panel = panel, this]
+        {
+            panel->setRenderer(
+                tgui::Theme::getDefault()->getRenderer("SelectablePanel"));
+        });
     return panel;
 }
 

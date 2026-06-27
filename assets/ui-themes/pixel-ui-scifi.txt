@@ -9,9 +9,14 @@ Panel
 	TextureBackground = "pixel-ui-scifi.png" Part(52, 104, 48, 48) Middle(16, 16, 16, 16);
 }
 
-SelectedPanel
+SelectablePanel
 {
 	TextureBackground = "pixel-ui-scifi.png" Part(0, 0, 48, 48) Middle(16, 16, 16, 16);
+}
+
+SelectablePanelHover
+{
+	TextureBackground = "pixel-ui-scifi.png" Part(0, 52, 48, 48) Middle(16, 16, 16, 16);
 }
 
 OptionsPanel
