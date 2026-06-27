@@ -94,15 +94,9 @@ void AnimationEngine::operator()(const event::ActorStopped& e)
 
 void AnimationEngine::operator()(const event::ActorDamaged& e)
 {
-    try
-    {
-        scene.actors.get<Skin>(e.entity).animation.setState(
-            HURT_ANIMATION_STATE, "looping"_false);
-    }
-    catch (...)
-    {
-        // props don't have animation states
-    }
+    auto& skin = scene.actors.get<Skin>(e.entity);
+    if (skin.skinType == SkinType::Prop) return;
+    skin.animation.setState(HURT_ANIMATION_STATE, "looping"_false);
 }
 
 void AnimationEngine::update(const dgm::Time& time)
