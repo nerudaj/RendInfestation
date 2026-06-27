@@ -31,18 +31,20 @@ void AppStateInputDetector::draw()
 
 void AppStateInputDetector::buildLayout()
 {
-    auto cancelPanel = tgui::Panel::create();
-    cancelPanel->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-    cancelPanel->getRenderer()->setBorders(0);
-    cancelPanel->onClick([&] { onCancel(); });
-    dic.gui.add(cancelPanel, PANEL_ID);
+    auto layout = tgui::Group::create();
+    dic.gui.add(layout, PANEL_ID);
 
-    auto layout = tgui::Group::create({ "50%", "50%" });
-    layout->setPosition({ "25%", "25%" });
-    cancelPanel->add(layout);
+    auto cancelPanel = tgui::Panel::create();
+    cancelPanel->onClick([&] { onCancel(); });
+    cancelPanel->getRenderer()->setOpacity(0.f);
+    layout->add(cancelPanel);
+
+    auto innerLayout = tgui::Group::create({ "50%", "50%" });
+    innerLayout->setPosition({ "25%", "25%" });
+    layout->add(innerLayout);
 
     auto panel = tgui::Panel::create();
-    layout->add(panel);
+    innerLayout->add(panel);
 
     auto labelLayout = tgui::Group::create({ "100%", "70%" });
     panel->add(labelLayout);

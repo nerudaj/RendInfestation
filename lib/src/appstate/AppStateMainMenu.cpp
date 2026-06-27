@@ -69,6 +69,10 @@ void AppStateMainMenu::buildLayout()
                 builderFactory.createButtonListBuilder()
                     .addButton(StringId::PlayButton, [&] { onPlay(); })
                     .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
+                    .addButton(
+                        StringId::ExitButton,
+                        [&] { onExit(); },
+                        "MainMenu_Button_Exit")
                     .build())
             .withNoTopLeftButton()
             .withTopRightButton(

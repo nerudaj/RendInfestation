@@ -13,7 +13,7 @@ constexpr const char* TABS_ID = "Options_Tabs";
 
 std::string resolutionToString(const sf::Vector2u& vec)
 {
-    return uni::format("{}x{}", vec.x, vec.y);
+    return uni::format("  {}x{}", vec.x, vec.y);
 }
 
 static std::vector<std::string> getResolutionStrings()
@@ -90,10 +90,11 @@ void AppStateOptions::buildLayout()
                              .build(TabbedLayoutOptions {
                                  .tabsWidgetId = TABS_ID,
                                  .contentIsScrollable = true,
+                                 .contentClassName = "OptionsPanel",
                              }))
             .withNoTopLeftButton()
             .withNoTopRightButton()
-            .withBottomLeftButton(dic.getIcon(Icon::Back), [&] { onBack(); })
+            .withBottomLeftButton(StringId::Back, [&] { onBack(); })
             .withNoBottomRightButton()
             .build());
 }
@@ -146,9 +147,13 @@ void AppStateOptions::onVideoTabSelected(tgui::Container::Ptr content)
                         .high = 2.f,
                         .step = 0.1f,
                     }),
-                WidgetBuilder::createButton(
+                WidgetBuilder::createRowButton(
                     dic.strings.getString(StringId::Apply),
-                    [&] { refresh(); },
+                    [&]
+                    {
+                        dic.sizer.setScale(dic.settings.video.uiScale);
+                        refresh();
+                    },
                     dic.sizer,
                     dic.soundPlayer))
 #ifdef _DEBUG

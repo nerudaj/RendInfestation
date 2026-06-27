@@ -74,7 +74,7 @@ DependencyContainer::DependencyContainer(
 
     gui.setFont(resmgr.get<tgui::Font>(FONT_NAME));
     // NOTE: You can create your own theme file and use it here
-    gui.setTheme(resmgr.get<tgui::Theme::Ptr>("Pico8.txt"));
+    gui.setTheme(resmgr.get<tgui::Theme::Ptr>("pixel-ui-scifi.txt"));
 }
 
 const tgui::Texture& DependencyContainer::getIcon(Icon icon) const

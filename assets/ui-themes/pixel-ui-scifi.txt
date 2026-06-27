@@ -1,0 +1,82 @@
+TextColor = rgba(255, 241, 232, 255);
+
+ArrowBackgroundColor = rgba(0, 135, 81, 255);
+ArrowColor = rgba(0, 228, 54, 255);
+ArrowColorHover = rgba(255, 204, 170, 255);
+
+Panel
+{
+	TextureBackground = "pixel-ui-scifi.png" Part(52, 104, 48, 48) Middle(16, 16, 16, 16);
+}
+
+SelectedPanel
+{
+	TextureBackground = "pixel-ui-scifi.png" Part(0, 0, 48, 48) Middle(16, 16, 16, 16);
+}
+
+OptionsPanel
+{
+	TextureBackground = "pixel-ui-scifi.png" Part(52, 156, 48, 48) Middle(16, 16, 16, 16);
+}
+
+ScrollablePanel
+{
+	TextureBackground = "pixel-ui-scifi.png" Part(52, 104, 48, 48) Middle(16, 16, 16, 16);
+}
+
+SemitransparentDarkPanel
+{
+	BackgroundColor = rgba(0, 0, 0, 128);
+}
+
+Button
+{
+	Texture = "pixel-ui-scifi.png" Part(0, 0, 48, 48) Middle(16, 16, 16, 16);
+	TextureHover = "pixel-ui-scifi.png" Part(0, 52, 48, 48) Middle(16, 16, 16, 16);
+	TextureDown = "pixel-ui-scifi.png" Part(0, 104, 48, 48) Middle(16, 16, 16, 16);
+}
+
+CheckBox {
+    TextureUnchecked = "pixel-ui-scifi.png" Part(0, 156, 48, 48) Middle(12, 12, 24, 24);
+    TextureUncheckedHover = "pixel-ui-scifi.png" Part(0, 208, 48, 48) Middle(12, 12, 24, 24);
+    TextureChecked   = "pixel-ui-scifi.png" Part(52, 0, 48, 48) Middle(12, 12, 24, 24);
+    TextureCheckedHover = "pixel-ui-scifi.png" Part(52, 52, 48, 48) Middle(12, 12, 24, 24);
+}
+
+Slider
+{
+    TextureTrack = "pixel-ui-scifi.png" Part(156, 8, 48, 32) Middle(8, 8, 32, 16);
+    TextureThumb = "pixel-ui-scifi.png" Part(0, 156, 48, 48) Middle(12, 12, 24, 24);
+    TextureThumbHover = "pixel-ui-scifi.png" Part(0, 208, 48, 48) Middle(12, 12, 24, 24);
+}
+
+Tabs
+{
+    TextureTab         = "pixel-ui-scifi.png" Part(104, 0, 48, 48) Middle(16, 16, 16, 16);
+    TextureTabHover    = "pixel-ui-scifi.png" Part(104, 52, 48, 48) Middle(16, 16, 16, 16);
+    TextureSelectedTab = "pixel-ui-scifi.png" Part(104, 104, 48, 48) Middle(16, 16, 16, 16);
+    TextureSelectedTabHover = "pixel-ui-scifi.png" Part(104, 156, 48, 48) Middle(16, 16, 16, 16);
+    DistanceToSide = 10;
+}
+
+ComboBox
+{
+    TextureArrow = "pixel-ui-scifi.png" Part(156, 104, 32, 24);
+    TextureArrowHover = "pixel-ui-scifi.png" Part(156, 156, 32, 24);
+    TextureBackground = "pixel-ui-scifi.png" Part(156, 52, 48, 48) Middle(20, 12, 16, 24);
+}
+
+ListBox
+{
+    TextColor = rgba(0, 0, 0, 255);
+    TextureBackground = "pixel-ui-scifi.png" Part(52, 208, 48, 48) Middle(16, 16, 16, 16);
+
+    SelectedTextColor = rgba(255, 241, 232, 255);
+    SelectedBackgroundColor = rgba(95, 87, 79, 255);
+
+    TextColorHover = rgba(255, 204, 170, 255);
+    BackgroundColorHover = rgba(0, 135, 81, 255);
+}
+
+UntexturedWidget
+{}

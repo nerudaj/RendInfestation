@@ -79,6 +79,8 @@ void AppStateWeaponModification::buildLayout()
     auto&& createButton = [&](const std::string& textureName, auto&& callback)
     {
         auto&& button = tgui::Button::create();
+        button->setRenderer(
+            tgui::Theme::getDefault()->getRenderer("UntexturedWidget"));
 
         if (textureName.empty())
         {
@@ -95,6 +97,8 @@ void AppStateWeaponModification::buildLayout()
             assert(!button->getRenderer()->getTexture().isSmooth());
         }
 
+        button->getRenderer()->setBackgroundColorHover(
+            tgui::Color(255, 255, 255, 128));
         button->getRenderer()->setBorders(0u);
         button->setSize({ "100%", "100%" });
         button->onClick(std::forward<decltype(callback)>(callback));
@@ -155,8 +159,6 @@ tgui::ChildWindow::Ptr AppStateWeaponModification::createModuleSelectModal(
     modal->getRenderer()->setTitleBarColor(COLOR_PURPLE);
     modal->getRenderer()->setTitleBarHeight(dic.sizer.getBaseContainerHeight());
     modal->getRenderer()->setTextSize(dic.sizer.getBaseFontSize());
-    modal->getRenderer()->setBorderColor(COLOR_PINK);
-    modal->getRenderer()->setBorders(2);
     return modal;
 }
 
@@ -246,12 +248,15 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
     };
 
     auto&& background = tgui::Panel::create();
-    background->getRenderer()->setBackgroundColor({ 0, 0, 0, 128 });
+    background->setRenderer(
+        tgui::Theme::getDefault()->getRenderer("SemitransparentDarkPanel"));
     background->onClick(close);
     dic.gui.add(background, "ModalContainer");
     dic.gui.add(modal);
 
     auto&& content = tgui::ScrollablePanel::create();
+    content->setRenderer(
+        tgui::Theme::getDefault()->getRenderer("OptionsPanel"));
     modal->add(content);
 
     const int MODULES_PER_ROW = 8;
@@ -260,7 +265,8 @@ void AppStateWeaponModification::onModSelected(size_t moduleIdx)
     int y = 0;
     for (auto&& module : getAvailableModules())
     {
-        const bool isInUse = anyWeaponContains(module);
+        const bool isInUse =
+            anyWeaponContains(module) && module != WeaponModule::None;
 
         auto cellLayout = tgui::Group::create(
             { uni::format("{}%", BUTTON_SIZE).c_str(), "width" });
