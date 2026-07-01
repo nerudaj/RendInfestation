@@ -15,9 +15,10 @@ struct [[nodiscard]] Prop final
     bool isSolid = true;
     std::optional<BoundLightEmitter> boundLightEmitter = std::nullopt;
     std::optional<Health> health = std::nullopt;
+    ZIndex zIndex = ZIndex(ZINDEX_COMMON);
 };
 
-const std::array<Prop, 13u> PROP_DEFINITIONS = {
+const std::array<Prop, 16u> PROP_DEFINITIONS = {
     Prop {
         .animationStateName = "labtube-full",
         .getCollider =
@@ -50,7 +51,8 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF
+                                 | SEMIGHOST_CRAWLER,
                 }
             };
         },
@@ -63,7 +65,8 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x, origin.y - 64.f }, { 64.f, 56.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF
+                                 | SEMIGHOST_CRAWLER,
                 }
             };
         },
@@ -84,6 +87,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         },
         .spriteOffset = { 16.f, 16.f },
         .isSolid = false,
+        .zIndex = ZIndex(ZINDEX_FLOOR_DECOR),
     },
     Prop {
         .animationStateName = "blue-carcass",
@@ -100,6 +104,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         },
         .spriteOffset = { 16.f, 16.f },
         .isSolid = false,
+        .zIndex = ZIndex(ZINDEX_FLOOR_DECOR),
     },
     Prop {
         .animationStateName = "blood-puddle-a",
@@ -116,6 +121,7 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
         },
         .spriteOffset = { 22.f, 25.f },
         .isSolid = false,
+        .zIndex = ZIndex(ZINDEX_FLOOR_DECOR),
     },
     Prop {
         .animationStateName = "pc",
@@ -195,9 +201,56 @@ const std::array<Prop, 13u> PROP_DEFINITIONS = {
             return Collider {
                 dgm::Rect({ origin.x + 16.f, origin.y - 48.f }, { 32.f, 24.f }),
                 ColliderOptions {
-                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF,
+                    .semighost = SEMIGHOST_PROJECTILE | SEMIGHOST_FLYING_STUFF
+                                 | SEMIGHOST_CRAWLER,
                 }
             };
         },
+    },
+    Prop {
+        .animationStateName = "tree",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x + 10.f, origin.y - 48.f }, { 4.f, 12.f }),
+                ColliderOptions {},
+            };
+        },
+        .spriteOffset = { 20.f, 10.f },
+        .health = Health(75),
+    },
+    Prop {
+        .animationStateName = "tree-destroyed",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Rect({ origin.x + 10.f, origin.y - 48.f }, { 4.f, 12.f }),
+                ColliderOptions {
+                    .nonblocking = true,
+                    .disabled = true,
+                }
+            };
+        },
+        .spriteOffset = { 20.f, 10.f },
+        .isSolid = false,
+    },
+    Prop {
+        .animationStateName = "plant",
+        .getCollider =
+            [](const sf::Vector2f& origin)
+        {
+            return Collider {
+                dgm::Circle({ origin.x + 7.f, origin.y - 52.f }, 1.f),
+                ColliderOptions {
+                    .nonblocking = true,
+                    .disabled = true,
+                },
+            };
+        },
+        .spriteOffset = { 25.f, 19.f },
+        .isSolid = false,
+        .zIndex = ZIndex(ZINDEX_LITTLE),
     },
 };

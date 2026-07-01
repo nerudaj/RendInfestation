@@ -139,6 +139,36 @@
                 "height": 64
             },
             "nframes": 1
+        },
+        {
+            "name": "tree",
+            "bounds": {
+                "left": 68,
+                "top": 200,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "tree-destroyed",
+            "bounds": {
+                "left": 134,
+                "top": 200,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
+        },
+        {
+            "name": "plant",
+            "bounds": {
+                "left": 200,
+                "top": 200,
+                "width": 64,
+                "height": 64
+            },
+            "nframes": 1
         }
     ]
 }

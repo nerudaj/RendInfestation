@@ -6,7 +6,8 @@ static inline bool isPassableTile(int id)
 {
     return (0 <= id && id <= 2) || (6 <= id && id <= 8)
            || (12 <= id && id <= 14) || id == 18 || id == 19
-           || (24 <= id && id <= 27) || id == 30;
+           || (24 <= id && id <= 27) || id == 30 || (45 <= id && id <= 47)
+           || (51 <= id && id <= 53) || (57 <= id && id <= 59) || id == 60;
 }
 
 static inline bool isPassableTileAlt(int id)

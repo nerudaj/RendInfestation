@@ -115,7 +115,7 @@ entt::entity ActorBuilder::createNpc(
             .input = dynamic_cast<NpcInput&>(*underlyingInput),
             .kind = config.npcKind,
         });
-    actors.emplace<ZIndex>(entity, ZINDEX_COMMON);
+    actors.emplace<ZIndex>(entity, config.zindex);
 
     actors.get<Skin>(entity).animation.setState(
         IDLE_ANIMATION_STATE, "looping"_true);
@@ -147,8 +147,7 @@ entt::entity ActorBuilder::createProp(
 
     actors.get<Skin>(entity).animation.setState(
         propDef.animationStateName, "looping"_true);
-    actors.emplace<ZIndex>(
-        entity, propDef.isSolid ? ZINDEX_COMMON : ZINDEX_FLOOR_DECOR);
+    actors.emplace<ZIndex>(entity, propDef.zIndex);
 
     if (propDef.boundLightEmitter.has_value())
     {
@@ -190,6 +189,21 @@ void ActorBuilder::destroyProp(entt::registry& actors, entt::entity entity)
         auto& collider = actors.get<Collider>(entity);
         collider.options.semighost = SEMIGHOST_PROJECTILE;
         skin.animation.setState("cactus-pot-destroyed", "looping"_true);
+
+        createParticleSystem(
+            actors,
+            collider.getPosition(),
+            sf::Vector2f { 1.f, 0.f },
+            ParticleSystemKind::CactusSpatter);
+    }
+    else if (skin.animation.getStateName() == "tree")
+    {
+        actors.remove<Health>(entity);
+
+        auto& collider = actors.get<Collider>(entity);
+        collider.options.nonblocking = true;
+        collider.options.disabled = true;
+        skin.animation.setState("tree-destroyed", "looping"_true);
 
         createParticleSystem(
             actors,

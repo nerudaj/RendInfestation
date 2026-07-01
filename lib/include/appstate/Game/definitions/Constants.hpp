@@ -23,10 +23,13 @@ constexpr int BASE_ANIMATION_FPS = 8;
 constexpr float MIN_ENEMY_SPAWN_DISTANCE = 256.f;
 constexpr int BASE_TURRET_HEALTH = BASE_PROJECTILE_DAMAGE * 10;
 constexpr int BASE_PLAYER_HEALTH = 100;
+
+// Semighosting
 constexpr int SEMIGHOST_PLAYER = 1;
 constexpr int SEMIGHOST_NPC = 2;
 constexpr int SEMIGHOST_PROJECTILE = 4;
 constexpr int SEMIGHOST_FLYING_STUFF = 8;
+constexpr int SEMIGHOST_CRAWLER = 16;
 
 // Animation states
 constexpr const char* IDLE_ANIMATION_STATE = "idle";
@@ -70,6 +73,8 @@ constexpr const unsigned FONT_BASE_HEIGHT = 8u;
 
 // Z-indices
 constexpr const int ZINDEX_FLOOR_DECOR = 0;
-constexpr const int ZINDEX_COMMON = 1;
+constexpr const int ZINDEX_LITTLE = 5;
+constexpr const int ZINDEX_COMMON = 10;
+constexpr const int ZINDEX_FLYING = 50;
 constexpr const int ZINDEX_PROJECTILES = 100;
 constexpr const int ZINDEX_FOREGROUND_DECOR = 200;
