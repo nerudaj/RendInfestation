@@ -422,13 +422,12 @@ std::vector<Face> RenderingEngine::getActorFaces() const
                 [&](const dgm::Circle& c) -> std::optional<sf::Vector2f>
                 {
                     if (!isObjectVisible(c)) return std::nullopt;
-                    return c.getPosition()
-                           + skin.spriteOriginOffsetFromCollider;
+                    return c.getPosition();
                 },
                 [&](const dgm::Rect& r) -> std::optional<sf::Vector2f>
                 {
                     if (!isObjectVisible(r)) return std::nullopt;
-                    return r.getCenter() + skin.spriteOriginOffsetFromCollider;
+                    return r.getCenter();
                 },
             },
             collider.shape);
@@ -436,7 +435,12 @@ std::vector<Face> RenderingEngine::getActorFaces() const
         if (position)
         {
             faces.push_back(Face {
-                .origin = sf::Vector3f(position->x, position->y, zIndex.get()),
+                .origin = *position + skin.spriteOriginOffsetFromCollider,
+                .sort =
+                    SortCoords {
+                        .y = position->y,
+                        .z = static_cast<float>(zIndex.get()),
+                    },
                 .texUvs = getFrame(
                     skin.skinType,
                     skin.animation.getStateName(),

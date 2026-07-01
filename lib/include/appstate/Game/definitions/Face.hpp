@@ -2,9 +2,16 @@
 
 #include <SFML/Graphics.hpp>
 
+struct [[nodiscard]] SortCoords final
+{
+    float y;
+    float z;
+};
+
 struct [[nodiscard]] Face final
 {
-    sf::Vector3f origin;
+    sf::Vector2f origin;
+    SortCoords sort;
     sf::FloatRect texUvs;
     sf::Vector2f scale = { 1.f, 1.f };
     sf::Angle rotation = sf::degrees(0);
@@ -17,9 +24,8 @@ namespace std
     {
         bool operator()(const Face& lhs, const Face& rhs) const noexcept
         {
-            if (lhs.origin.z != rhs.origin.z)
-                return lhs.origin.z < rhs.origin.z;
-            return lhs.origin.y < rhs.origin.y;
+            if (lhs.sort.z != rhs.sort.z) return lhs.sort.z < rhs.sort.z;
+            return lhs.sort.y < rhs.sort.y;
         }
     };
 } // namespace std
