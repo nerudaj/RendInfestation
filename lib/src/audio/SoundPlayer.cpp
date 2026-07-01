@@ -35,7 +35,10 @@ void SoundPlayer::setVolume(const float volume)
 }
 
 sf::Time SoundPlayer::playSound(
-    SoundId::IdType soundId, SoundChannel channel, const float distance)
+    SoundId::IdType soundId,
+    SoundChannel channel,
+    const float distance,
+    const float pitchLevel)
 {
     assert(channels.contains(channel));
 
@@ -43,6 +46,7 @@ sf::Time SoundPlayer::playSound(
     auto& slot = group.slots[group.slotIdx];
     auto& buffer = resmgr.get<sf::SoundBuffer>(soundId);
     slot.setBuffer(buffer);
+    slot.setPitch(pitchLevel);
 
     if (channel != SoundChannel::POV)
     {

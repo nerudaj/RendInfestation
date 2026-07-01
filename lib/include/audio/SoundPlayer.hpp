@@ -2,6 +2,7 @@
 
 #include "audio/SoundChannel.hpp"
 #include "audio/SoundId.hpp"
+#include "misc/Random.hpp"
 #include <DGM/classes/ResourceManager.hpp>
 #include <SFML/Audio.hpp>
 #include <audio/GuiAudioInterface.hpp>
@@ -25,7 +26,8 @@ public:
      */
     sf::Time playPovSound(SoundId::IdType soundId)
     {
-        return playSound(soundId, SoundChannel::POV, 0.f);
+        return playSound(
+            soundId, SoundChannel::POV, 0.f, Random::randomFloat(0.85f, 1.15f));
     }
 
     /**
@@ -56,7 +58,10 @@ public: // GuiAudioInterface
 
 private:
     sf::Time playSound(
-        SoundId::IdType soundId, SoundChannel channel, const float distance);
+        SoundId::IdType soundId,
+        SoundChannel channel,
+        const float distance,
+        const float pitchLevel = 1.f);
 
 private:
     struct ChannelGroup

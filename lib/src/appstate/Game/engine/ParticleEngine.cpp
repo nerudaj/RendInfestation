@@ -1,9 +1,5 @@
 #include "appstate/Game/engine/ParticleEngine.hpp"
-
-static float randomFloat(float min, float max, float scale = 100.f)
-{
-    return (rand() % static_cast<int>(max - min) * scale) / scale + min;
-}
+#include "misc/Random.hpp"
 
 void ParticleEngine::update(dgm::Time time)
 {
@@ -37,22 +33,23 @@ void ParticleEngine::update(dgm::Time time)
 
 Particle ParticleEngine::createParticle(const ParticleEmitter& emitter)
 {
-    const auto angle = sf::degrees(randomFloat(
+    const auto angle = sf::degrees(Random::randomFloat(
         -emitter.directionVariance.asDegrees(),
         emitter.directionVariance.asDegrees()));
     const auto speed = emitter.speedVariance == 0.f
                            ? emitter.speed
-                           : randomFloat(
+                           : Random::randomFloat(
                                  emitter.speed - emitter.speedVariance,
                                  emitter.speed + emitter.speedVariance);
 
     return Particle {
         .position = emitter.position,
         .velocity = emitter.direction.rotatedBy(angle) * speed,
-        .size = sf::Vector2f { 1.f, 1.f }
-                * (emitter.maxProjectileSize == 1.f
-                       ? 1.f
-                       : randomFloat(1.f, emitter.maxProjectileSize, 1.f)),
+        .size =
+            sf::Vector2f { 1.f, 1.f }
+            * (emitter.maxProjectileSize == 1.f
+                   ? 1.f
+                   : Random::randomFloat(1.f, emitter.maxProjectileSize, 1.f)),
         .color = emitter.colors[rand() % emitter.colors.size()],
     };
 }
