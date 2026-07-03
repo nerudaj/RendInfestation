@@ -27,6 +27,14 @@
                 "y": 640
             }
         },
+        "ordering_test.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 713.75,
+                "y": 728
+            }
+        },
         "survival-01.tmx": {
             "expandedObjectLayers": [
                 2
@@ -42,11 +50,38 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.25,
+            "scale": 0.75,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": -1226,
-                "y": -526
+                "x": 381.99999999999994,
+                "y": 186.66666666666669
+            }
+        },
+        "survival-03-tmx.tmx": {
+            "scale": 0.44135416666666666,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 959.5468491857447,
+                "y": 960.679726221383
+            }
+        },
+        "survival-03.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 262.75,
+                "y": 1005
+            }
+        },
+        "survival-04.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 194.25,
+                "y": 204.5
             }
         }
     },

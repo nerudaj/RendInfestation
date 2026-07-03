@@ -30,7 +30,7 @@ public:
         : dgm::AppState(app)
         , dic(dic)
         , atlas(GameTextureAtlasBuilder::createTextureAtlas(
-              dic.resmgr, { 1024, 1024 }))
+              dic.resmgr, { 2048, 2048 }))
         , scene(GameSceneBuilder::createScene(
               atlas, dic.resmgr, dic.input, gameModeProperties))
         , aiEngine(scene)

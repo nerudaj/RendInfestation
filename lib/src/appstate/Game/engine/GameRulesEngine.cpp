@@ -462,5 +462,7 @@ sf::Vector2f GameRulesEngine::pickEnemySpawnPosition() const
             { return (spawn - playerPos).length() > MIN_ENEMY_SPAWN_DISTANCE; })
         | uni::ranges::to<std::vector>();
 
+    if (filtered.empty()) return scene.enemySpawns.front();
+
     return filtered[rand() % filtered.size()];
 }

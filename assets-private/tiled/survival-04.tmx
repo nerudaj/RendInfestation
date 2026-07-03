@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="24">
+ <editorsettings>
+  <export target="../../assets/levels/survival-04.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="Core Tiles.tsx"/>
+ <tileset firstgid="79" source="Props.tsx"/>
+ <layer id="1" name="Vrstva dlaždic 1" width="12" height="12">
+  <data encoding="csv">
+4,22,22,22,22,22,5,22,22,22,22,6,
+30,49,49,49,49,49,30,49,49,49,49,30,
+30,57,61,62,63,57,30,57,61,63,57,30,
+30,55,55,55,55,55,30,55,55,55,55,30,
+30,55,55,55,55,55,36,55,55,55,55,30,
+30,64,55,55,55,55,50,55,55,55,64,30,
+30,70,55,55,55,55,55,55,55,55,70,30,
+30,76,55,55,55,55,55,55,55,55,76,30,
+30,55,55,55,55,55,24,55,55,55,55,30,
+30,55,55,55,55,55,30,55,55,55,55,30,
+30,56,55,55,55,56,30,56,55,55,56,30,
+16,22,22,22,22,22,17,22,22,22,22,18
+</data>
+ </layer>
+ <objectgroup id="2" name="props">
+  <object id="1" gid="92" x="68.909" y="120.182" width="64" height="64"/>
+  <object id="2" gid="92" x="98.909" y="119.273" width="64" height="64"/>
+  <object id="3" gid="92" x="131.455" y="119.818" width="64" height="64"/>
+  <object id="4" gid="94" x="266.75" y="132.75" width="64" height="64"/>
+  <object id="5" gid="94" x="295.75" y="133.75" width="64" height="64"/>
+  <object id="6" gid="79" x="240" y="351.75" width="64" height="64"/>
+  <object id="7" gid="80" x="272.5" y="352.5" width="64" height="64"/>
+  <object id="8" gid="80" x="48.25" y="352.25" width="64" height="64"/>
+  <object id="9" gid="80" x="112.25" y="353.5" width="64" height="64"/>
+  <object id="10" gid="81" x="144" y="174.25" width="64" height="64"/>
+  <object id="11" gid="87" x="162.5" y="193" width="64" height="64"/>
+  <object id="12" gid="85" x="102" y="229.75" width="64" height="64"/>
+  <object id="13" gid="85" x="105.75" y="237.5" width="64" height="64"/>
+  <object id="14" gid="85" x="112" y="231" width="64" height="64"/>
+  <object id="15" gid="85" x="117.5" y="240.5" width="64" height="64"/>
+  <object id="16" gid="94" x="330" y="232.5" width="64" height="64"/>
+  <object id="17" gid="94" x="330" y="262" width="64" height="64"/>
+  <object id="18" gid="94" x="329" y="293" width="64" height="64"/>
+  <object id="19" gid="94" x="42" y="233" width="64" height="64"/>
+  <object id="20" gid="94" x="39.5" y="261.5" width="64" height="64"/>
+  <object id="21" gid="94" x="42" y="292.5" width="64" height="64"/>
+  <object id="22" gid="94" x="42" y="292.5" width="64" height="64"/>
+  <object id="23" gid="91" x="303" y="109.5" width="64" height="64"/>
+ </objectgroup>
+ <layer id="3" name="decor" width="12" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,40,51,41,73,74,0,74,75,41,40,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,45,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,66,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,44,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>
