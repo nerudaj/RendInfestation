@@ -84,6 +84,8 @@ private:
         return dgm::Collision::basic(viewportCollider, o);
     }
 
+    void setCameraPosition(const sf::Vector2f& position);
+
 private:
     GameScene& scene;
     const GameTextureAtlas& atlas;

@@ -41,6 +41,8 @@ RenderingEngine::RenderingEngine(
           scene.actors.get<Collider>(scene.playerEntity).getPosition())
 {
     resmgr.getMutable<sf::Font>(FONT_NAME).setSmooth(false);
+    setCameraPosition(
+        scene.actors.get<Collider>(scene.playerEntity).getPosition());
 }
 
 void RenderingEngine::update(const dgm::Time& time)
@@ -67,9 +69,7 @@ void RenderingEngine::updateCameraPosition(const dgm::Time& time)
         dgm::Math::toUnit(directionToNew)
         * std::clamp(directionToNew.length(), 0.f, 512.f * time.getDeltaTime());
 
-    worldCamera.setPosition(cameraPosition);
-    viewportCollider.setPosition(
-        cameraPosition - viewportCollider.getSize() / 2.f);
+    setCameraPosition(cameraPosition);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
@@ -459,4 +459,10 @@ std::vector<Face> RenderingEngine::getActorFaces() const
     std::ranges::sort(faces, std::less<Face> {});
 
     return faces;
+}
+
+void RenderingEngine::setCameraPosition(const sf::Vector2f& position)
+{
+    worldCamera.setPosition(position);
+    viewportCollider.setPosition(position - viewportCollider.getSize() / 2.f);
 }
