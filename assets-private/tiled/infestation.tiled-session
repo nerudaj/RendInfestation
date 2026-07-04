@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "survival-02.tmx",
+    "activeFile": "demo-01.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -20,11 +20,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1,
+            "scale": 0.33,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 996.5,
-                "y": 640
+                "x": 510.60606060606074,
+                "y": 442.4242424242424
             }
         },
         "ordering_test.tmx": {
@@ -51,10 +51,10 @@
                 3
             ],
             "scale": 0.75,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 381.99999999999994,
-                "y": 186.66666666666669
+                "x": 327.33333333333326,
+                "y": 401.33333333333337
             }
         },
         "survival-03-tmx.tmx": {
@@ -80,8 +80,8 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 194.25,
-                "y": 204.5
+                "x": 192.25,
+                "y": 192
             }
         }
     },
@@ -96,15 +96,17 @@
         "demo-01.tmx",
         "Props.tsx",
         "survival-01.tmx",
-        "survival-02.tmx"
+        "survival-02.tmx",
+        "survival-04.tmx"
     ],
     "project": "infestation.tiled-project",
     "recentFiles": [
         "Core Tiles.tsx",
-        "demo-01.tmx",
-        "Props.tsx",
+        "survival-04.tmx",
+        "survival-02.tmx",
         "survival-01.tmx",
-        "survival-02.tmx"
+        "Props.tsx",
+        "demo-01.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 2,

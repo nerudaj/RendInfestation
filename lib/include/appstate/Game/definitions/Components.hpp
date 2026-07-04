@@ -165,7 +165,7 @@ struct [[nodiscard]] BoundLightEmitter final
 struct [[nodiscard]] DelayedOnLeaveTriggerInventory final
 {
     sf::Time delay = sf::Time::Zero;
-    entt::entity targetEntity;
+    entt::entity targetEntity = entt::null;
 };
 
 struct [[nodiscard]] InteractionTriggerInventory final

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="40">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="41">
  <editorsettings>
   <export target="../../assets/levels/demo-01.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="Core Tiles.tsx"/>
- <tileset firstgid="49" source="Props.tsx"/>
+ <tileset firstgid="79" source="Props.tsx"/>
  <layer id="1" name="Tiles" width="60" height="40">
   <data encoding="csv">
 4,22,22,22,22,22,22,22,22,22,5,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,5,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,5,22,22,22,22,22,22,22,22,6,
@@ -50,45 +50,40 @@
 </data>
  </layer>
  <objectgroup id="2" name="Props">
-  <object id="1" gid="58" x="1056" y="161" width="64" height="64"/>
-  <object id="2" gid="58" x="1056" y="288" width="64" height="64"/>
-  <object id="3" gid="58" x="1056" y="416" width="64" height="64"/>
-  <object id="4" gid="58" x="1055" y="576" width="64" height="64"/>
-  <object id="5" gid="58" x="1054" y="704" width="64" height="64"/>
-  <object id="6" gid="58" x="1248" y="704" width="64" height="64"/>
-  <object id="7" gid="58" x="1249" y="576" width="64" height="64"/>
-  <object id="8" gid="58" x="1248" y="417" width="64" height="64"/>
-  <object id="9" gid="58" x="1248" y="288" width="64" height="64"/>
-  <object id="10" gid="58" x="1249" y="161" width="64" height="64"/>
-  <object id="11" gid="58" x="1441" y="161" width="64" height="64"/>
-  <object id="12" gid="58" x="1441" y="289" width="64" height="64"/>
-  <object id="13" gid="58" x="1440" y="417" width="64" height="64"/>
-  <object id="14" gid="58" x="1441" y="577" width="64" height="64"/>
-  <object id="15" gid="58" x="1440" y="700" width="64" height="64"/>
-  <object id="16" gid="52" x="1362" y="1060" width="64" height="64"/>
-  <object id="17" gid="52" x="1488" y="1058" width="64" height="64"/>
-  <object id="18" gid="52" x="1488" y="1252" width="64" height="64"/>
-  <object id="19" gid="52" x="1360" y="1254" width="64" height="64"/>
-  <object id="20" gid="52" x="1424" y="1058" width="64" height="64"/>
-  <object id="21" gid="52" x="1424" y="1252" width="64" height="64"/>
-  <object id="22" gid="55" x="65" y="112" width="64" height="64"/>
-  <object id="23" gid="49" x="15" y="98" width="64" height="64"/>
-  <object id="24" gid="49" x="112" y="99" width="64" height="64"/>
-  <object id="25" gid="55" x="159" y="112" width="64" height="64"/>
-  <object id="26" gid="49" x="209" y="96" width="64" height="64"/>
-  <object id="27" gid="58" x="31" y="1245" width="64" height="64"/>
-  <object id="28" gid="55" x="400" y="688" width="64" height="64"/>
-  <object id="29" gid="67" x="80.0909" y="190.818" width="64" height="64"/>
-  <object id="30" gid="67" x="418.5" y="703.75" width="64" height="64"/>
-  <object id="31" gid="61" x="391.5" y="713" width="64" height="64"/>
-  <object id="32" gid="70" x="112.667" y="361.667" width="64" height="64"/>
-  <object id="33" gid="70" x="177.333" y="332.333" width="64" height="64"/>
-  <object id="34" gid="64" x="138.667" y="327.333" width="64" height="64"/>
-  <object id="35" gid="64" x="194" y="326.667" width="64" height="64"/>
-  <object id="36" gid="64" x="1477" y="454" width="64" height="64"/>
-  <object id="37" gid="64" x="1425" y="323" width="64" height="64"/>
-  <object id="38" gid="70" x="1440" y="355" width="64" height="64"/>
-  <object id="39" gid="70" x="1458" y="423" width="64" height="64"/>
+  <object id="1" gid="88" x="1056" y="161" width="64" height="64"/>
+  <object id="2" gid="88" x="1056" y="288" width="64" height="64"/>
+  <object id="3" gid="88" x="1056" y="416" width="64" height="64"/>
+  <object id="4" gid="88" x="1055" y="576" width="64" height="64"/>
+  <object id="5" gid="88" x="1054" y="704" width="64" height="64"/>
+  <object id="6" gid="88" x="1248" y="704" width="64" height="64"/>
+  <object id="7" gid="88" x="1249" y="576" width="64" height="64"/>
+  <object id="8" gid="88" x="1248" y="417" width="64" height="64"/>
+  <object id="9" gid="88" x="1248" y="288" width="64" height="64"/>
+  <object id="10" gid="88" x="1249" y="161" width="64" height="64"/>
+  <object id="11" gid="88" x="1441" y="161" width="64" height="64"/>
+  <object id="12" gid="88" x="1441" y="289" width="64" height="64"/>
+  <object id="13" gid="88" x="1440" y="417" width="64" height="64"/>
+  <object id="14" gid="88" x="1441" y="577" width="64" height="64"/>
+  <object id="15" gid="88" x="1440" y="700" width="64" height="64"/>
+  <object id="16" gid="82" x="1362" y="1060" width="64" height="64"/>
+  <object id="17" gid="82" x="1488" y="1058" width="64" height="64"/>
+  <object id="18" gid="82" x="1488" y="1252" width="64" height="64"/>
+  <object id="19" gid="82" x="1360" y="1254" width="64" height="64"/>
+  <object id="20" gid="82" x="1424" y="1058" width="64" height="64"/>
+  <object id="21" gid="82" x="1424" y="1252" width="64" height="64"/>
+  <object id="22" gid="85" x="65" y="112" width="64" height="64"/>
+  <object id="23" gid="79" x="15" y="98" width="64" height="64"/>
+  <object id="24" gid="79" x="112" y="99" width="64" height="64"/>
+  <object id="25" gid="85" x="159" y="112" width="64" height="64"/>
+  <object id="26" gid="79" x="209" y="96" width="64" height="64"/>
+  <object id="27" gid="88" x="31" y="1245" width="64" height="64"/>
+  <object id="28" gid="85" x="400" y="688" width="64" height="64"/>
+  <object id="31" gid="91" x="391.5" y="713" width="64" height="64"/>
+  <object id="34" gid="94" x="138.667" y="327.333" width="64" height="64"/>
+  <object id="35" gid="94" x="194" y="326.667" width="64" height="64"/>
+  <object id="36" gid="94" x="1477" y="454" width="64" height="64"/>
+  <object id="37" gid="94" x="1425" y="323" width="64" height="64"/>
+  <object id="40" gid="91" x="225.333" y="174" width="64" height="64"/>
  </objectgroup>
  <layer id="3" name="Decor" width="60" height="40">
   <data encoding="csv">

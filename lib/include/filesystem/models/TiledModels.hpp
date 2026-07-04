@@ -45,7 +45,8 @@ namespace tiled
 
     enum class [[nodiscard]] DrawOrder
     {
-        TopDown,
+        Uninitialized = -1,
+        TopDown = 0,
     };
 
     NLOHMANN_JSON_SERIALIZE_ENUM(
@@ -53,7 +54,8 @@ namespace tiled
 
     enum class [[nodiscard]] LayerType
     {
-        TileLayer,
+        Uninitialized = -1,
+        TileLayer = 0,
         ObjectGroup,
     };
 
@@ -105,7 +107,7 @@ namespace tiled
     {
         unsigned id = 0;
         std::string name = "";
-        LayerType type;
+        LayerType type = LayerType::Uninitialized;
         std::vector<int> data = {};
         int x = 0;
         int y = 0;
@@ -179,8 +181,8 @@ namespace tiled
         int y = 0;
         std::string name;
         std::vector<ObjectModel> objects = {};
-        DrawOrder draworder;
-        LayerType type;
+        DrawOrder draworder = DrawOrder::Uninitialized;
+        LayerType type = LayerType::Uninitialized;
         bool visible = true;
         unsigned opacity = 0;
     };

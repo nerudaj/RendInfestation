@@ -59,7 +59,7 @@
          "name":"Props",
          "objects":[
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":1,
                  "name":"",
@@ -71,7 +71,7 @@
                  "y":161
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":2,
                  "name":"",
@@ -83,7 +83,7 @@
                  "y":288
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":3,
                  "name":"",
@@ -95,7 +95,7 @@
                  "y":416
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":4,
                  "name":"",
@@ -107,7 +107,7 @@
                  "y":576
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":5,
                  "name":"",
@@ -119,7 +119,7 @@
                  "y":704
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":6,
                  "name":"",
@@ -131,7 +131,7 @@
                  "y":704
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":7,
                  "name":"",
@@ -143,7 +143,7 @@
                  "y":576
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":8,
                  "name":"",
@@ -155,7 +155,7 @@
                  "y":417
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":9,
                  "name":"",
@@ -167,7 +167,7 @@
                  "y":288
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":10,
                  "name":"",
@@ -179,7 +179,7 @@
                  "y":161
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":11,
                  "name":"",
@@ -191,7 +191,7 @@
                  "y":161
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":12,
                  "name":"",
@@ -203,7 +203,7 @@
                  "y":289
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":13,
                  "name":"",
@@ -215,7 +215,7 @@
                  "y":417
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":14,
                  "name":"",
@@ -227,7 +227,7 @@
                  "y":577
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":15,
                  "name":"",
@@ -239,7 +239,7 @@
                  "y":700
                 }, 
                 {
-                 "gid":50,
+                 "gid":82,
                  "height":64,
                  "id":16,
                  "name":"",
@@ -251,7 +251,7 @@
                  "y":1060
                 }, 
                 {
-                 "gid":50,
+                 "gid":82,
                  "height":64,
                  "id":17,
                  "name":"",
@@ -263,7 +263,7 @@
                  "y":1058
                 }, 
                 {
-                 "gid":50,
+                 "gid":82,
                  "height":64,
                  "id":18,
                  "name":"",
@@ -275,7 +275,7 @@
                  "y":1252
                 }, 
                 {
-                 "gid":50,
+                 "gid":82,
                  "height":64,
                  "id":19,
                  "name":"",
@@ -287,7 +287,7 @@
                  "y":1254
                 }, 
                 {
-                 "gid":50,
+                 "gid":82,
                  "height":64,
                  "id":20,
                  "name":"",
@@ -299,7 +299,7 @@
                  "y":1058
                 }, 
                 {
-                 "gid":50,
+                 "gid":82,
                  "height":64,
                  "id":21,
                  "name":"",
@@ -311,7 +311,7 @@
                  "y":1252
                 }, 
                 {
-                 "gid":51,
+                 "gid":85,
                  "height":64,
                  "id":22,
                  "name":"",
@@ -323,7 +323,7 @@
                  "y":112
                 }, 
                 {
-                 "gid":49,
+                 "gid":79,
                  "height":64,
                  "id":23,
                  "name":"",
@@ -335,7 +335,7 @@
                  "y":98
                 }, 
                 {
-                 "gid":49,
+                 "gid":79,
                  "height":64,
                  "id":24,
                  "name":"",
@@ -347,7 +347,7 @@
                  "y":99
                 }, 
                 {
-                 "gid":51,
+                 "gid":85,
                  "height":64,
                  "id":25,
                  "name":"",
@@ -359,7 +359,7 @@
                  "y":112
                 }, 
                 {
-                 "gid":49,
+                 "gid":79,
                  "height":64,
                  "id":26,
                  "name":"",
@@ -371,7 +371,7 @@
                  "y":96
                 }, 
                 {
-                 "gid":52,
+                 "gid":88,
                  "height":64,
                  "id":27,
                  "name":"",
@@ -383,7 +383,7 @@
                  "y":1245
                 }, 
                 {
-                 "gid":51,
+                 "gid":85,
                  "height":64,
                  "id":28,
                  "name":"",
@@ -395,31 +395,7 @@
                  "y":688
                 }, 
                 {
-                 "gid":55,
-                 "height":64,
-                 "id":29,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":83.0909,
-                 "y":127.818
-                }, 
-                {
-                 "gid":55,
-                 "height":64,
-                 "id":30,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":418.5,
-                 "y":703.75
-                }, 
-                {
-                 "gid":53,
+                 "gid":91,
                  "height":64,
                  "id":31,
                  "name":"",
@@ -431,31 +407,7 @@
                  "y":713
                 }, 
                 {
-                 "gid":56,
-                 "height":64,
-                 "id":32,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":112.667,
-                 "y":361.667
-                }, 
-                {
-                 "gid":56,
-                 "height":64,
-                 "id":33,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":177.333,
-                 "y":332.333
-                }, 
-                {
-                 "gid":54,
+                 "gid":94,
                  "height":64,
                  "id":34,
                  "name":"",
@@ -467,7 +419,7 @@
                  "y":327.333
                 }, 
                 {
-                 "gid":54,
+                 "gid":94,
                  "height":64,
                  "id":35,
                  "name":"",
@@ -479,7 +431,7 @@
                  "y":326.667
                 }, 
                 {
-                 "gid":54,
+                 "gid":94,
                  "height":64,
                  "id":36,
                  "name":"",
@@ -491,7 +443,7 @@
                  "y":454
                 }, 
                 {
-                 "gid":54,
+                 "gid":94,
                  "height":64,
                  "id":37,
                  "name":"",
@@ -503,28 +455,16 @@
                  "y":323
                 }, 
                 {
-                 "gid":56,
+                 "gid":91,
                  "height":64,
-                 "id":38,
+                 "id":40,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":1440,
-                 "y":355
-                }, 
-                {
-                 "gid":56,
-                 "height":64,
-                 "id":39,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":1458,
-                 "y":423
+                 "x":225.333333333333,
+                 "y":174
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -584,7 +524,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":40,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -595,7 +535,7 @@
          "source":"..\/..\/assets-private\/tiled\/Core Tiles.tsx"
         }, 
         {
-         "firstgid":49,
+         "firstgid":79,
          "source":"..\/..\/assets-private\/tiled\/Props.tsx"
         }],
  "tilewidth":32,

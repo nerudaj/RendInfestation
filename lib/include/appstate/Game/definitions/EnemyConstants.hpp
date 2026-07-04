@@ -43,7 +43,8 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .speed = BASE_ENEMY_SPEED * 1.1f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
             .weapons = { WeaponBuilder::createEnemyWeapon(
-                BASE_MELEE_DAMAGE * 1.5f, EnemyWeaponKind::Slash) },
+                static_cast<int>(BASE_MELEE_DAMAGE * 1.5f),
+                EnemyWeaponKind::Slash) },
             .semighostFlags = SEMIGHOST_NPC | SEMIGHOST_CRAWLER,
             .npcKind = NpcKind::GreaterScuttlebug,
             .zindex = ZIndex(ZINDEX_LITTLE),
@@ -57,7 +58,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .speed = BASE_ENEMY_SPEED * 0.8f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
             .weapons = { WeaponBuilder::createEnemyWeapon(
-                             BASE_MELEE_DAMAGE * 2.f,
+                             static_cast<int>(BASE_MELEE_DAMAGE * 2.f),
                              EnemyWeaponKind::Headbutt),
                          WeaponBuilder::createEnemyWeapon(
                              BASE_RANGED_DAMAGE, EnemyWeaponKind::BounceBall) },
@@ -73,7 +74,8 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .colliderRadius = 10.f,
             .canFall = false,
             .weapons = { WeaponBuilder::createEnemyWeapon(
-                BASE_RANGED_DAMAGE * 1.5f, EnemyWeaponKind::Fireball) },
+                static_cast<int>(BASE_RANGED_DAMAGE * 1.5f),
+                EnemyWeaponKind::Fireball) },
             .semighostFlags = SEMIGHOST_NPC | SEMIGHOST_FLYING_STUFF,
             .npcKind = NpcKind::Beholder,
             .zindex = ZIndex(ZINDEX_FLYING),

@@ -158,7 +158,8 @@ tgui::ChildWindow::Ptr AppStateWeaponModification::createModuleSelectModal(
     modal->setPosition(
         { "parent.width / 2 - width / 2", "parent.height / 2 - height / 2" });
     modal->getRenderer()->setTitleBarColor(COLOR_PURPLE);
-    modal->getRenderer()->setTitleBarHeight(dic.sizer.getBaseContainerHeight());
+    modal->getRenderer()->setTitleBarHeight(
+        static_cast<float>(dic.sizer.getBaseContainerHeight()));
     modal->getRenderer()->setTextSize(dic.sizer.getBaseFontSize());
     return modal;
 }

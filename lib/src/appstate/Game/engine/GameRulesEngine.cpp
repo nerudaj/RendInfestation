@@ -200,7 +200,7 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
     body.friction = RAGDOLL_FRICTION;
 }
 
-void GameRulesEngine::operator()(const event::WaveEnded& e)
+void GameRulesEngine::operator()(const event::WaveEnded&)
 {
     auto& health = scene.actors.get<Health>(scene.playerEntity);
     health = Health(std::clamp(health.value + 10, 0, scene.playerMaxHealth));

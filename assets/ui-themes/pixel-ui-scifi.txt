@@ -37,6 +37,7 @@ SemitransparentDarkPanel
 Button
 {
 	Texture = "pixel-ui-scifi.png" Part(0, 0, 48, 48) Middle(16, 16, 16, 16);
+	TextureFocused = "pixel-ui-scifi.png" Part(0, 52, 48, 48) Middle(16, 16, 16, 16);
 	TextureHover = "pixel-ui-scifi.png" Part(0, 52, 48, 48) Middle(16, 16, 16, 16);
 	TextureDown = "pixel-ui-scifi.png" Part(0, 104, 48, 48) Middle(16, 16, 16, 16);
 }

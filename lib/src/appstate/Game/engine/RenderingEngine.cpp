@@ -133,12 +133,15 @@ void RenderingEngine::renderWorld(dgm::Window& window)
 
 void RenderingEngine::addLevelFacesToPipeline()
 {
-    for (auto y = 0, idx = 0; y < scene.levelMesh.getDataSize().y; ++y)
+    for (auto y = 0u, idx = 0u; y < scene.levelMesh.getDataSize().y; ++y)
     {
         for (auto x = 0; x < scene.levelMesh.getDataSize().x; ++x, ++idx)
         {
             auto pos = sf::Vector2f(scene.levelMesh.getVoxelSize()) / 2.f
-                       + sf::Vector2f(x, y).componentWiseMul(
+                       + sf::Vector2f {
+                            static_cast<float>(x),
+                            static_cast<float>(y),
+                        }.componentWiseMul(
                            sf::Vector2f(scene.levelMesh.getVoxelSize()));
             if (!isObjectVisible(dgm::Circle(pos, 16.f))) continue;
 
