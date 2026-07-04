@@ -250,7 +250,7 @@ void RenderingEngine::renderHudBackgroundAndHealth(
     window.draw(hudSprite);
 
     const int health = std::clamp(
-        scene.actors.get<Health>(scene.playerEntity).get(),
+        scene.actors.get<Health>(scene.playerEntity).value,
         0,
         scene.playerMaxHealth);
     const auto tenth = (10 * (9 + health)) / scene.playerMaxHealth;

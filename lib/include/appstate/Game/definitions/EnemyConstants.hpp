@@ -9,6 +9,7 @@
 struct [[nodiscard]] EnemyConfig final
 {
     int health = 1;
+    SoundId::IdType deathSound = SoundId::Error;
     float speed = BASE_ENEMY_SPEED;
     float colliderRadius = 8.f;
     sf::Vector2f spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, 0.f };
@@ -24,6 +25,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
         SkinType::Scuttlebug,
         EnemyConfig {
             .health = BASE_PROJECTILE_DAMAGE * 4,
+            .deathSound = SoundId::ScuttlebugDeath,
             .speed = BASE_ENEMY_SPEED * 1.5f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
             .weapons = { WeaponBuilder::createEnemyWeapon(
@@ -37,6 +39,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
         SkinType::ScuttlebugBlue,
         EnemyConfig {
             .health = BASE_PROJECTILE_DAMAGE * 6,
+            .deathSound = SoundId::ScuttlebugDeath,
             .speed = BASE_ENEMY_SPEED * 1.1f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
             .weapons = { WeaponBuilder::createEnemyWeapon(
@@ -50,6 +53,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
         SkinType::Bighead,
         EnemyConfig {
             .health = BASE_PROJECTILE_DAMAGE * 8,
+            .deathSound = SoundId::BigheadDeath,
             .speed = BASE_ENEMY_SPEED * 0.8f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
             .weapons = { WeaponBuilder::createEnemyWeapon(
@@ -64,6 +68,7 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
         SkinType::Beholder,
         EnemyConfig {
             .health = BASE_PROJECTILE_DAMAGE * 16,
+            .deathSound = SoundId::BeholderDeath,
             .speed = BASE_ENEMY_SPEED * 0.6f,
             .colliderRadius = 10.f,
             .canFall = false,

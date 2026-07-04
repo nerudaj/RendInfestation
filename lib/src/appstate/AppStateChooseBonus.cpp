@@ -196,7 +196,7 @@ AppStateChooseBonus::generatePickerSelection()
         sortablePool.push_back(WeaponModule::ExtraHealth);
     }
 
-    if (scene.actors.get<Health>(scene.playerEntity).get()
+    if (scene.actors.get<Health>(scene.playerEntity).value
         < scene.playerMaxHealth / 2)
     {
         sortablePool[1] = WeaponModule::ExtraHealth;

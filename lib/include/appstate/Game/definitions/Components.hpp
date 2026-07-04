@@ -108,7 +108,11 @@ struct [[nodiscard]] Skin final
 
 using LookDirection = BrandedType<sf::Vector2f, struct LookDirectionTag>;
 
-using Health = BrandedType<int, struct HealthTag>;
+struct [[nodiscard]] Health final
+{
+    int value = 0;
+    SoundId::IdType deathSound = SoundId::Error;
+};
 
 using Lifetime = BrandedType<sf::Time, struct LifetimeTag>;
 

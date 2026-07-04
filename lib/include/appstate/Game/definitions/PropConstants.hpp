@@ -163,7 +163,11 @@ const std::array<Prop, 16u> PROP_DEFINITIONS = {
                 { origin.x, origin.y - 56.f }, { 15.f, 10.f }) };
         },
         .spriteOffset = { 25.f, 18.f },
-        .health = Health(50),
+        .health =
+            Health {
+                .value = 50,
+                .deathSound = SoundId::TreeDestroyed,
+            },
     },
     Prop {
         .animationStateName = "cactus-pot-destroyed",
@@ -218,7 +222,11 @@ const std::array<Prop, 16u> PROP_DEFINITIONS = {
             };
         },
         .spriteOffset = { 20.f, 10.f },
-        .health = Health(75),
+        .health =
+            Health {
+                .value = 75,
+                .deathSound = SoundId::TreeDestroyed,
+            },
     },
     Prop {
         .animationStateName = "tree-destroyed",

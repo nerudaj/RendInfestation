@@ -130,9 +130,10 @@ void GameRulesEngine::operator()(const event::ActorIsFalling& e)
 
 void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
 {
-    auto skin = scene.actors.try_get<Skin>(e.entity);
+    auto [skin, health] = scene.actors.try_get<Skin, Health>(e.entity);
     if (skin && skin->kind == EntityKind::Npc)
     {
+        assert(skin->skinType != SkinType::Turret);
         if (scene.survivalGameDirector)
             scene.status.score +=
                 scene.survivalGameDirector->markKilledEnemy(*skin);
@@ -143,20 +144,11 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
             sf::Vector2f { 0.f, -1.f },
             ParticleSystemKind::BloodSpatter);
 
-        if (skin->skinType == SkinType::Scuttlebug)
-            soundPlayer.playAttenuatedSound(
-                SoundChannel::Enemy,
-                SoundId::ScuttlebugDeath,
-                (scene.actors.get<Collider>(e.entity).getPosition()
-                 - scene.actors.get<Collider>(scene.playerEntity).getPosition())
-                    .length());
-        else if (skin->skinType == SkinType::Bighead)
-            soundPlayer.playAttenuatedSound(
-                SoundChannel::Enemy,
-                SoundId::BigheadDeath,
-                (scene.actors.get<Collider>(e.entity).getPosition()
-                 - scene.actors.get<Collider>(scene.playerEntity).getPosition())
-                    .length());
+        if (health)
+        {
+            playAttenuated(
+                health->deathSound, scene.actors.get<Collider>(e.entity));
+        }
     }
     // turrets also have entity kind player
     else if (
@@ -178,7 +170,7 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
 {
     auto&& [health, body] = scene.actors.get<Health, PhysicsBody>(e.entity);
 
-    health.get() -= e.damageAmount;
+    health.value -= e.damageAmount;
 
     if (e.impactForce.length() == 0.f || body.pinned) return;
 
@@ -208,7 +200,7 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
 void GameRulesEngine::operator()(const event::WaveEnded& e)
 {
     auto& health = scene.actors.get<Health>(scene.playerEntity);
-    health = Health(std::clamp(health.get() + 10, 0, scene.playerMaxHealth));
+    health = Health(std::clamp(health.value + 10, 0, scene.playerMaxHealth));
 }
 
 void GameRulesEngine::update(const dgm::Time& time)
@@ -328,11 +320,13 @@ void GameRulesEngine::updateHealth()
 {
     for (auto&& [entity, health] : scene.actors.view<Health>().each())
     {
-        if (health.get() > 0) continue;
+        if (health.value > 0) continue;
 
         auto skin = scene.actors.try_get<Skin>(entity);
         if (skin && skin->kind == EntityKind::Prop)
         {
+            playAttenuated(
+                health.deathSound, scene.actors.get<Collider>(entity));
             ActorBuilder::destroyProp(scene.actors, entity);
         }
         else
@@ -465,4 +459,15 @@ sf::Vector2f GameRulesEngine::pickEnemySpawnPosition() const
     if (filtered.empty()) return scene.enemySpawns.front();
 
     return filtered[rand() % filtered.size()];
+}
+
+void GameRulesEngine::playAttenuated(
+    SoundId::IdType soundId, const Collider& collider, SoundChannel channel)
+{
+    soundPlayer.playAttenuatedSound(
+        channel,
+        soundId,
+        (collider.getPosition()
+         - scene.actors.get<Collider>(scene.playerEntity).getPosition())
+            .length());
 }

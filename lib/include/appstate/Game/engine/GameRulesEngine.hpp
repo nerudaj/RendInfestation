@@ -94,6 +94,11 @@ private:
 
     sf::Vector2f pickEnemySpawnPosition() const;
 
+    void playAttenuated(
+        SoundId::IdType soundId,
+        const Collider& collider,
+        SoundChannel channel = SoundChannel::Enemy);
+
 private:
     EventQueue<GameEvent>& eventQueue;
     GameScene& scene;
