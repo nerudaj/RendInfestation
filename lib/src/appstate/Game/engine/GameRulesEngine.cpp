@@ -114,6 +114,9 @@ void GameRulesEngine::operator()(const event::DoorStartsClosing& e)
 
 void GameRulesEngine::operator()(const event::ActorIsFalling& e)
 {
+    // Prevent further ragdolling once falling
+    scene.actors.get<PhysicsBody>(e.entity).pinned = true;
+
     auto& skin = scene.actors.get<Skin>(e.entity);
     skin.scale -= FALL_SPEED * e.deltaTime;
     if (skin.scale <= 0.f)

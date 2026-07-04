@@ -60,7 +60,7 @@ GameScene GameSceneBuilder::createScene(
             WeaponModule::CadenceBarrel,   WeaponModule::ExplosiveAmmo,
             WeaponModule::Ricochet,        WeaponModule::PassthruAmmo,
             WeaponModule::BigBullet,       WeaponModule::Spikes,
-            WeaponModule::Splitter,
+            WeaponModule::Splitter,        WeaponModule::Turret,
         };
     }
     else
