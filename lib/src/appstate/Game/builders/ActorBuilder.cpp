@@ -296,9 +296,11 @@ entt::entity ActorBuilder::createTurret(
 {
     auto entity = actors.create();
 
+    const auto size = sf::Vector2f { 4.f, 19.f };
+
     actors.emplace<Collider>(
         entity,
-        dgm::Circle(origin, 8.f),
+        dgm::Rect(origin - sf::Vector2f { size.x / 2.f, size.y }, size),
         ColliderOptions {
             .semighost = SEMIGHOST_PLAYER | SEMIGHOST_NPC,
         });
@@ -322,6 +324,7 @@ entt::entity ActorBuilder::createTurret(
             .animation = dgm::Animation(
                 atlas.getSkinAnimationStates(SkinType::Turret),
                 BASE_ANIMATION_FPS),
+            .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -6.f },
         });
 
     actors.emplace<Health>(entity, BASE_TURRET_HEALTH);
