@@ -32,6 +32,7 @@ void GameRulesEngine::operator()(const event::ActorStartedAttack& e)
     auto& skin = scene.actors.get<Skin>(e.entity);
     if (skin.kind == EntityKind::Player)
     {
+        ++scene.status.shotsFired;
         eventQueue.pushEvent<event::ActorFiredWeapon>(e.entity);
     }
 }
@@ -140,6 +141,7 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
         if (scene.survivalGameDirector)
             scene.status.score +=
                 scene.survivalGameDirector->markKilledEnemy(*skin);
+        ++scene.status.enemiesKilled;
 
         ActorBuilder::createParticleSystem(
             scene.actors,
@@ -204,6 +206,9 @@ void GameRulesEngine::operator()(const event::WaveEnded&)
 {
     auto& health = scene.actors.get<Health>(scene.playerEntity);
     health = Health(std::clamp(health.value + 10, 0, scene.playerMaxHealth));
+
+    assert(scene.survivalGameDirector);
+    scene.status.waveBeaten = scene.survivalGameDirector->getContext().wave;
 }
 
 void GameRulesEngine::update(const dgm::Time& time)

@@ -60,9 +60,19 @@ DependencyContainer::DependencyContainer(
                   CMakeVars::TITLE,
                   settingsFileName,
                   AppSettingsStorageModel(settings));
+              saveProgress();
           })
+    , saveProgress(
+          [this]
+          { AppStorage::saveFile(CMakeVars::TITLE, "save.json", saveManager); })
     , guiBuilderFactory(sizer, strings, soundPlayer)
 {
+    auto loadResult = AppStorage::loadFile(CMakeVars::TITLE, "save.json");
+    if (loadResult)
+    {
+        saveManager = nlohmann::json::parse(*loadResult);
+    }
+
     // These asserts will fail when you're adding new bindings
     // just delete the settings.json and all will be fine again
     assert(

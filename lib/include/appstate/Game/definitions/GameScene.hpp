@@ -30,6 +30,9 @@ struct [[nodiscard]] GameStatus final
 {
     bool finished = false;
     int score = 0;
+    int enemiesKilled = 0;
+    int shotsFired = 0;
+    int waveBeaten = 0;
 };
 
 struct [[nodiscard]] GameScene final

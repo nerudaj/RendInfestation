@@ -1,13 +1,14 @@
 #pragma once
 
+#include "appstate/Game/definitions/Constants.hpp"
 #include "audio/Jukebox.hpp"
 #include "audio/SoundPlayer.hpp"
 #include "filesystem/ResourceLoader.hpp"
-#include "appstate/Game/definitions/Constants.hpp"
 #include "gui/Icon.hpp"
 #include "input/Input.hpp"
 #include "input/TouchController.hpp"
 #include "input/VirtualCursor.hpp"
+#include "misc/SaveManager.hpp"
 #include "settings/AppSettings.hpp"
 #include "strings/Language.hpp"
 #include "strings/StringId.hpp"
@@ -32,7 +33,9 @@ struct [[nodiscard]] DependencyContainer final
     SoundPlayer soundPlayer;
     AppSettings settings;
     std::function<void()> saveSettings;
+    std::function<void()> saveProgress;
     GuiBuilderFactory<StringId> guiBuilderFactory;
+    SaveManager saveManager;
 
     DependencyContainer(
         dgm::Window& window,

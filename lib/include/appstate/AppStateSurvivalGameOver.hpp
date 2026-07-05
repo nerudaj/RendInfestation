@@ -11,11 +11,7 @@ public:
     AppStateSurvivalGameOver(
         dgm::App& app,
         DependencyContainer& dic,
-        const GameStatus& status) noexcept
-        : dgm::AppState(app), dic(dic), status(status)
-    {
-        buildLayout();
-    }
+        const GameStatus& status) noexcept;
 
 public:
     void input() override;

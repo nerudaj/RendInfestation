@@ -108,6 +108,13 @@ enum class [[nodiscard]] StringId
     NewWeaponModuleUnlocked,
     GameOver,
     GameScore,
+    EnemiesRouted,
+    ShotsFired,
+    WavesBeaten,
+    NewBestScore,
+    PreviousBestScore,
+    CurrentBestScore,
 
+    Placeholder,
     MaxId, // Make sure this one is always the last!
 };

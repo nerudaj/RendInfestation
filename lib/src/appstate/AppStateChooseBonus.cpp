@@ -60,7 +60,7 @@ tgui::Layout2d AppStateChooseBonus::getCoreLayoutSize()
 void AppStateChooseBonus::buildLayout()
 {
     auto content = tgui::Group::create(getCoreLayoutSize());
-    GuiBuilderHelper::centerWidget(content);
+    TguiHelper::centerInParent(content);
 
     auto headingPanel = tgui::Panel::create({ "100%", "10%" });
     content->add(headingPanel);
@@ -115,7 +115,8 @@ tgui::Container::Ptr AppStateChooseBonus::createPickerBox(WeaponModule module)
     content->add(imageLayout);
 
     auto image = tgui::Panel::create({ "height", "100%" });
-    image->setPosition({ "parent.width / 2 - width / 2", "0%" });
+    TguiHelper::alignInParent(
+        image, tgui::HorizontalAlignment::Center, tgui::VerticalAlignment::Top);
     image->getRenderer()->setTextureBackground(dic.resmgr.get<tgui::Texture>(
         uni::format("ModuleIcon-{}", std::to_underlying(module))));
     imageLayout->add(image);

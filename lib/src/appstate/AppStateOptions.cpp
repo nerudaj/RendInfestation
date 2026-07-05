@@ -66,9 +66,12 @@ void AppStateOptions::draw()
 void AppStateOptions::buildLayout()
 {
     dic.gui.rebuildWith(
-        dic.guiBuilderFactory.createDefaultLayoutBuilder()
+        dic.guiBuilderFactory.createSimpleLayoutBuilder()
             .withNoBackground()
-            .withTitle(StringId::Options, HeadingLevel::H1)
+            .withTitleInPanel(
+                StringId::Options,
+                HeadingLevel::H1,
+                tgui::HorizontalAlignment::Left)
             .withContent(dic.guiBuilderFactory.createTabbedLayoutBuilder()
                              .addTab(
                                  StringId::VideoOptionsTab,
@@ -92,8 +95,6 @@ void AppStateOptions::buildLayout()
                                  .contentIsScrollable = true,
                                  .contentClassName = "OptionsPanel",
                              }))
-            .withNoTopLeftButton()
-            .withNoTopRightButton()
             .withBottomLeftButton(StringId::Back, [&] { onBack(); })
             .withNoBottomRightButton()
             .build());
