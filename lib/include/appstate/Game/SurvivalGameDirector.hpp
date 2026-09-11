@@ -32,6 +32,8 @@ private:
 
     static int getEnemyCountForWave(int wave);
 
+    sf::Time getEnemySpawnDelay(int wave);
+
 private:
     SurvivalSpawnerContext context;
 };

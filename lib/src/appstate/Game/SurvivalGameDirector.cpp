@@ -24,7 +24,7 @@ void SurvivalGameDirector::update(
         context.timeTillNextSpawn -= time;
         if (context.timeTillNextSpawn <= sf::Time::Zero)
         {
-            context.timeTillNextSpawn = SPAWNER_SPAWN_DELAY;
+            context.timeTillNextSpawn = getEnemySpawnDelay(context.wave);
             ++context.enemiesSpawnedInCurrentWave;
             eventQueue.pushEvent<event::SurvivalSpawnerTimerHit>(
                 getEnemyToSpawn());
@@ -111,4 +111,10 @@ int SurvivalGameDirector::getEnemyCountForWave(int wave)
     if (wave <= 6) return wave * 10;
     if (wave <= 13) return wave * 15;
     return wave * 20;
+}
+
+sf::Time SurvivalGameDirector::getEnemySpawnDelay(int wave)
+{
+    if (wave <= 12) return SPAWNER_SPAWN_DELAY;
+    return SPAWNER_SPAWN_DELAY / 2.f;
 }
