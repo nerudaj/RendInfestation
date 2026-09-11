@@ -36,7 +36,7 @@ TouchModel::computeLayout(const sf::Vector2u& windowSize, const Sizer& sizer)
             TouchObjectKind::Joystick, rightJoystickOrigin, joystickRadius),
         TouchInput( // Pause
             TouchObjectKind::Button,
-            { buttonRadius, buttonRadius },
+            { 2.f * buttonRadius, buttonRadius },
             buttonRadius),
         TouchInput( // Swap
             TouchObjectKind::Button,
