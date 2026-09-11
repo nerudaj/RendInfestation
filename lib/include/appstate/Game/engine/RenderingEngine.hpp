@@ -1,5 +1,6 @@
 #pragma once
 
+#include "appstate/Game/TextBoundsCache.hpp"
 #include "appstate/Game/definitions/Face.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
@@ -111,4 +112,5 @@ private:
     float timeElapsed = 0.f;
     mutable size_t entityCount = 0;
     sf::Vector2f cameraPosition = { 0.f, 0.f };
+    TextBoundsCache textBounds;
 };

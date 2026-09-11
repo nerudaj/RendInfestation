@@ -123,7 +123,7 @@ void RenderingEngine::renderWorld(dgm::Window& window)
     {
         text.setString(strings.getString(StringId::Interact));
         text.setPosition(
-            playerPosition - text.getGlobalBounds().size / 2.f
+            playerPosition - textBounds.getGlobalBounds(text) / 2.f
             - sf::Vector2f(0.f, 25.f));
         window.draw(text);
     }
@@ -312,29 +312,29 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
             text.setString(uni::format(
                 "Next wave in: {}s",
                 std::ceil(context.timeTillNextWave.asSeconds())));
-            text.setPosition(
-                { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
-                      / 2.f,
-                  2.f });
+            text.setPosition({ (INTERNAL_GAME_RESOLUTION.x
+                                - textBounds.getGlobalBounds(text).x)
+                                   / 2.f,
+                               2.f });
             window.draw(text);
         }
         else
         {
             text.setString(uni::format("Wave: {}", context.wave));
-            text.setPosition(
-                { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
-                      / 2.f,
-                  2.f });
+            text.setPosition({ (INTERNAL_GAME_RESOLUTION.x
+                                - textBounds.getGlobalBounds(text).x)
+                                   / 2.f,
+                               2.f });
             window.draw(text);
 
             text.setString(uni::format(
                 "{} / {}",
                 context.enemiesKilledInCurrentWave,
                 context.enemiesInCurrentWave));
-            text.setPosition(
-                { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
-                      / 2.f,
-                  11.f });
+            text.setPosition({ (INTERNAL_GAME_RESOLUTION.x
+                                - textBounds.getGlobalBounds(text).x)
+                                   / 2.f,
+                               11.f });
             window.draw(text);
         }
     }
@@ -343,7 +343,7 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
     {
         text.setString(scene.hudMessage.text);
         text.setPosition(
-            { (INTERNAL_GAME_RESOLUTION.x - text.getGlobalBounds().size.x)
+            { (INTERNAL_GAME_RESOLUTION.x - textBounds.getGlobalBounds(text).x)
                   / 2.f,
               INTERNAL_GAME_RESOLUTION.y * 2.f / 3.f });
         window.draw(text);
