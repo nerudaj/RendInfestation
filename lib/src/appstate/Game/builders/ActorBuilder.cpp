@@ -62,6 +62,38 @@ entt::entity ActorBuilder::createPlayer(
     return entity;
 }
 
+entt::entity ActorBuilder::createPlayerLegs(
+    entt::registry& actors,
+    const sf::Vector2f& spawnPosition,
+    const GameTextureAtlas& atlas)
+{
+    auto entity = actors.create();
+    actors.emplace<Collider>(
+        entity,
+        dgm::Circle(spawnPosition, 8.f),
+        ColliderOptions {
+            .nonblocking = true,
+            .disabled = true,
+        });
+
+    actors.emplace<Skin>(
+        entity,
+        EntityKind::Prop,
+        SkinType::PlayerLower,
+        dgm::Animation(
+            atlas.getSkinAnimationStates(SkinType::PlayerLower),
+            BASE_ANIMATION_FPS),
+        sf::Vector2f { 0.f, -10.f });
+
+    actors.emplace<ZIndex>(entity, ZINDEX_COMMON - 1);
+    actors.emplace<LookDirection>(entity, sf::Vector2f { 1.f, 0.f });
+
+    actors.get<Skin>(entity).animation.setState(
+        IDLE_ANIMATION_STATE, "looping"_true);
+
+    return entity;
+}
+
 entt::entity ActorBuilder::createNpc(
     entt::registry& actors,
     const sf::Vector2f& spawnPosition,

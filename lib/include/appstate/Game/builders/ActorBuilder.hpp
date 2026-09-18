@@ -19,6 +19,11 @@ public:
         Input& input,
         const WeaponLoadout& loadout);
 
+    static entt::entity createPlayerLegs(
+        entt::registry& actors,
+        const sf::Vector2f& spawnPosition,
+        const GameTextureAtlas& atlas);
+
     static entt::entity createNpc(
         entt::registry& actors,
         const sf::Vector2f& spawnPosition,

@@ -40,6 +40,7 @@ struct [[nodiscard]] GameScene final
     GameStatus status;
     entt::registry actors;
     entt::entity playerEntity;
+    entt::entity playerEntityLower;
     dgm::Mesh levelMesh;
     dgm::Mesh decorationsMesh;
     dgm::Mesh altLevelMesh;

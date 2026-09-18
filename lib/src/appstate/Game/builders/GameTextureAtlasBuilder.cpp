@@ -40,9 +40,17 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         SkinType::PlayerDefault,
         atlas
             .addSpritesheet(
-                resmgr.get<sf::Texture>("scifi_soldier.png"),
-                resmgr.get<dgm::AnimationStates>("scifi_soldier.png.anim"))
+                resmgr.get<sf::Texture>("soldier_upper.png"),
+                resmgr.get<dgm::AnimationStates>("soldier_upper.png.anim"))
             .value());
+    skins.emplace(
+        SkinType::PlayerLower,
+        atlas
+            .addSpritesheet(
+                resmgr.get<sf::Texture>("soldier_lower.png"),
+                resmgr.get<dgm::AnimationStates>("soldier_lower.png.anim"))
+            .value());
+
     skins.emplace(
         SkinType::Bighead,
         atlas

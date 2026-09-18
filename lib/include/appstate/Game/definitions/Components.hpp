@@ -81,6 +81,12 @@ struct [[nodiscard]] Collider final
             },
             shape);
     }
+
+    void setPosition(const sf::Vector2f& vec)
+    {
+        std::visit(
+            overloads { [&vec](auto& b) { b.setPosition(vec); } }, shape);
+    }
 };
 
 struct [[nodiscard]] PhysicsBody final

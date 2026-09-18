@@ -4,6 +4,7 @@ enum class [[nodiscard]] SkinType : unsigned char
 {
     // Player
     PlayerDefault,
+    PlayerLower,
 
     // Npcs
     Bighead,

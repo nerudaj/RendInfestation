@@ -52,6 +52,12 @@ void RenderingEngine::update(const dgm::Time& time)
     timeElapsed += time.getDeltaTime();
 
     updateCameraPosition(time);
+
+    scene.actors.get<Collider>(scene.playerEntityLower)
+        .setPosition(
+            scene.actors.get<Collider>(scene.playerEntity).getPosition());
+    scene.actors.get<LookDirection>(scene.playerEntityLower) =
+        scene.actors.get<LookDirection>(scene.playerEntity);
 }
 
 void RenderingEngine::updateCameraPosition(const dgm::Time& time)

@@ -49,8 +49,9 @@ void AppStateMainMenu::buildLayout()
     {
         return builder
             .withContent(
-                builderFactory.createButtonListBuilder()
-                    .addButton(StringId::PlayButton, [&] { onPlay(); })
+                builderFactory
+                    .createButtonListBuilder()
+                    /*.addButton(StringId::PlayButton, [&] { onPlay(); })*/
                     .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
                     .addButton(StringId::Options, [&] { onOptions(); })
                     .addButton(

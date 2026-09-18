@@ -30,6 +30,7 @@ private:
     struct [[nodiscard]] LevelCreationArtifact final
     {
         entt::entity playerEntity = entt::null;
+        entt::entity playerEntityLower = entt::null;
         std::vector<LightSource> lights = {};
         std::vector<sf::Vector2f> enemySpawns = {};
         WeaponLoadout loadout = {};

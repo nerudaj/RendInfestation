@@ -80,6 +80,13 @@ void AnimationEngine::operator()(const event::ActorMoved& e)
         if (skin.animation.getStateName() == IDLE_ANIMATION_STATE)
             skin.animation.setState(WALK_ANIMATION_STATE, "looping"_true);
     }
+
+    if (skin.kind == EntityKind::Player)
+    {
+        auto&& lowerSkin = scene.actors.get<Skin>(scene.playerEntityLower);
+        if (lowerSkin.animation.getStateName() == IDLE_ANIMATION_STATE)
+            lowerSkin.animation.setState(WALK_ANIMATION_STATE, "looping"_true);
+    }
 }
 
 void AnimationEngine::operator()(const event::ActorStopped& e)
@@ -89,6 +96,13 @@ void AnimationEngine::operator()(const event::ActorStopped& e)
     {
         if (skin.animation.getStateName() == WALK_ANIMATION_STATE)
             skin.animation.setState(IDLE_ANIMATION_STATE, "looping"_true);
+    }
+
+    if (skin.kind == EntityKind::Player)
+    {
+        auto&& lowerSkin = scene.actors.get<Skin>(scene.playerEntityLower);
+        if (lowerSkin.animation.getStateName() == WALK_ANIMATION_STATE)
+            lowerSkin.animation.setState(IDLE_ANIMATION_STATE, "looping"_true);
     }
 }
 

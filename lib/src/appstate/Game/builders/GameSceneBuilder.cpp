@@ -71,6 +71,7 @@ GameScene GameSceneBuilder::createScene(
     return GameScene {
         .actors = std::move(actors),
         .playerEntity = artifact.playerEntity,
+        .playerEntityLower = artifact.playerEntityLower,
         .levelMesh = dgm::Mesh(
             level.meshLayer.data
                 | std::views::transform(
@@ -198,6 +199,9 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
                     atlas,
                     input,
                     result.loadout);
+
+                result.playerEntityLower = ActorBuilder::createPlayerLegs(
+                    actors, tileCoordToWorld(x, y), atlas);
             }
             else if (
                 level.decorLayer.data[idx] - 1 == DOOR_TILE_ID
