@@ -84,6 +84,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.spread *= 4;
             props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
             props.projectileLifetime = EXTENDED_PROJECTILE_LIFETIME;
+            props.soundId = SoundId::ShrapnelFire;
             return props;
         };
     case Push:
@@ -96,7 +97,6 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     case ExplosiveAmmo:
         return [](WeaponProperties props)
         {
-            props.soundId = SoundId::RocketLauncher;
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Explosive;
             if (props.projectileSkin == SkinType::Spikes)
@@ -105,6 +105,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             {
                 props.projectileSkin = SkinType::Rocket;
                 props.projectileSpeed /= 2.f;
+                props.soundId = SoundId::RocketLauncher;
             }
             props.kickback += 100.f;
             props.fireDelay *= 2.f;

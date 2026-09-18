@@ -10,7 +10,7 @@ namespace SoundId
     const IdType Bullet = "bullet.wav";
     const IdType Explosion = "rocket_explosion.wav";
     const IdType Shotgun = "shotgun.wav";
-    const IdType ShrapnelFire = "error.wav";
+    const IdType ShrapnelFire = "grenade_launcher_fire.wav";
     const IdType RocketLauncher = "zombie_cards_launcher.wav";
     const IdType ScuttlebugAttack = "TY_SLICE.wav";
     const IdType BigheadAttack = "infestation_bighead_attack.wav";
@@ -18,7 +18,7 @@ namespace SoundId
     const IdType BehemothAttack = "infestation_behemoth_attack.wav";
     const IdType ScuttlebugDeath = "infestation_scuttlebug_death.wav";
     const IdType BigheadDeath = "zombiecards_zombie_growl2.wav";
-    const IdType BeholderDeath = "error.wav";
+    const IdType BeholderDeath = "blood_spatter.wav";
     const IdType Crafting = "crafting.wav";
     const IdType TreeDestroyed = "error.wav";
 } // namespace SoundId
