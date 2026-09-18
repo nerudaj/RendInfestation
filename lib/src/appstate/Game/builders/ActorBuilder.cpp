@@ -134,7 +134,7 @@ entt::entity ActorBuilder::createNpc(
                 config.spriteOriginOffsetFromCollider,
         });
 
-    actors.emplace<Health>(entity, config.health);
+    actors.emplace<Health>(entity, config.health, config.deathSound);
     actors.emplace<WeaponInventory>(entity, 0, config.weapons);
 
     auto input = std::make_unique<NpcInput>();
