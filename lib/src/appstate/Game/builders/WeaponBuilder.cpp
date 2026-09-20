@@ -160,6 +160,7 @@ Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
     return Weapon {
         .soundId = properties.soundId,
         .cooldown = properties.fireDelay,
+        .cooldownBase = properties.fireDelay,
         .projectileLifetime = properties.projectileLifetime,
         .kickback = properties.kickback,
         .projectileSpeed = properties.projectileSpeed,

@@ -45,7 +45,17 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
 
     auto&& weapon = getActiveWeapon(weaponInventory);
     assert(weapon.timeTillFire <= sf::Time::Zero);
-    weapon.timeTillFire = weapon.cooldown;
+
+    if (weapon.projectileSkin == SkinType::TurretSpawner)
+    {
+        weapon.cooldown =
+            weapon.cooldownBase * static_cast<float>(scene.activeTurrets + 1);
+        weapon.timeTillFire = weapon.cooldown;
+    }
+    else
+    {
+        weapon.timeTillFire = weapon.cooldown;
+    }
 
     // TODO: might not be POV
     soundPlayer.playPovSound(weapon.soundId);

@@ -200,6 +200,7 @@ struct [[nodiscard]] Weapon final
 {
     SoundId::IdType soundId = SoundId::Bullet;
     sf::Time cooldown = sf::seconds(0.1f);
+    sf::Time cooldownBase = sf::seconds(0.1f);
     sf::Time timeTillFire = sf::seconds(0.f);
     sf::Time projectileLifetime = sf::seconds(0.f);
     float kickback = 0.f;

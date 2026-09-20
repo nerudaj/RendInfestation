@@ -57,6 +57,7 @@ struct [[nodiscard]] GameScene final
     std::optional<InteractionTriggerInventory> interactionTrigger =
         std::nullopt;
     int playerMaxHealth = BASE_PLAYER_HEALTH;
+    int activeTurrets = 0;
 
     void updatePlayerLoadout();
 };

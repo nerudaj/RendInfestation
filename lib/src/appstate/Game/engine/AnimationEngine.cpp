@@ -115,8 +115,11 @@ void AnimationEngine::operator()(const event::ActorDamaged& e)
 
 void AnimationEngine::update(const dgm::Time& time)
 {
+    scene.activeTurrets = 0;
     for (auto&& [actor, skin] : scene.actors.view<Skin>().each())
     {
+        if (skin.skinType == SkinType::Turret) ++scene.activeTurrets;
+
         auto status = skin.animation.update(time);
 
         if (status != dgm::Animation::PlaybackStatus::Finished) continue;
