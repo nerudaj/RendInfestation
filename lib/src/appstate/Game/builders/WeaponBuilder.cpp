@@ -70,6 +70,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.baseProjectileDamage /= 2;
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Passthru;
+            props.projectileSkin = SkinType::Hyperbeam;
             return props;
         };
 
