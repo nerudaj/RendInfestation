@@ -1,8 +1,8 @@
 {
     "defaults": {
         "frame": {
-            "width": 7,
-            "height": 7
+            "width": 9,
+            "height": 5
         },
         "spacing": {
             "horizontal": 2,
@@ -15,10 +15,10 @@
             "bounds": {
                 "left": 2,
                 "top": 2,
-                "width": 25,
-                "height": 7
+                "width": 9,
+                "height": 5
             },
-            "nframes": 3
+            "nframes": 1
         }
     ]
 }
