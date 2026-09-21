@@ -16,10 +16,10 @@ namespace SoundId
     const IdType ScuttlebugAttack = "TY_SLICE-2.wav";
     const IdType BigheadAttack = "infestation_bighead_attack-2.wav";
     const IdType BigheadRangedAttack = "error-2.wav";
-    const IdType BehemothAttack = "infestation_behemoth_attack-2.wav";
+    const IdType BehemothAttack = "error-2.wav";
     const IdType ScuttlebugDeath = "infestation_scuttlebug_death-2.wav";
     const IdType BigheadDeath = "zombiecards_zombie_growl2-2.wav";
     const IdType BeholderDeath = "blood_spatter-2.wav";
     const IdType Crafting = "crafting-2.wav";
-    const IdType TreeDestroyed = "error-2.wav";
+    const IdType TreeDestroyed = "infestation_behemoth_attack-2.wav";
 } // namespace SoundId
