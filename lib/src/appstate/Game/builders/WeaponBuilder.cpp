@@ -71,6 +71,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Passthru;
             props.projectileSkin = SkinType::Hyperbeam;
+            props.soundId = SoundId::Hyperbeam;
             return props;
         };
 

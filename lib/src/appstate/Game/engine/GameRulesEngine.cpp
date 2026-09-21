@@ -57,8 +57,19 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
         weapon.timeTillFire = weapon.cooldown;
     }
 
-    // TODO: might not be POV
-    soundPlayer.playPovSound(weapon.soundId);
+    if (e.entity == scene.playerEntity)
+    {
+        soundPlayer.playPovSound(weapon.soundId);
+    }
+    else
+    {
+        const auto&& distance =
+            (scene.actors.get<Collider>(scene.playerEntity).getPosition()
+             - shooterCollider.getPosition())
+                .length();
+        soundPlayer.playAttenuatedSound(
+            SoundChannel::Enemy, weapon.soundId, distance);
+    }
 
     const auto unitDirection = dgm::Math::toUnit(lookDirection.get());
     for (auto&& _ : std::views::iota(0, weapon.numShots))
