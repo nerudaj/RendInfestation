@@ -67,8 +67,7 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
             (scene.actors.get<Collider>(scene.playerEntity).getPosition()
              - shooterCollider.getPosition())
                 .length();
-        soundPlayer.playAttenuatedSound(
-            SoundChannel::Enemy, weapon.soundId, distance);
+        playAttenuated(weapon.soundId, shooterCollider);
     }
 
     const auto unitDirection = dgm::Math::toUnit(lookDirection.get());
@@ -102,14 +101,12 @@ void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
     auto&& inventory =
         scene.actors.get<ProjectileInventory>(e.projectileEntity);
 
-    const auto distance =
-        (scene.actors.get<Collider>(e.projectileEntity).getPosition()
-         - scene.actors.get<Collider>(scene.playerEntity).getPosition())
-            .length();
     if (inventory.traits & ProjectileTraits::Explosive)
     {
-        soundPlayer.playAttenuatedSound(
-            SoundChannel::Ambient, SoundId::Explosion, distance);
+        playAttenuated(
+            SoundId::Explosion,
+            scene.actors.get<Collider>(e.projectileEntity),
+            SoundChannel::Ambient);
     }
 
     if (inventory.traits & ProjectileTraits::SplitOnHit)
