@@ -13,7 +13,7 @@ AppStateMainMenu::AppStateMainMenu(
     : dgm::AppState(app), dic(dic)
 {
     buildLayout();
-    dic.jukebox.play("dstechnician-angry-robot-iii.ogg", "looping"_true);
+    dic.jukebox.play(JukeboxMode::Menu);
 }
 
 void AppStateMainMenu::input()

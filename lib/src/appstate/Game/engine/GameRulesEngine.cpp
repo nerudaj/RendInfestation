@@ -378,8 +378,15 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
                 atlas,
                 *inventory);
         }
-
-        eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        else if (inventory)
+        {
+            createDamageMarkerForProjectile(entity, inventory);
+            eventQueue.pushEvent<event::ProjectileDestroyed>(entity);
+        }
+        else
+        {
+            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        }
     }
 }
 
@@ -393,6 +400,12 @@ void GameRulesEngine::handleProjectileToActorCollision(
     if (!skin) return;
 
     if (skin->kind == inventory->originator) return;
+
+    const bool isPasshtruLandmine =
+        inventory->traits & ProjectileTraits::Passthru
+        && inventory->traits & ProjectileTraits::Explosive
+        && inventory->traits & ProjectileTraits::Shrapnels;
+    if (isPasshtruLandmine) return;
 
     createDamageMarkerForProjectile(projectile, inventory);
 
