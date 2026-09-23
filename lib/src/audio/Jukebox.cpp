@@ -3,7 +3,14 @@
 
 Jukebox::Jukebox(dgm::ResourceManager& resmgr) : resmgr(resmgr)
 {
-    workerThread = std::jthread([&](std::stop_token token) { worker(token); });
+    workerThread = std::thread(&Jukebox::worker, this);
+}
+
+Jukebox::~Jukebox()
+{
+    stopRequested = true;
+    cv.notify_all();
+    workerThread.join();
 }
 
 void Jukebox::setVolume(float newVolume)
@@ -48,7 +55,7 @@ void Jukebox::resume()
         cv.notify_one();
 }
 
-void Jukebox::worker(const std::stop_token& stopToken)
+void Jukebox::worker()
 {
     auto&& playOrResume = [&]
     {
@@ -69,7 +76,7 @@ void Jukebox::worker(const std::stop_token& stopToken)
         return playRandomTrack();
     };
 
-    while (!stopToken.stop_requested())
+    while (!stopRequested)
     {
         // While jukebox is off, wait until it is on
         if (status == JukeboxStatus::Off)
@@ -78,10 +85,7 @@ void Jukebox::worker(const std::stop_token& stopToken)
             cv.wait(
                 lock,
                 [&]()
-                {
-                    return status != JukeboxStatus::Off
-                           || stopToken.stop_requested();
-                });
+                { return status != JukeboxStatus::Off || stopRequested; });
         }
         else
         {
@@ -91,10 +95,7 @@ void Jukebox::worker(const std::stop_token& stopToken)
                 lock,
                 duration.toDuration(),
                 [&]()
-                {
-                    return status != JukeboxStatus::Running
-                           || stopToken.stop_requested();
-                });
+                { return status != JukeboxStatus::Running || stopRequested; });
         }
     }
 }

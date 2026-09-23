@@ -5,7 +5,6 @@
 #include <atomic>
 #include <mutex>
 #include <optional>
-#include <stop_token>
 #include <thread>
 
 enum class [[nodiscard]] JukeboxMode
@@ -29,11 +28,7 @@ public:
 
     Jukebox(const Jukebox&) = delete;
     Jukebox(Jukebox&&) = delete;
-
-    ~Jukebox()
-    {
-        cv.notify_all();
-    }
+    ~Jukebox();
 
 public:
     void setVolume(float newVolume);
@@ -45,7 +40,7 @@ public:
     void resume();
 
 private:
-    void worker(const std::stop_token& stopToken);
+    void worker();
 
     sf::Time playRandomTrack();
 
@@ -58,7 +53,8 @@ private:
     std::optional<std::string> currentTrackName;
     std::atomic<JukeboxMode> mode;
     std::atomic<JukeboxStatus> status;
+    std::atomic_bool stopRequested = false;
     std::mutex mutex;
-    std::jthread workerThread;
+    std::thread workerThread;
     std::condition_variable cv;
 };
