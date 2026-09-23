@@ -99,13 +99,17 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
     case ExplosiveAmmo:
         return [](WeaponProperties props)
         {
+            const bool isPassthru =
+                props.projectileTraits & ProjectileTraits::Passthru;
+            const bool isSpikes = props.projectileSkin == SkinType::Spikes;
+
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Explosive;
-            if (props.projectileSkin == SkinType::Spikes)
+            if (isSpikes)
                 props.projectileSkin = SkinType::Landmine;
             else
             {
-                props.projectileSkin = SkinType::Rocket;
+                if (!isPassthru) props.projectileSkin = SkinType::Rocket;
                 props.projectileSpeed /= 2.f;
                 props.soundId = SoundId::RocketLauncher;
             }

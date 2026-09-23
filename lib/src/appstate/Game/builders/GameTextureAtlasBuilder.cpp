@@ -152,8 +152,8 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         SkinType::Hyperbeam,
         atlas
             .addSpritesheet(
-                resmgr.get<sf::Texture>("projectile_wave.png"),
-                resmgr.get<dgm::AnimationStates>("projectile_wave.png.anim"))
+                resmgr.get<sf::Texture>("projectile_laser.png"),
+                resmgr.get<dgm::AnimationStates>("projectile_laser.png.anim"))
             .value());
 
     skins.emplace(
