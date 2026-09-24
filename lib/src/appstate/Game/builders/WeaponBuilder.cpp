@@ -202,7 +202,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
     case Slash:
         return Weapon {
             .soundId = SoundId::ScuttlebugAttack,
-            .cooldown = sf::seconds(0.5f),
+            .cooldownBase = sf::seconds(0.5f),
             .projectileLifetime = sf::Time::Zero,
             .kickback = 20.f,
             .projectileSpeed = 0.f,
@@ -216,7 +216,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
     case Slash2:
         return Weapon {
             .soundId = SoundId::GreaterScuttlebugAttack,
-            .cooldown = sf::seconds(0.5f),
+            .cooldownBase = sf::seconds(0.5f),
             .projectileLifetime = sf::Time::Zero,
             .kickback = 20.f,
             .projectileSpeed = 0.f,
@@ -230,7 +230,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
     case Headbutt:
         return Weapon {
             .soundId = SoundId::BigheadAttack,
-            .cooldown = sf::seconds(0.5f),
+            .cooldownBase = sf::seconds(0.5f),
             .projectileLifetime = sf::Time::Zero,
             .kickback = 20.f,
             .projectileSpeed = 0.f,
@@ -244,7 +244,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
     case BounceBall:
         return Weapon {
             .soundId = SoundId::BigheadRangedAttack,
-            .cooldown = sf::seconds(1.5f),
+            .cooldownBase = sf::seconds(1.5f),
             .projectileLifetime = BASE_PROJECTILE_LIFETIME,
             .kickback = 50.f,
             .projectileSpeed = BASE_PROJECTILE_SPEED / 2.f,
@@ -259,7 +259,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
     case Fireball:
         return Weapon {
             .soundId = SoundId::BehemothAttack,
-            .cooldown = sf::seconds(1.5f),
+            .cooldownBase = sf::seconds(1.5f),
             .projectileLifetime = BASE_PROJECTILE_LIFETIME,
             .kickback = 10.f,
             .projectileSpeed = BASE_PROJECTILE_SPEED / 3.f,
