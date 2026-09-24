@@ -39,12 +39,12 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
         SkinType::ScuttlebugBlue,
         EnemyConfig {
             .health = BASE_PROJECTILE_DAMAGE * 6,
-            .deathSound = SoundId::ScuttlebugDeath,
+            .deathSound = SoundId::GreaterScuttlebugDeath,
             .speed = BASE_ENEMY_SPEED * 1.1f,
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
             .weapons = { WeaponBuilder::createEnemyWeapon(
                 static_cast<int>(BASE_MELEE_DAMAGE * 1.5f),
-                EnemyWeaponKind::Slash) },
+                EnemyWeaponKind::Slash2) },
             .semighostFlags = SEMIGHOST_NPC | SEMIGHOST_CRAWLER,
             .npcKind = NpcKind::GreaterScuttlebug,
             .zindex = ZIndex(ZINDEX_LITTLE),

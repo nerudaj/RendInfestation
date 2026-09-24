@@ -213,6 +213,20 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
                     .originator = EntityKind::Npc,
                 },
         };
+    case Slash2:
+        return Weapon {
+            .soundId = SoundId::GreaterScuttlebugAttack,
+            .cooldown = sf::seconds(0.5f),
+            .projectileLifetime = sf::Time::Zero,
+            .kickback = 20.f,
+            .projectileSpeed = 0.f,
+            .projectileSkin = SkinType::SmallBullet,
+            .defaultProjectileInventory =
+                ProjectileInventory {
+                    .damage = damage,
+                    .originator = EntityKind::Npc,
+                },
+        };
     case Headbutt:
         return Weapon {
             .soundId = SoundId::BigheadAttack,

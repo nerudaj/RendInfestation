@@ -103,7 +103,7 @@ ResourceLoader::loadResources(const std::filesystem::path& assetDir)
         "graphics", { ".anim" }, DgmLoader::loadAnimationStates);
     loader.loadOrThrow<dgm::Clip>("graphics", { ".clip" }, DgmLoader::loadClip);
     loader.loadOrThrow<sf::SoundBuffer>(
-        "sounds", { ".wav" }, SfmlLoader::loadSound);
+        "sounds", { ".wav", ".ogg" }, SfmlLoader::loadSound);
     loader.loadOrThrow<sf::Music>(
         "music", { ".ogg", ".wav" }, SfmlLoader::loadSong);
     loader.loadOrThrow<tiled::FiniteMapModel>(
