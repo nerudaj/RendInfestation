@@ -204,8 +204,6 @@ AppStateChooseBonus::generatePickerSelection()
     }
 
     assert(sortablePool.size() >= 2);
-    sortablePool[0] = WeaponModule::PassthruAmmo;
-    sortablePool[1] = WeaponModule::ExplosiveAmmo;
     return { sortablePool[0], sortablePool[1] };
 }
 
