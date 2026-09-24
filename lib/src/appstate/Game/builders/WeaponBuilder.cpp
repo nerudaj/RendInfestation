@@ -87,6 +87,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
             props.projectileLifetime = EXTENDED_PROJECTILE_LIFETIME;
             props.soundId = SoundId::ShrapnelFire;
+            props.progressiveCooldownRate = 0.05f;
             return props;
         };
     case Push:
@@ -106,7 +107,10 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.projectileTraits =
                 props.projectileTraits | ProjectileTraits::Explosive;
             if (isSpikes)
+            {
                 props.projectileSkin = SkinType::Landmine;
+                props.progressiveCooldownRate = 0.1f;
+            }
             else
             {
                 if (!isPassthru) props.projectileSkin = SkinType::Rocket;
@@ -138,6 +142,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.baseProjectileDamage /= 1.5f;
             props.projectileLifetime = sf::seconds(0.5f);
             props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
+            props.progressiveCooldownRate = 1.f;
             return props;
         };
     }
@@ -184,6 +189,7 @@ Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
                                   { return mod != WeaponModule::Turret; })
                               | uni::ranges::to<std::vector>(),
             },
+        .progressiveCooldownRate = properties.progressiveCooldownRate,
     };
 }
 

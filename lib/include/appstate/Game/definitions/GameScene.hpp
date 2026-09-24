@@ -57,7 +57,9 @@ struct [[nodiscard]] GameScene final
     std::optional<InteractionTriggerInventory> interactionTrigger =
         std::nullopt;
     int playerMaxHealth = BASE_PLAYER_HEALTH;
-    int activeTurrets = 0;
+
+    // recomputed each frame, used for progressive cooldowns
+    std::map<SkinType, unsigned> skinCounts = {};
 
     void updatePlayerLoadout();
 };

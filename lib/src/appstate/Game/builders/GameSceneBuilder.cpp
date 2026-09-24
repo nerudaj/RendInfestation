@@ -65,7 +65,10 @@ GameScene GameSceneBuilder::createScene(
     }
     else
     { // Survival
-        artifact.unlockedModules = {};
+        artifact.unlockedModules = { WeaponModule::ExplosiveAmmo,
+                                     WeaponModule::Turret,
+                                     WeaponModule::Spikes,
+                                     WeaponModule::CadenceBarrel };
     }
 
     return GameScene {

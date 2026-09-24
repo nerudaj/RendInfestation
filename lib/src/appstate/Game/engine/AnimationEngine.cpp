@@ -115,10 +115,12 @@ void AnimationEngine::operator()(const event::ActorDamaged& e)
 
 void AnimationEngine::update(const dgm::Time& time)
 {
-    scene.activeTurrets = 0;
+    scene.skinCounts.clear();
     for (auto&& [actor, skin] : scene.actors.view<Skin>().each())
     {
-        if (skin.skinType == SkinType::Turret) ++scene.activeTurrets;
+        scene.skinCounts
+            [skin.skinType == SkinType::Turret ? SkinType::TurretSpawner
+                                               : skin.skinType]++;
 
         auto status = skin.animation.update(time);
 

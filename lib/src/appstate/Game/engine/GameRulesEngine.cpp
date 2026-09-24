@@ -46,16 +46,11 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     auto&& weapon = getActiveWeapon(weaponInventory);
     assert(weapon.timeTillFire <= sf::Time::Zero);
 
-    if (weapon.projectileSkin == SkinType::TurretSpawner)
-    {
-        weapon.cooldown =
-            weapon.cooldownBase * static_cast<float>(scene.activeTurrets + 1);
-        weapon.timeTillFire = weapon.cooldown;
-    }
-    else
-    {
-        weapon.timeTillFire = weapon.cooldown;
-    }
+    const auto count = scene.skinCounts[weapon.projectileSkin];
+    weapon.cooldown = weapon.cooldownBase
+                      + (count == 0 ? 0u : count - 1u)
+                            * weapon.progressiveCooldownRate
+                            * weapon.cooldownBase;
 
     if (e.entity == scene.playerEntity)
     {
@@ -377,6 +372,7 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
                 scene.actors.get<Collider>(entity).getPosition(),
                 atlas,
                 *inventory);
+            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
         }
         else if (inventory)
         {

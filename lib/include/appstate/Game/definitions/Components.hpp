@@ -210,6 +210,7 @@ struct [[nodiscard]] Weapon final
     int numShots = 1;
     SkinType projectileSkin = SkinType::SmallBullet;
     ProjectileInventory defaultProjectileInventory;
+    float progressiveCooldownRate = 0.f;
 };
 
 struct [[nodiscard]] WeaponInventory final

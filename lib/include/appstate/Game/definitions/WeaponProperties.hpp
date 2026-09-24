@@ -19,4 +19,5 @@ struct [[nodiscard]] WeaponProperties final
     float projectileSpeedVariance = 0.f;
     ProjectileTraits projectileTraits = ProjectileTraits::None;
     SkinType projectileSkin = SkinType::SmallBullet;
+    float progressiveCooldownRate = 0.f;
 };
