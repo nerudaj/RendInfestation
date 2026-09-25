@@ -10,12 +10,12 @@ struct [[nodiscard]] Playlist final
 };
 
 const Playlist PLAYLIST = Playlist {
-    .menuSongs = { "01 Dance of Anarchy.ogg" },
-    .gameSongs = { "01 Dance of Anarchy.ogg",
-                   "02 Smartphone Zombies.ogg",
-                   "03 The men with fake names.ogg",
-                   "04 Sofamusik.ogg",
-                   "06 When the freaks are coming home.ogg",
-                   "07 Sounds from yesterday.ogg",
-                   "08 The old Technomachine.ogg" },
+    .menuSongs = { "01_Dance_of_Anarchy.ogg" },
+    .gameSongs = { "01_Dance_of_Anarchy.ogg",
+                   "02_Smartphone_Zombies.ogg",
+                   "03_The_men_with_fake_names.ogg",
+                   "04_Sofamusik.ogg",
+                   "06_When_the_freaks_are_coming_home.ogg",
+                   "07_Sounds_from_yesterday.ogg",
+                   "08_The_old_Technomachine.ogg" },
 };
