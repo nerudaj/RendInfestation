@@ -10,7 +10,7 @@ set ( DGM_ENABLE_LEGACY_ANIMATION OFF )
 
 CPMAddPackage("gh:nerudaj/dgm-engine-core-lib#${DGM_ENGINE_CORE_LIB_VERSION}")
 CPMAddPackage("gh:jarro2783/cxxopts#v${CXXOPTS_VERSION}")
-CPMAddPackage("gh:nlohmann/json#v${NLOHMANN_VERSION}")
+CPMAddPackage("gh:nerudaj/json#v${NLOHMANN_VERSION}")
 CPMAddPackage("gh:skypjack/entt@${ENTT_VERSION}")
 CPMAddPackage("gh:nerudaj/fsm-lib#${FSM_LIB_VERSION}") 
 AddCatch( "${CATCH2_VERSION}" )
