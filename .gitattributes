@@ -2,4 +2,5 @@
 * text eol=lf
 *.png binary
 *.wav binary
+*.ogg binary
 *.ttf binary

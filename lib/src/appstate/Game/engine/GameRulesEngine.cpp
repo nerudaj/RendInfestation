@@ -53,8 +53,6 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
                             * weapon.cooldownBase;
     weapon.timeTillFire = weapon.cooldown;
 
-    std::cerr << "Cooldown: " << weapon.cooldown.asSeconds() << std::endl;
-
     if (e.entity == scene.playerEntity)
     {
         soundPlayer.playPovSound(weapon.soundId);
