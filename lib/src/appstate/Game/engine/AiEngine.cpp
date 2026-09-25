@@ -407,6 +407,12 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBighead(AiEngine& self)
 
 fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
 {
+    auto&& isTargetEligibleForAttacking = [&](const NpcBlackboard& bb)
+    {
+        return self.isTargetValidAndVisibleAndInShootingRange(bb)
+               && self.scene.skinCounts[SkinType::Fireball] <= 2;
+    };
+
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
         .withErrorMachine()
@@ -417,7 +423,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
             .done()
         .withMainMachine()
             .withEntryState("Start")
-                .when(CONDITION(isTargetValidAndVisibleAndInShootingRange))
+                .when(isTargetEligibleForAttacking)
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisibleOnAltMesh))
                     .goToState("InvalidateWaypoint")
@@ -429,7 +435,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
                 .exec(ACTION(invalidateWaypoint))
                 .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
-                .when(CONDITION(isTargetInShootingRange))
+                .when(isTargetEligibleForAttacking)
                     .goToState("Attack")
                 .orWhen(NOT(isTargetVisible))
                     .goToState("Start")
