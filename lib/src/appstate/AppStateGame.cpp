@@ -1,4 +1,5 @@
 #include "appstate/AppStateGame.hpp"
+#include "appstate/AppStateDimmer.hpp"
 #include "appstate/AppStatePause.hpp"
 #include "appstate/AppStateSurvivalGameOver.hpp"
 #include "appstate/AppStateWeaponModification.hpp"
@@ -64,7 +65,17 @@ void AppStateGame::update()
 
     if (scene.status.finished)
     {
-        app.pushState<AppStateSurvivalGameOver>(dic, scene.status);
+        AppStateTransitions::applyFadeOutThenInTransition<
+            AppStateSurvivalGameOver>(
+            app,
+            FadeInOptions(FadeOptions {
+                .duration = sf::seconds(2.f),
+            }),
+            FadeOutOptions(FadeOptions {
+                .duration = sf::seconds(1.f),
+            }),
+            dic,
+            scene.status);
     }
 }
 

@@ -44,6 +44,7 @@ void AppStateInputDetector::buildLayout()
     layout->add(innerLayout);
 
     auto panel = tgui::Panel::create();
+    panel->setRenderer(tgui::Theme::getDefault()->getRenderer("LightPanel"));
     innerLayout->add(panel);
 
     auto labelLayout = tgui::Group::create({ "100%", "70%" });
@@ -53,6 +54,7 @@ void AppStateInputDetector::buildLayout()
         dic.strings.getString(StringId::ReleaseAllInputs),
         dic.sizer,
         "justify"_true);
+    label->getRenderer()->setTextColor(tgui::Color::Black);
     panel->add(label, LABEL_ID);
 }
 

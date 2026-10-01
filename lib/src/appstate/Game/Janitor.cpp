@@ -4,7 +4,7 @@ void Janitor::cleanScene(GameScene& scene)
 {
     for (auto&& entity : objectsToClean)
     {
-        scene.actors.destroy(entity);
+        if (entity != scene.playerEntity) scene.actors.destroy(entity);
     }
 
     objectsToClean.clear();

@@ -1,4 +1,5 @@
 #include "appstate/AppStateMainMenu.hpp"
+#include "appstate/AppStateDimmer.hpp"
 #include "appstate/AppStateGame.hpp"
 #include "appstate/AppStateOptions.hpp"
 #include "appstate/CommonHandler.hpp"
@@ -44,14 +45,13 @@ void AppStateMainMenu::buildLayout()
 {
     auto& builderFactory = dic.guiBuilderFactory;
 
-    auto createDesktopLayout =
-        [&](priv::LayoutBuilderWithBackgroundAndTitle<StringId>& builder)
-    {
-        return builder
+    dic.gui.rebuildWith(
+        builderFactory.createDefaultLayoutBuilder()
+            .withBackgroundImage(
+                dic.resmgr.get<tgui::Texture>("main_screen.png"))
+            .withTitle(StringId::GameTitle, HeadingLevel::H1)
             .withContent(
-                builderFactory
-                    .createButtonListBuilder()
-                    /*.addButton(StringId::PlayButton, [&] { onPlay(); })*/
+                builderFactory.createButtonListBuilder()
                     .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
                     .addButton(StringId::Options, [&] { onOptions(); })
                     .addButton(
@@ -59,40 +59,7 @@ void AppStateMainMenu::buildLayout()
                         [&] { onExit(); },
                         "MainMenu_Button_Exit")
                     .build())
-            .withNoCornerButtons();
-    };
-
-    auto createAndroidLayout =
-        [&](priv::LayoutBuilderWithBackgroundAndTitle<StringId>& builder)
-    {
-        return builder
-            .withContent(
-                builderFactory.createButtonListBuilder()
-                    .addButton(StringId::PlayButton, [&] { onPlay(); })
-                    .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
-                    .addButton(
-                        StringId::ExitButton,
-                        [&] { onExit(); },
-                        "MainMenu_Button_Exit")
-                    .build())
-            .withNoTopLeftButton()
-            .withTopRightButton(
-                dic.getIcon(Icon::Settings), [&] { onOptions(); })
-            .withNoBottomLeftButton()
-            .withNoBottomRightButton();
-    };
-
-    auto&& builderWithTitle =
-        builderFactory.createDefaultLayoutBuilder()
-            .withNoBackground()
-            .withTitle(StringId::GameTitle, HeadingLevel::H1);
-
-    dic.gui.rebuildWith(
-#ifdef ANDROID
-        createAndroidLayout(builderWithTitle)
-#else
-        createDesktopLayout(builderWithTitle)
-#endif
+            .withNoCornerButtons()
             .build());
 }
 
@@ -108,7 +75,12 @@ void AppStateMainMenu::onPlay()
 
 void AppStateMainMenu::onSurvival()
 {
-    app.pushState<AppStateGame>(
+    // TODO: not perceptible due to long loading times
+    AppStateTransitions::applyFadeInTransition<AppStateGame>(
+        app,
+        FadeInOptions(FadeOptions {
+            .duration = sf::seconds(1.f),
+        }),
         dic,
         GameModeProperties {
             .mode = GameMode::Survival,
