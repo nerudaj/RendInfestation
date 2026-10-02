@@ -9,6 +9,11 @@ Panel
 	TextureBackground = "pixel-ui-scifi.png" Part(52, 104, 48, 48) Middle(16, 16, 16, 16);
 }
 
+LightPanel
+{
+	TextureBackground = "pixel-ui-scifi.png" Part(104, 208, 48, 48) Middle(16, 16, 16, 16);
+}
+
 SelectablePanel
 {
 	TextureBackground = "pixel-ui-scifi.png" Part(0, 0, 48, 48) Middle(16, 16, 16, 16);
