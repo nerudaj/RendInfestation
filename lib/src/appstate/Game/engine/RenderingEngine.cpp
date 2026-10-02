@@ -53,11 +53,14 @@ void RenderingEngine::update(const dgm::Time& time)
 
     updateCameraPosition(time);
 
-    scene.actors.get<Collider>(scene.playerEntityLower)
-        .setPosition(
-            scene.actors.get<Collider>(scene.playerEntity).getPosition());
-    scene.actors.get<LookDirection>(scene.playerEntityLower) =
-        scene.actors.get<LookDirection>(scene.playerEntity);
+    if (scene.playerEntityLower != entt::null)
+    {
+        scene.actors.get<Collider>(scene.playerEntityLower)
+            .setPosition(
+                scene.actors.get<Collider>(scene.playerEntity).getPosition());
+        scene.actors.get<LookDirection>(scene.playerEntityLower) =
+            scene.actors.get<LookDirection>(scene.playerEntity);
+    }
 }
 
 void RenderingEngine::updateCameraPosition(const dgm::Time& time)

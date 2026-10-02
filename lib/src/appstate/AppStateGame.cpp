@@ -63,16 +63,17 @@ void AppStateGame::update()
 
     ++scene.tick;
 
-    if (scene.status.finished)
+    if (scene.status.finished && AppState::hasFocus)
     {
         AppStateTransitions::applyFadeOutThenInTransition<
             AppStateSurvivalGameOver>(
             app,
             FadeInOptions(FadeOptions {
-                .duration = sf::seconds(2.f),
+                .duration = sf::seconds(1.f),
             }),
             FadeOutOptions(FadeOptions {
-                .duration = sf::seconds(1.f),
+                .duration = sf::seconds(2.f),
+                .shouldSimulateUnderlyingState = true,
             }),
             dic,
             scene.status);

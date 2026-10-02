@@ -160,8 +160,9 @@ namespace AppStateTransitions
     public:
         void input() override
         {
-            if (timer >= targetTime)
+            if (timer >= targetTime && !transitioned)
             {
+                transitioned = true;
                 std::apply(
                     [&](Params&&... ps)
                     {
@@ -200,6 +201,7 @@ namespace AppStateTransitions
         sf::Time targetTime;
         sf::RectangleShape overlay;
         FadeInOptions fadeInOptions;
+        bool transitioned = false;
     };
 
     template<class TargetState, class... Params>

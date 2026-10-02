@@ -81,7 +81,8 @@ void AnimationEngine::operator()(const event::ActorMoved& e)
             skin.animation.setState(WALK_ANIMATION_STATE, "looping"_true);
     }
 
-    if (skin.kind == EntityKind::Player)
+    if (skin.kind == EntityKind::Player
+        && scene.playerEntityLower != entt::null)
     {
         auto&& lowerSkin = scene.actors.get<Skin>(scene.playerEntityLower);
         if (lowerSkin.animation.getStateName() == IDLE_ANIMATION_STATE)
@@ -98,7 +99,8 @@ void AnimationEngine::operator()(const event::ActorStopped& e)
             skin.animation.setState(IDLE_ANIMATION_STATE, "looping"_true);
     }
 
-    if (skin.kind == EntityKind::Player)
+    if (skin.kind == EntityKind::Player
+        && scene.playerEntityLower != entt::null)
     {
         auto&& lowerSkin = scene.actors.get<Skin>(scene.playerEntityLower);
         if (lowerSkin.animation.getStateName() == WALK_ANIMATION_STATE)
@@ -109,8 +111,23 @@ void AnimationEngine::operator()(const event::ActorStopped& e)
 void AnimationEngine::operator()(const event::ActorDamaged& e)
 {
     auto& skin = scene.actors.get<Skin>(e.entity);
-    if (skin.skinType == SkinType::Prop) return;
+    if (skin.skinType == SkinType::Prop)
+        return;
+    else if (skin.animation.getStateName() == "death")
+        return;
     skin.animation.setState(HURT_ANIMATION_STATE, "looping"_false);
+}
+
+void AnimationEngine::operator()(const event::ObjectDestroyed& e)
+{
+    if (e.entity == scene.playerEntity && scene.playerEntityLower != entt::null)
+    {
+        auto& skin = scene.actors.get<Skin>(e.entity);
+        skin.animation.setState("death", "looping"_false);
+
+        scene.actors.destroy(scene.playerEntityLower);
+        scene.playerEntityLower = entt::null;
+    }
 }
 
 void AnimationEngine::update(const dgm::Time& time)
