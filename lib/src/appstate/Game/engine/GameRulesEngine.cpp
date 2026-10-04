@@ -172,13 +172,14 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
     // turrets also have entity kind player
     else if (
         skin && skin->skinType == SkinType::PlayerDefault
-        && skin->kind == EntityKind::Player && scene.playerEntityLower != entt::null)
+        && skin->kind == EntityKind::Player
+        && scene.playerEntityLower != entt::null)
     {
         // TODO: sound
         scene.status.finished = true;
         scene.actors.destroy(scene.playerEntityLower);
         scene.playerEntityLower = entt::null;
-        scene.actors.remove<Input>(e.entity);
+        scene.actors.remove<EntityInput>(e.entity);
         scene.actors.remove<Health>(e.entity);
     }
 }
