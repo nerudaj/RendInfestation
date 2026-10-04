@@ -15,7 +15,9 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
         scene.actors.get<Collider, PhysicsBody, ProjectileInventory, Skin>(
             e.projectileEntity);
 
-    if (inventory.traits & ProjectileTraits::Explosive)
+    const bool isExplosive = inventory.traits & ProjectileTraits::Explosive;
+    const bool isPassthru = inventory.traits & ProjectileTraits::Passthru;
+    if (isExplosive)
     {
         auto kind = [scale = skin.scale]
         {
@@ -29,7 +31,9 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
             scene.actors,
             collider.getPosition(),
             sf::Vector2 { 1.f, 0.f },
-            kind);
+            isPassthru
+                ? static_cast<ParticleSystemKind>(std::to_underlying(kind) + 3)
+                : kind);
     }
     else if (skin.skinType == SkinType::Fireball)
     {
@@ -45,7 +49,8 @@ void AnimationEngine::operator()(const event::ProjectileDestroyed& e)
             scene.actors,
             collider.getPosition(),
             dgm::Math::toUnit(body.forward),
-            ParticleSystemKind::ProjectileImpact);
+            isPassthru ? ParticleSystemKind::ProjectileImpactPink
+                       : ParticleSystemKind::ProjectileImpact);
     }
 }
 
