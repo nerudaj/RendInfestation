@@ -1,6 +1,7 @@
 #include "appstate/AppStateSurvivalLevelSelect.hpp"
 #include "appstate/AppStateDimmer.hpp"
 #include "appstate/AppStateGame.hpp"
+#include "appstate/AppStateLoading.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "strings/StringId.hpp"
 
@@ -112,11 +113,5 @@ void AppStateSurvivalLevelSelect::onBack()
 
 void AppStateSurvivalLevelSelect::onPlay()
 {
-    AppStateTransitions::applyFadeInTransition<AppStateGame>(
-        app,
-        FadeInOptions(FadeOptions {
-            .duration = sf::seconds(1.f),
-        }),
-        dic,
-        gameProps);
+    app.pushState<AppStateLoading>(dic, gameProps);
 }

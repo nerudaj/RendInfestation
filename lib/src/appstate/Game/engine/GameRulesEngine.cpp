@@ -59,10 +59,6 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     }
     else
     {
-        const auto&& distance =
-            (scene.actors.get<Collider>(scene.playerEntity).getPosition()
-             - shooterCollider.getPosition())
-                .length();
         playAttenuated(weapon.soundId, shooterCollider);
     }
 

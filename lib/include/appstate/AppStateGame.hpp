@@ -2,8 +2,6 @@
 
 #include "appstate/AppStateChooseBonus.hpp"
 #include "appstate/Game/Janitor.hpp"
-#include "appstate/Game/builders/GameSceneBuilder.hpp"
-#include "appstate/Game/builders/GameTextureAtlasBuilder.hpp"
 #include "appstate/Game/definitions/GameMode.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
@@ -26,13 +24,12 @@ public:
     AppStateGame(
         dgm::App& app,
         DependencyContainer& dic,
-        const GameModeProperties& gameModeProperties)
+        const GameTextureAtlas& atlas,
+        GameScene& scene)
         : dgm::AppState(app)
         , dic(dic)
-        , atlas(GameTextureAtlasBuilder::createTextureAtlas(
-              dic.resmgr, { 2048, 2048 }))
-        , scene(GameSceneBuilder::createScene(
-              atlas, dic.resmgr, dic.input, gameModeProperties))
+        , atlas(atlas)
+        , scene(scene)
         , aiEngine(scene)
         , gameRulesEngine(gameEvents, scene, atlas, dic.input, dic.soundPlayer)
         , animationEngine(scene, gameEvents, atlas)
@@ -68,8 +65,8 @@ private:
 
 private:
     DependencyContainer& dic;
-    GameTextureAtlas atlas;
-    GameScene scene;
+    const GameTextureAtlas& atlas;
+    GameScene& scene;
     EventQueue<GameEvent> gameEvents;
     AiEngine aiEngine;
     GameRulesEngine gameRulesEngine;

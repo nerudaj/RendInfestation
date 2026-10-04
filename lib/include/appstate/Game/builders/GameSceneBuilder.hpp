@@ -1,3 +1,5 @@
+#pragma once
+
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/GameMode.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"

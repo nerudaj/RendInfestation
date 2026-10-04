@@ -144,7 +144,7 @@ void RenderingEngine::addLevelFacesToPipeline()
 {
     for (auto y = 0u, idx = 0u; y < scene.levelMesh.getDataSize().y; ++y)
     {
-        for (auto x = 0; x < scene.levelMesh.getDataSize().x; ++x, ++idx)
+        for (auto x = 0u; x < scene.levelMesh.getDataSize().x; ++x, ++idx)
         {
             auto pos = sf::Vector2f(scene.levelMesh.getVoxelSize()) / 2.f
                        + sf::Vector2f {

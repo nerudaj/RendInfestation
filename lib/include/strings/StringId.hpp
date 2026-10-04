@@ -12,6 +12,7 @@ enum class [[nodiscard]] StringId
     PauseTitle,
     ExitButton,
     Back,
+    Loading,
 
     // Survival Level Select
     SurvivalLevelSelect,
