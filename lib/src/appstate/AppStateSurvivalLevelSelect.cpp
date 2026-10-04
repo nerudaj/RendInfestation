@@ -60,9 +60,9 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
 
     auto&& dropdownRow = WidgetBuilder::createRow(dic.sizer);
     dropdownRow->add(WidgetBuilder::createDropdown(
-        { "survival-02.json" },
-        "survival-02.json",
-        [&](size_t idx) { gameProps.mapName = "survival-02.json"; },
+        LEVEL_NAMES,
+        LEVEL_NAMES.front(),
+        [&](size_t idx) { gameProps.mapName = LEVEL_IDS[idx]; },
         dic.sizer));
     vbox->add(dropdownRow, "DropdownRow");
 
@@ -118,8 +118,5 @@ void AppStateSurvivalLevelSelect::onPlay()
             .duration = sf::seconds(1.f),
         }),
         dic,
-        GameModeProperties {
-            .mode = GameMode::Survival,
-            .mapName = "survival-02.json",
-        });
+        gameProps);
 }

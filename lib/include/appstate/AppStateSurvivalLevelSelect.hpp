@@ -28,6 +28,16 @@ private:
     void onPlay();
 
 private:
+    const static inline std::vector<std::string> LEVEL_NAMES = {
+        "  Landing pad", "  Botany bay", "  Labs"
+    };
+    const static inline std::vector<std::string> LEVEL_IDS = {
+        "survival-02.json", "survival-03.json", "survival-04.json"
+    };
+
     DependencyContainer& dic;
-    GameModeProperties gameProps = {};
+    GameModeProperties gameProps = {
+        .mode = GameMode::Survival,
+        .mapName = LEVEL_IDS.front(),
+    };
 };
