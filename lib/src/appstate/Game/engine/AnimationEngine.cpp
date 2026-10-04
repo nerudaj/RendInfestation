@@ -120,13 +120,10 @@ void AnimationEngine::operator()(const event::ActorDamaged& e)
 
 void AnimationEngine::operator()(const event::ObjectDestroyed& e)
 {
-    if (e.entity == scene.playerEntity && scene.playerEntityLower != entt::null)
+    if (e.entity == scene.playerEntity)
     {
         auto& skin = scene.actors.get<Skin>(e.entity);
         skin.animation.setState("death", "looping"_false);
-
-        scene.actors.destroy(scene.playerEntityLower);
-        scene.playerEntityLower = entt::null;
     }
 }
 
