@@ -68,12 +68,12 @@ void AppStateGame::update()
         AppStateTransitions::applyFadeOutThenInTransition<
             AppStateSurvivalGameOver>(
             app,
-            FadeInOptions(FadeOptions {
-                .duration = sf::seconds(1.f),
-            }),
             FadeOutOptions(FadeOptions {
                 .duration = sf::seconds(2.f),
                 .shouldSimulateUnderlyingState = true,
+            }),
+            FadeInOptions(FadeOptions {
+                .duration = sf::seconds(1.f),
             }),
             dic,
             scene.status);

@@ -4,8 +4,9 @@ namespace SoundId
 {
     using IdType = const char*;
 
-    const IdType Error = "error-2.wav";
-    const IdType Click = "click-2.wav";
+    const IdType Error = "Tone1C_Double.wav";
+    const IdType Click = "Click_Mid-High.wav";
+    const IdType ButtonHover = "Ting_Pitched_Down.wav";
     const IdType Land = "land-2.wav";
     const IdType Bullet = "bullet-2.wav";
     const IdType Explosion = "rocket_explosion-2.wav";

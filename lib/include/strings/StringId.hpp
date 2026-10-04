@@ -13,6 +13,15 @@ enum class [[nodiscard]] StringId
     ExitButton,
     Back,
 
+    // Survival Level Select
+    SurvivalLevelSelect,
+    SelectMap,
+    SelectBoon,
+    BoonLocked,
+    BoonWave4,
+    BoonWave8,
+    BoonExtraWeapon,
+
     // Options
     Apply,
     VideoOptionsTab,

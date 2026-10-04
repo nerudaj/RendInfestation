@@ -1,7 +1,6 @@
 #include "appstate/AppStateMainMenu.hpp"
-#include "appstate/AppStateDimmer.hpp"
-#include "appstate/AppStateGame.hpp"
 #include "appstate/AppStateOptions.hpp"
+#include "appstate/AppStateSurvivalLevelSelect.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Game/definitions/GameMode.hpp"
 #include "gui/Icon.hpp"
@@ -65,27 +64,17 @@ void AppStateMainMenu::buildLayout()
 
 void AppStateMainMenu::onPlay()
 {
-    app.pushState<AppStateGame>(
+    /*app.pushState<AppStateGame>(
         dic,
         GameModeProperties {
             .mode = GameMode::Story,
             .mapName = "demo-01.json",
-        });
+        });*/
 }
 
 void AppStateMainMenu::onSurvival()
 {
-    // TODO: not perceptible due to long loading times
-    AppStateTransitions::applyFadeInTransition<AppStateGame>(
-        app,
-        FadeInOptions(FadeOptions {
-            .duration = sf::seconds(1.f),
-        }),
-        dic,
-        GameModeProperties {
-            .mode = GameMode::Survival,
-            .mapName = "survival-02.json",
-        });
+    app.pushState<AppStateSurvivalLevelSelect>(dic);
 }
 
 void AppStateMainMenu::onOptions()

@@ -223,8 +223,8 @@ namespace AppStateTransitions
     template<class TargetState, class... Params>
     static void applyFadeOutThenInTransition(
         dgm::App& app,
-        const FadeInOptions& fadeInOptions,
         const FadeOutOptions& fadeOutOptions,
+        const FadeInOptions& fadeInOptions,
         Params&&... params)
     {
         app.pushState<AppStateFadeOutThenIn<TargetState, Params...>>(

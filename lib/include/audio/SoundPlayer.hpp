@@ -56,6 +56,11 @@ public: // GuiAudioInterface
         std::ignore = playPovSound(SoundId::Click);
     }
 
+    void playWidgetHoverEffect() override
+    {
+        std::ignore = playPovSound(SoundId::ButtonHover);
+    }
+
 private:
     sf::Time playSound(
         SoundId::IdType soundId,

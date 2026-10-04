@@ -15,6 +15,15 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { ExitButton, "Exit" },
     { Back, "Back" },
 
+    // Survival Level Select
+    { SurvivalLevelSelect, "Map selection" },
+    { SelectMap, "Map" },
+    { SelectBoon, "Boons" },
+    { BoonLocked, "- Locked -" },
+    { BoonWave4, "Start at wave 4" },
+    { BoonWave8, "Start at wave 8" },
+    { BoonExtraWeapon, "Start with extra weapon" },
+
     // Options
     { Apply, "Apply" },
     { VideoOptionsTab, "Video" },
