@@ -22,8 +22,10 @@ public:
 private:
     void buildLayout();
 
-    tgui::ChildWindow::Ptr
-    createModuleSelectModal(StringId titleStringId, tgui::Layout2d size) const;
+    tgui::Container::Ptr buildLoadoutPanel(size_t loadoutIdx);
+
+    tgui::Container::Ptr buildButtonForSelectingModule(
+        const WeaponModule module, size_t moduleIdx, size_t loadoutIdx);
 
     tgui::Button::Ptr createModuleSelectButton(
         WeaponModule module,
@@ -40,18 +42,21 @@ private:
         return scene.loadout.weapons[currentWeaponIdx].modules;
     }
 
+    const tgui::Texture& getWeaponModuleTexture(const WeaponModule module) const
+    {
+        return dic.resmgr.get<tgui::Texture>(
+            uni::format("ModuleIcon-{}", std::to_underlying(module)));
+    }
+
     void onResume();
     void onBack();
     void onCycle();
-    void onModSelected(size_t moduleIdx);
+    void onModSelected();
+    void onClearLoadout(size_t loadoutIdx);
 
     void restoreGuiViewport();
 
-    [[nodiscard]] std::vector<std::string> getModuleNames() const;
-    [[nodiscard]] std::vector<std::string> getAvailableModuleNames() const;
-    [[nodiscard]] std::vector<WeaponModule> getAvailableModules() const;
-    [[nodiscard]] static size_t moduleToIndex(WeaponModule module) noexcept;
-    [[nodiscard]] static WeaponModule indexToModule(size_t index) noexcept;
+    void restoreFocusImpl(const std::string&) override;
 
 private:
     DependencyContainer& dic;
@@ -63,4 +68,8 @@ private:
 
     int currentWeaponIdx = 0;
     AnimationTimer animationTimer;
+
+    size_t selectedLoadoutIdx = 0;
+    size_t selectedModuleIdx = 0;
+    std::optional<WeaponModule> selectedModule = std::nullopt;
 };

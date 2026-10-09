@@ -59,6 +59,8 @@ constexpr const sf::Color COLOR_BROWN = sf::Color { 0xab, 0x52, 0x36 };
 constexpr const sf::Color COLOR_PINK = sf::Color { 0xff, 0x77, 0xa8 };
 constexpr const sf::Color COLOR_LIGHT_GREY = sf::Color { 0xc2, 0xc3, 0xc7 };
 constexpr const sf::Color COLOR_DARK_GREY = sf::Color { 0x5f, 0x57, 0x4f };
+constexpr const sf::Color COLOR_LIGHT_BLUE = sf::Color { 0x29, 0xad, 0xff };
+constexpr const sf::Color COLOR_MID_BLUE = sf::Color { 0x06, 0x5a, 0xb5 };
 
 // Other
 constexpr const sf::Time SPAWNER_SPAWN_DELAY = sf::seconds(0.3f);

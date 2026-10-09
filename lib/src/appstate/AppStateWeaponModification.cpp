@@ -1,4 +1,5 @@
 #include "appstate/AppStateWeaponModification.hpp"
+#include "appstate/AppStateWeaponModuleSelection.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Game/builders/WeaponBuilder.hpp"
 #include "appstate/Game/definitions/Components.hpp"
@@ -36,12 +37,12 @@ AppStateWeaponModification::AppStateWeaponModification(
 {
     buildLayout();
 
-    const auto&& windowSize = sf::Vector2f(app.window.getSize());
+    /*const auto&& windowSize = sf::Vector2f(app.window.getSize());
     auto&& sfmlViewport = guiCamera.getCurrentView().getViewport();
     auto&& tguiViewport = tgui::FloatRect(
         tgui::Vector2f(sfmlViewport.position.componentWiseMul(windowSize)),
         tgui::Vector2f(sfmlViewport.size.componentWiseMul(windowSize)));
-    dic.gui.getTguiHandle().setAbsoluteViewport(tguiViewport);
+    dic.gui.getTguiHandle().setAbsoluteViewport(tguiViewport);*/
 }
 
 void AppStateWeaponModification::input()
@@ -51,15 +52,16 @@ void AppStateWeaponModification::input()
 
 void AppStateWeaponModification::update()
 {
-    animationTimer.update(app.time.getElapsed());
+    //    animationTimer.update(app.time.getElapsed());
 }
 
 void AppStateWeaponModification::draw()
 {
-    app.window.setViewFromCamera(renderCamera);
-    renderer.renderWorkbench(app.window, animationTimer, currentWeaponIdx);
+    //    app.window.setViewFromCamera(renderCamera);
+    //    renderer.renderWorkbench(app.window, animationTimer,
+    //    currentWeaponIdx);
 
-    app.window.setViewFromCamera(guiCamera);
+    // app.window.setViewFromCamera(guiCamera);
 
     dic.gui.draw();
     dic.virtualCursor.draw();
@@ -67,100 +69,124 @@ void AppStateWeaponModification::draw()
 
 void AppStateWeaponModification::buildLayout()
 {
-    dic.gui.removeAllWidgets();
+    auto&& hbox = tgui::HorizontalLayout::create();
 
-    auto&& toLayout = [](unsigned x, unsigned y)
-    {
-        return tgui::Layout2d {
-            uni::format("{}%", 100 * x / INTERNAL_GAME_RESOLUTION.x).c_str(),
-            uni::format("{}%", 100 * y / INTERNAL_GAME_RESOLUTION.y).c_str(),
-        };
-    };
+    auto&& weapon1Panel = buildLoadoutPanel(0);
+    auto&& weapon2Panel = buildLoadoutPanel(1);
 
-    auto&& createButton = [&](const std::string& textureName, auto&& callback)
-    {
-        auto&& button = tgui::Button::create();
-        button->setRenderer(
-            tgui::Theme::getDefault()->getRenderer("UntexturedWidget"));
+    hbox->add(weapon1Panel);
+    hbox->addSpace(0.05f);
+    hbox->add(weapon2Panel);
 
-        if (textureName.empty())
-        {
-            button->getRenderer()->setBackgroundColor(sf::Color::Transparent);
-            button->getRenderer()->setBackgroundColorHover(
-                sf::Color::Transparent);
-        }
-        else
-        {
-            button->getRenderer()->setTexture(
-                dic.resmgr.get<tgui::Texture>(textureName + ".png"));
-            button->getRenderer()->setTextureHover(
-                dic.resmgr.get<tgui::Texture>(textureName + "-hover.png"));
-            assert(!button->getRenderer()->getTexture().isSmooth());
-        }
-
-        button->getRenderer()->setBackgroundColorHover(
-            tgui::Color(255, 255, 255, 128));
-        button->getRenderer()->setBorders(0u);
-        button->setSize({ "100%", "100%" });
-        button->onClick(std::forward<decltype(callback)>(callback));
-        return button;
-    };
-
-    auto&& resumeButtonLayout = tgui::Group::create();
-    resumeButtonLayout->setSize(toLayout(24, 24));
-    resumeButtonLayout->setPosition(toLayout(346, 178));
-    resumeButtonLayout->add(
-        createButton("button-confirm", [&] { onResume(); }));
-    dic.gui.add(resumeButtonLayout);
-
-    auto&& cancelButtonLayout = tgui::Group::create();
-    cancelButtonLayout->setSize(toLayout(24, 24));
-    cancelButtonLayout->setPosition(toLayout(16, 16));
-    cancelButtonLayout->add(createButton("button-cancel", [&] { onBack(); }));
-    dic.gui.add(cancelButtonLayout);
-
-    if (scene.loadout.weapons.size() > 1)
-    {
-        auto&& swapWeaponLayout = tgui::Group::create();
-        swapWeaponLayout->setSize(toLayout(23, 47));
-        swapWeaponLayout->setPosition(toLayout(344, 85));
-        swapWeaponLayout->add(
-            createButton("button-swap-weapon", [&] { onCycle(); }));
-        dic.gui.add(swapWeaponLayout);
-    }
-
-    auto&& modSelect1Layout = tgui::Group::create();
-    modSelect1Layout->setSize(toLayout(18, 18));
-    modSelect1Layout->setPosition(toLayout(35, 163));
-    modSelect1Layout->add(createButton("", [&] { onModSelected(0); }));
-    dic.gui.add(modSelect1Layout);
-
-    auto&& modSelect2Layout = tgui::Group::create();
-    modSelect2Layout->setSize(toLayout(18, 18));
-    modSelect2Layout->setPosition(toLayout(58, 163));
-    modSelect2Layout->add(createButton("", [&] { onModSelected(1); }));
-    dic.gui.add(modSelect2Layout);
-
-    auto&& modSelect3Layout = tgui::Group::create();
-    modSelect3Layout->setSize(toLayout(18, 18));
-    modSelect3Layout->setPosition(toLayout(81, 163));
-    modSelect3Layout->add(createButton("", [&] { onModSelected(2); }));
-    dic.gui.add(modSelect3Layout);
+    dic.gui.rebuildWith(
+        dic.guiBuilderFactory.createSimpleLayoutBuilder()
+            .withNoBackground()
+            .withNoTitle()
+            .withContent(hbox)
+            .withNoBottomLeftButton()
+            .withBottomRightButton(StringId::Apply, [&] { onResume(); })
+            .build());
 }
 
-tgui::ChildWindow::Ptr AppStateWeaponModification::createModuleSelectModal(
-    StringId titleStringId, tgui::Layout2d size) const
+tgui::Container::Ptr
+AppStateWeaponModification::buildLoadoutPanel(size_t loadoutIdx)
 {
-    auto&& modal = tgui::ChildWindow::create(
-        dic.strings.getString(titleStringId),
-        tgui::ChildWindow::TitleButton::None);
-    modal->setSize(size);
-    TguiHelper::centerInParent(modal);
-    modal->getRenderer()->setTitleBarColor(COLOR_PURPLE);
-    modal->getRenderer()->setTitleBarHeight(
-        static_cast<float>(dic.sizer.getBaseContainerHeight()));
-    modal->getRenderer()->setTextSize(dic.sizer.getBaseFontSize());
-    return modal;
+    const bool locked = scene.loadout.weapons.size() <= loadoutIdx;
+
+    auto&& panel = tgui::Panel::create();
+    panel->getRenderer()->setPadding({ 20.f, 20.f });
+
+    auto&& labelRow = WidgetBuilder::createRow(dic.sizer);
+    labelRow->add(WidgetBuilder::createTextLabel(
+        dic.strings.getString(
+            locked            ? StringId::BoonLocked
+            : loadoutIdx == 0 ? StringId::Weapon1Title
+                              : StringId::Weapon2Title),
+        dic.sizer,
+        "justify"_true));
+    panel->add(labelRow, "WeaponTitle");
+
+    if (locked) return panel;
+
+    // === clear button ===
+    auto&& clearButtonGroup = WidgetBuilder::createRow(dic.sizer);
+    panel->add(clearButtonGroup, "ClearButton");
+
+    clearButtonGroup->setPosition({ "0%", "100% - height" });
+
+    clearButtonGroup->add(WidgetBuilder::createRowButton(
+        dic.strings.getString(StringId::Clear),
+        [this, loadoutIdxCopy = loadoutIdx] { onClearLoadout(loadoutIdxCopy); },
+        dic.sizer,
+        dic.soundPlayer));
+
+    // === module select buttons ===
+    auto&& buttonHbox = tgui::HorizontalLayout::create(
+        { "100%", 3 * dic.sizer.getBaseContainerHeight() });
+    buttonHbox->setPosition({ "0%", "100% - height - ClearButton.height" });
+
+    for (auto idx : std::views::iota(0u, 3u))
+    {
+        const auto module = scene.loadout.weapons[loadoutIdx].modules[idx];
+        buttonHbox->add(buildButtonForSelectingModule(module, idx, loadoutIdx));
+    }
+
+    panel->add(buttonHbox, "ModuleButtonsHbox");
+
+    // === image ===
+    auto&& imageGroup = tgui::Group::create(
+        { "100%",
+          "100% - WeaponTitle.height - ModuleButtonsHbox.height - "
+          "ClearButton.height" });
+
+    auto&& imagePanel = tgui::Panel::create({ "height * 16 / 9", "80%" });
+    TguiHelper::centerInParent(imagePanel);
+    imagePanel->getRenderer()->setTextureBackground(
+        dic.resmgr.get<tgui::Texture>("placeholder16_9.png"));
+    imageGroup->add(imagePanel);
+
+    panel->add(imageGroup);
+
+    return panel;
+}
+
+tgui::Container::Ptr AppStateWeaponModification::buildButtonForSelectingModule(
+    const WeaponModule module, size_t moduleIdx, size_t loadoutIdx)
+{
+    auto&& wrapper = tgui::Group::create();
+
+    auto&& modSelectCallback =
+        [this, loadoutIdxCopy = loadoutIdx, moduleIdxCopy = moduleIdx]
+    {
+        selectedLoadoutIdx = loadoutIdxCopy;
+        selectedModuleIdx = moduleIdxCopy;
+        onModSelected();
+    };
+
+    auto&& button = [&](auto&& callback)
+    {
+        if (module == WeaponModule::None)
+        {
+            return WidgetBuilder::createButton(
+                "X",
+                std::forward<decltype(callback)>(callback),
+                dic.sizer,
+                dic.soundPlayer);
+        }
+
+        return WidgetBuilder::createTexturedButton(
+            dic.resmgr.get<tgui::Texture>(
+                uni::format("ModuleIcon-{}", std::to_underlying(module))),
+            std::forward<decltype(callback)>(callback),
+            dic.soundPlayer);
+    }(modSelectCallback);
+
+    button->setSize({ "height", "90%" });
+    button->setPosition({ "parent.width / 2 - width / 2", "50% - height / 2" });
+
+    wrapper->add(button);
+
+    return wrapper;
 }
 
 tgui::Button::Ptr AppStateWeaponModification::createModuleSelectButton(
@@ -227,72 +253,21 @@ void AppStateWeaponModification::onCycle()
     animationTimer.restart();
 }
 
-void AppStateWeaponModification::onModSelected(size_t moduleIdx)
+void AppStateWeaponModification::onModSelected()
 {
-    auto&& modal =
-        createModuleSelectModal(StringId::SelectModule, { "80%", "80%" });
+    app.pushState<AppStateWeaponModuleSelection>(
+        std::ref(dic),
+        std::cref(scene),
+        std::ref(selectedModule),
+        scene.loadout.weapons[selectedLoadoutIdx].modules[selectedModuleIdx]);
+}
 
-    auto&& close = [&, modal]
-    {
-        auto&& widget = dic.gui.get<tgui::Panel>("ModalContainer");
-        dic.gui.remove(widget);
-        modal->close();
-    };
-
-    auto&& anyWeaponContains = [&](WeaponModule module)
-    {
-        for (auto&& weapon : scene.loadout.weapons)
-        {
-            if (uni::ranges::contains(weapon.modules, module)) return true;
-        }
-        return false;
-    };
-
-    auto&& background = GuiBuilderHelper::createSemitransparentBlackPanel();
-    background->onClick(close);
-    dic.gui.add(background, "ModalContainer");
-    dic.gui.add(modal);
-
-    auto&& content = tgui::ScrollablePanel::create();
-    content->setRenderer(
-        tgui::Theme::getDefault()->getRenderer("OptionsPanel"));
-    modal->add(content);
-
-    const int MODULES_PER_ROW = 8;
-    const float BUTTON_SIZE = 100 / MODULES_PER_ROW;
-    int x = 0;
-    int y = 0;
-    for (auto&& module : getAvailableModules())
-    {
-        const bool isInUse =
-            anyWeaponContains(module) && module != WeaponModule::None;
-
-        auto cellLayout = tgui::Group::create(
-            { uni::format("{}%", BUTTON_SIZE).c_str(), "width" });
-        cellLayout->setPosition({
-            uni::format("width * {}", x).c_str(),
-            uni::format("height * {}", y).c_str(),
-        });
-
-        cellLayout->add(createModuleSelectButton(
-            module,
-            [&, close, module, moduleIdx]
-            {
-                dic.soundPlayer.playClick();
-                getCurrentLoadout()[moduleIdx] = module;
-                close();
-            },
-            isInUse));
-
-        content->add(cellLayout);
-
-        x++;
-        if (x == MODULES_PER_ROW)
-        {
-            x = 0;
-            y++;
-        }
-    }
+void AppStateWeaponModification::onClearLoadout(size_t loadoutIdx)
+{
+    assert(scene.loadout.weapons.size() > loadoutIdx);
+    for (auto& module : scene.loadout.weapons[loadoutIdx].modules)
+        module = WeaponModule::None;
+    buildLayout();
 }
 
 void AppStateWeaponModification::restoreGuiViewport()
@@ -301,8 +276,18 @@ void AppStateWeaponModification::restoreGuiViewport()
         { 0.f, 0.f }, tgui::Vector2f(sf::Vector2f(app.window.getSize()))));
 }
 
+void AppStateWeaponModification::restoreFocusImpl(const std::string&)
+{
+    if (selectedModule)
+    {
+        scene.loadout.weapons[selectedLoadoutIdx].modules[selectedModuleIdx] =
+            *selectedModule;
+        buildLayout();
+    }
+}
+
 // Build the subset of available modules (None + unlocked)
-std::vector<WeaponModule>
+/*std::vector<WeaponModule>
 AppStateWeaponModification::getAvailableModules() const
 {
     std::vector<WeaponModule> modules;
@@ -314,3 +299,4 @@ AppStateWeaponModification::getAvailableModules() const
     }
     return modules;
 }
+*/

@@ -15,6 +15,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { ExitButton, "Exit" },
     { Back, "Back" },
     { Loading, "Loading" },
+    { Clear, "Clear" },
 
     // Survival Level Select
     { SurvivalLevelSelect, "Map selection" },
@@ -97,6 +98,8 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModule_BigBullet, "Big Bullet" },
     { WeaponModule_Spikes, "Spikes" },
     { WeaponModule_Splitter, "Splitter" },
+    { WeaponModule_Push, "Push" },
+    { WeaponModule_Turret, "Turret" },
     { WeaponModule_ExtraHealth, "Extra health" },
     { WeaponModule_ExtraGun, "Extra gun" },
 

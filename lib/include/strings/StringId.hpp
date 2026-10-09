@@ -13,6 +13,7 @@ enum class [[nodiscard]] StringId
     ExitButton,
     Back,
     Loading,
+    Clear,
 
     // Survival Level Select
     SurvivalLevelSelect,

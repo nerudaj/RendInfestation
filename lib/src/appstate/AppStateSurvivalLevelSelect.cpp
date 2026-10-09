@@ -56,7 +56,7 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
 
     auto&& labelRow = WidgetBuilder::createRow(dic.sizer);
     labelRow->add(WidgetBuilder::createTextLabel(
-        dic.strings.getString(StringId::SelectMap), dic.sizer));
+        dic.strings.getString(StringId::SelectMap), dic.sizer, "justify"_true));
     vbox->add(labelRow, "LabelRow");
 
     auto&& dropdownRow = WidgetBuilder::createRow(dic.sizer);
