@@ -95,6 +95,9 @@ enum class [[nodiscard]] StringId
     WeaponModule_Turret,
     WeaponModule_ExtraHealth,
     WeaponModule_ExtraGun,
+    InUse,
+    Install,
+    ConfigureLoadout,
 
     // WeaponModificationDesc
     WeaponModuleDesc_None,

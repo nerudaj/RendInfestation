@@ -9,40 +9,20 @@
 #include "gui/builders/WidgetBuilder.hpp"
 #include "rendering/CameraFactory.hpp"
 #include "strings/StringId.hpp"
+#include "ui-components/SelectablePanelComponent.hpp"
 #include <array>
-
-static sf::Vector2f resolutionTo16by9(const sf::Vector2f& resolution)
-{
-    assert(resolution.x > resolution.y);
-    assert(resolution.x / resolution.y >= 16.f / 9.f);
-
-    return sf::Vector2f {
-        resolution.y * 16.f / 9.f,
-        resolution.y,
-    };
-}
 
 AppStateWeaponModification::AppStateWeaponModification(
     dgm::App& app, DependencyContainer& dic, GameScene& scene)
-    : dgm::AppState(app)
+    : dgm::AppState(
+          app,
+          {
+              .shouldDrawUnderlyingState = true,
+          })
     , dic(dic)
     , scene(scene)
-    , renderCamera(CameraFactory::createFullscreenCamera(
-          sf::Vector2f(app.window.getSize()), INTERNAL_GAME_RESOLUTION))
-    , guiCamera(CameraFactory::createFullscreenCamera(
-          sf::Vector2f(app.window.getSize()),
-          resolutionTo16by9(sf::Vector2f(app.window.getSize()))))
-    , renderer(scene, dic)
-    , animationTimer(sf::seconds(0.5f))
 {
     buildLayout();
-
-    /*const auto&& windowSize = sf::Vector2f(app.window.getSize());
-    auto&& sfmlViewport = guiCamera.getCurrentView().getViewport();
-    auto&& tguiViewport = tgui::FloatRect(
-        tgui::Vector2f(sfmlViewport.position.componentWiseMul(windowSize)),
-        tgui::Vector2f(sfmlViewport.size.componentWiseMul(windowSize)));
-    dic.gui.getTguiHandle().setAbsoluteViewport(tguiViewport);*/
 }
 
 void AppStateWeaponModification::input()
@@ -50,19 +30,10 @@ void AppStateWeaponModification::input()
     CommonHandler::handleInput(app, dic, dic.settings.input);
 }
 
-void AppStateWeaponModification::update()
-{
-    //    animationTimer.update(app.time.getElapsed());
-}
+void AppStateWeaponModification::update() {}
 
 void AppStateWeaponModification::draw()
 {
-    //    app.window.setViewFromCamera(renderCamera);
-    //    renderer.renderWorkbench(app.window, animationTimer,
-    //    currentWeaponIdx);
-
-    // app.window.setViewFromCamera(guiCamera);
-
     dic.gui.draw();
     dic.virtualCursor.draw();
 }
@@ -138,6 +109,7 @@ AppStateWeaponModification::buildLoadoutPanel(size_t loadoutIdx)
         { "100%",
           "100% - WeaponTitle.height - ModuleButtonsHbox.height - "
           "ClearButton.height" });
+    imageGroup->setPosition({ "0%", "WeaponTitle.height" });
 
     auto&& imagePanel = tgui::Panel::create({ "height * 16 / 9", "80%" });
     TguiHelper::centerInParent(imagePanel);
@@ -154,84 +126,26 @@ tgui::Container::Ptr AppStateWeaponModification::buildButtonForSelectingModule(
     const WeaponModule module, size_t moduleIdx, size_t loadoutIdx)
 {
     auto&& wrapper = tgui::Group::create();
-
-    auto&& modSelectCallback =
+    auto&& selectablePanel = SelectablePanelComponent::buildLayout(dic);
+    selectablePanel->onClick(
         [this, loadoutIdxCopy = loadoutIdx, moduleIdxCopy = moduleIdx]
-    {
-        selectedLoadoutIdx = loadoutIdxCopy;
-        selectedModuleIdx = moduleIdxCopy;
-        onModSelected();
-    };
-
-    auto&& button = [&](auto&& callback)
-    {
-        if (module == WeaponModule::None)
         {
-            return WidgetBuilder::createButton(
-                "X",
-                std::forward<decltype(callback)>(callback),
-                dic.sizer,
-                dic.soundPlayer);
-        }
-
-        return WidgetBuilder::createTexturedButton(
-            dic.resmgr.get<tgui::Texture>(
-                uni::format("ModuleIcon-{}", std::to_underlying(module))),
-            std::forward<decltype(callback)>(callback),
-            dic.soundPlayer);
-    }(modSelectCallback);
-
-    button->setSize({ "height", "90%" });
-    button->setPosition({ "parent.width / 2 - width / 2", "50% - height / 2" });
-
-    wrapper->add(button);
-
-    return wrapper;
-}
-
-tgui::Button::Ptr AppStateWeaponModification::createModuleSelectButton(
-    WeaponModule module,
-    std::function<void(void)>&& callback,
-    bool disabled) const
-{
-    auto&& toLayout = [&](unsigned x, unsigned y)
-    {
-        return tgui::Layout2d {
-            uni::format(
-                "{}", app.window.getSize().x * x / INTERNAL_GAME_RESOLUTION.x)
-                .c_str(),
-            uni::format(
-                "{}", app.window.getSize().y * y / INTERNAL_GAME_RESOLUTION.y)
-                .c_str(),
-        };
-    };
-
-    auto&& button =
-        tgui::Button::create(module == WeaponModule::None ? "X" : "");
-
-    if (module != WeaponModule::None)
-    {
-        button->getRenderer()->setTexture(dic.resmgr.get<tgui::Texture>(
-            uni::format("ModuleIcon-{}", std::to_underlying(module))));
-    }
-
-    if (disabled)
-    {
-        button->setEnabled(false);
-        button->getRenderer()->setOpacity(0.5f);
-    }
-
-    button->setSize(toLayout(18, 18));
-    button->setPosition(
-        { "parent.width / 2 - width / 2", "parent.height / 2 - height  / 2" });
-    button->onClick(
-        [&, callback = std::move(callback)]
-        {
-            dic.soundPlayer.playPovSound(SoundId::Crafting);
-            callback();
+            dic.soundPlayer.playClick();
+            selectedLoadoutIdx = loadoutIdxCopy;
+            selectedModuleIdx = moduleIdxCopy;
+            onModSelected();
         });
+    selectablePanel->setSize({ "height", "90%" });
+    TguiHelper::centerInParent(selectablePanel);
 
-    return button;
+    auto&& image = tgui::Panel::create();
+    image->getRenderer()->setTextureBackground(getWeaponModuleTexture(module));
+    image->setSize({ "90%", "90%" });
+    TguiHelper::centerInParent(image);
+    selectablePanel->add(image);
+
+    wrapper->add(selectablePanel);
+    return wrapper;
 }
 
 void AppStateWeaponModification::onResume()
@@ -245,12 +159,6 @@ void AppStateWeaponModification::onBack()
 {
     restoreGuiViewport();
     app.popState();
-}
-
-void AppStateWeaponModification::onCycle()
-{
-    currentWeaponIdx = (currentWeaponIdx + 1) % 2;
-    animationTimer.restart();
 }
 
 void AppStateWeaponModification::onModSelected()
@@ -285,18 +193,3 @@ void AppStateWeaponModification::restoreFocusImpl(const std::string&)
         buildLayout();
     }
 }
-
-// Build the subset of available modules (None + unlocked)
-/*std::vector<WeaponModule>
-AppStateWeaponModification::getAvailableModules() const
-{
-    std::vector<WeaponModule> modules;
-    modules.push_back(WeaponModule::None);
-    for (size_t i = 1; i < ALLOWED_MODULES.size(); ++i)
-    {
-        if (scene.unlockedModules.contains(ALLOWED_MODULES[i]))
-            modules.push_back(ALLOWED_MODULES[i]);
-    }
-    return modules;
-}
-*/

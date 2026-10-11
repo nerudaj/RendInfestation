@@ -3,6 +3,7 @@
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
 #include "gui/GuiBuilderHelper.hpp"
+#include "ui-components/SelectablePanelComponent.hpp"
 #include <misc/Compatibility.hpp>
 #include <random>
 
@@ -71,39 +72,24 @@ void AppStateChooseBonus::buildLayout()
 
     auto modulesToPick = generatePickerSelection();
 
-    auto leftBox = createSelectablePanel({ "49%", "85%" });
-    leftBox->setPosition({ "0%", "15%" });
+    auto&& hbox = tgui::HorizontalLayout::create({ "100%", "85%" });
+    TguiHelper::alignInParent(
+        hbox, tgui::HorizontalAlignment::Left, tgui::VerticalAlignment::Bottom);
+    content->add(hbox);
+
+    auto&& leftBox = SelectablePanelComponent::buildLayout(dic);
     leftBox->add(createPickerBox(modulesToPick.first));
     leftBox->onClick([&, module = modulesToPick.first] { onSubmit(module); });
-    content->add(leftBox);
+    hbox->add(leftBox);
 
-    auto rightBox = createSelectablePanel({ "49%", "85%" });
-    rightBox->setPosition({ "51%", "15%" });
+    hbox->addSpace(0.02f);
+
+    auto rightBox = SelectablePanelComponent::buildLayout(dic);
     rightBox->add(createPickerBox(modulesToPick.second));
     rightBox->onClick([&, module = modulesToPick.second] { onSubmit(module); });
-    content->add(rightBox);
+    hbox->add(rightBox);
 
     dic.gui.rebuildWith(content);
-}
-
-tgui::Panel::Ptr AppStateChooseBonus::createSelectablePanel(tgui::Layout2d size)
-{
-    auto panel = tgui::Panel::create(size);
-    panel->setRenderer(
-        tgui::Theme::getDefault()->getRenderer("SelectablePanel"));
-    panel->onMouseEnter(
-        [panel = panel, this]
-        {
-            panel->setRenderer(
-                tgui::Theme::getDefault()->getRenderer("SelectablePanelHover"));
-        });
-    panel->onMouseLeave(
-        [panel = panel, this]
-        {
-            panel->setRenderer(
-                tgui::Theme::getDefault()->getRenderer("SelectablePanel"));
-        });
-    return panel;
 }
 
 tgui::Container::Ptr AppStateChooseBonus::createPickerBox(WeaponModule module)

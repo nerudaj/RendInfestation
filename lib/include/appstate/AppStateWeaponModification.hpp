@@ -27,11 +27,6 @@ private:
     tgui::Container::Ptr buildButtonForSelectingModule(
         const WeaponModule module, size_t moduleIdx, size_t loadoutIdx);
 
-    tgui::Button::Ptr createModuleSelectButton(
-        WeaponModule module,
-        std::function<void(void)>&& callback,
-        bool disabled) const;
-
     std::array<WeaponModule, 3>& getCurrentLoadout()
     {
         return scene.loadout.weapons[currentWeaponIdx].modules;
@@ -50,7 +45,6 @@ private:
 
     void onResume();
     void onBack();
-    void onCycle();
     void onModSelected();
     void onClearLoadout(size_t loadoutIdx);
 
@@ -62,12 +56,7 @@ private:
     DependencyContainer& dic;
     GameScene& scene;
 
-    dgm::Camera renderCamera;
-    dgm::Camera guiCamera;
-    Renderer renderer;
-
     int currentWeaponIdx = 0;
-    AnimationTimer animationTimer;
 
     size_t selectedLoadoutIdx = 0;
     size_t selectedModuleIdx = 0;

@@ -2,6 +2,7 @@
 
 #include "appstate/Game/definitions/GameScene.hpp"
 #include "misc/DependencyContainer.hpp"
+#include "ui-components/WeaponModuleDetailComponent.hpp"
 #include <DGM/classes/AppState.hpp>
 #include <optional>
 #include <ranges>
@@ -33,11 +34,7 @@ private:
 
     tgui::Container::Ptr buildModuleSelectionLayout();
 
-    tgui::Container::Ptr buildModuleDetailLayout();
-
     tgui::Container::Ptr buildModuleListEntryLayout(const WeaponModule module);
-
-    void refreshModuleDetailPanel();
 
     const tgui::Texture& getWeaponModuleTexture(const WeaponModule module) const
     {
@@ -73,4 +70,5 @@ private:
     const GameScene& scene;
     std::optional<WeaponModule>& outModule;
     WeaponModule selectedModule;
+    WeaponModuleDetailComponent moduleDetailComponent;
 };

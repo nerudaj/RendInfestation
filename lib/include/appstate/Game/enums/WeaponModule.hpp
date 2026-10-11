@@ -7,7 +7,7 @@
 
 enum class [[nodiscard]] WeaponModule
 {
-    None = -1,
+    None = 0,
     SpreadBarrel_x4,
     SpreadBarrel_x2,
     CadenceBarrel,

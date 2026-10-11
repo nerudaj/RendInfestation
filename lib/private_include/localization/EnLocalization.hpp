@@ -102,6 +102,9 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModule_Turret, "Turret" },
     { WeaponModule_ExtraHealth, "Extra health" },
     { WeaponModule_ExtraGun, "Extra gun" },
+    { InUse, "(in use)" },
+    { Install, "Install" },
+    { ConfigureLoadout, "Configure loadout" },
 
     // WeaponModDec
     { WeaponModuleDesc_None, "No description" },

@@ -17,6 +17,10 @@ AppStateWeaponModuleSelection::AppStateWeaponModuleSelection(
     , scene(scene)
     , outModule(outModule)
     , selectedModule(currentlySelectedModule)
+    , moduleDetailComponent(
+          dic,
+          [&](const WeaponModule module)
+          { return getWeaponModuleTexture(module); })
 {
     buildLayout();
 }
@@ -80,7 +84,7 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
     container->add(hbox);
 
     auto&& bottomNavbar = WidgetBuilder::createContainer<tgui::Panel>(
-        { "100%", dic.sizer.getBaseContainerHeight() },
+        { "100%", dic.sizer.getBaseContainerHeight() * 1.5 },
         {
             .className = "BottomCutoutPanel",
         });
@@ -96,7 +100,7 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
             const std::optional<std::string> id = std::nullopt)
     {
         auto&& wrapper = tgui::Group::create(
-            { dic.sizer.getBaseContainerHeight() * 3, "100%" });
+            { dic.sizer.getBaseContainerHeight() * 4, "90%" });
         wrapper->add(WidgetBuilder::createRowButton(
             dic.strings.getString(stringId),
             std::forward<decltype(callback)>(callback),
@@ -110,12 +114,12 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
 
     auto&& buttonList = tgui::GrowHorizontalLayout::create();
     buttonList->add(createSubmitButton(StringId::Back, [&] { onCancel(); }));
-    buttonList->add(
-        createSubmitButton(StringId::Apply, [&] { onApply(); }, "ApplyButton"));
+    buttonList->add(createSubmitButton(
+        StringId::Install, [&] { onApply(); }, "ApplyButton"));
     TguiHelper::alignInParent(
         buttonList,
         tgui::HorizontalAlignment::Right,
-        tgui::VerticalAlignment::Top);
+        tgui::VerticalAlignment::Center);
     bottomNavbar->add(buttonList);
 
     auto&& scrollList = WidgetBuilder::createContainer<tgui::ScrollablePanel>({
@@ -134,49 +138,9 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
             buildModuleListEntryLayout(module), getModuleListEntryId(module));
     }
 
-    hbox->add(buildModuleDetailLayout());
+    hbox->add(moduleDetailComponent.buildLayout());
 
     return container;
-}
-
-tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleDetailLayout()
-{
-    auto&& panel = tgui::Panel::create();
-    panel->setRenderer(
-        tgui::Theme::getDefault()->getRenderer("AllCornersPanel"));
-    panel->getRenderer()->setPadding({ 20.f, 20.f });
-
-    auto&& nameGroup = WidgetBuilder::createRow(dic.sizer);
-    panel->add(nameGroup, "WeaponModuleDetailNameGroup");
-    nameGroup->add(
-        WidgetBuilder::createTextLabel("", dic.sizer, "justify"_true),
-        "WeaponModuleDetailName");
-
-    auto&& imageGroup = tgui::Group::create({ "100%", "30%" });
-    imageGroup->setPosition({ "0%", "WeaponModuleDetailNameGroup.height" });
-    panel->add(imageGroup, "WeaponModuleDetailImageGroup");
-    auto&& imagePanel = tgui::Panel::create({ "height", "80%" });
-    TguiHelper::centerInParent(imagePanel);
-    imageGroup->add(imagePanel, "WeaponModuleDetailImage");
-
-    auto&& descriptionPanel =
-        WidgetBuilder::createContainer<tgui::ScrollablePanel>(
-            { "100%",
-              "parent.height - WeaponModuleDetailNameGroup.height - "
-              "WeaponModuleDetailImageGroup.height" },
-            {
-                .className = "UntexturedWidgetScrollable",
-            });
-    TguiHelper::alignInParent(
-        descriptionPanel,
-        tgui::HorizontalAlignment::Left,
-        tgui::VerticalAlignment::Bottom);
-    panel->add(descriptionPanel);
-
-    auto&& description = WidgetBuilder::createTextLabel("", dic.sizer);
-    descriptionPanel->add(description, "WeaponModuleDetailDescription");
-
-    return panel;
 }
 
 tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleListEntryLayout(
@@ -187,7 +151,9 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleListEntryLayout(
         {
             .className = "UntexturedWidget",
         });
-    if (isInUseModule(module)) row->getRenderer()->setOpacity(0.5f);
+
+    const bool isInUse = isInUseModule(module);
+    if (isInUse) row->getRenderer()->setOpacity(0.5f);
 
     if (module == selectedModule)
     {
@@ -238,30 +204,18 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleListEntryLayout(
                 tgui::HorizontalAlignment::Right,
                 tgui::VerticalAlignment::Top);
 
-            labelGroup->add(WidgetBuilder::createTextLabel(
+            auto&& labelText = std::format(
+                "{} {}",
                 dic.strings.getString(getModuleName(module)),
-                dic.sizer,
-                "justify"_true));
+                isInUse ? dic.strings.getString(StringId::InUse) : "");
+
+            labelGroup->add(WidgetBuilder::createTextLabel(
+                labelText, dic.sizer, "justify"_true));
 
             return labelGroup;
         }());
 
     return row;
-}
-
-void AppStateWeaponModuleSelection::refreshModuleDetailPanel()
-{
-    auto&& name = dic.gui.get<tgui::Label>("WeaponModuleDetailName");
-    name->setText(dic.strings.getString(getModuleName(selectedModule)));
-
-    auto&& image = dic.gui.get<tgui::Panel>("WeaponModuleDetailImage");
-    image->getRenderer()->setTextureBackground(
-        getWeaponModuleTexture(selectedModule));
-
-    auto&& description =
-        dic.gui.get<tgui::Label>("WeaponModuleDetailDescription");
-    description->setText(
-        dic.strings.getString(getModuleDescription(selectedModule)));
 }
 
 void AppStateWeaponModuleSelection::onCancel()
@@ -291,7 +245,7 @@ void AppStateWeaponModuleSelection::onModuleSelected(
         ->setBackgroundColor(COLOR_MID_BLUE);
 
     selectedModule = newSelectedModule;
-    refreshModuleDetailPanel();
+    moduleDetailComponent.refreshDetail(selectedModule);
 
     auto&& enabled = !isInUseModule(newSelectedModule);
     auto&& button = dic.gui.get<tgui::Button>("ApplyButton");
