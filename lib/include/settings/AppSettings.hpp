@@ -3,6 +3,7 @@
 #include "settings/AudioSettings.hpp"
 #include "settings/BindingsSettings.hpp"
 #include "settings/InputSettings.hpp"
+#include "settings/Saves.hpp"
 #include "settings/VideoSettings.hpp"
 #include <nlohmann/json.hpp>
 
@@ -12,6 +13,7 @@ struct [[nodiscard]] AppSettings final
     VideoSettings video;
     InputSettings input;
     BindingsSettings bindings;
+    Saves saves;
 };
 
 struct [[nodiscard]] AppSettingsStorageModel final
@@ -20,16 +22,17 @@ struct [[nodiscard]] AppSettingsStorageModel final
     VideoSettings video;
     InputSettings input;
     BindingsSettings bindings;
+    Saves saves;
 
     AppSettingsStorageModel() = default;
 
     explicit AppSettingsStorageModel(const AppSettings& settings) noexcept
-        : audio(
-              { .soundVolume = settings.audio.soundVolume,
-                .musicVolume = settings.audio.musicVolume })
+        : audio({ .soundVolume = settings.audio.soundVolume,
+                  .musicVolume = settings.audio.musicVolume })
         , video(settings.video)
         , input(settings.input)
         , bindings(settings.bindings)
+        , saves(saves)
     {
     }
 };

@@ -23,6 +23,8 @@ private:
 
     tgui::Container::Ptr buildContent();
 
+    void buildMapDetailLayout(tgui::Container::Ptr parent, size_t mapIdx);
+
     void onBack();
 
     void onPlay();

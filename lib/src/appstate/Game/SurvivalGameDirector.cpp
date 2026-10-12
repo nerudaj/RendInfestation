@@ -1,7 +1,10 @@
 #include "appstate/Game/SurvivalGameDirector.hpp"
 
-SurvivalGameDirector::SurvivalGameDirector() : context(createInitialContext())
+SurvivalGameDirector::SurvivalGameDirector(int startingWave)
+    : context(createInitialContext())
 {
+    context.wave = startingWave;
+    setupWave();
 }
 
 void SurvivalGameDirector::update(
@@ -13,10 +16,7 @@ void SurvivalGameDirector::update(
         if (context.timeTillNextWave <= sf::Time::Zero)
         {
             ++context.wave;
-            context.enemiesSpawnedInCurrentWave = 0;
-            context.enemiesKilledInCurrentWave = 0;
-            context.enemiesInCurrentWave = getEnemyCountForWave(context.wave);
-            context.state = SurvivalModeState::SpawningEnemies;
+            setupWave();
         }
     }
     else if (context.state == SurvivalModeState::SpawningEnemies)
@@ -117,4 +117,12 @@ sf::Time SurvivalGameDirector::getEnemySpawnDelay(int wave)
 {
     if (wave <= 12) return SPAWNER_SPAWN_DELAY;
     return SPAWNER_SPAWN_DELAY / 2.f;
+}
+
+void SurvivalGameDirector::setupWave()
+{
+    context.enemiesSpawnedInCurrentWave = 0;
+    context.enemiesKilledInCurrentWave = 0;
+    context.enemiesInCurrentWave = getEnemyCountForWave(context.wave);
+    context.state = SurvivalModeState::SpawningEnemies;
 }

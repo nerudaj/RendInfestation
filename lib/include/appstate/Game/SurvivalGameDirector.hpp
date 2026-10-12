@@ -10,7 +10,7 @@
 class [[nodiscard]] SurvivalGameDirector final
 {
 public:
-    SurvivalGameDirector();
+    explicit SurvivalGameDirector(int startingWave);
 
 public:
     void update(const sf::Time& time, EventQueue<GameEvent>& eventQueue);
@@ -33,6 +33,8 @@ private:
     static int getEnemyCountForWave(int wave);
 
     sf::Time getEnemySpawnDelay(int wave);
+
+    void setupWave();
 
 private:
     SurvivalSpawnerContext context;

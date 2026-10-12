@@ -68,6 +68,11 @@ GameScene GameSceneBuilder::createScene(
         artifact.unlockedModules = {};
     }
 
+    if (gameModeProperties.boons.extraWeapon)
+    {
+        artifact.loadout.weapons.push_back(WeaponConfig {});
+    }
+
     return GameScene {
         .actors = std::move(actors),
         .playerEntity = artifact.playerEntity,
@@ -116,9 +121,13 @@ GameScene GameSceneBuilder::createScene(
         .lights = std::move(artifact.lights),
         .loadout = std::move(artifact.loadout),
         .unlockedModules = std::move(artifact.unlockedModules),
-        .survivalGameDirector = gameModeProperties.mode == GameMode::Survival
-                                    ? std::make_optional<SurvivalGameDirector>()
-                                    : std::nullopt,
+        .survivalGameDirector =
+            gameModeProperties.mode == GameMode::Survival
+                ? std::make_optional<SurvivalGameDirector>(
+                      gameModeProperties.boons.wave8start   ? 8
+                      : gameModeProperties.boons.wave4start ? 4
+                                                            : 1)
+                : std::nullopt,
     };
 }
 

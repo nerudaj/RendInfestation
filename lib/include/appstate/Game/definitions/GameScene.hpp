@@ -60,6 +60,7 @@ struct [[nodiscard]] GameScene final
 
     // recomputed each frame, used for progressive cooldowns
     std::map<SkinType, unsigned> skinCounts = {};
+    size_t actorWithInputCount = 0;
 
     void updatePlayerLoadout();
 };

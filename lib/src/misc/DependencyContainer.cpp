@@ -52,6 +52,7 @@ DependencyContainer::DependencyContainer(
               },
           .input = settingsSM.input,
           .bindings = settingsSM.bindings,
+          .saves = settingsSM.saves,
       })
     , saveSettings(
           [settingsFileName, this]

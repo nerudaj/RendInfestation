@@ -50,7 +50,17 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
     auto&& content = tgui::HorizontalLayout::create();
 
     auto&& levelSelectPanel = tgui::Panel::create({ "50%", "100%" });
-    auto&& vbox = tgui::GrowVerticalLayout::create();
+    levelSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
+    levelSelectPanel->add(WidgetBuilder::createCarousel(
+        LEVEL_NAMES.size(),
+        [this](tgui::Container::Ptr parent, size_t page)
+        {
+            gameProps.mapName = LEVEL_IDS.at(page);
+            buildMapDetailLayout(parent, page);
+        },
+        dic.sizer,
+        dic.soundPlayer));
+    /*auto&& vbox = tgui::Group::create();
     vbox->getRenderer()->setPadding({ 10.f, 10.f });
     levelSelectPanel->add(vbox);
 
@@ -59,44 +69,57 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
         dic.strings.getString(StringId::SelectMap), dic.sizer, "justify"_true));
     vbox->add(labelRow, "LabelRow");
 
-    auto&& dropdownRow = WidgetBuilder::createRow(dic.sizer);
-    dropdownRow->add(WidgetBuilder::createDropdown(
-        LEVEL_NAMES,
-        LEVEL_NAMES.front(),
-        [&](size_t idx) { gameProps.mapName = LEVEL_IDS[idx]; },
-        dic.sizer));
-    vbox->add(dropdownRow, "DropdownRow");
+    auto&& levelCarousel = WidgetBuilder::createCarousel(
+        LEVEL_NAMES.size(),
+        [this](tgui::Container::Ptr parent, size_t page)
+        {
+            gameProps.mapName = LEVEL_IDS.at(page);
+            buildMapDetailLayout(parent, page);
+        },
+        dic.sizer,
+        dic.soundPlayer);
 
-    auto&& imageBox = tgui::Group::create({ "100%", "width / 16 * 9" });
-    auto&& heroImagePanel = tgui::Panel::create({ "16 * height / 9", "80%" });
-    TguiHelper::centerInParent(heroImagePanel);
-    heroImagePanel->getRenderer()->setTextureBackground(
-        dic.resmgr.get<tgui::Texture>("placeholder16_9.png"));
-    imageBox->add(heroImagePanel);
-    vbox->add(imageBox);
+    levelCarousel->setSize({ "100%", "parent.innerheight - LabelRow.height" });
+    TguiHelper::alignInParent(
+        levelCarousel,
+        tgui::HorizontalAlignment::Left,
+        tgui::VerticalAlignment::Bottom);
+    vbox->add(levelCarousel);*/
 
     auto&& boonSelectPanel = tgui::Panel::create({ "50%", "100%" });
     boonSelectPanel->add(
         dic.guiBuilderFactory.createFormBuilder()
             .addLabel(StringId::SelectBoon)
             .addOption(
-                StringId::BoonLocked,
+                dic.settings.saves.unlockedBoons.wave4start
+                    ? StringId::BoonWave4
+                    : StringId::BoonLocked,
                 WidgetBuilder::createCheckbox(
                     false,
                     [&](bool value) { gameProps.boons.wave4start = value; },
-                    WidgetOptions { .enabled = false }))
+                    WidgetOptions {
+                        .enabled = dic.settings.saves.unlockedBoons.wave4start,
+                    }))
             .addOption(
-                StringId::BoonLocked,
+                dic.settings.saves.unlockedBoons.wave8start
+                    ? StringId::BoonWave8
+                    : StringId::BoonLocked,
                 WidgetBuilder::createCheckbox(
                     false,
-                    [&](bool value) { gameProps.boons.wave4start = value; },
-                    WidgetOptions { .enabled = false }))
+                    [&](bool value) { gameProps.boons.wave8start = value; },
+                    WidgetOptions {
+                        .enabled = dic.settings.saves.unlockedBoons.wave8start,
+                    }))
             .addOption(
-                StringId::BoonLocked,
+                dic.settings.saves.unlockedBoons.extraWeapon
+                    ? StringId::BoonExtraWeapon
+                    : StringId::BoonLocked,
                 WidgetBuilder::createCheckbox(
                     false,
                     [&](bool value) { gameProps.boons.extraWeapon = value; },
-                    WidgetOptions { .enabled = false }))
+                    WidgetOptions {
+                        .enabled = dic.settings.saves.unlockedBoons.extraWeapon,
+                    }))
             .build());
 
     content->add(levelSelectPanel);
@@ -104,6 +127,34 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
     content->add(boonSelectPanel);
 
     return content;
+}
+
+void AppStateSurvivalLevelSelect::buildMapDetailLayout(
+    tgui::Container::Ptr parent, size_t mapIdx)
+{
+    parent->removeAllWidgets();
+    auto&& group = tgui::Group::create();
+
+    auto&& labelRow = WidgetBuilder::createRow(dic.sizer);
+    labelRow->add(WidgetBuilder::createTextLabel(
+        LEVEL_NAMES.at(mapIdx), dic.sizer, "justify"_true));
+    group->add(labelRow, "MapNameRow");
+
+    auto&& imageGroup =
+        tgui::Group::create({ "100%", "100% - MapNameRow.height" });
+    TguiHelper::alignInParent(
+        imageGroup,
+        tgui::HorizontalAlignment::Left,
+        tgui::VerticalAlignment::Bottom);
+
+    auto&& heroImagePanel = tgui::Panel::create({ "16 * height / 9", "80%" });
+    TguiHelper::centerInParent(heroImagePanel);
+    heroImagePanel->getRenderer()->setTextureBackground(
+        dic.resmgr.get<tgui::Texture>("placeholder16_9.png"));
+    imageGroup->add(heroImagePanel);
+    group->add(imageGroup);
+
+    parent->add(group);
 }
 
 void AppStateSurvivalLevelSelect::onBack()
