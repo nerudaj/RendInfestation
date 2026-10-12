@@ -23,8 +23,16 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { GameSetup, "Modifiers" },
     { BoonLocked, "- Locked -" },
     { BoonWave4, "Start at wave 4" },
-    { BoonWave8, "Start at wave 8" },
     { BoonExtraWeapon, "Start with extra weapon" },
+    { StartingWeapon, "Starting weapon" },
+    { StartingWeapon_None, "- None -" },
+    { StartingWeapon_Random, "Random" },
+    { StartingWeapon_Sweeper, "Sweeper" },
+    { StartingWeapon_Landmine, "Landmines" },
+    { StartingWeapon_Fragshot, "Fragshot" },
+    { StartingWeapon_Painless, "Painless" },
+    { StartingWeapon_WorstEver, "The worst one" },
+    { StartingWeapon_Tower, "Tower" },
 
     // Options
     { Apply, "Apply" },

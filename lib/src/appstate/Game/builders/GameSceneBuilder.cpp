@@ -1,6 +1,7 @@
 #include "appstate/Game/builders/GameSceneBuilder.hpp"
 #include "appstate/Game/builders/ActorBuilder.hpp"
 #include "appstate/Game/builders/WeaponBuilder.hpp"
+#include <random>
 
 static inline bool isPassableTile(int id)
 {
@@ -55,18 +56,19 @@ GameScene GameSceneBuilder::createScene(
     // Initialize unlocked modules based on game mode
     if (gameModeProperties.mode == GameMode::Story)
     {
-        artifact.unlockedModules = {
-            WeaponModule::SpreadBarrel_x2, WeaponModule::SpreadBarrel_x4,
-            WeaponModule::CadenceBarrel,   WeaponModule::ExplosiveAmmo,
-            WeaponModule::Ricochet,        WeaponModule::PassthruAmmo,
-            WeaponModule::BigBullet,       WeaponModule::Spikes,
-            WeaponModule::Splitter,        WeaponModule::Turret,
-        };
+        // TODO: this
+        /*std::copy(
+            ALLOWED_MODULES.begin(),
+            ALLOWED_MODULES.end(),
+            artifact.unlockedModules.begin());*/
     }
     else
     { // Survival
         artifact.unlockedModules = {};
     }
+
+    updateLoadoutWithStartingWeapon(
+        artifact, gameModeProperties.boons.startingWeapon);
 
     if (gameModeProperties.boons.extraWeapon)
     {
@@ -124,9 +126,7 @@ GameScene GameSceneBuilder::createScene(
         .survivalGameDirector =
             gameModeProperties.mode == GameMode::Survival
                 ? std::make_optional<SurvivalGameDirector>(
-                      gameModeProperties.boons.wave8start   ? 8
-                      : gameModeProperties.boons.wave4start ? 4
-                                                            : 1)
+                      gameModeProperties.boons.wave4start ? 4 : 1)
                 : std::nullopt,
     };
 }
@@ -230,4 +230,66 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
     }
 
     return result;
+}
+
+void GameSceneBuilder::updateLoadoutWithStartingWeapon(
+    GameSceneBuilder::LevelCreationArtifact& artifact,
+    const WeaponCombo startingWeapon)
+{
+    if (startingWeapon == WeaponCombo::None)
+    {
+        return;
+    }
+    else if (startingWeapon == WeaponCombo::Random)
+    {
+        auto&& allModules = ALLOWED_MODULES | std::ranges::to<std::vector>();
+
+        std::shuffle(
+            allModules.begin(),
+            allModules.end(),
+            std::mt19937 { std::random_device {}() });
+
+        artifact.unlockedModules =
+            allModules | std::views::take(3) | std::ranges::to<std::set>();
+    }
+    else if (startingWeapon == WeaponCombo::Sweeper)
+    {
+        artifact.unlockedModules = { WeaponModule::Push,
+                                     WeaponModule::BigBullet,
+                                     WeaponModule::PassthruAmmo };
+    }
+    else if (startingWeapon == WeaponCombo::Landmine)
+    {
+        artifact.unlockedModules = { WeaponModule::Spikes,
+                                     WeaponModule::ExplosiveAmmo,
+                                     WeaponModule::SpreadBarrel_x2 };
+    }
+    else if (startingWeapon == WeaponCombo::Fragshot)
+    {
+        artifact.unlockedModules = { WeaponModule::Spikes,
+                                     WeaponModule::Splitter,
+                                     WeaponModule::SpreadBarrel_x4 };
+    }
+    else if (startingWeapon == WeaponCombo::Painless)
+    {
+        artifact.unlockedModules = { WeaponModule::CadenceBarrel,
+                                     WeaponModule::SpreadBarrel_x2,
+                                     WeaponModule::Ricochet };
+    }
+    else if (startingWeapon == WeaponCombo::WorstEver)
+    {
+        artifact.unlockedModules = { WeaponModule::Spikes,
+                                     WeaponModule::ExplosiveAmmo,
+                                     WeaponModule::PassthruAmmo };
+    }
+    else if (startingWeapon == WeaponCombo::Tower)
+    {
+        artifact.unlockedModules = { WeaponModule::Turret,
+                                     WeaponModule::CadenceBarrel,
+                                     WeaponModule::Push };
+    }
+
+    std::ranges::copy(
+        artifact.unlockedModules,
+        artifact.loadout.weapons.front().modules.begin());
 }

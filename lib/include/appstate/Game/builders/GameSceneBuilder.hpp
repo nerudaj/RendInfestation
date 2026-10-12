@@ -49,4 +49,7 @@ private:
         entt::registry& actors,
         const GameTextureAtlas& atlas,
         Input& input);
+
+    static void updateLoadoutWithStartingWeapon(
+        LevelCreationArtifact& artifact, const WeaponCombo startingWeapon);
 };

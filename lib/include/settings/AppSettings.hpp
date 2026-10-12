@@ -38,4 +38,4 @@ struct [[nodiscard]] AppSettingsStorageModel final
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-    AppSettingsStorageModel, audio, video, input, bindings);
+    AppSettingsStorageModel, audio, video, input, bindings, saves);

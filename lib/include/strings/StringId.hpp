@@ -21,8 +21,16 @@ enum class [[nodiscard]] StringId
     GameSetup,
     BoonLocked,
     BoonWave4,
-    BoonWave8,
     BoonExtraWeapon,
+    StartingWeapon,
+    StartingWeapon_None,
+    StartingWeapon_Random,
+    StartingWeapon_Sweeper,
+    StartingWeapon_Landmine,
+    StartingWeapon_Fragshot,
+    StartingWeapon_Painless,
+    StartingWeapon_WorstEver,
+    StartingWeapon_Tower,
 
     // Options
     Apply,
