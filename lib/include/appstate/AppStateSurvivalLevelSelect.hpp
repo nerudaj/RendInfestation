@@ -23,6 +23,10 @@ private:
 
     tgui::Container::Ptr buildContent();
 
+    tgui::Container::Ptr buildMapSelectLayout();
+
+    tgui::Container::Ptr buildBoonSelectLayout();
+
     void buildMapDetailLayout(tgui::Container::Ptr parent, size_t mapIdx);
 
     void onBack();

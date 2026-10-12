@@ -16,9 +16,9 @@ enum class [[nodiscard]] StringId
     Clear,
 
     // Survival Level Select
-    SurvivalLevelSelect,
+    SurvivalSetupTitle,
     SelectMap,
-    SelectBoon,
+    GameSetup,
     BoonLocked,
     BoonWave4,
     BoonWave8,

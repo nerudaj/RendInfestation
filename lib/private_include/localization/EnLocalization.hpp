@@ -18,9 +18,9 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { Clear, "Clear" },
 
     // Survival Level Select
-    { SurvivalLevelSelect, "Map selection" },
+    { SurvivalSetupTitle, "Survival" },
     { SelectMap, "Map" },
-    { SelectBoon, "Boons" },
+    { GameSetup, "Modifiers" },
     { BoonLocked, "- Locked -" },
     { BoonWave4, "Start at wave 4" },
     { BoonWave8, "Start at wave 8" },

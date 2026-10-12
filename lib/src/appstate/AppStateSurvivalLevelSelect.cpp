@@ -34,12 +34,10 @@ void AppStateSurvivalLevelSelect::restoreFocusImpl(const std::string& message)
 void AppStateSurvivalLevelSelect::buildLayout()
 {
     dic.gui.rebuildWith(
-        dic.guiBuilderFactory.createDefaultLayoutBuilder()
+        dic.guiBuilderFactory.createSimpleLayoutBuilder()
             .withNoBackground()
-            .withTitle(StringId::SurvivalLevelSelect, HeadingLevel::H1)
+            .withPlainTitle(StringId::SurvivalSetupTitle, HeadingLevel::H1)
             .withContent(buildContent())
-            .withNoTopLeftButton()
-            .withNoTopRightButton()
             .withBottomLeftButton(StringId::Back, [&] { onBack(); })
             .withBottomRightButton(StringId::PlayButton, [&] { onPlay(); })
             .build());
@@ -49,7 +47,16 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
 {
     auto&& content = tgui::HorizontalLayout::create();
 
-    auto&& levelSelectPanel = tgui::Panel::create({ "50%", "100%" });
+    content->add(buildMapSelectLayout());
+    content->addSpace(0.05f);
+    content->add(buildBoonSelectLayout());
+
+    return content;
+}
+
+tgui::Container::Ptr AppStateSurvivalLevelSelect::buildMapSelectLayout()
+{
+    auto&& levelSelectPanel = tgui::Panel::create();
     levelSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
     levelSelectPanel->add(WidgetBuilder::createCarousel(
         LEVEL_NAMES.size(),
@@ -60,36 +67,15 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
         },
         dic.sizer,
         dic.soundPlayer));
-    /*auto&& vbox = tgui::Group::create();
-    vbox->getRenderer()->setPadding({ 10.f, 10.f });
-    levelSelectPanel->add(vbox);
+    return levelSelectPanel;
+}
 
-    auto&& labelRow = WidgetBuilder::createRow(dic.sizer);
-    labelRow->add(WidgetBuilder::createTextLabel(
-        dic.strings.getString(StringId::SelectMap), dic.sizer, "justify"_true));
-    vbox->add(labelRow, "LabelRow");
-
-    auto&& levelCarousel = WidgetBuilder::createCarousel(
-        LEVEL_NAMES.size(),
-        [this](tgui::Container::Ptr parent, size_t page)
-        {
-            gameProps.mapName = LEVEL_IDS.at(page);
-            buildMapDetailLayout(parent, page);
-        },
-        dic.sizer,
-        dic.soundPlayer);
-
-    levelCarousel->setSize({ "100%", "parent.innerheight - LabelRow.height" });
-    TguiHelper::alignInParent(
-        levelCarousel,
-        tgui::HorizontalAlignment::Left,
-        tgui::VerticalAlignment::Bottom);
-    vbox->add(levelCarousel);*/
-
-    auto&& boonSelectPanel = tgui::Panel::create({ "50%", "100%" });
+tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
+{
+    auto&& boonSelectPanel = tgui::Panel::create();
     boonSelectPanel->add(
         dic.guiBuilderFactory.createFormBuilder()
-            .addLabel(StringId::SelectBoon)
+            .addLabel(StringId::GameSetup)
             .addOption(
                 dic.settings.saves.unlockedBoons.wave4start
                     ? StringId::BoonWave4
@@ -99,16 +85,6 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
                     [&](bool value) { gameProps.boons.wave4start = value; },
                     WidgetOptions {
                         .enabled = dic.settings.saves.unlockedBoons.wave4start,
-                    }))
-            .addOption(
-                dic.settings.saves.unlockedBoons.wave8start
-                    ? StringId::BoonWave8
-                    : StringId::BoonLocked,
-                WidgetBuilder::createCheckbox(
-                    false,
-                    [&](bool value) { gameProps.boons.wave8start = value; },
-                    WidgetOptions {
-                        .enabled = dic.settings.saves.unlockedBoons.wave8start,
                     }))
             .addOption(
                 dic.settings.saves.unlockedBoons.extraWeapon
@@ -122,11 +98,7 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildContent()
                     }))
             .build());
 
-    content->add(levelSelectPanel);
-    content->addSpace(0.05f);
-    content->add(boonSelectPanel);
-
-    return content;
+    return boonSelectPanel;
 }
 
 void AppStateSurvivalLevelSelect::buildMapDetailLayout(
