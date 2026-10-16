@@ -125,6 +125,10 @@ enum class [[nodiscard]] StringId
 
     // Game
     Interact,
+    NewWeaponComboUnlocked,
+    Wave4SkipUnlocked,
+    ExtraWeaponUnlocked,
+    NewMapUnlocked,
 
     // Survival progression
     NewWeaponModuleUnlocked,

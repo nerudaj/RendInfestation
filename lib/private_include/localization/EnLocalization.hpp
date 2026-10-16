@@ -144,6 +144,10 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
 
     // Game
     { Interact, "[interact]" },
+    { NewWeaponComboUnlocked, "New weapon combo discovered!" },
+    { Wave4SkipUnlocked, "You can now start from wave 4!" },
+    { ExtraWeaponUnlocked, "Extra starting weapon unlocked!" },
+    { NewMapUnlocked, "New map unlocked!" },
 
     // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },
