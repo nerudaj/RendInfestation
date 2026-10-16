@@ -70,7 +70,7 @@ constexpr float CAMERA_SHAKE_MAGNITUDE = 8.f;
 constexpr float CAMERA_MOVE_SPEED = 256.f;
 constexpr float FALL_SPEED = 0.75f; // percent per second
 
-constexpr const char* FONT_NAME = "PublicPixel-rv0pA.ttf";
+constexpr const char* FONT_NAME = "PressStart2P-Regular.ttf";
 constexpr const unsigned FONT_BASE_HEIGHT = 8u;
 
 // Z-indices
