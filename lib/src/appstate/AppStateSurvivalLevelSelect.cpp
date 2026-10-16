@@ -130,6 +130,7 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
             parent->add(WidgetBuilder::createTextLabel(
                 dic.strings.getString(getWeaponComboName(combos[pageIdx])),
                 dic.sizer));
+            gameProps.boons.startingWeapon = static_cast<WeaponCombo>(pageIdx);
         },
         dic.sizer,
         dic.soundPlayer);
@@ -174,6 +175,5 @@ void AppStateSurvivalLevelSelect::onBack()
 
 void AppStateSurvivalLevelSelect::onPlay()
 {
-    gameProps.boons.startingWeapon = WeaponCombo::Random;
     app.pushState<AppStateLoading>(dic, gameProps);
 }

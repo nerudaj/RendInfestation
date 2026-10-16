@@ -79,6 +79,10 @@ void RenderingEngine::updateCameraPosition(const dgm::Time& time)
         * std::clamp(directionToNew.length(), 0.f, 512.f * time.getDeltaTime());
 
     setCameraPosition(cameraPosition);
+
+    auto zoomLevel = std::clamp(scene.actorWithInputCount / 30.f, 1.f, 3.f);
+
+    worldCamera.setZoom(zoomLevel);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
