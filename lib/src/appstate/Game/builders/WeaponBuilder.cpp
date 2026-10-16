@@ -9,13 +9,16 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
         using enum WeaponModule;
     case None:
         return std::identity {};
-    case CadenceBarrel:
+
+    case SpreadBarrel_x4:
         return [](WeaponProperties props)
         {
-            props.fireDelay /= 4.f;
-            props.kickback += 10.f;
-            props.baseProjectileDamage -= props.baseProjectileDamage / 4;
-            props.spread *= 2;
+            props.soundId = SoundId::Shotgun;
+            props.numShots *= 4;
+            // props.baseProjectileDamage /= 2;
+            props.kickback += 100.f;
+            props.fireDelay *= 1.5f;
+            props.spread *= 8;
             return props;
         };
 
@@ -31,28 +34,13 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             return props;
         };
 
-    case SpreadBarrel_x4:
+    case CadenceBarrel:
         return [](WeaponProperties props)
         {
-            props.soundId = SoundId::Shotgun;
-            props.numShots *= 4;
-            // props.baseProjectileDamage /= 2;
-            props.kickback += 100.f;
-            props.fireDelay *= 1.5f;
-            props.spread *= 8;
-            return props;
-        };
-
-    case BigBullet:
-        return [](WeaponProperties props)
-        {
-            props.projectileSpeed /= 2.f;
-            props.baseProjectileDamage *= 1.5f;
-            props.kickback += 150.f;
-            props.fireDelay *= 1.4f;
-            props.projectileTraits =
-                props.projectileTraits | ProjectileTraits::Big;
-            props.projectileLifetime *= 2.f;
+            props.fireDelay /= 4.f;
+            props.kickback += 10.f;
+            props.baseProjectileDamage -= props.baseProjectileDamage / 4;
+            props.spread *= 2;
             return props;
         };
 
@@ -75,6 +63,27 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             return props;
         };
 
+    case BigBullet:
+        return [](WeaponProperties props)
+        {
+            props.projectileSpeed /= 2.f;
+            props.baseProjectileDamage *= 1.5f;
+            props.kickback += 150.f;
+            props.fireDelay *= 1.4f;
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Big;
+            props.projectileLifetime *= 2.f;
+            return props;
+        };
+
+    case Splitter:
+        return [](WeaponProperties props)
+        {
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::SplitOnHit;
+            return props;
+        };
+
     case Spikes:
         return [](WeaponProperties props)
         {
@@ -90,6 +99,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.progressiveCooldownRate = 0.05f;
             return props;
         };
+
     case Push:
         return [](WeaponProperties props)
         {
@@ -97,6 +107,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
                 props.projectileTraits | ProjectileTraits::Push;
             return props;
         };
+
     case ExplosiveAmmo:
         return [](WeaponProperties props)
         {
@@ -120,14 +131,6 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.kickback += 100.f;
             props.fireDelay *= 2.f;
             props.baseProjectileDamage *= 4;
-            return props;
-        };
-
-    case Splitter:
-        return [](WeaponProperties props)
-        {
-            props.projectileTraits =
-                props.projectileTraits | ProjectileTraits::SplitOnHit;
             return props;
         };
 

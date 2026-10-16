@@ -72,31 +72,69 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildMapSelectLayout()
 
 tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
 {
-    auto&& boonSelectPanel = tgui::Panel::create();
-    boonSelectPanel->add(
-        dic.guiBuilderFactory.createFormBuilder()
-            .addLabel(StringId::GameSetup)
-            .addOption(
-                dic.settings.saves.unlockedBoons.wave4start
-                    ? StringId::BoonWave4
-                    : StringId::BoonLocked,
-                WidgetBuilder::createCheckbox(
-                    false,
-                    [&](bool value) { gameProps.boons.wave4start = value; },
-                    WidgetOptions {
-                        .enabled = dic.settings.saves.unlockedBoons.wave4start,
-                    }))
-            .addOption(
-                dic.settings.saves.unlockedBoons.extraWeapon
-                    ? StringId::BoonExtraWeapon
-                    : StringId::BoonLocked,
-                WidgetBuilder::createCheckbox(
-                    false,
-                    [&](bool value) { gameProps.boons.extraWeapon = value; },
-                    WidgetOptions {
-                        .enabled = dic.settings.saves.unlockedBoons.extraWeapon,
-                    }))
-            .build());
+    auto&& boonSelectPanel = tgui::ScrollablePanel::create();
+    boonSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
+
+    auto&& vbox = tgui::GrowVerticalLayout::create();
+    boonSelectPanel->add(vbox);
+
+    auto&& titleRow = WidgetBuilder::createRow(dic.sizer);
+    titleRow->add(WidgetBuilder::createTextLabel(
+        dic.strings.getString(StringId::GameSetup), dic.sizer, "justify"_true));
+    vbox->add(titleRow);
+
+    auto&& makeOption = [&](StringId labelId, tgui::Widget::Ptr widget)
+    {
+        auto&& hbox = tgui::HorizontalLayout::create(
+            { "100%", dic.sizer.getBaseContainerHeight() });
+
+        hbox->add(
+            WidgetBuilder::createTextLabel(
+                dic.strings.getString(labelId), dic.sizer),
+            0.8f);
+
+        hbox->add(widget, 0.2f);
+
+        return hbox;
+    };
+
+    auto&& saveMgr = dic.saveManager;
+
+    vbox->add(makeOption(
+        saveMgr.isWave4StartUnlocked() ? StringId::BoonWave4
+                                       : StringId::BoonLocked,
+        WidgetBuilder::createCheckbox(
+            false,
+            [&](bool value) { gameProps.boons.wave4start = value; },
+            WidgetOptions {
+                .enabled = saveMgr.isWave4StartUnlocked(),
+            })));
+
+    vbox->add(makeOption(
+        saveMgr.isExtraWeaponUnlocked() ? StringId::BoonExtraWeapon
+                                        : StringId::BoonLocked,
+        WidgetBuilder::createCheckbox(
+            false,
+            [&](bool value) { gameProps.boons.extraWeapon = value; },
+            WidgetOptions {
+                .enabled = saveMgr.isExtraWeaponUnlocked(),
+            })));
+
+    auto&& weaponSelector = WidgetBuilder::createCarousel(
+        saveMgr.getUnlockedCombos().size(),
+        [&](tgui::Container::Ptr parent, size_t pageIdx)
+        {
+            parent->removeAllWidgets();
+            auto&& combos =
+                saveMgr.getUnlockedCombos() | std::ranges::to<std::vector>();
+            parent->add(WidgetBuilder::createTextLabel(
+                dic.strings.getString(getWeaponComboName(combos[pageIdx])),
+                dic.sizer));
+        },
+        dic.sizer,
+        dic.soundPlayer);
+    weaponSelector->setSize({ "100%", dic.sizer.getBaseContainerHeight() * 2 });
+    vbox->add(weaponSelector);
 
     return boonSelectPanel;
 }
@@ -136,5 +174,6 @@ void AppStateSurvivalLevelSelect::onBack()
 
 void AppStateSurvivalLevelSelect::onPlay()
 {
+    gameProps.boons.startingWeapon = WeaponCombo::Random;
     app.pushState<AppStateLoading>(dic, gameProps);
 }

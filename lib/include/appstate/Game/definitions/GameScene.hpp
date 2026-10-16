@@ -11,6 +11,7 @@
 #include <DGM/dgm.hpp>
 #include <array>
 #include <entt/entt.hpp>
+#include <queue>
 #include <set>
 #include <vector>
 
@@ -23,6 +24,7 @@ struct [[nodiscard]] TimedScript final
 struct [[nodiscard]] HudMessage final
 {
     std::string text;
+    std::queue<StringId> queuedMessages;
     sf::Time displayTime = sf::Time::Zero;
 };
 
@@ -34,6 +36,8 @@ struct [[nodiscard]] GameStatus final
     int shotsFired = 0;
     int waveBeaten = 0;
 };
+
+using Ledger = std::vector<StringId>;
 
 struct [[nodiscard]] GameScene final
 {
@@ -61,6 +65,8 @@ struct [[nodiscard]] GameScene final
     // recomputed each frame, used for progressive cooldowns
     std::map<SkinType, unsigned> skinCounts = {};
     size_t actorWithInputCount = 0;
+
+    Ledger ledger; // Game over screen can log what was unlocked
 
     void updatePlayerLoadout();
 };

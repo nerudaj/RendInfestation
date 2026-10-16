@@ -31,7 +31,14 @@ public:
         , atlas(atlas)
         , scene(scene)
         , aiEngine(scene)
-        , gameRulesEngine(gameEvents, scene, atlas, dic.input, dic.soundPlayer)
+        , gameRulesEngine(
+              gameEvents,
+              scene,
+              atlas,
+              dic.input,
+              dic.soundPlayer,
+              dic.strings,
+              dic.saveManager)
         , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
         , particleEngine(scene)
@@ -75,4 +82,5 @@ private:
     ParticleEngine particleEngine;
     RenderingEngine renderingEngine;
     Janitor janitor;
+    int previousWeaponCount = 0;
 };

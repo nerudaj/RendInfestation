@@ -28,7 +28,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
         { WeaponCombo::Tower, "tower" },
     });
 
-static StringId getWeaponComboName(const WeaponCombo combo)
+static inline StringId getWeaponComboName(const WeaponCombo combo)
 {
     switch (combo)
     {

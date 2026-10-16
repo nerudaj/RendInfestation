@@ -9,6 +9,8 @@
 #include "audio/SoundPlayer.hpp"
 #include "input/Input.hpp"
 #include "misc/EventQueue.hpp"
+#include "misc/SaveManager.hpp"
+#include "strings/StringProvider.hpp"
 
 class [[nodiscard]] GameRulesEngine final
 {
@@ -18,12 +20,16 @@ public:
         GameScene& scene,
         const GameTextureAtlas& atlas,
         Input& input,
-        SoundPlayer& player) noexcept
+        SoundPlayer& player,
+        const StringProvider<StringId>& strings,
+        SaveManager& saveManager) noexcept
         : eventQueue(eventQueue)
         , scene(scene)
         , atlas(atlas)
         , input(input)
         , soundPlayer(player)
+        , strings(strings)
+        , saves(saveManager)
     {
     }
 
@@ -66,8 +72,12 @@ public:
 
     void updateHealth();
 
+    void evaluateUnlocks(int previousWeaponCount);
+
 private:
     void updateLifetimes(const dgm::Time& time);
+
+    void updateMessages(const dgm::Time& time);
 
     Weapon& getActiveWeapon(WeaponInventory& inventory) const
     {
@@ -86,11 +96,7 @@ private:
     void handleTriggerToActorCollision(
         entt::entity triggerIdx, entt::entity actorIdx);
 
-    void postMessage(const std::string& message)
-    {
-        scene.hudMessage.text = message;
-        scene.hudMessage.displayTime = sf::seconds(3.f);
-    }
+    void postMessage(StringId messageId);
 
     sf::Vector2f pickEnemySpawnPosition() const;
 
@@ -105,4 +111,6 @@ private:
     const GameTextureAtlas& atlas;
     Input& input;
     SoundPlayer& soundPlayer;
+    const StringProvider<StringId>& strings;
+    SaveManager& saves;
 };

@@ -258,17 +258,20 @@ void GameRulesEngine::update(const dgm::Time& time)
 
     updateTriggers(time);
 
-    if (scene.hudMessage.displayTime > sf::Time::Zero)
-        scene.hudMessage.displayTime -= time.getElapsed();
+    updateMessages(time);
 }
 
 void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
 {
+    scene.actorWithInputCount = 0;
+
     for (auto&& [entity, controller, body, lookDirection, weaponInventory] :
          scene.actors
              .view<EntityInput, PhysicsBody, LookDirection, WeaponInventory>()
              .each())
     {
+        ++scene.actorWithInputCount;
+
         auto&& forwardImpulse = controller->getForward();
         if (body.ragdoll) forwardImpulse = sf::Vector2f {};
         body.forward += forwardImpulse * body.maxSpeed;
@@ -359,6 +362,92 @@ void GameRulesEngine::updateHealth()
     }
 }
 
+void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
+{
+    if (previousWeaponCount < scene.loadout.weapons.size()
+        && saves.tryUnlockExtraWeapon() == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+
+    const bool hasBeatenWave4 =
+        scene.survivalGameDirector
+        && scene.survivalGameDirector->getContext().wave > 4;
+    if (hasBeatenWave4 && saves.tryUnlockWave4Start() == UnlockStatus::Ok)
+    {
+        postMessage(StringId::Wave4SkipUnlocked);
+    }
+
+    const bool allLoadoutSlotsUsed = std::ranges::any_of(
+        scene.loadout.weapons,
+        [](const WeaponConfig& weapon)
+        {
+            // true if all slots are used
+            return std::find(
+                       weapon.modules.begin(),
+                       weapon.modules.end(),
+                       WeaponModule::None)
+                   == weapon.modules.end();
+        });
+
+    if (allLoadoutSlotsUsed
+        && saves.tryUnlockWeaponCombo(WeaponCombo::Random) == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+
+    // TODO: not in unlockedModules, but rather in loadout
+    auto&& hasCombo = [this](const std::array<WeaponModule, 3u>& combo)
+    {
+        return std::all_of(
+            combo.begin(),
+            combo.end(),
+            [&](const WeaponModule module)
+            { return scene.unlockedModules.contains(module); });
+    };
+
+    using enum WeaponModule;
+    if (hasCombo({ Push, BigBullet, PassthruAmmo })
+        && saves.tryUnlockWeaponCombo(WeaponCombo::Sweeper) == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+
+    if (hasCombo({ Spikes, ExplosiveAmmo, SpreadBarrel_x2 })
+        && saves.tryUnlockWeaponCombo(WeaponCombo::Landmine)
+               == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+
+    if (hasCombo({ Spikes, Splitter, SpreadBarrel_x4 })
+        && saves.tryUnlockWeaponCombo(WeaponCombo::Fragshot)
+               == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+
+    if (hasCombo({ CadenceBarrel, Ricochet, SpreadBarrel_x2 })
+        && saves.tryUnlockWeaponCombo(WeaponCombo::Painless)
+               == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+
+    if (hasCombo({ Spikes, ExplosiveAmmo, PassthruAmmo })
+        && saves.tryUnlockWeaponCombo(WeaponCombo::WorstEver)
+               == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+
+    if (hasCombo({ Turret, CadenceBarrel, Push })
+        && saves.tryUnlockWeaponCombo(WeaponCombo::Tower) == UnlockStatus::Ok)
+    {
+        postMessage(StringId::ExtraWeaponUnlocked);
+    }
+}
+
 void GameRulesEngine::updateLifetimes(const dgm::Time& time)
 {
     for (auto&& [entity, lifetime] : scene.actors.view<Lifetime>().each())
@@ -385,6 +474,20 @@ void GameRulesEngine::updateLifetimes(const dgm::Time& time)
         {
             eventQueue.pushEvent<event::ObjectDestroyed>(entity);
         }
+    }
+}
+
+void GameRulesEngine::updateMessages(const dgm::Time& time)
+{
+    if (scene.hudMessage.displayTime > sf::Time::Zero)
+        scene.hudMessage.displayTime -= time.getElapsed();
+    else if (
+        scene.hudMessage.displayTime <= sf::Time::Zero
+        && !scene.hudMessage.queuedMessages.empty())
+    {
+        const auto messageId = scene.hudMessage.queuedMessages.front();
+        scene.hudMessage.queuedMessages.pop();
+        postMessage(messageId);
     }
 }
 
@@ -478,6 +581,22 @@ void GameRulesEngine::handleTriggerToActorCollision(
             scene.actors.try_get<InteractionTriggerInventory>(triggerIdx))
     {
         scene.interactionTrigger = *inventory2;
+    }
+}
+
+void GameRulesEngine::postMessage(StringId messageId)
+{
+    scene.ledger.push_back(messageId);
+
+    // Still displaying previous message
+    if (scene.hudMessage.displayTime > sf::Time::Zero)
+    {
+        scene.hudMessage.queuedMessages.push(messageId);
+    }
+    else
+    {
+        scene.hudMessage.text = strings.getString(messageId);
+        scene.hudMessage.displayTime = sf::seconds(3.f);
     }
 }
 

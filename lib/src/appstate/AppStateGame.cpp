@@ -57,7 +57,10 @@ void AppStateGame::update()
         overloads { [&](event::WorkbenchOpened&)
                     { app.pushState<AppStateWeaponModification>(dic, scene); },
                     [&](event::WaveEnded&)
-                    { app.pushState<AppStateChooseBonus>(dic, scene); },
+                    {
+                        previousWeaponCount = scene.loadout.weapons.size();
+                        app.pushState<AppStateChooseBonus>(dic, scene);
+                    },
                     [&](auto&&) {} });
     janitor.cleanScene(scene);
 
@@ -92,7 +95,8 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
         std::visit(
             overloads {
                 [&](PopIfNotMenu&) { app.popState(msg); },
-                [&](PopIfNotGame&) {},
+                [&](PopIfNotGame&)
+                { gameRulesEngine.evaluateUnlocks(previousWeaponCount); },
             },
             *message);
     }

@@ -402,7 +402,7 @@ void ActorBuilder::shatterProjectile(
     auto skin = actors.get<Skin>(projectile);
     skin.scale *= 0.5f;
     auto inventory = actors.get<ProjectileInventory>(projectile);
-    // TODO: somehow substract the trait for splitting
+
     inventory.damage /= 2;
     inventory.traits = inventory.traits - ProjectileTraits::SplitOnHit;
 
