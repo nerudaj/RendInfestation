@@ -41,7 +41,7 @@ void AppStateSurvivalGameOver::buildLayout()
     dic.gui.rebuildWith(
         builderFactory.createSimpleLayoutBuilder()
             .withNoBackground()
-            .withTitleInPanel(
+            .withPlainTitle(
                 StringId::GameOver,
                 HeadingLevel::H1,
                 tgui::HorizontalAlignment::Left)
