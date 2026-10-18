@@ -9,6 +9,12 @@
 #include <map>
 #include <vector>
 
+enum class [[nodiscard]] SoundPostProcess
+{
+    None,
+    DropPitch
+};
+
 class [[nodiscard]] SoundPlayer final : public GuiAudioInterface
 {
 public:
@@ -24,10 +30,16 @@ public:
      *
      * \returns The duration of the sound that started playing.
      */
-    sf::Time playPovSound(SoundId::IdType soundId)
+    sf::Time playPovSound(
+        SoundId::IdType soundId,
+        const SoundPostProcess postProcess = SoundPostProcess::None)
     {
-        return playSound(
-            soundId, SoundChannel::POV, 0.f, Random::randomFloat(0.85f, 1.15f));
+        const float pitch =
+            Random::randomFloat(0.85f, 1.15f)
+                    - (postProcess == SoundPostProcess::DropPitch)
+                ? 0.8f
+                : 0.f;
+        return playSound(soundId, SoundChannel::POV, 0.f, pitch);
     }
 
     /**

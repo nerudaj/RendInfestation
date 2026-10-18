@@ -55,7 +55,11 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
 
     if (e.entity == scene.playerEntity)
     {
-        soundPlayer.playPovSound(weapon.soundId);
+        const bool shootsBig =
+            weapon.defaultProjectileInventory.traits & ProjectileTraits::Big;
+        soundPlayer.playPovSound(
+            weapon.soundId,
+            shootsBig ? SoundPostProcess::DropPitch : SoundPostProcess::None);
     }
     else
     {
