@@ -138,6 +138,10 @@ namespace event
         {
         }
     };
+
+    struct [[nodiscard]] PlayerDied final
+    {
+    };
 } // namespace event
 
 using GameEvent = std::variant<
@@ -156,4 +160,5 @@ using GameEvent = std::variant<
     event::ActorDamaged,
     event::WorkbenchOpened,
     event::WaveEnded,
-    event::SurvivalSpawnerTimerHit>;
+    event::SurvivalSpawnerTimerHit,
+    event::PlayerDied>;

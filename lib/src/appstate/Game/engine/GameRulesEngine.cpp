@@ -175,12 +175,7 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
         && skin->kind == EntityKind::Player
         && scene.playerEntityLower != entt::null)
     {
-        // TODO: sound
-        scene.status.finished = true;
-        scene.actors.destroy(scene.playerEntityLower);
-        scene.playerEntityLower = entt::null;
-        scene.actors.remove<EntityInput>(e.entity);
-        scene.actors.remove<Health>(e.entity);
+        eventQueue.pushEvent<event::PlayerDied>();
     }
 }
 
@@ -192,9 +187,12 @@ void GameRulesEngine::operator()(const event::SurvivalSpawnerTimerHit& e)
 
 void GameRulesEngine::operator()(const event::ActorDamaged& e)
 {
-    auto&& [health, body] = scene.actors.get<Health, PhysicsBody>(e.entity);
+    auto&& health = scene.actors.try_get<Health>(e.entity);
+    if (!health) return;
 
-    health.value -= e.damageAmount;
+    auto&& body= scene.actors.get<PhysicsBody>(e.entity);
+
+    health->value -= e.damageAmount;
 
     if (e.impactForce.length() == 0.f || body.pinned) return;
 
@@ -228,6 +226,16 @@ void GameRulesEngine::operator()(const event::WaveEnded&)
 
     assert(scene.survivalGameDirector);
     scene.status.waveBeaten = scene.survivalGameDirector->getContext().wave;
+}
+
+void GameRulesEngine::operator()(const event::PlayerDied& e)
+{
+    soundPlayer.playPovSound(SoundId::PlayerDeathScream);
+    scene.status.finished = true;
+    scene.actors.destroy(scene.playerEntityLower);
+    scene.playerEntityLower = entt::null;
+    scene.actors.remove<EntityInput>(scene.playerEntity);
+    scene.actors.remove<Health>(scene.playerEntity);
 }
 
 void GameRulesEngine::update(const dgm::Time& time)

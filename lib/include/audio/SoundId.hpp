@@ -14,7 +14,8 @@ namespace SoundId
     const IdType ShrapnelFire = "grenade_launcher_fire-2.wav";
     const IdType Hyperbeam = "laser_fire.wav";
     const IdType RocketLauncher = "zombie_cards_launcher-2.wav";
-    const IdType ScuttlebugAttack = "scuttlebug_attack_alt.wav";
+    const IdType ScuttlebugAttack =
+        "scuttlebug_attack_alt.wav"; // TODO: not a very good sound
     const IdType GreaterScuttlebugAttack = "TY_SLICE-2.wav";
     const IdType BigheadAttack = "infestation_bighead_attack-2.wav";
     const IdType BigheadRangedAttack = "error-2.wav";
@@ -25,4 +26,5 @@ namespace SoundId
     const IdType BeholderDeath = "blood_spatter-2.wav";
     const IdType Crafting = "crafting-2.wav";
     const IdType TreeDestroyed = "infestation_behemoth_attack-2.wav";
+    const IdType PlayerDeathScream = "human_male_death_scream.wav";
 } // namespace SoundId

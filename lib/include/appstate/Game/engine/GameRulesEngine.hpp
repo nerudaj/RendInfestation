@@ -61,6 +61,8 @@ public:
 
     void operator()(const event::WaveEnded& e);
 
+    void operator()(const event::PlayerDied& e);
+
     void operator()(const auto&) {}
 
 public:
