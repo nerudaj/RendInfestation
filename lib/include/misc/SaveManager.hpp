@@ -62,7 +62,7 @@ public:
     }
 
 private:
-    int version = 2;
+    const static int version = 2;
     int bestScore = 0;
     bool wave4startUnlocked = false;
     bool extraWeaponUnlocked = false;

@@ -190,7 +190,7 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
     auto&& health = scene.actors.try_get<Health>(e.entity);
     if (!health) return;
 
-    auto&& body= scene.actors.get<PhysicsBody>(e.entity);
+    auto&& body = scene.actors.get<PhysicsBody>(e.entity);
 
     health->value -= e.damageAmount;
 
@@ -376,15 +376,16 @@ void GameRulesEngine::updateHealth()
 
 void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
 {
-    if (previousWeaponCount < scene.loadout.weapons.size()
+    if (previousWeaponCount == 1 && scene.loadout.weapons.size() == 2
         && saves.tryUnlockExtraWeapon() == UnlockStatus::Ok)
     {
         postMessage(StringId::ExtraWeaponUnlocked);
     }
 
+    // This is evaluated before SurvivalSpawnerContext updates wave number
     const bool hasBeatenWave4 =
         scene.survivalGameDirector
-        && scene.survivalGameDirector->getContext().wave > 4;
+        && scene.survivalGameDirector->getContext().wave == 4;
     if (hasBeatenWave4 && saves.tryUnlockWave4Start() == UnlockStatus::Ok)
     {
         postMessage(StringId::Wave4SkipUnlocked);
@@ -405,58 +406,65 @@ void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
     if (allLoadoutSlotsUsed
         && saves.tryUnlockWeaponCombo(WeaponCombo::Random) == UnlockStatus::Ok)
     {
-        postMessage(StringId::ExtraWeaponUnlocked);
+        postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    // TODO: not in unlockedModules, but rather in loadout
     auto&& hasCombo = [this](const std::array<WeaponModule, 3u>& combo)
     {
-        return std::all_of(
-            combo.begin(),
-            combo.end(),
-            [&](const WeaponModule module)
-            { return scene.unlockedModules.contains(module); });
+        const auto comboSet = combo | std::ranges::to<std::set>();
+
+        return std::any_of(
+            scene.loadout.weapons.begin(),
+            scene.loadout.weapons.end(),
+            [&comboSet](const WeaponConfig& config)
+            {
+                return std::all_of(
+                    config.modules.begin(),
+                    config.modules.end(),
+                    [&comboSet](const WeaponModule& module)
+                    { return comboSet.contains(module); });
+            });
     };
 
     using enum WeaponModule;
     if (hasCombo({ Push, BigBullet, PassthruAmmo })
         && saves.tryUnlockWeaponCombo(WeaponCombo::Sweeper) == UnlockStatus::Ok)
     {
-        postMessage(StringId::ExtraWeaponUnlocked);
+        postMessage(StringId::NewWeaponComboUnlocked);
     }
 
     if (hasCombo({ Spikes, ExplosiveAmmo, SpreadBarrel_x2 })
         && saves.tryUnlockWeaponCombo(WeaponCombo::Landmine)
                == UnlockStatus::Ok)
     {
-        postMessage(StringId::ExtraWeaponUnlocked);
+        postMessage(StringId::NewWeaponComboUnlocked);
     }
 
     if (hasCombo({ Spikes, Splitter, SpreadBarrel_x4 })
         && saves.tryUnlockWeaponCombo(WeaponCombo::Fragshot)
                == UnlockStatus::Ok)
     {
-        postMessage(StringId::ExtraWeaponUnlocked);
+        postMessage(StringId::NewWeaponComboUnlocked);
     }
 
     if (hasCombo({ CadenceBarrel, Ricochet, SpreadBarrel_x2 })
         && saves.tryUnlockWeaponCombo(WeaponCombo::Painless)
                == UnlockStatus::Ok)
     {
-        postMessage(StringId::ExtraWeaponUnlocked);
+        postMessage(StringId::NewWeaponComboUnlocked);
     }
 
     if (hasCombo({ Spikes, ExplosiveAmmo, PassthruAmmo })
         && saves.tryUnlockWeaponCombo(WeaponCombo::WorstEver)
                == UnlockStatus::Ok)
     {
-        postMessage(StringId::ExtraWeaponUnlocked);
+        postMessage(StringId::NewWeaponComboUnlocked);
     }
 
     if (hasCombo({ Turret, CadenceBarrel, Push })
         && saves.tryUnlockWeaponCombo(WeaponCombo::Tower) == UnlockStatus::Ok)
     {
-        postMessage(StringId::ExtraWeaponUnlocked);
+        postMessage(StringId::NewWeaponComboUnlocked);
     }
 }
 

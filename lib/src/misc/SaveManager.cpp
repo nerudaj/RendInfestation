@@ -11,13 +11,14 @@ void to_json(nlohmann::json& j, const SaveManager& mgr)
 
 void from_json(const nlohmann::json& j, SaveManager& mgr)
 {
-    j.at("version").get_to(mgr.version);
+    int jsonVersion = 0;
+    j.at("version").get_to(jsonVersion);
 
-    if (mgr.version >= 1)
+    if (jsonVersion == 1)
     {
         j.at("bestScore").get_to(mgr.bestScore);
     }
-    else if (mgr.version >= 2)
+    else if (jsonVersion >= 2)
     {
         j.at("wave4").get_to(mgr.wave4startUnlocked);
         j.at("extraWeapon").get_to(mgr.extraWeaponUnlocked);

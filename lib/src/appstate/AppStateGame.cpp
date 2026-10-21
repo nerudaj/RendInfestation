@@ -95,12 +95,12 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
         std::visit(
             overloads {
                 [&](PopIfNotMenu&) { app.popState(msg); },
-                [&](PopIfNotGame&)
-                { gameRulesEngine.evaluateUnlocks(previousWeaponCount); },
+                [&](PopIfNotGame&) {},
             },
             *message);
     }
 
+    gameRulesEngine.evaluateUnlocks(previousWeaponCount);
     sf::Mouse::setPosition(
         sf::Vector2i(app.window.getSize() / 2u),
         app.window.getSfmlWindowContext());

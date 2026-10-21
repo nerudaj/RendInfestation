@@ -13,6 +13,9 @@ AppStateSurvivalGameOver::AppStateSurvivalGameOver(
     {
         dic.saveManager.updateBestScore(status.score);
     }
+
+    // Write all unlocks etc
+    dic.saveProgress();
 }
 
 void AppStateSurvivalGameOver::input()
