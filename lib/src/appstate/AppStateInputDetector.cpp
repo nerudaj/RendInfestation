@@ -54,7 +54,6 @@ void AppStateInputDetector::buildLayout()
         dic.strings.getString(StringId::ReleaseAllInputs),
         dic.sizer,
         "justify"_true);
-    label->getRenderer()->setTextColor(tgui::Color::Black);
     panel->add(label, LABEL_ID);
 }
 
