@@ -36,9 +36,7 @@ public:
     {
         const float pitch =
             Random::randomFloat(0.85f, 1.15f)
-                    - (postProcess == SoundPostProcess::DropPitch)
-                ? 0.8f
-                : 0.f;
+            - ((postProcess == SoundPostProcess::DropPitch) ? 0.4f : 0.f);
         return playSound(soundId, SoundChannel::POV, 0.f, pitch);
     }
 
