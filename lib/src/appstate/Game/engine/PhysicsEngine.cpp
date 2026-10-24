@@ -47,6 +47,9 @@ void PhysicsEngine::updateForConcreteCollider(
 
         if (moment.x == 0.f) body.forward.x *= -body.bounciness;
         if (moment.y == 0.f) body.forward.y *= -body.bounciness;
+
+        if (body.bounciness > 0.f && (moment.x == 0.f || moment.y == 0.f))
+            eventQueue.pushEvent<event::ActorBounced>(entity);
     }
 
     if (body.useAltMesh)

@@ -41,6 +41,8 @@ public:
 
     void operator()(const event::ActorToActorCollision& e);
 
+    void operator()(const event::ActorBounced& e);
+
     void operator()(const event::ActorStartedAttack& e);
 
     void operator()(const event::ActorFiredWeapon& e);

@@ -27,6 +27,18 @@ void GameRulesEngine::operator()(const event::ActorToActorCollision& e)
     handleTriggerToActorCollision(e.entity2, e.entity1);
 }
 
+void GameRulesEngine::operator()(const event::ActorBounced& e)
+{
+    auto&& inventory = scene.actors.try_get<ProjectileInventory>(e.entity);
+
+    if (!inventory || !(inventory->traits & ProjectileTraits::Bouncy)) return;
+
+    playAttenuated(
+        SoundId::ProjectileBounce,
+        scene.actors.get<Collider>(e.entity),
+        SoundChannel::Ambient);
+}
+
 void GameRulesEngine::operator()(const event::ActorStartedAttack& e)
 {
     auto& skin = scene.actors.get<Skin>(e.entity);

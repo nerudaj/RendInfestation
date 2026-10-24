@@ -26,6 +26,13 @@ namespace event
         }
     };
 
+    struct [[nodiscard]] ActorBounced final
+    {
+        entt::entity entity;
+
+        explicit ActorBounced(entt::entity entity) : entity(entity) {}
+    };
+
     struct [[nodiscard]] ActorFiredWeapon final
     {
         entt::entity entity;
@@ -147,6 +154,7 @@ namespace event
 using GameEvent = std::variant<
     event::ActorToMeshCollision,
     event::ActorToActorCollision,
+    event::ActorBounced,
     event::ActorFiredWeapon,
     event::ProjectileDestroyed,
     event::ObjectDestroyed,

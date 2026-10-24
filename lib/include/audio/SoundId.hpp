@@ -27,4 +27,5 @@ namespace SoundId
     const IdType Crafting = "crafting-2.wav";
     const IdType TreeDestroyed = "infestation_behemoth_attack-2.wav";
     const IdType PlayerDeathScream = "human_male_death_scream.wav";
+    const IdType ProjectileBounce = "dart_bounce.wav";
 } // namespace SoundId
