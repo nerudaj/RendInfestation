@@ -1,6 +1,6 @@
 #include "appstate/AppStateLoading.hpp"
-#include "appstate/AppStateDimmer.hpp"
 #include "appstate/AppStateGame.hpp"
+#include "appstate/AppStateTransitions.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Game/builders/GameSceneBuilder.hpp"
 #include "appstate/Game/builders/GameTextureAtlasBuilder.hpp"

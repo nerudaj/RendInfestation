@@ -1,7 +1,7 @@
 #include "appstate/AppStateGame.hpp"
-#include "appstate/AppStateDimmer.hpp"
 #include "appstate/AppStatePause.hpp"
 #include "appstate/AppStateSurvivalGameOver.hpp"
+#include "appstate/AppStateTransitions.hpp"
 #include "appstate/AppStateWeaponModification.hpp"
 #include "appstate/Messaging.hpp"
 

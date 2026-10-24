@@ -1,5 +1,4 @@
 #include "appstate/AppStateSurvivalLevelSelect.hpp"
-#include "appstate/AppStateDimmer.hpp"
 #include "appstate/AppStateGame.hpp"
 #include "appstate/AppStateLoading.hpp"
 #include "appstate/CommonHandler.hpp"
