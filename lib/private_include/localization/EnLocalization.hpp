@@ -113,6 +113,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { InUse, "(in use)" },
     { Install, "Install" },
     { ConfigureLoadout, "Configure loadout" },
+    { RemoveMod, "Clear" },
 
     // WeaponModDec
     { WeaponModuleDesc_None, "No description" },
@@ -144,7 +145,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
 
     // Game
     { Interact, "[interact]" },
-    { NewWeaponComboUnlocked, "New weapon combo discovered!" },
+    { NewWeaponComboUnlocked, "New starting weapon unlocked!" },
     { Wave4SkipUnlocked, "You can now start from wave 4!" },
     { ExtraWeaponUnlocked, "Extra starting weapon unlocked!" },
     { NewMapUnlocked, "New map unlocked!" },

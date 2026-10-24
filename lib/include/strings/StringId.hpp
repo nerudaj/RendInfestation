@@ -106,6 +106,7 @@ enum class [[nodiscard]] StringId
     InUse,
     Install,
     ConfigureLoadout,
+    RemoveMod,
 
     // WeaponModificationDesc
     WeaponModuleDesc_None,

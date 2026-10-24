@@ -114,6 +114,8 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
 
     auto&& buttonList = tgui::GrowHorizontalLayout::create();
     buttonList->add(createSubmitButton(StringId::Back, [&] { onCancel(); }));
+    buttonList->add(
+        createSubmitButton(StringId::RemoveMod, [&] { onRemoveMod(); }));
     buttonList->add(createSubmitButton(
         StringId::Install, [&] { onApply(); }, "ApplyButton"));
     TguiHelper::alignInParent(
@@ -227,6 +229,12 @@ void AppStateWeaponModuleSelection::onCancel()
 void AppStateWeaponModuleSelection::onApply()
 {
     outModule = selectedModule;
+    app.popState();
+}
+
+void AppStateWeaponModuleSelection::onRemoveMod()
+{
+    outModule = WeaponModule::None;
     app.popState();
 }
 

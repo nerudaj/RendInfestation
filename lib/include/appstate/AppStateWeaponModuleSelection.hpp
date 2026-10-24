@@ -63,6 +63,8 @@ private:
 
     void onApply();
 
+    void onRemoveMod();
+
     void onModuleSelected(const WeaponModule newSelectedModule);
 
 private:
