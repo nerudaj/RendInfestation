@@ -243,6 +243,10 @@ void GameSceneBuilder::updateLoadoutWithStartingWeapon(
     else if (startingWeapon == WeaponCombo::Random)
     {
         auto&& allModules = ALLOWED_MODULES | std::ranges::to<std::vector>();
+        // WeaponModule::None must not be in this list
+        assert(
+            std::ranges::find(allModules, WeaponModule::None)
+            == allModules.end());
 
         std::shuffle(
             allModules.begin(),
@@ -289,7 +293,14 @@ void GameSceneBuilder::updateLoadoutWithStartingWeapon(
                                      WeaponModule::Push };
     }
 
+    assert(artifact.unlockedModules.size() == 3u);
     std::ranges::copy(
         artifact.unlockedModules,
         artifact.loadout.weapons.front().modules.begin());
+
+    assert(std::none_of(
+        artifact.loadout.weapons.front().modules.begin(),
+        artifact.loadout.weapons.front().modules.end(),
+        [](const WeaponModule module)
+        { return module == WeaponModule::None; }));
 }

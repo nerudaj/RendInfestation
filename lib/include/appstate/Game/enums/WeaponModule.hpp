@@ -25,17 +25,12 @@ enum class [[nodiscard]] WeaponModule
 };
 
 constexpr auto ALLOWED_MODULES = std::array {
-    WeaponModule::None,
-    WeaponModule::SpreadBarrel_x2,
-    WeaponModule::SpreadBarrel_x4,
-    WeaponModule::CadenceBarrel,
-    WeaponModule::ExplosiveAmmo,
-    WeaponModule::Ricochet,
-    WeaponModule::PassthruAmmo,
-    WeaponModule::BigBullet,
-    WeaponModule::Spikes,
-    WeaponModule::Splitter,
-    WeaponModule::Push,
+    // WeaponModule::None should not be part of this list
+    WeaponModule::SpreadBarrel_x2, WeaponModule::SpreadBarrel_x4,
+    WeaponModule::CadenceBarrel,   WeaponModule::ExplosiveAmmo,
+    WeaponModule::Ricochet,        WeaponModule::PassthruAmmo,
+    WeaponModule::BigBullet,       WeaponModule::Spikes,
+    WeaponModule::Splitter,        WeaponModule::Push,
     WeaponModule::Turret,
 };
 
