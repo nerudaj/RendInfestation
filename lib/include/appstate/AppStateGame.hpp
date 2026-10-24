@@ -52,12 +52,12 @@ public:
     {
         srand(static_cast<unsigned>(time(nullptr)));
         gameEvents.pushEvent<event::WaveEnded>();
-        dic.jukebox.play(JukeboxMode::Game);
+        dic.jukebox.changePlaylist(PLAYLIST.gameSongs);
     }
 
     ~AppStateGame()
     {
-        dic.jukebox.play(JukeboxMode::Menu);
+        dic.jukebox.changePlaylist(PLAYLIST.menuSongs);
     }
 
 public:

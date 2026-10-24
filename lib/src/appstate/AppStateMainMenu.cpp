@@ -13,7 +13,7 @@ AppStateMainMenu::AppStateMainMenu(
     : dgm::AppState(app), dic(dic)
 {
     buildLayout();
-    dic.jukebox.play(JukeboxMode::Menu);
+    dic.jukebox.changePlaylist(PLAYLIST.menuSongs);
 }
 
 void AppStateMainMenu::input()

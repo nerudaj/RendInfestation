@@ -24,7 +24,7 @@ void AppStateGame::input()
         else if (event->is<sf::Event::FocusGained>())
             dic.jukebox.resume();
         else if (event->is<sf::Event::FocusLost>())
-            dic.jukebox.stop();
+            dic.jukebox.pause();
         else if (event->is<sf::Event::KeyPressed>())
         {
             if (event->getIf<sf::Event::KeyPressed>()->code

@@ -1,5 +1,7 @@
 #include "audio/Jukebox.hpp"
-#include "audio/Playlist.hpp"
+
+const sf::Time INFINITE_TIME = sf::seconds(
+    24 * 60 * 60); ///< numeric_limits::infinity yields negative time
 
 Jukebox::Jukebox(dgm::ResourceManager& resmgr) : resmgr(resmgr)
 {
@@ -18,7 +20,7 @@ void Jukebox::setVolume(float newVolume)
     assert(0.f <= newVolume && newVolume <= 100.f);
     volume = newVolume;
 
-    auto&& guard = std::lock_guard(mutex);
+    auto&& guard = std::unique_lock(mutex);
     if (currentTrackName) getCurrentTrack().setVolume(volume);
 }
 
@@ -28,84 +30,81 @@ sf::Music& Jukebox::getCurrentTrack()
     return resmgr.getMutable<sf::Music>(currentTrackName.value());
 }
 
-void Jukebox::play(JukeboxMode newMode)
+void Jukebox::writeCommand(JukeboxCommand command)
 {
-    // mode MUST be exchanged first (spurious wakeup could trigger on status)
-    const auto wasInDifferentMode = mode.exchange(newMode) != newMode;
-
-    // clang-format off
-    const auto newStatus = wasInDifferentMode
-        ? JukeboxStatus::ChangingMode
-        : JukeboxStatus::Running;
-    // clang-format on
-    if (status.exchange(newStatus) != newStatus) cv.notify_one();
+    auto&& lock = std::unique_lock(mutex);
+    commands.push(command);
+    cv.notify_one();
 }
 
-void Jukebox::stop()
+sf::Time Jukebox::executeCommand(
+    JukeboxCommand command, const std::unique_lock<std::mutex>&)
 {
-    // If was previously running or resuming
-    if (status.exchange(JukeboxStatus::Off) != JukeboxStatus::Off)
-        cv.notify_one();
-}
+    switch (command.kind)
+    {
+        using enum JukeboxCommandKind;
 
-void Jukebox::resume()
-{
-    // If was previously stopped
-    if (status.exchange(JukeboxStatus::Resuming) == JukeboxStatus::Off)
-        cv.notify_one();
+    case Stop:
+        if (currentTrackName) getCurrentTrack().stop();
+        currentTrackName.reset();
+        break;
+
+    case Pause:
+        if (currentTrackName) getCurrentTrack().pause();
+        break;
+
+    case Play:
+        return playRandomTrack();
+
+    case Resume: {
+        assert(currentTrackName);
+        auto& track = getCurrentTrack();
+        track.play();
+        return track.getDuration() - track.getPlayingOffset();
+    }
+
+    case ChangeList:
+        if (currentTrackName) getCurrentTrack().stop();
+        playlist = std::move(command.data);
+        return playRandomTrack();
+    }
+
+    return INFINITE_TIME;
 }
 
 void Jukebox::worker()
 {
-    auto&& playOrResume = [&]
-    {
-        if (status == JukeboxStatus::Resuming)
-        {
-            status.store(JukeboxStatus::Running);
-            assert(currentTrackName);
-            auto&& track = getCurrentTrack();
-            auto&& durationLeft =
-                track.getDuration() - track.getPlayingOffset();
-            getCurrentTrack().play();
-            return durationLeft;
-        }
-
-        if (status == JukeboxStatus::ChangingMode) getCurrentTrack().stop();
-
-        status.store(JukeboxStatus::Running);
-        return playRandomTrack();
-    };
+    auto duration = INFINITE_TIME;
 
     while (!stopRequested)
     {
-        // While jukebox is off, wait until it is on
-        if (status == JukeboxStatus::Off)
+        assert(duration > sf::Time::Zero);
+        auto&& lock = std::unique_lock(mutex);
+        cv.wait_for(
+            lock,
+            duration.toDuration(),
+            [&] { return !commands.empty() || stopRequested; });
+
+        if (stopRequested)
         {
-            auto&& lock = std::unique_lock(mutex);
-            cv.wait(
-                lock,
-                [&]()
-                { return status != JukeboxStatus::Off || stopRequested; });
+            return;
         }
-        else
+        else if (!commands.empty())
         {
-            auto&& duration = playOrResume();
-            auto&& lock = std::unique_lock(mutex);
-            cv.wait_for(
-                lock,
-                duration.toDuration(),
-                [&]()
-                { return status != JukeboxStatus::Running || stopRequested; });
+            const auto command = commands.front();
+            commands.pop();
+            duration = executeCommand(command, lock);
+        }
+        else // song finished
+        {
+            duration = playRandomTrack();
         }
     }
 }
 
 sf::Time Jukebox::playRandomTrack()
 {
-    currentTrackName =
-        mode == JukeboxMode::Menu
-            ? PLAYLIST.menuSongs[rand() % PLAYLIST.menuSongs.size()]
-            : PLAYLIST.gameSongs[rand() % PLAYLIST.gameSongs.size()];
+    currentTrackName = playlist[rand() % playlist.size()];
 
     auto& track = getCurrentTrack();
     track.setVolume(volume);

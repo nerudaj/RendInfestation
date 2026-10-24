@@ -1,25 +1,13 @@
 #pragma once
 
+#include "audio/Playlist.hpp"
 #include <DGM/classes/ResourceManager.hpp>
 #include <SFML/Audio/Music.hpp>
 #include <atomic>
 #include <mutex>
 #include <optional>
+#include <queue>
 #include <thread>
-
-enum class [[nodiscard]] JukeboxMode
-{
-    Menu,
-    Game,
-};
-
-enum class [[nodiscard]] JukeboxStatus
-{
-    Off,
-    Resuming,
-    Running,
-    ChangingMode,
-};
 
 class [[nodiscard]] Jukebox final
 {
@@ -33,13 +21,53 @@ public:
 public:
     void setVolume(float newVolume);
 
-    void play(JukeboxMode newMode);
+    inline void play()
+    {
+        writeCommand({ JukeboxCommandKind::Play });
+    }
 
-    void stop();
+    inline void resume()
+    {
+        writeCommand({ JukeboxCommandKind::Resume });
+    }
 
-    void resume();
+    inline void pause()
+    {
+        writeCommand({ JukeboxCommandKind::Pause });
+    }
+
+    inline void stop()
+    {
+        writeCommand({ JukeboxCommandKind::Stop });
+    }
+
+    inline void changePlaylist(const std::vector<std::string>& list)
+    {
+        writeCommand({ JukeboxCommandKind::ChangeList, list });
+    }
 
 private:
+    enum class [[nodiscard]] JukeboxCommandKind
+    {
+        Stop,
+        Pause,
+        Play,
+        Resume,
+        ChangeList
+    };
+
+    struct [[nodiscard]] JukeboxCommand final
+    {
+        JukeboxCommandKind kind;
+        std::vector<std::string> data;
+    };
+
+private:
+    void writeCommand(JukeboxCommand command);
+
+    sf::Time
+    executeCommand(JukeboxCommand command, const std::unique_lock<std::mutex>&);
+
     void worker();
 
     sf::Time playRandomTrack();
@@ -49,12 +77,16 @@ private:
 
 private:
     dgm::ResourceManager& resmgr;
+
     float volume = 0.f;
     std::optional<std::string> currentTrackName;
-    std::atomic<JukeboxMode> mode;
-    std::atomic<JukeboxStatus> status;
-    std::atomic_bool stopRequested = false;
+    std::vector<std::string> playlist;
+
+    std::atomic_bool stopRequested =
+        false; ///< stop token is not supported on all compilers
     std::mutex mutex;
     std::thread workerThread;
     std::condition_variable cv;
+    std::queue<JukeboxCommand>
+        commands; ///< Used to signal what worker thread shall do
 };
