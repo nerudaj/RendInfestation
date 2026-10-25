@@ -97,7 +97,8 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
     auto&& createSubmitButton =
         [&](StringId stringId,
             std::function<void(void)>&& callback,
-            const std::optional<std::string> id = std::nullopt)
+            const std::optional<std::string> id = std::nullopt,
+            bool enabled = true)
     {
         auto&& wrapper = tgui::Group::create(
             { dic.sizer.getBaseContainerHeight() * 4, "90%" });
@@ -108,14 +109,18 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
             dic.soundPlayer,
             {
                 .id = id,
+                .enabled = enabled,
             }));
         return wrapper;
     };
 
     auto&& buttonList = tgui::GrowHorizontalLayout::create();
     buttonList->add(createSubmitButton(StringId::Back, [&] { onCancel(); }));
-    buttonList->add(
-        createSubmitButton(StringId::RemoveMod, [&] { onRemoveMod(); }));
+    buttonList->add(createSubmitButton(
+        StringId::RemoveMod,
+        [&] { onRemoveMod(); },
+        std::nullopt,
+        selectedModule != WeaponModule::None));
     buttonList->add(createSubmitButton(
         StringId::Install, [&] { onApply(); }, "ApplyButton"));
     TguiHelper::alignInParent(
