@@ -117,7 +117,7 @@ using LookDirection = BrandedType<sf::Vector2f, struct LookDirectionTag>;
 struct [[nodiscard]] Health final
 {
     int value = 0;
-    SoundId::IdType deathSound = SoundId::Error;
+    SoundId::IdType deathSound = SoundId::UiError;
 };
 
 using Lifetime = BrandedType<sf::Time, struct LifetimeTag>;

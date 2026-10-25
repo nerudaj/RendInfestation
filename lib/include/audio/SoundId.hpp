@@ -4,9 +4,12 @@ namespace SoundId
 {
     using IdType = const char*;
 
-    const IdType Error = "Tone1C_Double.wav";
-    const IdType Click = "Click_Mid-High.wav";
-    const IdType ButtonHover = "Ting_Pitched_Down.wav";
+    const IdType UiError = "Tone1C_Double.wav";
+    const IdType UiClick = "Click_Mid-High.wav";
+    const IdType UiButtonHover = "Ting_Pitched_Down.wav";
+    const IdType UiModInstall = "crafting-2.wav";
+    const IdType UiModUninstall = "mod_uninstall.wav";
+
     const IdType Land = "land-2.wav";
     const IdType Bullet = "bullet-2.wav";
     const IdType Explosion = "rocket_explosion-2.wav";
@@ -24,7 +27,6 @@ namespace SoundId
     const IdType GreaterScuttlebugDeath = "scuttlebug_death_alt.wav";
     const IdType BigheadDeath = "zombiecards_zombie_growl2-2.wav";
     const IdType BeholderDeath = "blood_spatter-2.wav";
-    const IdType Crafting = "crafting-2.wav";
     const IdType TreeDestroyed = "infestation_behemoth_attack-2.wav";
     const IdType PlayerDeathScream = "human_male_death_scream.wav";
     const IdType ProjectileBounce = "dart_bounce.wav";

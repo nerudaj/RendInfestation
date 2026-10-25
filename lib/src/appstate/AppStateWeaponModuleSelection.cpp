@@ -228,12 +228,14 @@ void AppStateWeaponModuleSelection::onCancel()
 
 void AppStateWeaponModuleSelection::onApply()
 {
+    dic.soundPlayer.playPovSound(SoundId::UiModInstall);
     outModule = selectedModule;
     app.popState();
 }
 
 void AppStateWeaponModuleSelection::onRemoveMod()
 {
+    dic.soundPlayer.playPovSound(SoundId::UiModUninstall);
     outModule = WeaponModule::None;
     app.popState();
 }

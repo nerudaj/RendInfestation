@@ -63,12 +63,12 @@ public:
 public: // GuiAudioInterface
     void playClick() override
     {
-        std::ignore = playPovSound(SoundId::Click);
+        std::ignore = playPovSound(SoundId::UiClick);
     }
 
     void playWidgetHoverEffect() override
     {
-        std::ignore = playPovSound(SoundId::ButtonHover);
+        std::ignore = playPovSound(SoundId::UiButtonHover);
     }
 
 private:

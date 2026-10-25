@@ -9,7 +9,7 @@
 struct [[nodiscard]] EnemyConfig final
 {
     int health = 1;
-    SoundId::IdType deathSound = SoundId::Error;
+    SoundId::IdType deathSound = SoundId::UiError;
     float speed = BASE_ENEMY_SPEED;
     float colliderRadius = 8.f;
     sf::Vector2f spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, 0.f };
