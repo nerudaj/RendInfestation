@@ -38,7 +38,7 @@ void SurvivalGameDirector::update(
     }
     else if (context.state == SurvivalModeState::WaitingForEnemiesToDie)
     {
-        if (context.enemiesKilledInCurrentWave == context.enemiesInCurrentWave)
+        if (context.enemiesKilledInCurrentWave >= context.enemiesInCurrentWave)
         {
             context.state = SurvivalModeState::WaitingForNextWave;
             context.timeTillNextWave = sf::seconds(5.f);

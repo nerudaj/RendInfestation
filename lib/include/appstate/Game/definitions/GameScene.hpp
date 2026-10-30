@@ -2,6 +2,7 @@
 
 #include "appstate/Game/SurvivalGameDirector.hpp"
 #include "appstate/Game/Types.hpp"
+#include "appstate/Game/definitions/CameraZoomHandler.hpp"
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/Constants.hpp"
 #include "appstate/Game/definitions/LightSource.hpp"
@@ -67,6 +68,7 @@ struct [[nodiscard]] GameScene final
     size_t actorWithInputCount = 0;
 
     Ledger ledger; // Game over screen can log what was unlocked
+    CameraZoomHandler zoomHandler = CameraZoomHandler(survivalGameDirector);
 
     void updatePlayerLoadout();
 };

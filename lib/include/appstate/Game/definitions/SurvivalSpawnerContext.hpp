@@ -12,5 +12,7 @@ struct [[nodiscard]] SurvivalSpawnerContext final
     int enemiesKilledInCurrentWave = 0;
     sf::Time timeTillNextWave = sf::seconds(5.f);
     sf::Time timeTillNextSpawn = SPAWNER_SPAWN_DELAY;
+    sf::Time durationOfTooManyEnemiesConcurrently = sf::seconds(0.f);
+    sf::Time durationOfNotEnoughEnemiesConcurrently = sf::seconds(0.f);
     SurvivalModeState state = SurvivalModeState::WaitingForNextWave;
 };

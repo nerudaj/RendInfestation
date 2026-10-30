@@ -26,9 +26,7 @@ RenderingEngine::RenderingEngine(
     , touchInputCamera(
           sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
           sf::Vector2f(settings.video.resolution))
-    , viewportCollider(
-          { 0.f, 0.f },
-          INTERNAL_GAME_RESOLUTION + sf::Vector2f({ 128.f, 128.f }))
+    , viewportCollider({ 0.f, 0.f }, { 1.f, 1.f })
     , text(resmgr.get<sf::Font>(FONT_NAME))
     , hudSprite(atlas.atlas.getTexture())
     , pipeline(atlas.atlas.getTexture())
@@ -61,6 +59,8 @@ void RenderingEngine::update(const dgm::Time& time)
         scene.actors.get<LookDirection>(scene.playerEntityLower) =
             scene.actors.get<LookDirection>(scene.playerEntity);
     }
+
+    scene.zoomHandler.update(time.getElapsed());
 }
 
 void RenderingEngine::updateCameraPosition(const dgm::Time& time)
@@ -80,9 +80,7 @@ void RenderingEngine::updateCameraPosition(const dgm::Time& time)
 
     setCameraPosition(cameraPosition);
 
-    auto zoomLevel = std::clamp(scene.actorWithInputCount / 30.f, 1.f, 3.f);
-
-    worldCamera.setZoom(zoomLevel);
+    scene.zoomHandler.triggerCameraTransitions(worldCamera);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
@@ -95,10 +93,16 @@ void RenderingEngine::draw(dgm::Window& window)
     window.setViewFromCamera(hudCamera);
     renderHud(window);
 
-    if (settings.input.showTouchControls)
+    const bool renderAnyTouchControls = settings.input.showTouchControls
+#ifdef ANDROID
+                                        || true
+#endif
+        ;
+
+    if (renderAnyTouchControls)
     {
         window.setViewFromCamera(touchInputCamera);
-        renderTouchControls(window);
+        renderTouchControls(window, settings.input.showTouchControls);
     }
 }
 
@@ -212,10 +216,10 @@ void RenderingEngine::renderLights(dgm::Window& window)
 {
     sf::RectangleShape blackRect;
     blackRect.setFillColor(sf::Color { 0, 0, 0, 128 });
-    blackRect.setSize(INTERNAL_GAME_RESOLUTION);
+    blackRect.setSize(
+        INTERNAL_GAME_RESOLUTION * scene.zoomHandler.getCurrentZoom());
     blackRect.setPosition(
-        worldCamera.getCurrentView().getCenter()
-        - INTERNAL_GAME_RESOLUTION / 2.f);
+        worldCamera.getCurrentView().getCenter() - blackRect.getSize() / 2.f);
     window.getSfmlWindowContext().draw(blackRect, sf::BlendAlpha);
 
     lightPipeline.clear();
@@ -363,10 +367,26 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
     }
 }
 
-void RenderingEngine::renderTouchControls(dgm::Window& window)
+void RenderingEngine::renderTouchControls(
+    dgm::Window& window, const bool renderAllTouchControls)
 {
     auto& model = touchController.getTouchModel();
     dgm::Circle thumb({ 0.f, 0.f }, 16.f);
+    const auto buttonRadius = model.objects[2].touchArea.getRadius() * 0.8f;
+    const auto cornerOffset = sf::Vector2f { buttonRadius, buttonRadius };
+
+    const auto scale = 2 * buttonRadius / iconsClip.getFrameSize().x;
+    hudSprite.setScale({ scale, scale });
+
+    // Third object is pause
+    hudSprite.setTextureRect(iconsClip.getFrame(Icon::Pause2));
+    hudSprite.setPosition(
+        model.objects[2].touchArea.getPosition() - cornerOffset);
+    window.draw(hudSprite);
+
+    if (!renderAllTouchControls) return;
+
+    hudSprite.setScale({ 1.f, 1.f });
 
     // First two objects are joysticks
     for (auto&& object : model.objects | uni::views::take(2))
@@ -376,17 +396,6 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
         thumb.debugRender(window, sf::Color(128, 128, 128));
     }
 
-    const auto buttonRadius = model.objects[2].touchArea.getRadius() * 0.8f;
-
-    const auto offset = sf::Vector2f { buttonRadius, buttonRadius };
-    const auto scale = 2 * buttonRadius / iconsClip.getFrameSize().x;
-    hudSprite.setScale({ scale, scale });
-
-    // Third is pause
-    hudSprite.setTextureRect(iconsClip.getFrame(Icon::Pause2));
-    hudSprite.setPosition(model.objects[2].touchArea.getPosition() - offset);
-    window.draw(hudSprite);
-
     // Fourth is swap
     if (scene.loadout.weapons.size() > 1)
     {
@@ -394,7 +403,7 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
             window, sf::Color(128, 128, 128, 128));
         hudSprite.setTextureRect(iconsClip.getFrame(Icon::Swap));
         hudSprite.setPosition(
-            model.objects[3].touchArea.getPosition() - offset);
+            model.objects[3].touchArea.getPosition() - cornerOffset);
         window.draw(hudSprite);
     }
 
@@ -405,7 +414,7 @@ void RenderingEngine::renderTouchControls(dgm::Window& window)
             window, sf::Color(128, 128, 128, 128));
         hudSprite.setTextureRect(iconsClip.getFrame(Icon::Hand));
         hudSprite.setPosition(
-            model.objects[4].touchArea.getPosition() - offset);
+            model.objects[4].touchArea.getPosition() - cornerOffset);
         window.draw(hudSprite);
     }
 
@@ -479,6 +488,9 @@ std::vector<Face> RenderingEngine::getActorFaces() const
 
 void RenderingEngine::setCameraPosition(const sf::Vector2f& position)
 {
+    viewportCollider.setSize(
+        (INTERNAL_GAME_RESOLUTION + sf::Vector2f({ 128.f, 128.f }))
+        * scene.zoomHandler.getCurrentZoom());
     worldCamera.setPosition(position);
     viewportCollider.setPosition(position - viewportCollider.getSize() / 2.f);
 }

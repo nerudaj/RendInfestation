@@ -31,6 +31,8 @@ public:
 
     void updateCameraPosition(const dgm::Time& time);
 
+    void handleCameraZoom();
+
     void draw(dgm::Window& window);
 
 private:
@@ -58,7 +60,8 @@ private:
 
     void renderHudStrings(dgm::Window& window);
 
-    void renderTouchControls(dgm::Window& window);
+    void
+    renderTouchControls(dgm::Window& window, const bool renderAllTouchControls);
 
     sf::Angle getEntityRotation(entt::entity entity, EntityKind kind) const;
 
