@@ -14,6 +14,7 @@ enum class [[nodiscard]] StringId
     Back,
     Loading,
     Clear,
+    Restart,
 
     // Survival Level Select
     SurvivalSetupTitle,

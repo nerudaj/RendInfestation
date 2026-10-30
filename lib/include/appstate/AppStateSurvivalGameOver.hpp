@@ -20,7 +20,10 @@ public:
 
 private:
     void buildLayout();
-    tgui::Container::Ptr buildContent();
+    tgui::Container::Ptr buildBentoBoxContent();
+    tgui::Container::Ptr buildGameSummaryLayout();
+
+    void onRestart();
     void onBackToMenu();
 
 private:

@@ -16,6 +16,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { Back, "Back" },
     { Loading, "Loading" },
     { Clear, "Clear" },
+    { Restart, "Restart" },
 
     // Survival Level Select
     { SurvivalSetupTitle, "Survival" },

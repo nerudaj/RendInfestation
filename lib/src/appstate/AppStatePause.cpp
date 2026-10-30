@@ -90,8 +90,7 @@ void AppStatePause::restoreFocusImpl(const std::string& message)
     {
         std::visit(
             overloads {
-                [&](PopIfNotGame&) { app.popState(message); },
-                [&](PopIfNotMenu&) { app.popState(message); },
+                [&](const auto&) { app.popState(message); },
             },
             *msg);
     }

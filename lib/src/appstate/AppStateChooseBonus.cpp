@@ -41,6 +41,7 @@ void AppStateChooseBonus::restoreFocusImpl(const std::string& msg)
         std::visit(
             overloads {
                 [&](PopIfNotMenu&) { app.popState(msg); },
+                [&](RestartGame&) { app.popState(msg); },
                 [&](PopIfNotGame&) {},
             },
             *message);

@@ -2,6 +2,7 @@
 #include "appstate/AppStateGame.hpp"
 #include "appstate/AppStateLoading.hpp"
 #include "appstate/CommonHandler.hpp"
+#include "appstate/Messaging.hpp"
 #include "strings/StringId.hpp"
 
 AppStateSurvivalLevelSelect::AppStateSurvivalLevelSelect(
@@ -27,7 +28,16 @@ void AppStateSurvivalLevelSelect::draw()
 
 void AppStateSurvivalLevelSelect::restoreFocusImpl(const std::string& message)
 {
-    app.popState(message);
+    auto msg = Messaging::deserialize(message);
+    if (msg)
+    {
+        std::visit(
+            overloads {
+                [&](const RestartGame&) { onPlay(); },
+                [&](const auto&) { app.popState(message); },
+            },
+            *msg);
+    }
 }
 
 void AppStateSurvivalLevelSelect::buildLayout()

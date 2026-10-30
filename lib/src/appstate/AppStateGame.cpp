@@ -96,6 +96,7 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
             overloads {
                 [&](PopIfNotMenu&) { app.popState(msg); },
                 [&](PopIfNotGame&) {},
+                [&](RestartGame&) { app.popState(msg); },
             },
             *message);
     }

@@ -61,9 +61,9 @@ void AppStateLoading::draw()
     dic.virtualCursor.draw();
 }
 
-void AppStateLoading::restoreFocusImpl(const std::string& message)
+void AppStateLoading::restoreFocusImpl(const std::string& msg)
 {
-    app.popState(message);
+    app.popState(msg);
 }
 
 void AppStateLoading::buildLayout()
