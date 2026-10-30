@@ -175,6 +175,7 @@ void AppStateWeaponModification::onClearLoadout(size_t loadoutIdx)
     assert(scene.loadout.weapons.size() > loadoutIdx);
     for (auto& module : scene.loadout.weapons[loadoutIdx].modules)
         module = WeaponModule::None;
+    dic.soundPlayer.playPovSound(SoundId::UiModUninstall);
     buildLayout();
 }
 

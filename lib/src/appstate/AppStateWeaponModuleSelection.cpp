@@ -255,6 +255,7 @@ void AppStateWeaponModuleSelection::onModuleSelected(
             ->setBackgroundColor(tgui::Color::Transparent);
     }
 
+    dic.soundPlayer.playPovSound(SoundId::UiButtonHover);
     dic.gui.get<tgui::Panel>(getModuleListEntryId(newSelectedModule))
         ->getRenderer()
         ->setBackgroundColor(COLOR_MID_BLUE);
