@@ -233,6 +233,14 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
 
 void GameRulesEngine::operator()(const event::WaveEnded&)
 {
+    if (scene.survivalGameDirector
+        && scene.survivalGameDirector->getContext().wave % 5 == 0
+        && !scene.emergencyReviveActive)
+    {
+        scene.emergencyReviveActive = true;
+        postMessage(StringId::GotRevive);
+    }
+
     auto&& health = scene.actors.try_get<Health>(scene.playerEntity);
     if (!health) return;
 

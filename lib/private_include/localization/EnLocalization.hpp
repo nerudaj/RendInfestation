@@ -25,6 +25,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { BoonLocked, "- Locked -" },
     { BoonWave4, "Start at wave 4" },
     { BoonExtraWeapon, "Start with extra weapon" },
+    { BoonEmergencyRevive, "Start with revive" },
     { StartingWeapon, "Starting weapon" },
     { StartingWeapon_None, "- None -" },
     { StartingWeapon_Random, "Random" },
@@ -150,6 +151,8 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { Wave4SkipUnlocked, "You can now start from wave 4!" },
     { ExtraWeaponUnlocked, "Extra starting weapon unlocked!" },
     { NewMapUnlocked, "New map unlocked!" },
+    { GotRevive, "Gained emergency revive!" },
+    { StartingEmergencyReviveUnlocked, "Revive unlocked!" },
 
     // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },

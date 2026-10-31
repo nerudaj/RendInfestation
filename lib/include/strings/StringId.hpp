@@ -23,6 +23,7 @@ enum class [[nodiscard]] StringId
     BoonLocked,
     BoonWave4,
     BoonExtraWeapon,
+    BoonEmergencyRevive,
     StartingWeapon,
     StartingWeapon_None,
     StartingWeapon_Random,
@@ -131,6 +132,8 @@ enum class [[nodiscard]] StringId
     Wave4SkipUnlocked,
     ExtraWeaponUnlocked,
     NewMapUnlocked,
+    GotRevive,
+    StartingEmergencyReviveUnlocked,
 
     // Survival progression
     NewWeaponModuleUnlocked,

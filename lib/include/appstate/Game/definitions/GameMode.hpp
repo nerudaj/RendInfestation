@@ -13,6 +13,7 @@ struct [[nodiscard]] GameBoons final
 {
     bool wave4start = false;
     bool extraWeapon = false;
+    bool revive = false;
     WeaponCombo startingWeapon = WeaponCombo::None;
 };
 

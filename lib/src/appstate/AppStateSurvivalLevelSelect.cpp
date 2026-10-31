@@ -128,6 +128,15 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
             WidgetOptions {
                 .enabled = saveMgr.isExtraWeaponUnlocked(),
             })));
+    vbox->add(makeOption(
+        saveMgr.isReviveUnlocked() ? StringId::BoonEmergencyRevive
+                                   : StringId::BoonLocked,
+        WidgetBuilder::createCheckbox(
+            false,
+            [&](bool value) { gameProps.boons.revive = value; },
+            WidgetOptions {
+                .enabled = saveMgr.isReviveUnlocked(),
+            })));
 
     auto&& weaponSelector = WidgetBuilder::createCarousel(
         saveMgr.getUnlockedCombos().size(),

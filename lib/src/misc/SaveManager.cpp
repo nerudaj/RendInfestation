@@ -7,6 +7,7 @@ void to_json(nlohmann::json& j, const SaveManager& mgr)
     j["wave4"] = mgr.wave4startUnlocked;
     j["extraWeapon"] = mgr.extraWeaponUnlocked;
     j["combos"] = mgr.unlockedWeaponCombos;
+    j["revive"] = mgr.reviveUnlocked;
 }
 
 void from_json(const nlohmann::json& j, SaveManager& mgr)
@@ -14,15 +15,21 @@ void from_json(const nlohmann::json& j, SaveManager& mgr)
     int jsonVersion = 0;
     j.at("version").get_to(jsonVersion);
 
-    if (jsonVersion == 1)
+    if (jsonVersion >= 1)
     {
         j.at("bestScore").get_to(mgr.bestScore);
     }
-    else if (jsonVersion >= 2)
+
+    if (jsonVersion >= 2)
     {
         j.at("wave4").get_to(mgr.wave4startUnlocked);
         j.at("extraWeapon").get_to(mgr.extraWeaponUnlocked);
         j.at("combos").get_to(mgr.unlockedWeaponCombos);
+    }
+
+    if (jsonVersion >= 3)
+    {
+        j.at("revive").get_to(mgr.reviveUnlocked);
     }
 }
 

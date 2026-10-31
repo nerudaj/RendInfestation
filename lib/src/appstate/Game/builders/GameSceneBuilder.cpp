@@ -128,6 +128,7 @@ GameScene GameSceneBuilder::createScene(
                 ? std::make_optional<SurvivalGameDirector>(
                       gameModeProperties.boons.wave4start ? 4 : 1)
                 : std::nullopt,
+        .emergencyReviveActive = gameModeProperties.boons.revive,
     };
 }
 

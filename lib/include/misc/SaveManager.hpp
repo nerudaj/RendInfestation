@@ -19,19 +19,24 @@ public:
 public:
     void updateBestScore(int score);
 
-    [[nodiscard]] int getBestScore() const noexcept
+    [[nodiscard]] constexpr int getBestScore() const noexcept
     {
         return bestScore;
     }
 
-    constexpr bool isWave4StartUnlocked() const noexcept
+    [[nodiscard]] constexpr bool isWave4StartUnlocked() const noexcept
     {
         return wave4startUnlocked;
     }
 
-    constexpr bool isExtraWeaponUnlocked() const noexcept
+    [[nodiscard]] constexpr bool isExtraWeaponUnlocked() const noexcept
     {
         return extraWeaponUnlocked;
+    }
+
+    [[nodiscard]] constexpr bool isReviveUnlocked() const noexcept
+    {
+        return reviveUnlocked;
     }
 
     constexpr const std::set<WeaponCombo>& getUnlockedCombos() const noexcept
@@ -53,6 +58,13 @@ public:
                    : UnlockStatus::Ok;
     }
 
+    UnlockStatus tryUnlockRevive()
+    {
+        return std::exchange(reviveUnlocked, true)
+                   ? UnlockStatus::AlreadyUnlocked
+                   : UnlockStatus::Ok;
+    }
+
     UnlockStatus tryUnlockWeaponCombo(const WeaponCombo combo)
     {
         if (unlockedWeaponCombos.contains(combo))
@@ -62,9 +74,10 @@ public:
     }
 
 private:
-    const static inline int version = 2;
+    const static inline int version = 3;
     int bestScore = 0;
     bool wave4startUnlocked = false;
     bool extraWeaponUnlocked = false;
+    bool reviveUnlocked = false;
     std::set<WeaponCombo> unlockedWeaponCombos = { WeaponCombo::None };
 };

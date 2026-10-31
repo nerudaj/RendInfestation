@@ -51,7 +51,6 @@ public:
               dic.strings)
     {
         srand(static_cast<unsigned>(time(nullptr)));
-        gameEvents.pushEvent<event::WaveEnded>();
         dic.jukebox.changePlaylist(PLAYLIST.gameSongs);
     }
 
