@@ -13,4 +13,6 @@ enum class [[nodiscard]] Hud
     Health8,
     Health9,
     Health10,
+    Health11,
+    Health12
 };

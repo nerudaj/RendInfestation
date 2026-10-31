@@ -273,9 +273,9 @@ void RenderingEngine::renderHudBackgroundAndHealth(
         scene.actors.try_get<Health>(scene.playerEntity);
     const int health = std::clamp(
         healthComponent ? healthComponent->value : 0, 0, scene.playerMaxHealth);
-    const auto tenth = (10 * (9 + health)) / scene.playerMaxHealth;
+    const auto twelfth = (12 * health) / scene.playerMaxHealth;
     hudSprite.setTextureRect(
-        hudClip.getFrame(std::to_underlying(Hud::Health1) + tenth - 1));
+        hudClip.getFrame(std::to_underlying(Hud::Health1) + twelfth - 1));
     window.draw(hudSprite);
 }
 
@@ -291,9 +291,9 @@ void RenderingEngine::renderHudReloadTimeAndModules(
         / activeWeapon.cooldown;
 
     // Render reload time
-    auto&& reloadShape = sf::RectangleShape({ cooldownFactor * 58.f, 2.f });
+    auto&& reloadShape = sf::RectangleShape({ cooldownFactor * 50.f, 3.f });
     reloadShape.setFillColor(COLOR_PURPLE);
-    reloadShape.setPosition(hudOrigin + sf::Vector2f { 5.f, 23.f });
+    reloadShape.setPosition(hudOrigin + sf::Vector2f { 4.f, 22.f });
     window.draw(reloadShape);
 
     // Render used modules:
@@ -306,7 +306,7 @@ void RenderingEngine::renderHudReloadTimeAndModules(
         hudSprite.setTextureRect(
             modulesClip.getFrame(std::to_underlying(module)));
         hudSprite.setPosition(
-            hudOrigin + sf::Vector2f { 4.f + idx * 19.f, 4.f });
+            hudOrigin + sf::Vector2f { 1.f + idx * 20.f, 1.f });
         window.draw(hudSprite);
     }
 }
