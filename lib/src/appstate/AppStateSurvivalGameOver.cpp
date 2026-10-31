@@ -86,7 +86,7 @@ tgui::Container::Ptr AppStateSurvivalGameOver::buildBentoBoxContent()
     secondRowHbow->add(buttonVbox);
 
     buttonVbox->add(WidgetBuilder::createButton(
-        dic.strings.getString(StringId::StartingWeapon_Tower),
+        dic.strings.getString(StringId::Restart),
         [&] { onRestart(); },
         dic.sizer,
         dic.soundPlayer));
@@ -94,7 +94,7 @@ tgui::Container::Ptr AppStateSurvivalGameOver::buildBentoBoxContent()
     buttonVbox->addSpace(0.05f);
 
     buttonVbox->add(WidgetBuilder::createButton(
-        dic.strings.getString(StringId::Back),
+        dic.strings.getString(StringId::BackToMenu),
         [&] { onBackToMenu(); },
         dic.sizer,
         dic.soundPlayer));
