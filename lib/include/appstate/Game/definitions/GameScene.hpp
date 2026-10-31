@@ -29,6 +29,8 @@ struct [[nodiscard]] HudMessage final
     sf::Time displayTime = sf::Time::Zero;
 };
 
+using Ledger = std::set<StringId>;
+
 struct [[nodiscard]] GameStatus final
 {
     bool finished = false;
@@ -36,9 +38,9 @@ struct [[nodiscard]] GameStatus final
     int enemiesKilled = 0;
     int shotsFired = 0;
     int waveBeaten = 0;
+    Ledger ledger = { StringId::ExtraWeaponUnlocked,
+                      StringId::Wave4SkipUnlocked };
 };
-
-using Ledger = std::vector<StringId>;
 
 struct [[nodiscard]] GameScene final
 {
@@ -67,7 +69,6 @@ struct [[nodiscard]] GameScene final
     std::map<SkinType, unsigned> skinCounts = {};
     size_t actorWithInputCount = 0;
 
-    Ledger ledger; // Game over screen can log what was unlocked
     CameraZoomHandler zoomHandler = CameraZoomHandler(survivalGameDirector);
 
     void updatePlayerLoadout();

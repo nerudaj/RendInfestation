@@ -77,7 +77,8 @@ tgui::Container::Ptr AppStateSurvivalGameOver::buildBentoBoxContent()
     auto&& secondRowHbow = tgui::HorizontalLayout::create();
     vbox->add(secondRowHbow);
 
-    auto&& ledgerPanel = tgui::Panel::create();
+    auto&& ledgerPanel = tgui::ScrollablePanel::create();
+    ledgerPanel->add(buildLedgerSummaryLayout());
     secondRowHbow->add(ledgerPanel, 2.f);
 
     secondRowHbow->addSpace(0.05f);
@@ -158,6 +159,19 @@ tgui::Container::Ptr AppStateSurvivalGameOver::buildGameSummaryLayout()
                 "justify"_true),
         })
         .build();
+}
+
+tgui::Container::Ptr AppStateSurvivalGameOver::buildLedgerSummaryLayout()
+{
+    auto builder = dic.guiBuilderFactory.createTableBuilder().withNoHeading();
+
+    for (auto&& line : status.ledger)
+    {
+        builder.addRow({ WidgetBuilder::createTextLabel(
+            dic.strings.getString(line), dic.sizer, "justify"_true) });
+    }
+
+    return builder.build();
 }
 
 void AppStateSurvivalGameOver::onRestart()

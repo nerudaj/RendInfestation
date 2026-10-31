@@ -620,7 +620,7 @@ void GameRulesEngine::handleTriggerToActorCollision(
 
 void GameRulesEngine::postMessage(StringId messageId)
 {
-    scene.ledger.push_back(messageId);
+    scene.status.ledger.insert(messageId);
 
     // Still displaying previous message
     if (scene.hudMessage.displayTime > sf::Time::Zero)

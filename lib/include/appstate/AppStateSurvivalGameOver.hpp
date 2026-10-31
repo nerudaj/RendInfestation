@@ -22,6 +22,7 @@ private:
     void buildLayout();
     tgui::Container::Ptr buildBentoBoxContent();
     tgui::Container::Ptr buildGameSummaryLayout();
+    tgui::Container::Ptr buildLedgerSummaryLayout();
 
     void onRestart();
     void onBackToMenu();
