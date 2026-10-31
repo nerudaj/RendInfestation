@@ -69,7 +69,5 @@ struct [[nodiscard]] GameScene final
     std::map<SkinType, unsigned> skinCounts = {};
     size_t actorWithInputCount = 0;
 
-    CameraZoomHandler zoomHandler = CameraZoomHandler(survivalGameDirector);
-
     void updatePlayerLoadout();
 };

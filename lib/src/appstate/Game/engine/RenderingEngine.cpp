@@ -37,6 +37,7 @@ RenderingEngine::RenderingEngine(
     , modulesClip(atlas.atlas.getClip(atlas.modulesLocation))
     , cameraPosition(
           scene.actors.get<Collider>(scene.playerEntity).getPosition())
+    , zoomHandler(scene.survivalGameDirector)
 {
     resmgr.getMutable<sf::Font>(FONT_NAME).setSmooth(false);
     setCameraPosition(
@@ -60,7 +61,7 @@ void RenderingEngine::update(const dgm::Time& time)
             scene.actors.get<LookDirection>(scene.playerEntity);
     }
 
-    scene.zoomHandler.update(time.getElapsed());
+    zoomHandler.update(time.getElapsed());
 }
 
 void RenderingEngine::updateCameraPosition(const dgm::Time& time)
@@ -80,7 +81,7 @@ void RenderingEngine::updateCameraPosition(const dgm::Time& time)
 
     setCameraPosition(cameraPosition);
 
-    scene.zoomHandler.triggerCameraTransitions(worldCamera);
+    zoomHandler.triggerCameraTransitions(worldCamera);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
@@ -216,8 +217,7 @@ void RenderingEngine::renderLights(dgm::Window& window)
 {
     sf::RectangleShape blackRect;
     blackRect.setFillColor(sf::Color { 0, 0, 0, 128 });
-    blackRect.setSize(
-        INTERNAL_GAME_RESOLUTION * scene.zoomHandler.getCurrentZoom());
+    blackRect.setSize(INTERNAL_GAME_RESOLUTION * zoomHandler.getCurrentZoom());
     blackRect.setPosition(
         worldCamera.getCurrentView().getCenter() - blackRect.getSize() / 2.f);
     window.getSfmlWindowContext().draw(blackRect, sf::BlendAlpha);
@@ -501,7 +501,7 @@ void RenderingEngine::setCameraPosition(const sf::Vector2f& position)
 {
     viewportCollider.setSize(
         (INTERNAL_GAME_RESOLUTION + sf::Vector2f({ 128.f, 128.f }))
-        * scene.zoomHandler.getCurrentZoom());
+        * zoomHandler.getCurrentZoom());
     worldCamera.setPosition(position);
     viewportCollider.setPosition(position - viewportCollider.getSize() / 2.f);
 }

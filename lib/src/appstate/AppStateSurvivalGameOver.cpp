@@ -163,6 +163,8 @@ tgui::Container::Ptr AppStateSurvivalGameOver::buildGameSummaryLayout()
 
 tgui::Container::Ptr AppStateSurvivalGameOver::buildLedgerSummaryLayout()
 {
+    if (status.ledger.empty()) return tgui::Group::create();
+
     auto builder = dic.guiBuilderFactory.createTableBuilder().withNoHeading();
 
     for (auto&& line : status.ledger)

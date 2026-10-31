@@ -31,8 +31,6 @@ public:
 
     void updateCameraPosition(const dgm::Time& time);
 
-    void handleCameraZoom();
-
     void draw(dgm::Window& window);
 
 private:
@@ -116,4 +114,5 @@ private:
     mutable size_t entityCount = 0;
     sf::Vector2f cameraPosition = { 0.f, 0.f };
     TextBoundsCache textBounds;
+    CameraZoomHandler zoomHandler;
 };
