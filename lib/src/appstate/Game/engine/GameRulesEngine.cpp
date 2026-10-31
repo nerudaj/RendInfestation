@@ -233,8 +233,10 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
 
 void GameRulesEngine::operator()(const event::WaveEnded&)
 {
-    auto& health = scene.actors.get<Health>(scene.playerEntity);
-    health = Health(std::clamp(health.value + 10, 0, scene.playerMaxHealth));
+    auto&& health = scene.actors.try_get<Health>(scene.playerEntity);
+    if (!health) return;
+
+    *health = Health(std::clamp(health->value + 10, 0, scene.playerMaxHealth));
 
     assert(scene.survivalGameDirector);
     scene.status.waveBeaten = scene.survivalGameDirector->getContext().wave;
