@@ -19,6 +19,7 @@ struct [[nodiscard]] GameTextureAtlas final
     dgm::TextureAtlas::ResourceLocation<dgm::Clip> hudLocation;
     dgm::TextureAtlas::ResourceLocation<dgm::Clip> iconsLocation;
     dgm::TextureAtlas::ResourceLocation<dgm::Clip> modulesLocation;
+    dgm::TextureAtlas::ResourceLocation<dgm::Clip> reviveIconLocation;
 
     dgm::TextureAtlas::ResourceLocation<dgm::AnimationStates>
     getSkinLocation(SkinType skin) const

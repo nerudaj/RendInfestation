@@ -259,6 +259,17 @@ void RenderingEngine::renderHud(dgm::Window& window)
     renderHudBackgroundAndHealth(hudOrigin, window);
     renderHudReloadTimeAndModules(hudOrigin, window);
 
+    if (scene.emergencyReviveActive)
+    {
+        auto&& iconClip = atlas.atlas.getClip(atlas.reviveIconLocation);
+        hudSprite.setTextureRect(iconClip.getFrame(0));
+        hudSprite.setPosition({
+            hudOrigin.x - iconClip.getFrameSize().x,
+            hudOrigin.y,
+        });
+        window.draw(hudSprite);
+    }
+
     renderHudStrings(window);
 }
 

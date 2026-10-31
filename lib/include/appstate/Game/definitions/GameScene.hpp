@@ -38,8 +38,7 @@ struct [[nodiscard]] GameStatus final
     int enemiesKilled = 0;
     int shotsFired = 0;
     int waveBeaten = 0;
-    Ledger ledger = { StringId::ExtraWeaponUnlocked,
-                      StringId::Wave4SkipUnlocked };
+    Ledger ledger = {};
 };
 
 struct [[nodiscard]] GameScene final
@@ -64,6 +63,7 @@ struct [[nodiscard]] GameScene final
     std::optional<InteractionTriggerInventory> interactionTrigger =
         std::nullopt;
     int playerMaxHealth = BASE_PLAYER_HEALTH;
+    bool emergencyReviveActive = false;
 
     // recomputed each frame, used for progressive cooldowns
     std::map<SkinType, unsigned> skinCounts = {};

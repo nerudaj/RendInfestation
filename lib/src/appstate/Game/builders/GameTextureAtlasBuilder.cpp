@@ -204,6 +204,9 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
                               resmgr.get<dgm::Clip>("crosshairs.png.clip"))
                           .value();
 
+    auto reviveIcon =
+        atlas.addImage(resmgr.get<sf::Texture>("revive_icon.png")).value();
+
     auto image = sf::Image(atlas.getTexture().copyToImage());
     std::ignore = image.saveToFile("atlas_debug.png");
 
@@ -216,5 +219,6 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         .hudLocation = hud,
         .iconsLocation = icons,
         .modulesLocation = modules,
+        .reviveIconLocation = reviveIcon,
     };
 }
