@@ -72,10 +72,12 @@ constexpr float FALL_SPEED = 0.75f; // percent per second
 
 constexpr const char* FONT_NAME = "PressStart2P-Regular.ttf";
 constexpr const unsigned FONT_BASE_HEIGHT = 8u;
-constexpr const unsigned TOO_MANY_ENEMIES_THRESHOLD = 15;
+constexpr const unsigned TOO_MANY_ENEMIES_THRESHOLD = 35;
+constexpr const unsigned ONLY_FEW_ENEMIES_THRESHOLD = 10;
 const sf::Time ZOOM_OUT_TIME_THRESHOLD = sf::seconds(5.f);
-const sf::Time ZOOM_OUT_2ND_TIME_THRESHOLD = sf::seconds(10.f);
 const sf::Time ZOOM_IN_TIME_THRESHOLD = sf::seconds(5.f);
+const sf::Time ZOOM_DURATION = sf::seconds(4.5);
+constexpr const float MAX_ZOOM_OUT_FACTOR = 1.5f;
 
 // Z-indices
 constexpr const int ZINDEX_FLOOR_DECOR = 0;

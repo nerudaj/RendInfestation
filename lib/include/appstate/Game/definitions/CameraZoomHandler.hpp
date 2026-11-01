@@ -15,16 +15,18 @@ public:
     }
 
 public:
-    void update(const sf::Time& time);
-
-    void triggerCameraTransitions(dgm::Camera& camera);
+    void update(const sf::Time& time, dgm::Camera& camera);
 
     [[nodiscard]] constexpr const float getCurrentZoom() const noexcept
     {
-        return currentZoom;
+        return state == State::Default ? 1.f : 2.f;
     }
 
 private:
+    void updateTimers(const sf::Time& time);
+
+    void updateState(dgm::Camera& camera);
+
     constexpr int computeCurrentEnemyCount(
         const SurvivalSpawnerContext& context) const noexcept
     {
@@ -33,8 +35,16 @@ private:
     }
 
 private:
+    enum class [[nodiscard]] State
+    {
+        Default,
+        ZoomingOut,
+        ZoomedOut,
+        ZoomingIn
+    };
+
     std::optional<SurvivalGameDirector>& director;
     sf::Time durationOfTooManyEnemiesConcurrently = sf::Time::Zero;
     sf::Time durationOfNotEnoughEnemiesConcurrently = sf::Time::Zero;
-    float currentZoom = 1.f;
+    State state = State::Default;
 };

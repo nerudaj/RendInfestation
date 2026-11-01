@@ -60,8 +60,6 @@ void RenderingEngine::update(const dgm::Time& time)
         scene.actors.get<LookDirection>(scene.playerEntityLower) =
             scene.actors.get<LookDirection>(scene.playerEntity);
     }
-
-    zoomHandler.update(time.getElapsed());
 }
 
 void RenderingEngine::updateCameraPosition(const dgm::Time& time)
@@ -81,7 +79,7 @@ void RenderingEngine::updateCameraPosition(const dgm::Time& time)
 
     setCameraPosition(cameraPosition);
 
-    zoomHandler.triggerCameraTransitions(worldCamera);
+    zoomHandler.update(time.getElapsed(), worldCamera);
 }
 
 void RenderingEngine::draw(dgm::Window& window)
