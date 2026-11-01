@@ -100,7 +100,7 @@ private:
     void handleTriggerToActorCollision(
         entt::entity triggerIdx, entt::entity actorIdx);
 
-    void postMessage(StringId messageId);
+    void postMessage(StringId messageId, bool updateLedger = true);
 
     sf::Vector2f pickEnemySpawnPosition() const;
 

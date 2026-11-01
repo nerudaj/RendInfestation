@@ -238,7 +238,7 @@ void GameRulesEngine::operator()(const event::WaveEnded&)
         && !scene.emergencyReviveActive)
     {
         scene.emergencyReviveActive = true;
-        postMessage(StringId::GotRevive);
+        postMessage(StringId::GotRevive, "updateLedger"_false);
     }
 
     auto&& health = scene.actors.try_get<Health>(scene.playerEntity);
@@ -626,9 +626,9 @@ void GameRulesEngine::handleTriggerToActorCollision(
     }
 }
 
-void GameRulesEngine::postMessage(StringId messageId)
+void GameRulesEngine::postMessage(StringId messageId, bool updateLedger)
 {
-    scene.status.ledger.insert(messageId);
+    if (updateLedger) scene.status.ledger.insert(messageId);
 
     // Still displaying previous message
     if (scene.hudMessage.displayTime > sf::Time::Zero)
