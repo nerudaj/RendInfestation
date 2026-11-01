@@ -488,6 +488,12 @@ void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
     }
+
+    if (scene.emergencyReviveActive
+        && saves.tryUnlockRevive() == UnlockStatus::Ok)
+    {
+        postMessage(StringId::StartingEmergencyReviveUnlocked);
+    }
 }
 
 void GameRulesEngine::updateLifetimes(const dgm::Time& time)
