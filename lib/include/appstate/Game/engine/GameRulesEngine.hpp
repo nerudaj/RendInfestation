@@ -109,6 +109,8 @@ private:
         const Collider& collider,
         SoundChannel channel = SoundChannel::Enemy);
 
+    bool shallGainEmergencyRevive() const noexcept;
+
 private:
     EventQueue<GameEvent>& eventQueue;
     GameScene& scene;

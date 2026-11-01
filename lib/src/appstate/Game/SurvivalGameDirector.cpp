@@ -3,8 +3,8 @@
 SurvivalGameDirector::SurvivalGameDirector(int startingWave)
     : context(createInitialContext())
 {
-    context.wave = startingWave;
-    setupWave();
+    // starting in WaitingForNextWave, which will increment the wave number
+    context.wave = startingWave - 1;
 }
 
 void SurvivalGameDirector::update(

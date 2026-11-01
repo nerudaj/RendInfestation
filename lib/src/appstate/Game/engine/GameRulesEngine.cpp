@@ -233,9 +233,7 @@ void GameRulesEngine::operator()(const event::ActorDamaged& e)
 
 void GameRulesEngine::operator()(const event::WaveEnded&)
 {
-    if (scene.survivalGameDirector
-        && scene.survivalGameDirector->getContext().wave % 5 == 0
-        && !scene.emergencyReviveActive)
+    if (shallGainEmergencyRevive())
     {
         scene.emergencyReviveActive = true;
         postMessage(StringId::GotRevive, "updateLedger"_false);
@@ -674,4 +672,13 @@ void GameRulesEngine::playAttenuated(
         (collider.getPosition()
          - scene.actors.get<Collider>(scene.playerEntity).getPosition())
             .length());
+}
+
+bool GameRulesEngine::shallGainEmergencyRevive() const noexcept
+{
+    if (!scene.survivalGameDirector) return false;
+
+    const auto wave = scene.survivalGameDirector->getContext().wave;
+
+    return wave != 0 && wave % 5 == 0 && !scene.emergencyReviveActive;
 }
