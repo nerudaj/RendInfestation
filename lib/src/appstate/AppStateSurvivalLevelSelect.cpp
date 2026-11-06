@@ -81,74 +81,7 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildMapSelectLayout()
 
 tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
 {
-    auto&& boonSelectPanel = tgui::ScrollablePanel::create();
-    boonSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
-
-    auto&& vbox = tgui::GrowVerticalLayout::create();
-    boonSelectPanel->add(vbox);
-
-    auto&& titleRow = WidgetBuilder::createRow(dic.sizer);
-    titleRow->add(WidgetBuilder::createTextLabel(
-        dic.strings.getString(StringId::GameSetup), dic.sizer, "justify"_true));
-    vbox->add(titleRow);
-
-    auto&& makeOption = [&](StringId labelId, tgui::Widget::Ptr widget)
-    {
-        auto&& hbox = tgui::HorizontalLayout::create(
-            { "100%", dic.sizer.getBaseContainerHeight() });
-
-        hbox->add(
-            WidgetBuilder::createTextLabel(
-                dic.strings.getString(labelId), dic.sizer),
-            0.8f);
-
-        hbox->add(widget, 0.2f);
-
-        return hbox;
-    };
-
     auto&& saveMgr = dic.saveManager;
-
-    vbox->add(makeOption(
-        saveMgr.isWave4StartUnlocked() ? StringId::BoonWave4
-                                       : StringId::BoonLocked,
-        WidgetBuilder::createCheckbox(
-            false,
-            [&](bool value) { gameProps.boons.wave4start = value; },
-            WidgetOptions {
-                .enabled = saveMgr.isWave4StartUnlocked(),
-            })));
-
-    vbox->add(makeOption(
-        saveMgr.isExtraWeaponUnlocked() ? StringId::BoonExtraWeapon
-                                        : StringId::BoonLocked,
-        WidgetBuilder::createCheckbox(
-            false,
-            [&](bool value) { gameProps.boons.extraWeapon = value; },
-            WidgetOptions {
-                .enabled = saveMgr.isExtraWeaponUnlocked(),
-            })));
-    vbox->add(makeOption(
-        saveMgr.isReviveUnlocked() ? StringId::BoonEmergencyRevive
-                                   : StringId::BoonLocked,
-        WidgetBuilder::createCheckbox(
-            false,
-            [&](bool value) { gameProps.boons.revive = value; },
-            WidgetOptions {
-                .enabled = saveMgr.isReviveUnlocked(),
-            })));
-
-    auto&& gap =
-        tgui::Group::create({ "100%", dic.sizer.getBaseContainerHeight() });
-    vbox->add(gap);
-
-    auto&& weaponSelectorLabel = WidgetBuilder::createTextLabel(
-        dic.strings.getString(StringId::StartingWeapon),
-        dic.sizer,
-        "justify"_true);
-    weaponSelectorLabel->setSize(
-        { "100%", dic.sizer.getBaseContainerHeight() });
-    vbox->add(weaponSelectorLabel);
 
     auto&& unlockedCombosLabels =
         saveMgr.getUnlockedCombos()
@@ -160,20 +93,53 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
             })
         | std::ranges::to<std::vector>();
 
-    auto&& weaponSelector = WidgetBuilder::createListChoice(
-        unlockedCombosLabels,
-        0u,
-        [&](size_t pageIdx)
-        {
-            auto&& combos =
-                saveMgr.getUnlockedCombos() | std::ranges::to<std::vector>();
-            gameProps.boons.startingWeapon = combos.at(pageIdx);
-        },
-        dic.sizer,
-        dic.soundPlayer);
+    auto&& boonSelectPanel = tgui::ScrollablePanel::create();
+    boonSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
 
-    weaponSelector->setSize({ "100%", dic.sizer.getBaseContainerHeight() });
-    vbox->add(weaponSelector);
+    boonSelectPanel->add(
+        dic.guiBuilderFactory.createFormBuilder()
+            .addLabel(StringId::GameSetup)
+            .addOption(
+                saveMgr.isWave4StartUnlocked() ? StringId::BoonWave4
+                                               : StringId::BoonLocked,
+                WidgetBuilder::createCheckbox(
+                    false,
+                    [&](bool value) { gameProps.boons.wave4start = value; },
+                    WidgetOptions {
+                        .enabled = saveMgr.isWave4StartUnlocked(),
+                    }))
+            .addOption(
+                saveMgr.isExtraWeaponUnlocked() ? StringId::BoonExtraWeapon
+                                                : StringId::BoonLocked,
+                WidgetBuilder::createCheckbox(
+                    false,
+                    [&](bool value) { gameProps.boons.extraWeapon = value; },
+                    WidgetOptions {
+                        .enabled = saveMgr.isExtraWeaponUnlocked(),
+                    }))
+            .addOption(
+                saveMgr.isReviveUnlocked() ? StringId::BoonEmergencyRevive
+                                           : StringId::BoonLocked,
+                WidgetBuilder::createCheckbox(
+                    false,
+                    [&](bool value) { gameProps.boons.revive = value; },
+                    WidgetOptions {
+                        .enabled = saveMgr.isReviveUnlocked(),
+                    }))
+            .addGap()
+            .addLabel(StringId::StartingWeapon)
+            .addFullRowOption(WidgetBuilder::createListChoice(
+                unlockedCombosLabels,
+                0u,
+                [&](size_t pageIdx)
+                {
+                    auto&& combos = saveMgr.getUnlockedCombos()
+                                    | std::ranges::to<std::vector>();
+                    gameProps.boons.startingWeapon = combos.at(pageIdx);
+                },
+                dic.sizer,
+                dic.soundPlayer))
+            .build());
 
     return boonSelectPanel;
 }
