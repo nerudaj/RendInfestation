@@ -44,6 +44,12 @@ public:
         return unlockedWeaponCombos;
     }
 
+    [[nodiscard]] constexpr bool
+    isNthSurvivalMapUnlocked(size_t mapIdx) const noexcept
+    {
+        return mapIdx < unlockedSurvivalMapCount;
+    }
+
     UnlockStatus tryUnlockWave4Start()
     {
         return std::exchange(wave4startUnlocked, true)
@@ -73,11 +79,25 @@ public:
         return UnlockStatus::Ok;
     }
 
+    UnlockStatus tryUnlockSurvivalMap(size_t idx)
+    {
+        // If this fails then somehow we are playing map that shouldn't be
+        // unlocked yet
+        assert(idx <= unlockedSurvivalMapCount);
+
+        if (idx < unlockedSurvivalMapCount)
+            return UnlockStatus::AlreadyUnlocked;
+
+        ++unlockedSurvivalMapCount;
+        return UnlockStatus::Ok;
+    }
+
 private:
-    const static inline int version = 3;
+    const static inline int version = 4;
     int bestScore = 0;
     bool wave4startUnlocked = false;
     bool extraWeaponUnlocked = false;
     bool reviveUnlocked = false;
     std::set<WeaponCombo> unlockedWeaponCombos = { WeaponCombo::None };
+    size_t unlockedSurvivalMapCount = 1;
 };

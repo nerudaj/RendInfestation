@@ -29,22 +29,45 @@ private:
 
     void buildMapDetailLayout(tgui::Container::Ptr parent, size_t mapIdx);
 
+    void onMapSelected(size_t mapIdx);
+
     void onBack();
 
     void onPlay();
 
 private:
-    // TODO: string IDs
-    const static inline std::vector<std::string> LEVEL_NAMES = {
-        "  Landing pad", "  Botany bay", "  Labs"
+    struct [[nodiscard]] LevelContext final
+    {
+        StringId levelName;
+        StringId levelLockedString;
+        std::string fileId;
+        std::string imageName;
     };
-    const static inline std::vector<std::string> LEVEL_IDS = {
-        "survival-02.json", "survival-03.json", "survival-04.json"
+
+    const static inline auto LEVELS = std::vector<LevelContext> {
+        LevelContext {
+            .levelName = StringId::SurvivalMap01_Name,
+            .levelLockedString = StringId::SurvivalMap01_Locked,
+            .fileId = "survival-02.json",
+            .imageName = "placeholder16_9.png",
+        },
+        LevelContext {
+            .levelName = StringId::SurvivalMap02_Name,
+            .levelLockedString = StringId::SurvivalMap02_Locked,
+            .fileId = "survival-03.json",
+            .imageName = "placeholder16_9.png",
+        },
+        LevelContext {
+            .levelName = StringId::SurvivalMap03_Name,
+            .levelLockedString = StringId::SurvivalMap03_Locked,
+            .fileId = "survival-04.json",
+            .imageName = "placeholder16_9.png",
+        },
     };
 
     DependencyContainer& dic;
     GameModeProperties gameProps = {
         .mode = GameMode::Survival,
-        .mapName = LEVEL_IDS.front(),
+        .mapName = LEVELS.front().fileId,
     };
 };

@@ -5,6 +5,8 @@
 #include "appstate/Messaging.hpp"
 #include "strings/StringId.hpp"
 
+constexpr const char* PLAY_BUTTON_ID = "PlayButton";
+
 AppStateSurvivalLevelSelect::AppStateSurvivalLevelSelect(
     dgm::App& app, DependencyContainer& dic)
     : dgm::AppState(app), dic(dic)
@@ -48,7 +50,12 @@ void AppStateSurvivalLevelSelect::buildLayout()
             .withPlainTitle(StringId::SurvivalSetupTitle, HeadingLevel::H1)
             .withContent(buildContent())
             .withBottomLeftButton(StringId::Back, [&] { onBack(); })
-            .withBottomRightButton(StringId::PlayButton, [&] { onPlay(); })
+            .withBottomRightButton(
+                StringId::PlayButton,
+                [&] { onPlay(); },
+                WidgetOptions {
+                    .id = PLAY_BUTTON_ID,
+                })
             .build());
 }
 
@@ -68,10 +75,10 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildMapSelectLayout()
     auto&& levelSelectPanel = tgui::Panel::create();
     levelSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
     levelSelectPanel->add(WidgetBuilder::createCarousel(
-        LEVEL_NAMES.size(),
+        LEVELS.size(),
         [this](tgui::Container::Ptr parent, size_t page)
         {
-            gameProps.mapName = LEVEL_IDS.at(page);
+            onMapSelected(page);
             buildMapDetailLayout(parent, page);
         },
         dic.sizer,
@@ -152,7 +159,9 @@ void AppStateSurvivalLevelSelect::buildMapDetailLayout(
 
     auto&& labelRow = WidgetBuilder::createRow(dic.sizer);
     labelRow->add(WidgetBuilder::createTextLabel(
-        LEVEL_NAMES.at(mapIdx), dic.sizer, "justify"_true));
+        dic.strings.getString(LEVELS.at(mapIdx).levelName),
+        dic.sizer,
+        "justify"_true));
     group->add(labelRow, "MapNameRow");
 
     auto&& imageGroup =
@@ -162,14 +171,44 @@ void AppStateSurvivalLevelSelect::buildMapDetailLayout(
         tgui::HorizontalAlignment::Left,
         tgui::VerticalAlignment::Bottom);
 
-    auto&& heroImagePanel = tgui::Panel::create({ "16 * height / 9", "80%" });
-    TguiHelper::centerInParent(heroImagePanel);
-    heroImagePanel->getRenderer()->setTextureBackground(
-        dic.resmgr.get<tgui::Texture>("placeholder16_9.png"));
-    imageGroup->add(heroImagePanel);
+    const bool mapUnlocked = dic.saveManager.isNthSurvivalMapUnlocked(mapIdx);
+    if (mapUnlocked)
+    {
+        auto&& heroImagePanel =
+            tgui::Panel::create({ "16 * height / 9", "80%" });
+        TguiHelper::centerInParent(heroImagePanel);
+        heroImagePanel->getRenderer()->setTextureBackground(
+            dic.resmgr.get<tgui::Texture>(LEVELS.at(mapIdx).imageName));
+        imageGroup->add(heroImagePanel);
+    }
+    else
+    {
+        imageGroup->add(WidgetBuilder::createTextLabel(
+            dic.strings.getString(LEVELS.at(mapIdx).levelLockedString),
+            dic.sizer,
+            "justify"_true));
+    }
+
     group->add(imageGroup);
 
     parent->add(group);
+}
+
+void AppStateSurvivalLevelSelect::onMapSelected(size_t mapIdx)
+{
+    const bool mapUnlocked = dic.saveManager.isNthSurvivalMapUnlocked(mapIdx);
+
+    auto&& playBtn = dic.gui.get<tgui::Button>(PLAY_BUTTON_ID);
+    if (!playBtn)
+        return; // happens on the first pass through builders when PlayButton
+                // doesn't yet exist
+
+    WidgetBuilder::setButtonEnabled(playBtn, mapUnlocked);
+
+    if (mapUnlocked)
+    {
+        gameProps.mapName = LEVELS.at(mapIdx).fileId;
+    }
 }
 
 void AppStateSurvivalLevelSelect::onBack()

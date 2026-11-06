@@ -265,6 +265,5 @@ void AppStateWeaponModuleSelection::onModuleSelected(
 
     auto&& enabled = !isInUseModule(newSelectedModule);
     auto&& button = dic.gui.get<tgui::Button>("ApplyButton");
-    button->setEnabled(enabled);
-    button->getRenderer()->setOpacity(enabled ? 1.f : 0.5f);
+    WidgetBuilder::setButtonEnabled(button, enabled);
 }

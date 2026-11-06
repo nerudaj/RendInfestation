@@ -8,6 +8,7 @@ void to_json(nlohmann::json& j, const SaveManager& mgr)
     j["extraWeapon"] = mgr.extraWeaponUnlocked;
     j["combos"] = mgr.unlockedWeaponCombos;
     j["revive"] = mgr.reviveUnlocked;
+    j["unlockedSurvivalMapCount"] = mgr.unlockedSurvivalMapCount;
 }
 
 void from_json(const nlohmann::json& j, SaveManager& mgr)
@@ -30,6 +31,11 @@ void from_json(const nlohmann::json& j, SaveManager& mgr)
     if (jsonVersion >= 3)
     {
         j.at("revive").get_to(mgr.reviveUnlocked);
+    }
+
+    if (jsonVersion >= 4)
+    {
+        j.at("unlockedSurvivalMapCount").get_to(mgr.unlockedSurvivalMapCount);
     }
 }
 

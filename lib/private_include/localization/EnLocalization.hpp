@@ -35,6 +35,14 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { StartingWeapon_Painless, "Painless" },
     { StartingWeapon_WorstEver, "The worst one" },
     { StartingWeapon_Tower, "Tower" },
+    { SurvivalMap01_Name, "Landing Bay" },
+    { SurvivalMap01_Locked, "-- error locked level 01 --" },
+    { SurvivalMap02_Name, "Botanical Sector" },
+    { SurvivalMap02_Locked,
+      "You need to beat wave 10 of Landing Bay to unlock this map." },
+    { SurvivalMap03_Name, "Laboratories" },
+    { SurvivalMap03_Locked,
+      "You need to beat wave 13 of Botanical Sector to unlock this map." },
 
     // Options
     { Apply, "Apply" },
