@@ -406,11 +406,15 @@ void ActorBuilder::shatterProjectile(
     inventory.damage /= 2;
     inventory.traits = inventory.traits - ProjectileTraits::SplitOnHit;
 
-    for (auto direction = sf::degrees(45); direction < sf::degrees(360);
-         direction += sf::degrees(90))
+    auto collider = actors.get<Collider>(projectile);
+    collider.options.disabled = true; // gets reenabled via TimedScript
+    auto&& newEntities = std::vector<entt::entity>();
+    body.forward = body.forward.rotatedBy(sf::degrees(45));
+
+    for (auto&& _ : std::views::iota(0u, 4u))
     {
         auto entity = actors.create();
-        actors.emplace<Collider>(entity, actors.get<Collider>(projectile));
+        actors.emplace<Collider>(entity, collider);
 
         body.forward = body.forward.rotatedBy(sf::degrees(90));
         actors.emplace<PhysicsBody>(entity, body);
@@ -424,7 +428,25 @@ void ActorBuilder::shatterProjectile(
         {
             actors.emplace<Interval>(entity, *interval);
         }
+
+        newEntities.push_back(entity);
     }
+
+    // Re-enable colliders after some time
+    auto future = actors.create();
+    actors.emplace<TimedScript>(
+        future,
+        sf::seconds(0.1f),
+        [entities = newEntities, &actors]
+        {
+            for (auto&& entity : entities)
+            {
+                auto&& collider = actors.try_get<Collider>(entity);
+                if (!collider) continue;
+
+                collider->options.disabled = false;
+            }
+        });
 }
 
 entt::entity ActorBuilder::createDamageMarker(
