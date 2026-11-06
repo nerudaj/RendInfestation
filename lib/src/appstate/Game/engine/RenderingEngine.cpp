@@ -386,9 +386,7 @@ void RenderingEngine::renderHudNavigationArrows(dgm::Window& window)
     auto&& context = scene.survivalGameDirector->getContext();
 
     // If we are at the start of the wave, skip
-    if (context.enemiesSpawnedInCurrentWave
-        <= SHOW_DIRECTIONS_TO_ENEMIES_THRESHOLD)
-        return;
+    if (context.state != SurvivalModeState::WaitingForEnemiesToDie) return;
 
     const auto enemyCount = context.enemiesSpawnedInCurrentWave
                             - context.enemiesKilledInCurrentWave;
