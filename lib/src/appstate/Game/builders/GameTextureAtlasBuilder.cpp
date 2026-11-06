@@ -207,6 +207,9 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
     auto reviveIcon =
         atlas.addImage(resmgr.get<sf::Texture>("revive_icon.png")).value();
 
+    auto redArrow =
+        atlas.addImage(resmgr.get<sf::Texture>("red-arrow.png")).value();
+
     auto image = sf::Image(atlas.getTexture().copyToImage());
     std::ignore = image.saveToFile("atlas_debug.png");
 
@@ -220,5 +223,6 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
         .iconsLocation = icons,
         .modulesLocation = modules,
         .reviveIconLocation = reviveIcon,
+        .redArrowLocation = redArrow,
     };
 }

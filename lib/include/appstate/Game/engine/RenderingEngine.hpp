@@ -50,6 +50,11 @@ private:
 
     void renderHud(dgm::Window& window);
 
+    void renderHudNavigationArrows(dgm::Window& window);
+
+    void
+    renderHudReviveIcon(const sf::Vector2f& hudOrigin, dgm::Window& window);
+
     void renderHudBackgroundAndHealth(
         const sf::Vector2f& hudOrigin, dgm::Window& window);
 

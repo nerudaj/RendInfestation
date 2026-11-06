@@ -256,19 +256,9 @@ void RenderingEngine::renderHud(dgm::Window& window)
 
     renderHudBackgroundAndHealth(hudOrigin, window);
     renderHudReloadTimeAndModules(hudOrigin, window);
-
-    if (scene.emergencyReviveActive)
-    {
-        auto&& iconClip = atlas.atlas.getClip(atlas.reviveIconLocation);
-        hudSprite.setTextureRect(iconClip.getFrame(0));
-        hudSprite.setPosition({
-            hudOrigin.x - iconClip.getFrameSize().x,
-            hudOrigin.y,
-        });
-        window.draw(hudSprite);
-    }
-
+    renderHudReviveIcon(hudOrigin, window);
     renderHudStrings(window);
+    renderHudNavigationArrows(window);
 }
 
 void RenderingEngine::renderHudBackgroundAndHealth(
@@ -318,6 +308,20 @@ void RenderingEngine::renderHudReloadTimeAndModules(
             hudOrigin + sf::Vector2f { 1.f + idx * 20.f, 1.f });
         window.draw(hudSprite);
     }
+}
+
+void RenderingEngine::renderHudReviveIcon(
+    const sf::Vector2f& hudOrigin, dgm::Window& window)
+{
+    if (!scene.emergencyReviveActive) return;
+
+    auto&& iconClip = atlas.atlas.getClip(atlas.reviveIconLocation);
+    hudSprite.setTextureRect(iconClip.getFrame(0));
+    hudSprite.setPosition({
+        hudOrigin.x - iconClip.getFrameSize().x,
+        hudOrigin.y,
+    });
+    window.draw(hudSprite);
 }
 
 void RenderingEngine::renderHudStrings(dgm::Window& window)
@@ -373,6 +377,40 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
                   / 2.f,
               INTERNAL_GAME_RESOLUTION.y * 2.f / 3.f });
         window.draw(text);
+    }
+}
+
+void RenderingEngine::renderHudNavigationArrows(dgm::Window& window)
+{
+    if (!scene.survivalGameDirector) return;
+    auto&& context = scene.survivalGameDirector->getContext();
+
+    // If we are at the start of the wave, skip
+    if (context.enemiesSpawnedInCurrentWave
+        <= SHOW_DIRECTIONS_TO_ENEMIES_THRESHOLD)
+        return;
+
+    const auto enemyCount = context.enemiesSpawnedInCurrentWave
+                            - context.enemiesKilledInCurrentWave;
+    if (enemyCount > SHOW_DIRECTIONS_TO_ENEMIES_THRESHOLD) return;
+    const auto playerPosition =
+        scene.actors.get<Collider>(scene.playerEntity).getPosition();
+
+    for (auto&& [_, collider] : scene.actors.view<EnemyTag, Collider>().each())
+    {
+        auto direction =
+            dgm::Math::toUnit(collider.getPosition() - playerPosition);
+
+        auto&& redArrow = atlas.atlas.getClip(atlas.redArrowLocation);
+        hudSprite.setTextureRect(redArrow.getFrame(0));
+        hudSprite.setOrigin(sf::Vector2f(redArrow.getFrameSize() / 2u));
+        hudSprite.setPosition(
+            INTERNAL_GAME_RESOLUTION / 2.f + direction * 50.f);
+        hudSprite.setRotation(direction.angle());
+        window.draw(hudSprite);
+
+        hudSprite.setRotation(sf::degrees(0.f));
+        hudSprite.setOrigin({ 0.f, 0.f });
     }
 }
 

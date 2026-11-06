@@ -152,6 +152,8 @@ entt::entity ActorBuilder::createNpc(
     actors.get<Skin>(entity).animation.setState(
         IDLE_ANIMATION_STATE, "looping"_true);
 
+    if (config.npcKind != NpcKind::Turret) actors.emplace<EnemyTag>(entity);
+
     return entity;
 }
 

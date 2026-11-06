@@ -41,6 +41,10 @@ struct [[nodiscard]] GameStatus final
     Ledger ledger = {};
 };
 
+struct [[nodiscard]] EnemyTag final
+{
+};
+
 struct [[nodiscard]] GameScene final
 {
     GameStatus status;
