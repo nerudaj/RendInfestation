@@ -38,10 +38,7 @@ void AppStatePause::buildLayout()
     auto createAndroidLayout =
         [&](priv::LayoutBuilderWithBackgroundAndTitle<StringId>& builder)
     {
-        return builder
-            .withContent(builderFactory.createButtonListBuilder()
-                             .addButton(StringId::ExitButton, [&] { onExit(); })
-                             .build())
+        return builder.withContent(tgui::Group::create())
             .withTopLeftButton(dic.getIcon(Icon::Exit), [&] { onBackToMenu(); })
             .withTopRightButton(
                 dic.getIcon(Icon::Settings), [&] { onOptions(); })
