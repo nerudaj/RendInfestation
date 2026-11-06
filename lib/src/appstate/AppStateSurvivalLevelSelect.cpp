@@ -138,21 +138,41 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
                 .enabled = saveMgr.isReviveUnlocked(),
             })));
 
-    auto&& weaponSelector = WidgetBuilder::createCarousel(
-        saveMgr.getUnlockedCombos().size(),
-        [&](tgui::Container::Ptr parent, size_t pageIdx)
+    auto&& gap =
+        tgui::Group::create({ "100%", dic.sizer.getBaseContainerHeight() });
+    vbox->add(gap);
+
+    auto&& weaponSelectorLabel = WidgetBuilder::createTextLabel(
+        dic.strings.getString(StringId::StartingWeapon),
+        dic.sizer,
+        "justify"_true);
+    weaponSelectorLabel->setSize(
+        { "100%", dic.sizer.getBaseContainerHeight() });
+    vbox->add(weaponSelectorLabel);
+
+    auto&& unlockedCombosLabels =
+        saveMgr.getUnlockedCombos()
+        | std::views::transform(
+            [&](WeaponCombo combo)
+            {
+                return std::string(
+                    dic.strings.getString(getWeaponComboName(combo)));
+            })
+        | std::ranges::to<std::vector>();
+
+    auto&& weaponSelector = WidgetBuilder::createListChoice(
+        unlockedCombosLabels,
+        0u,
+        [&](size_t pageIdx)
         {
-            parent->removeAllWidgets();
             auto&& combos =
                 saveMgr.getUnlockedCombos() | std::ranges::to<std::vector>();
-            parent->add(WidgetBuilder::createTextLabel(
-                dic.strings.getString(getWeaponComboName(combos[pageIdx])),
-                dic.sizer));
             gameProps.boons.startingWeapon = combos.at(pageIdx);
         },
         dic.sizer,
         dic.soundPlayer);
-    weaponSelector->setSize({ "100%", dic.sizer.getBaseContainerHeight() * 2 });
+
+    weaponSelector->setSize({ "100%", dic.sizer.getBaseContainerHeight() });
     vbox->add(weaponSelector);
 
     return boonSelectPanel;
