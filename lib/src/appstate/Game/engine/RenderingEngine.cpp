@@ -371,12 +371,24 @@ void RenderingEngine::renderHudStrings(dgm::Window& window)
 
     if (scene.hudMessage.displayTime > sf::Time::Zero)
     {
+        const auto fadeOutFactor =
+            std::clamp(scene.hudMessage.displayTime.asSeconds(), 0.f, 0.5f)
+            / 0.5f;
+
         text.setString(scene.hudMessage.text);
         text.setPosition(
             { (INTERNAL_GAME_RESOLUTION.x - textBounds.getGlobalBounds(text).x)
                   / 2.f,
               INTERNAL_GAME_RESOLUTION.y * 2.f / 3.f });
+
+        const auto originalColor = text.getFillColor();
+        auto newColor = originalColor;
+        newColor.a = static_cast<uint8_t>(255 * fadeOutFactor);
+
+        text.setFillColor(newColor);
         window.draw(text);
+
+        text.setFillColor(originalColor);
     }
 }
 
