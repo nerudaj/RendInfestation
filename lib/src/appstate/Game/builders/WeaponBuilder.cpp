@@ -96,7 +96,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.projectileSpeedVariance = props.projectileSpeed * 0.1f;
             props.projectileLifetime = EXTENDED_PROJECTILE_LIFETIME;
             props.soundId = SoundId::ShrapnelFire;
-            props.progressiveCooldownRate = 0.05f;
+            props.progressiveCooldownRate = 0.01f;
             return props;
         };
 
@@ -120,7 +120,7 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             if (isSpikes)
             {
                 props.projectileSkin = SkinType::Landmine;
-                props.progressiveCooldownRate = 0.1f;
+                props.progressiveCooldownRate = 0.05f;
             }
             else
             {
