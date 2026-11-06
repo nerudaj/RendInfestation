@@ -48,7 +48,15 @@ void PhysicsEngine::updateForConcreteCollider(
         if (moment.x == 0.f) body.forward.x *= -body.bounciness;
         if (moment.y == 0.f) body.forward.y *= -body.bounciness;
 
-        if (body.bounciness > 0.f && (moment.x == 0.f || moment.y == 0.f))
+        const bool isBouncy = body.bounciness > 0.f;
+        const bool bouncedOnX = moment.x == 0.f && body.forward.x != 0.f;
+        const bool bouncedOnY = moment.y == 0.f && body.forward.y != 0.f;
+
+        // This is either a corner bounce or it means the projectile is stuck
+        if (isBouncy && (bouncedOnX && bouncedOnY))
+            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
+        // This is a regular bounce
+        if (isBouncy && (bouncedOnX || bouncedOnY))
             eventQueue.pushEvent<event::ActorBounced>(entity);
     }
 
