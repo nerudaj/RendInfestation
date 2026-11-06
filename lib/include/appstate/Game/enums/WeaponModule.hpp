@@ -20,8 +20,12 @@ enum class [[nodiscard]] WeaponModule
     Dummy,
     ExplosiveAmmo,
     Turret,
+    Zap,
     ExtraHealth,
     ExtraGun,
+    ShatteringRicochet,
+    PulseRounds,
+    AutomaticShotgun,
 };
 
 constexpr auto ALLOWED_MODULES = std::array {
@@ -32,6 +36,12 @@ constexpr auto ALLOWED_MODULES = std::array {
     WeaponModule::BigBullet,       WeaponModule::Spikes,
     WeaponModule::Splitter,        WeaponModule::Push,
     WeaponModule::Turret,
+};
+
+constexpr auto GOLD_MODULES = std::array {
+    WeaponModule::ShatteringRicochet,
+    WeaponModule::AutomaticShotgun,
+    WeaponModule::PulseRounds,
 };
 
 static inline StringId getModuleName(WeaponModule module)
@@ -62,10 +72,18 @@ static inline StringId getModuleName(WeaponModule module)
         return StringId::WeaponModule_ExplosiveAmmo;
     case WeaponModule::Turret:
         return StringId::WeaponModule_Turret;
+    case WeaponModule::Zap:
+        return StringId::WeaponModule_Zap;
     case WeaponModule::ExtraHealth:
         return StringId::WeaponModule_ExtraHealth;
     case WeaponModule::ExtraGun:
         return StringId::WeaponModule_ExtraGun;
+    case WeaponModule::ShatteringRicochet:
+        return StringId::WeaponModule_ShatteringRicochet;
+    case WeaponModule::PulseRounds:
+        return StringId::WeaponModule_PulseRounds;
+    case WeaponModule::AutomaticShotgun:
+        return StringId::WeaponModule_AutomaticShotgun;
     }
 
     throw std::runtime_error(uni::format(
@@ -100,10 +118,18 @@ static inline StringId getModuleDescription(WeaponModule module)
         return StringId::WeaponModuleDesc_ExplosiveAmmo;
     case WeaponModule::Turret:
         return StringId::WeaponModuleDesc_Turret;
+    case WeaponModule::Zap:
+        return StringId::WeaponModuleDesc_Zap;
     case WeaponModule::ExtraHealth:
         return StringId::WeaponModuleDesc_ExtraHealth;
     case WeaponModule::ExtraGun:
         return StringId::WeaponModuleDesc_ExtraGun;
+    case WeaponModule::ShatteringRicochet:
+        return StringId::WeaponModuleDesc_ShatteringRicochet;
+    case WeaponModule::PulseRounds:
+        return StringId::WeaponModuleDesc_PulseRounds;
+    case WeaponModule::AutomaticShotgun:
+        return StringId::WeaponModuleDesc_AutomaticShotgun;
     }
 
     throw std::runtime_error(uni::format(

@@ -105,13 +105,17 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModule_ExplosiveAmmo, "Explosive Ammo" },
     { WeaponModule_Ricochet, "Ricochet" },
     { WeaponModule_PassthruAmmo, "Passthru Ammo" },
-    { WeaponModule_BigBullet, "Big Bullet" },
+    { WeaponModule_BigBullet, "Heavy rounds" },
     { WeaponModule_Spikes, "Spikes" },
     { WeaponModule_Splitter, "Splitter" },
     { WeaponModule_Push, "Push" },
     { WeaponModule_Turret, "Turret" },
+    { WeaponModule_Zap, "Zapper" },
     { WeaponModule_ExtraHealth, "Extra health" },
     { WeaponModule_ExtraGun, "Extra gun" },
+    { WeaponModule_ShatteringRicochet, "Shattering ricochet" },
+    { WeaponModule_PulseRounds, "Pulse rounds" },
+    { WeaponModule_AutomaticShotgun, "Automatic Shotgun" },
     { InUse, "(in use)" },
     { Install, "Install" },
     { ConfigureLoadout, "Configure loadout" },
@@ -141,9 +145,18 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModuleDesc_Turret,
       "Projectiles transform into mobile turrets. All other equipped modules "
       "affect the turret behavior." },
+    { WeaponModuleDesc_Zap, "-- todo --" },
     { WeaponModuleDesc_ExtraHealth,
       "Heal to full health. Increases max health." },
     { WeaponModuleDesc_ExtraGun, "Gain an extra weapon slot." },
+    { WeaponModuleDesc_ShatteringRicochet,
+      "Projectile shatters into smaller projectiles upon hitting the wall. "
+      "These can shatter again upon hitting another wall" },
+    { WeaponModuleDesc_PulseRounds,
+      "Projectiles gets bigger and more powerful, while being faster and with "
+      "shorter cooldowns than Heavy rounds." },
+    { WeaponModuleDesc_AutomaticShotgun,
+      "Shoots 3 projectiles per shot really, really fast." },
 
     // Game
     { Interact, "[interact]" },

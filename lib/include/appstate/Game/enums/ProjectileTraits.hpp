@@ -14,6 +14,7 @@ enum class [[nodiscard]] ProjectileTraits
     SplitOnHit = 64, // splits into multiple projectiles on hit
     Turret = 128,
     Push = 256,
+    ShrapnellingBounce = 512,
 };
 
 constexpr ProjectileTraits operator|(ProjectileTraits a, ProjectileTraits b)

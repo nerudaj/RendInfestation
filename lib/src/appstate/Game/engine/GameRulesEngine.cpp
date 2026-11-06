@@ -117,7 +117,8 @@ void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
             SoundChannel::Ambient);
     }
 
-    if (inventory.traits & ProjectileTraits::SplitOnHit)
+    if (inventory.traits & ProjectileTraits::SplitOnHit
+        || inventory.traits & ProjectileTraits::ShrapnellingBounce)
     {
         ActorBuilder::shatterProjectile(scene.actors, e.projectileEntity);
     }

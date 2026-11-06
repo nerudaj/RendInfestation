@@ -148,6 +148,40 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             props.progressiveCooldownRate = 1.f;
             return props;
         };
+
+    case ShatteringRicochet:
+        return [](WeaponProperties props)
+        {
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::ShrapnellingBounce;
+            return props;
+        };
+
+    case PulseRounds:
+        return [](WeaponProperties props)
+        {
+            props.projectileSpeed /= 1.1f;
+            props.baseProjectileDamage *= 1.4f;
+            props.kickback += 150.f;
+            props.fireDelay *= 1.1f;
+            props.projectileTraits =
+                props.projectileTraits | ProjectileTraits::Big;
+            props.projectileLifetime *= 1.5f;
+            return props;
+        };
+
+    case AutomaticShotgun:
+        return [](WeaponProperties props)
+        {
+            props.soundId = SoundId::Shotgun;
+            props.numShots *= 3;
+            props.kickback += 110.f;
+            props.spread *= 11;
+            props.fireDelay *= 1.35f;
+            props.fireDelay /= 4.f;
+            props.baseProjectileDamage -= props.baseProjectileDamage / 5;
+            return props;
+        };
     }
 }
 

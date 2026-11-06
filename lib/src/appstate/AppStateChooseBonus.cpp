@@ -175,6 +175,18 @@ AppStateChooseBonus::generatePickerSelection()
         }
     }
 
+    // If draft pool is small enough, we can try the gold modules
+    if (draftPool.size() <= 2)
+    {
+        for (auto&& goldModule : GOLD_MODULES)
+        {
+            if (!scene.unlockedModules.contains(goldModule))
+            {
+                draftPool.insert(goldModule);
+            }
+        }
+    }
+
     auto sortablePool = draftPool | uni::ranges::to<std::vector>();
     std::mt19937 gen { static_cast<unsigned>(rand()) };
     uni::ranges::shuffle(sortablePool, gen);
