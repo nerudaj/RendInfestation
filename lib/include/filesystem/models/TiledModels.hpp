@@ -1,204 +1,21 @@
 #pragma once
 
+#include "filesystem/models/tiled/definitions/ObjectGroupModel.hpp"
+#include "filesystem/models/tiled/definitions/TileLayerModel.hpp"
+#include "filesystem/models/tiled/definitions/TilesetModel.hpp"
+#include "filesystem/models/tiled/enums/LayerType.hpp"
+#include "filesystem/models/tiled/enums/MapType.hpp"
+#include "filesystem/models/tiled/enums/Orientation.hpp"
+#include "filesystem/models/tiled/enums/RenderOrder.hpp"
+#include "filesystem/models/tiled/enums/StaggerAxis.hpp"
+#include "filesystem/models/tiled/enums/StaggerIndex.hpp"
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
 
 namespace tiled
 {
-
     // docs: https://doc.mapeditor.org/en/stable/reference/json-map-format/
-
-    enum class [[nodiscard]] Orientation
-    {
-        Orthogonal,
-        Isometric,
-        Staggered,
-        Hexagonal,
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        Orientation,
-        {
-            { Orientation::Orthogonal, "orthogonal" },
-            { Orientation::Isometric, "isometric" },
-            { Orientation::Staggered, "staggered" },
-            { Orientation::Hexagonal, "hexagonal" },
-        });
-
-    enum class [[nodiscard]] RenderOrder
-    {
-        RightDown,
-        RightUp,
-        LeftDown,
-        LeftUp,
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        RenderOrder,
-        {
-            { RenderOrder::RightDown, "right-down" },
-            { RenderOrder::RightUp, "right-up" },
-            { RenderOrder::LeftDown, "left-down" },
-            { RenderOrder::LeftUp, "left-up" },
-        });
-
-    enum class [[nodiscard]] DrawOrder
-    {
-        Uninitialized = -1,
-        TopDown = 0,
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        DrawOrder, { { DrawOrder::TopDown, "topdown" } });
-
-    enum class [[nodiscard]] LayerType
-    {
-        Uninitialized = -1,
-        TileLayer = 0,
-        ObjectGroup,
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        LayerType,
-        {
-            { LayerType::TileLayer, "tilelayer" },
-            { LayerType::ObjectGroup, "objectgroup" },
-        });
-
-    enum class [[nodiscard]] MapType
-    {
-        Map,
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        MapType,
-        {
-            { MapType::Map, "map" },
-        });
-
-    enum class [[nodiscard]] StaggerAxis
-    {
-        X,
-        Y,
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        StaggerAxis,
-        {
-            { StaggerAxis::X, "x" },
-            { StaggerAxis::Y, "y" },
-        });
-
-    enum class [[nodiscard]] StaggerIndex
-    {
-        Odd,
-        Even,
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        StaggerIndex,
-        {
-            { StaggerIndex::Odd, "odd" },
-            { StaggerIndex::Even, "even" },
-        });
-
-    struct TileLayerModel
-    {
-        unsigned id = 0;
-        std::string name = "";
-        LayerType type = LayerType::Uninitialized;
-        std::vector<int> data = {};
-        int x = 0;
-        int y = 0;
-        unsigned width = 0;
-        unsigned height = 0;
-        unsigned opacity = 0;
-        bool visible = true;
-    };
-
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-        TileLayerModel,
-        id,
-        name,
-        data,
-        x,
-        y,
-        width,
-        height,
-        opacity,
-        type,
-        visible);
-
-    struct TilesetModel
-    {
-        unsigned firstgid = 0;
-        std::string source = "";
-    };
-
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TilesetModel, firstgid, source);
-
-    struct ObjectModel
-    {
-        int gid = 0;
-        int id = 0;
-        float x = 0;
-        float y = 0;
-        unsigned width = 0;
-        unsigned height = 0;
-        std::string name;
-        std::string type;
-        int rotation = 0;
-        bool point = true;
-        bool visible = true;
-
-        friend void to_json(nlohmann::json&, const ObjectModel&) {}
-
-        friend void from_json(const nlohmann::json& j, ObjectModel& model)
-        {
-            if (j.contains("gid")) j["gid"].get_to(model.gid);
-            if (j.contains("id")) j["id"].get_to(model.id);
-            if (j.contains("x")) j["x"].get_to(model.x);
-            if (j.contains("y")) j["y"].get_to(model.y);
-            if (j.contains("width")) j["width"].get_to(model.width);
-            if (j.contains("height")) j["height"].get_to(model.height);
-            if (j.contains("name")) j["name"].get_to(model.name);
-            if (j.contains("type")) j["type"].get_to(model.type);
-            if (j.contains("rotation")) j["rotation"].get_to(model.rotation);
-            if (j.contains("point")) j["point"].get_to(model.point);
-            if (j.contains("visible")) j["visible"].get_to(model.visible);
-        }
-    };
-
-} // namespace tiled
-
-namespace tiled
-{
-    struct ObjectGroupModel
-    {
-        int id = 0;
-        int x = 0;
-        int y = 0;
-        std::string name;
-        std::vector<ObjectModel> objects = {};
-        DrawOrder draworder = DrawOrder::Uninitialized;
-        LayerType type = LayerType::Uninitialized;
-        bool visible = true;
-        unsigned opacity = 0;
-    };
-
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-        ObjectGroupModel,
-        id,
-        x,
-        y,
-        name,
-        objects,
-        draworder,
-        type,
-        visible,
-        opacity);
-
     using LayerModel = std::variant<TileLayerModel, ObjectGroupModel>;
 
     struct FiniteMapModel
