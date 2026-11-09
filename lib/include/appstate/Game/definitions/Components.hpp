@@ -177,6 +177,7 @@ struct [[nodiscard]] DelayedOnLeaveTriggerInventory final
 struct [[nodiscard]] InteractionTriggerInventory final
 {
     InteractionTriggerType type = InteractionTriggerType::Workbench;
+    std::optional<int> value = std::nullopt;
 };
 
 struct [[nodiscard]] DamageMarkerInventory final

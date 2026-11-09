@@ -35,6 +35,7 @@ private:
         entt::entity playerEntityLower = entt::null;
         std::vector<LightSource> lights = {};
         std::vector<sf::Vector2f> enemySpawns = {};
+        std::vector<sf::Vector2f> playerSpawns = {};
         WeaponLoadout loadout = {};
         std::set<WeaponModule> unlockedModules = {};
     };

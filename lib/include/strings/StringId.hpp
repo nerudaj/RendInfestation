@@ -160,6 +160,14 @@ enum class [[nodiscard]] StringId
     PreviousBestScore,
     CurrentBestScore,
 
+    // Notes
+    Note1,
+    Note2,
+    Note3,
+    Note4,
+    Note5,
+    Note6,
+
     Placeholder,
     MaxId, // Make sure this one is always the last!
 };

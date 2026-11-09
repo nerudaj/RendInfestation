@@ -84,6 +84,7 @@ constexpr const size_t SHOW_DIRECTIONS_TO_ENEMIES_THRESHOLD = 3;
 constexpr const int ZINDEX_FLOOR_DECOR = 0;
 constexpr const int ZINDEX_LITTLE = 5;
 constexpr const int ZINDEX_COMMON = 10;
+constexpr const int ZINDEX_TABLETOP = 11;
 constexpr const int ZINDEX_FLYING = 50;
 constexpr const int ZINDEX_PROJECTILES = 100;
 constexpr const int ZINDEX_FOREGROUND_DECOR = 200;

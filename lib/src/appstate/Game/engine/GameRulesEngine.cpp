@@ -338,6 +338,15 @@ void GameRulesEngine::updateEntitiesWithInput(const dgm::Time& time)
             {
                 eventQueue.pushEvent<event::WorkbenchOpened>();
             }
+            else if (
+                scene.interactionTrigger->type == InteractionTriggerType::Note)
+            {
+                assert(scene.interactionTrigger->value);
+                eventQueue.pushEvent<event::NoteOpened>(
+                    *(scene.interactionTrigger->value));
+            }
+            else
+                assert(false); // unimplemented trigger
         }
 
         // Reload all weapons at once

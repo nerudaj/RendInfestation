@@ -191,18 +191,6 @@ entt::entity ActorBuilder::createProp(
 
     if (propDef.animationStateName == "workbench")
     {
-        const auto triggerHalf =
-            sf::Vector2f { collider.getRadius(), collider.getRadius() };
-        auto trigger = actors.create();
-        actors.emplace<Collider>(
-            trigger,
-            dgm::Rect(collider.getPosition() - triggerHalf, triggerHalf * 2.f),
-            ColliderOptions {
-                .reportActorCollisions = true,
-                .nonblocking = true,
-            });
-        actors.emplace<InteractionTriggerInventory>(
-            trigger, InteractionTriggerType::Workbench);
     }
 
     if (propDef.health)
@@ -211,6 +199,31 @@ entt::entity ActorBuilder::createProp(
     }
 
     return entity;
+}
+
+entt::entity ActorBuilder::createInteractionTrigger(
+    entt::registry& actors,
+    entt::entity anchorEntity,
+    InteractionTriggerType triggerType,
+    std::optional<int> value)
+{
+    auto&& collider = actors.get<Collider>(anchorEntity);
+
+    const auto triggerHalf =
+        sf::Vector2f { collider.getRadius(), collider.getRadius() };
+    auto trigger = actors.create();
+
+    actors.emplace<Collider>(
+        trigger,
+        dgm::Rect(collider.getPosition() - triggerHalf, triggerHalf * 2.f),
+        ColliderOptions {
+            .reportActorCollisions = true,
+            .nonblocking = true,
+        });
+
+    actors.emplace<InteractionTriggerInventory>(trigger, triggerType, value);
+
+    return trigger;
 }
 
 void ActorBuilder::destroyProp(entt::registry& actors, entt::entity entity)

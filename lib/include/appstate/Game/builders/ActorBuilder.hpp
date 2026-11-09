@@ -36,6 +36,12 @@ public:
         size_t propId,
         const GameTextureAtlas& atlas);
 
+    static entt::entity createInteractionTrigger(
+        entt::registry& actors,
+        entt::entity anchorEntity,
+        InteractionTriggerType triggerType,
+        std::optional<int> value);
+
     static void destroyProp(entt::registry& actors, entt::entity entity);
 
     static entt::entity createProjectile(

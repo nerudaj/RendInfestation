@@ -138,6 +138,7 @@ const std::array<Prop, 16u> PROP_DEFINITIONS = {
         },
         .spriteOffset = { 22.f, 25.f },
         .isSolid = true,
+        .zIndex = ZIndex(ZINDEX_TABLETOP),
     },
     Prop {
         .animationStateName = "pc-active",
@@ -153,6 +154,7 @@ const std::array<Prop, 16u> PROP_DEFINITIONS = {
             };
         },
         .spriteOffset = { 22.f, 25.f },
+        .zIndex = ZIndex(ZINDEX_TABLETOP),
     },
     Prop {
         .animationStateName = "cactus-pot",

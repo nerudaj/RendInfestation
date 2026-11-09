@@ -3,6 +3,44 @@
 #include "appstate/Game/builders/WeaponBuilder.hpp"
 #include <random>
 
+struct [[nodiscard]] ObjectProperties final
+{
+    bool interactable = false;
+    InteractionTriggerType interactType = InteractionTriggerType::Workbench;
+    std::optional<int> interactValue = std::nullopt;
+};
+
+static ObjectProperties convertObjectProperties(
+    const std::vector<tiled::ObjectPropertyModel>& properties)
+{
+    auto&& result = ObjectProperties {};
+
+    for (auto&& prop : properties)
+    {
+        if (prop.name == "interactable")
+            result.interactable = std::get<bool>(prop.value);
+        else if (prop.name == "interactValue")
+            result.interactValue = std::get<int>(prop.value);
+        else if (prop.name == "interactType")
+        {
+            const auto typeName = std::get<std::string>(prop.value);
+            if (typeName == "workbench")
+                result.interactType = InteractionTriggerType::Workbench;
+            else if (typeName == "note")
+                result.interactType = InteractionTriggerType::Note;
+            else
+            {
+                throw std::runtime_error(
+                    "Invalid interact type name: " + typeName);
+            }
+        }
+        else
+            throw std::runtime_error("Invalid property name: " + prop.name);
+    }
+
+    return result;
+}
+
 static inline bool isPassableTile(int id)
 {
     return (0 <= id && id <= 2) || (6 <= id && id <= 8)
@@ -47,8 +85,16 @@ GameScene GameSceneBuilder::createScene(
     for (auto&& prop : level.objectLayer.objects)
     {
         const auto propId = prop.gid - tilesClip.getFrameCount() - 1;
-        std::ignore =
+        auto&& propEntity =
             ActorBuilder::createProp(actors, { prop.x, prop.y }, propId, atlas);
+
+        const auto properties = convertObjectProperties(prop.properties);
+        if (properties.interactable)
+            std::ignore = ActorBuilder::createInteractionTrigger(
+                actors,
+                propEntity,
+                properties.interactType,
+                properties.interactValue);
     }
 
     auto artifact = evaluateTileLayers(level, actors, atlas, input);
@@ -57,10 +103,6 @@ GameScene GameSceneBuilder::createScene(
     if (gameModeProperties.mode == GameMode::Story)
     {
         // TODO: this
-        /*std::copy(
-            ALLOWED_MODULES.begin(),
-            ALLOWED_MODULES.end(),
-            artifact.unlockedModules.begin());*/
     }
     else
     { // Survival
@@ -197,21 +239,7 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
             }
             else if (level.decorLayer.data[idx] - 1 == PLAYER_SPAWN_TILE_ID)
             {
-                if (result.playerEntity != entt::null)
-                {
-                    throw std::runtime_error(
-                        "Multiple player spawn points in level");
-                }
-
-                result.playerEntity = ActorBuilder::createPlayer(
-                    actors,
-                    tileCoordToWorld(x, y),
-                    atlas,
-                    input,
-                    result.loadout);
-
-                result.playerEntityLower = ActorBuilder::createPlayerLegs(
-                    actors, tileCoordToWorld(x, y), atlas);
+                result.playerSpawns.push_back(tileCoordToWorld(x, y));
             }
             else if (
                 level.decorLayer.data[idx] - 1 == DOOR_TILE_ID
@@ -229,6 +257,17 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
             }
         }
     }
+
+    if (result.playerSpawns.empty())
+    {
+        throw std::runtime_error("No player spawns in the level!");
+    }
+
+    result.playerEntity = ActorBuilder::createPlayer(
+        actors, result.playerSpawns.front(), atlas, input, result.loadout);
+
+    result.playerEntityLower = ActorBuilder::createPlayerLegs(
+        actors, result.playerSpawns.front(), atlas);
 
     return result;
 }

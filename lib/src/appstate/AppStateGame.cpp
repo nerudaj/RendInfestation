@@ -1,4 +1,5 @@
 #include "appstate/AppStateGame.hpp"
+#include "appstate/AppStateNoteReader.hpp"
 #include "appstate/AppStatePause.hpp"
 #include "appstate/AppStateSurvivalGameOver.hpp"
 #include "appstate/AppStateTransitions.hpp"
@@ -56,6 +57,8 @@ void AppStateGame::update()
         janitor,
         overloads { [&](event::WorkbenchOpened&)
                     { app.pushState<AppStateWeaponModification>(dic, scene); },
+                    [&](event::NoteOpened& e)
+                    { app.pushState<AppStateNoteReader>(dic, e.noteId); },
                     [&](event::WaveEnded&)
                     {
                         previousWeaponCount = scene.loadout.weapons.size();

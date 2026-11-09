@@ -132,6 +132,11 @@ namespace event
     {
     };
 
+    struct [[nodiscard]] NoteOpened final
+    {
+        int noteId;
+    };
+
     struct [[nodiscard]] WaveEnded final
     {
     };
@@ -167,6 +172,7 @@ using GameEvent = std::variant<
     event::ActorStopped,
     event::ActorDamaged,
     event::WorkbenchOpened,
+    event::NoteOpened,
     event::WaveEnded,
     event::SurvivalSpawnerTimerHit,
     event::PlayerDied>;
