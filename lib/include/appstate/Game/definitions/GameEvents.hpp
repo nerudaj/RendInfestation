@@ -10,107 +10,68 @@ namespace event
     struct [[nodiscard]] ActorToMeshCollision final
     {
         entt::entity entity;
-
-        explicit ActorToMeshCollision(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ActorToActorCollision final
     {
         entt::entity entity1;
         entt::entity entity2;
-
-        explicit ActorToActorCollision(
-            entt::entity entity1, entt::entity entity2)
-            : entity1(entity1), entity2(entity2)
-        {
-        }
     };
 
     struct [[nodiscard]] ActorBounced final
     {
         entt::entity entity;
-
-        explicit ActorBounced(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ActorFiredWeapon final
     {
         entt::entity entity;
-
-        explicit ActorFiredWeapon(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ActorStartedAttack final
     {
         entt::entity entity;
-
-        explicit ActorStartedAttack(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ActorFinishedAttack final
     {
         entt::entity entity;
-
-        explicit ActorFinishedAttack(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ProjectileDestroyed final
     {
         entt::entity projectileEntity;
-
-        explicit ProjectileDestroyed(entt::entity projectileEntity)
-            : projectileEntity(projectileEntity)
-        {
-        }
     };
 
     struct [[nodiscard]] ObjectDestroyed final
     {
         entt::entity entity;
-
-        explicit ObjectDestroyed(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] DoorOpened final
     {
         entt::entity doorEntity;
-
-        explicit DoorOpened(entt::entity doorEntity) : doorEntity(doorEntity) {}
     };
 
     struct [[nodiscard]] DoorStartsClosing final
     {
         entt::entity doorEntity;
-
-        explicit DoorStartsClosing(entt::entity doorEntity)
-            : doorEntity(doorEntity)
-        {
-        }
     };
 
     struct [[nodiscard]] ActorIsFalling final
     {
         entt::entity entity;
         float deltaTime;
-
-        ActorIsFalling(entt::entity _entity, float _deltaTime)
-            : entity(_entity), deltaTime(_deltaTime)
-        {
-        }
     };
 
     struct [[nodiscard]] ActorMoved final
     {
         entt::entity entity;
-
-        explicit ActorMoved(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ActorStopped final
     {
         entt::entity entity;
-
-        explicit ActorStopped(entt::entity entity) : entity(entity) {}
     };
 
     struct [[nodiscard]] ActorDamaged final
@@ -118,14 +79,6 @@ namespace event
         entt::entity entity;
         int damageAmount;
         sf::Vector2f impactForce;
-
-        ActorDamaged(
-            entt::entity entity, int damageAmount, sf::Vector2f impactForce)
-            : entity(entity)
-            , damageAmount(damageAmount)
-            , impactForce(impactForce)
-        {
-        }
     };
 
     struct [[nodiscard]] WorkbenchOpened final
@@ -144,11 +97,6 @@ namespace event
     struct [[nodiscard]] SurvivalSpawnerTimerHit final
     {
         SkinType typeToSpawn;
-
-        constexpr explicit SurvivalSpawnerTimerHit(SkinType typeToSpawn)
-            : typeToSpawn(typeToSpawn)
-        {
-        }
     };
 
     struct [[nodiscard]] PlayerDied final
