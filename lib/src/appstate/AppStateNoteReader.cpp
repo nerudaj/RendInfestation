@@ -1,6 +1,7 @@
 #include "appstate/AppStateNoteReader.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
+#include "gui/ModalBuilder.hpp"
 #include "gui/TguiHelper.hpp"
 
 AppStateNoteReader::AppStateNoteReader(
@@ -30,16 +31,26 @@ void AppStateNoteReader::draw()
 
 void AppStateNoteReader::buildLayout(int noteId)
 {
-    auto&& panel = tgui::ScrollablePanel::create({ "45%", "90%" });
+    auto&& panel = WidgetBuilder::createContainer<tgui::ScrollablePanel>(
+        { "45%", "90%" },
+        WidgetOptions {
+            .className = "AllCornersPanelScrollable",
+        });
     panel->getRenderer()->setPadding({ 20.f, 20.f });
     panel->getRenderer()->setScrollbarWidth(100.f);
-
-    TguiHelper::centerInParent(panel);
 
     const auto stringId =
         static_cast<StringId>(std::to_underlying(StringId::Note1) + noteId);
     panel->add(WidgetBuilder::createTextLabel(
         dic.strings.getString(stringId), dic.sizer));
 
-    dic.gui.rebuildWith(panel);
+    auto&& builder = ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer);
+
+    dic.gui.rebuildWith(
+        builder.openModal(StringId::AudioOptionsTab, { "45%", "90%" })
+            .withContent(panel, "BottomCutoutPanel")
+            .withBottomButton(
+                StringId::Back,
+                [&] { app.popState(Messaging::serialize<PopIfNotGame>()); })
+            .build());
 }

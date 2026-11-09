@@ -27,9 +27,6 @@ public:
     void draw() override;
 
 private:
-    tgui::ChildWindow::Ptr
-    createModuleSelectModal(StringId titleStringId, tgui::Layout2d size) const;
-
     void buildLayout();
 
     tgui::Container::Ptr buildModuleSelectionLayout();

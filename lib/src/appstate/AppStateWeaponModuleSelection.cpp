@@ -1,6 +1,7 @@
 #include "appstate/AppStateWeaponModuleSelection.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "gui/GuiBuilderHelper.hpp"
+#include "gui/ModalBuilder.hpp"
 
 AppStateWeaponModuleSelection::AppStateWeaponModuleSelection(
     dgm::App& app,
@@ -47,27 +48,26 @@ void AppStateWeaponModuleSelection::draw()
     dic.virtualCursor.draw();
 }
 
-tgui::ChildWindow::Ptr AppStateWeaponModuleSelection::createModuleSelectModal(
-    StringId titleStringId, tgui::Layout2d size) const
-{
-    auto&& modal = tgui::ChildWindow::create(
-        dic.strings.getString(titleStringId),
-        tgui::ChildWindow::TitleButton::None);
-    modal->setSize(size);
-    modal->setTitleTextSize(dic.sizer.getBaseFontSize());
-    TguiHelper::centerInParent(modal);
-    modal->getRenderer()->setTitleBarColor(COLOR_MID_BLUE);
-    modal->getRenderer()->setTitleBarHeight(
-        static_cast<float>(dic.sizer.getBaseContainerHeight()));
-    modal->getRenderer()->setTextSize(dic.sizer.getBaseFontSize());
-    return modal;
-}
-
 void AppStateWeaponModuleSelection::buildLayout()
 {
+    auto&& builder = ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer);
     auto&& modal =
-        createModuleSelectModal(StringId::SelectModule, { "80%", "80%" });
-    modal->add(buildModuleSelectionLayout());
+        builder.openModal(StringId::SelectModule, { "80%", "80%" })
+            .withContent(buildModuleSelectionLayout(), "BottomCutoutPanel")
+            .withBottomButton(StringId::Back, [&] { onCancel(); })
+            .withBottomButton(
+                StringId::RemoveMod,
+                [&] { onRemoveMod(); },
+                WidgetOptions {
+                    .enabled = selectedModule != WeaponModule::None,
+                })
+            .withBottomButton(
+                StringId::Install,
+                [&] { onApply(); },
+                WidgetOptions {
+                    .id = "ApplyButton",
+                })
+            .build();
 
     auto&& background = GuiBuilderHelper::createSemitransparentBlackPanel();
     dic.gui.add(background, "ModalBackground");
@@ -77,57 +77,7 @@ void AppStateWeaponModuleSelection::buildLayout()
 
 tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
 {
-    auto&& container = tgui::Group::create();
-
-    auto&& hbox = tgui::HorizontalLayout::create(
-        { "100%", "100% - ModuleSelectionBottomNavbar.height" });
-    container->add(hbox);
-
-    auto&& bottomNavbar = WidgetBuilder::createContainer<tgui::Panel>(
-        { "100%", dic.sizer.getBaseContainerHeight() * 1.5 },
-        {
-            .className = "BottomCutoutPanel",
-        });
-    TguiHelper::alignInParent(
-        bottomNavbar,
-        tgui::HorizontalAlignment::Left,
-        tgui::VerticalAlignment::Bottom);
-    container->add(bottomNavbar, "ModuleSelectionBottomNavbar");
-
-    auto&& createSubmitButton =
-        [&](StringId stringId,
-            std::function<void(void)>&& callback,
-            const std::optional<std::string> id = std::nullopt,
-            bool enabled = true)
-    {
-        auto&& wrapper = tgui::Group::create(
-            { dic.sizer.getBaseContainerHeight() * 4, "90%" });
-        wrapper->add(WidgetBuilder::createRowButton(
-            dic.strings.getString(stringId),
-            std::forward<decltype(callback)>(callback),
-            dic.sizer,
-            dic.soundPlayer,
-            {
-                .id = id,
-                .enabled = enabled,
-            }));
-        return wrapper;
-    };
-
-    auto&& buttonList = tgui::GrowHorizontalLayout::create();
-    buttonList->add(createSubmitButton(StringId::Back, [&] { onCancel(); }));
-    buttonList->add(createSubmitButton(
-        StringId::RemoveMod,
-        [&] { onRemoveMod(); },
-        std::nullopt,
-        selectedModule != WeaponModule::None));
-    buttonList->add(createSubmitButton(
-        StringId::Install, [&] { onApply(); }, "ApplyButton"));
-    TguiHelper::alignInParent(
-        buttonList,
-        tgui::HorizontalAlignment::Right,
-        tgui::VerticalAlignment::Center);
-    bottomNavbar->add(buttonList);
+    auto&& hbox = tgui::HorizontalLayout::create();
 
     auto&& scrollList = WidgetBuilder::createContainer<tgui::ScrollablePanel>({
         .className = "AllCornersPanelScrollable",
@@ -147,7 +97,7 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
 
     hbox->add(moduleDetailComponent.buildLayout());
 
-    return container;
+    return hbox;
 }
 
 tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleListEntryLayout(
