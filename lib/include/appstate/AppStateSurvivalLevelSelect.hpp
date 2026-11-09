@@ -48,8 +48,8 @@ private:
         LevelContext {
             .levelName = StringId::SurvivalMap01_Name,
             .levelLockedString = StringId::SurvivalMap01_Locked,
-            .fileId = "survival-02.json",
-            .imageName = "placeholder16_9.png",
+            .fileId = "landing-bay-small.json",
+            .imageName = "landing-bay-thumbnail.png",
         },
         LevelContext {
             .levelName = StringId::SurvivalMap02_Name,
