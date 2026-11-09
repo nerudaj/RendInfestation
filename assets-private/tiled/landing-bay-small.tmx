@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="23">
+ <editorsettings>
+  <export target="../../assets/levels/landing-bay-small.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="Core Tiles.tsx"/>
+ <tileset firstgid="79" source="Props.tsx"/>
+ <layer id="1" name="tiles" width="20" height="20">
+  <data encoding="csv">
+35,4,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,6,
+35,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,30,
+35,30,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,30,
+35,36,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,30,
+35,38,14,14,14,14,14,20,8,8,8,8,8,8,8,8,8,8,8,30,
+24,9,8,8,8,8,8,7,33,33,33,33,33,33,4,22,23,8,8,30,
+30,9,8,28,8,8,8,7,35,35,35,35,35,35,30,37,37,8,8,30,
+30,9,8,8,8,28,8,7,35,35,35,35,35,35,36,27,8,8,8,30,
+36,9,8,8,8,8,8,7,35,35,35,35,35,35,37,8,8,8,8,30,
+35,24,2,2,2,2,2,26,31,31,31,31,31,31,8,8,8,8,8,30,
+35,36,8,8,8,8,8,8,31,31,31,31,31,31,8,8,8,8,8,30,
+35,38,14,14,14,14,14,20,31,31,31,31,31,31,8,8,8,8,27,30,
+24,9,8,8,8,8,8,7,32,32,32,32,32,32,21,23,8,8,21,12,
+30,9,8,8,8,28,8,7,35,35,35,35,35,35,37,37,8,8,37,30,
+30,9,8,28,8,8,8,7,35,35,35,35,35,35,8,8,8,8,8,30,
+36,9,8,8,8,8,8,7,35,35,35,35,35,35,8,8,8,8,8,30,
+35,24,2,2,2,2,2,26,8,8,8,8,8,8,8,8,8,8,8,30,
+35,30,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,30,
+35,30,61,62,63,8,8,8,8,8,8,8,8,8,8,8,8,8,8,30,
+35,16,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,18
+</data>
+ </layer>
+ <objectgroup id="2" name="objects">
+  <object id="1" gid="91" x="63.1617" y="107.525" width="64" height="64">
+   <properties>
+    <property name="interactType" value="workbench"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="21" gid="91" x="481.162" y="269.525" width="64" height="64">
+   <properties>
+    <property name="interactType" value="workbench"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="3" gid="81" x="192.31" y="104.504" width="64" height="64"/>
+  <object id="4" gid="87" x="213.608" y="117.641" width="64" height="64">
+   <properties>
+    <property name="interactType" value="note"/>
+    <property name="interactValue" type="int" value="0"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="22" gid="87" x="466.335" y="502.913" width="64" height="64">
+   <properties>
+    <property name="interactType" value="note"/>
+    <property name="interactValue" type="int" value="1"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="5" gid="92" x="69.2037" y="630.159" width="64" height="64"/>
+  <object id="6" gid="92" x="131.89" y="630.159" width="64" height="64"/>
+  <object id="7" gid="92" x="100.169" y="630.159" width="64" height="64"/>
+  <object id="8" gid="90" x="123.582" y="126.406" width="64" height="64"/>
+  <object id="9" gid="90" x="137.932" y="126.406" width="64" height="64"/>
+  <object id="10" gid="90" x="131.89" y="138.49" width="64" height="64"/>
+  <object id="11" gid="90" x="153.792" y="126.406" width="64" height="64"/>
+  <object id="12" gid="90" x="146.239" y="139.246" width="64" height="64"/>
+  <object id="13" gid="90" x="580.509" y="510.829" width="64" height="64"/>
+  <object id="14" gid="90" x="593.348" y="511.585" width="64" height="64"/>
+  <object id="15" gid="90" x="592.593" y="524.424" width="64" height="64"/>
+  <object id="16" gid="81" x="448.34" y="489.682" width="64" height="64"/>
+  <object id="18" gid="83" x="453.627" y="516.116" width="64" height="64"/>
+  <object id="19" gid="84" x="171.163" y="135.469" width="64" height="64"/>
+  <object id="20" gid="85" x="519.333" y="514.606" width="64" height="64"/>
+ </objectgroup>
+ <layer id="3" name="decorations" width="20" height="20">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,73,74,75,39,0,0,0,41,41,41,41,0,69,0,39,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,44,0,0,0,0,0,45,0,0,0,0,0,0,65,44,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,40,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,45,0,0,0,0,0,0,0,0,0,0,0,0,0,45,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,40,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,44,0,0,0,0,45,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,44,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

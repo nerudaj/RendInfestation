@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "demo-01.tmx",
+    "activeFile": "landing-bay-small.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -23,8 +23,24 @@
             "scale": 0.33,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 510.60606060606074,
-                "y": 442.4242424242424
+                "x": 1071.2121212121212,
+                "y": 639.3939393939395
+            }
+        },
+        "landing-bay-small.tmx": {
+            "scale": 5.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 441.0909090909091,
+                "y": 434.72727272727275
+            }
+        },
+        "landing-bay.tmx": {
+            "scale": 0.8827083333333333,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 479.77342459287235,
+                "y": 480.3398631106915
             }
         },
         "ordering_test.tmx": {
@@ -50,11 +66,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.75,
+            "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 327.33333333333326,
-                "y": 401.33333333333337
+                "x": 320.5,
+                "y": 336
             }
         },
         "survival-03-tmx.tmx": {
@@ -66,11 +82,11 @@
             }
         },
         "survival-03.tmx": {
-            "scale": 2,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 262.75,
-                "y": 1005
+                "x": 640.6666666666666,
+                "y": 480
             }
         },
         "survival-04.tmx": {
@@ -87,26 +103,33 @@
     },
     "last.exportedFilePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/levels",
     "last.imagePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/graphics",
-    "map.height": 60,
+    "map.height": 20,
     "map.lastUsedExportFilter": "Všechny soubory (*)",
     "map.lastUsedFormat": "tmx",
-    "map.width": 60,
+    "map.width": 20,
     "openFiles": [
         "Core Tiles.tsx",
         "demo-01.tmx",
         "Props.tsx",
         "survival-01.tmx",
         "survival-02.tmx",
-        "survival-04.tmx"
+        "survival-04.tmx",
+        "survival-03.tmx",
+        "landing-bay.tmx",
+        "landing-bay-small.tmx"
     ],
     "project": "infestation.tiled-project",
+    "property.type": "string",
     "recentFiles": [
         "Core Tiles.tsx",
-        "survival-04.tmx",
-        "survival-02.tmx",
-        "survival-01.tmx",
+        "demo-01.tmx",
         "Props.tsx",
-        "demo-01.tmx"
+        "survival-01.tmx",
+        "survival-02.tmx",
+        "survival-04.tmx",
+        "survival-03.tmx",
+        "landing-bay.tmx",
+        "landing-bay-small.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 2,
