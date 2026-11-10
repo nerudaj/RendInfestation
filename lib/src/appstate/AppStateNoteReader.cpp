@@ -39,15 +39,24 @@ void AppStateNoteReader::buildLayout(int noteId)
     panel->getRenderer()->setPadding({ 20.f, 20.f });
     panel->getRenderer()->setScrollbarWidth(100.f);
 
-    const auto stringId =
-        static_cast<StringId>(std::to_underlying(StringId::Note1) + noteId);
-    panel->add(WidgetBuilder::createTextLabel(
-        dic.strings.getString(stringId), dic.sizer));
+    auto&& getStringId = [](StringId first, int offset)
+    { return static_cast<StringId>(std::to_underlying(first) + 2 * offset); };
+
+    auto&& getString = [&](StringId first, int offset)
+    { return dic.strings.getString(getStringId(first, offset)); };
+
+    auto&& label = WidgetBuilder::createTextLabel(
+        getString(StringId::Note1, noteId), dic.sizer);
+    label->setVerticalAlignment(tgui::VerticalAlignment::Top);
+
+    panel->add(label);
 
     auto&& builder = ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer);
 
     dic.gui.rebuildWith(
-        builder.openModal(StringId::AudioOptionsTab, { "45%", "90%" })
+        builder
+            .openModal(
+                getStringId(StringId::Note1Title, noteId), { "45%", "90%" })
             .withContent(panel, "BottomCutoutPanel")
             .withBottomButton(
                 StringId::Back,

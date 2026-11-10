@@ -161,11 +161,17 @@ enum class [[nodiscard]] StringId
     CurrentBestScore,
 
     // Notes
+    Note1Title,
     Note1,
+    Note2Title,
     Note2,
+    Note3Title,
     Note3,
+    Note4Title,
     Note4,
+    Note5Title,
     Note5,
+    Note6Title,
     Note6,
 
     Placeholder,
