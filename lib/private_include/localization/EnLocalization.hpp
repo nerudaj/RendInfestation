@@ -236,7 +236,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { Note5,
       "Subject: Joe Wilkinson\n"
       "\n"
-      "The subject sustained extensive soft - tissue injuries of undetermined "
+      "The subject sustained extensive soft-tissue injuries of undetermined "
       "origin. Both lower extremities show multiple deep lacerations and "
       "abrasions, with areas of skin avulsion and exposed underlying "
       "tissue.The left shoulder and anterior chest exhibit burns consistent in "

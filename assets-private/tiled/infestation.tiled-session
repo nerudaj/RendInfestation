@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "landing-bay-small.tmx",
+    "activeFile": "laboratory.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -16,6 +16,17 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "botanical-garden.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 4,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 239.125,
+                "y": 324.25
+            }
+        },
         "demo-01.tmx": {
             "expandedObjectLayers": [
                 2
@@ -23,24 +34,38 @@
             "scale": 0.33,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1071.2121212121212,
-                "y": 639.3939393939395
+                "x": 960.6060606060605,
+                "y": 640.909090909091
+            }
+        },
+        "laboratory.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 4,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 133.625,
+                "y": 527.75
             }
         },
         "landing-bay-small.tmx": {
-            "scale": 5.5,
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 441.0909090909091,
-                "y": 434.72727272727275
+                "x": 275.5,
+                "y": 306
             }
         },
         "landing-bay.tmx": {
             "scale": 0.8827083333333333,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 479.77342459287235,
-                "y": 480.3398631106915
+                "x": 479.7734245928723,
+                "y": 479.7734245928723
             }
         },
         "ordering_test.tmx": {
@@ -58,8 +83,8 @@
             "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 960.5,
-                "y": 960
+                "x": 996.5,
+                "y": 960.5
             }
         },
         "survival-02.tmx": {
@@ -69,8 +94,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 320.5,
-                "y": 336
+                "x": 319.5,
+                "y": 335.5
             }
         },
         "survival-03-tmx.tmx": {
@@ -85,8 +110,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 640.6666666666666,
-                "y": 480
+                "x": 639.3333333333334,
+                "y": 479.3333333333333
             }
         },
         "survival-04.tmx": {
@@ -96,17 +121,17 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 192.25,
-                "y": 192
+                "x": 191.75,
+                "y": 191.75
             }
         }
     },
     "last.exportedFilePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/levels",
     "last.imagePath": "C:/Users/doomi/Documents/GitHub/RendInfestation/assets/graphics",
-    "map.height": 20,
+    "map.height": 22,
     "map.lastUsedExportFilter": "Všechny soubory (*)",
     "map.lastUsedFormat": "tmx",
-    "map.width": 20,
+    "map.width": 22,
     "openFiles": [
         "Core Tiles.tsx",
         "demo-01.tmx",
@@ -116,7 +141,9 @@
         "survival-04.tmx",
         "survival-03.tmx",
         "landing-bay.tmx",
-        "landing-bay-small.tmx"
+        "landing-bay-small.tmx",
+        "botanical-garden.tmx",
+        "laboratory.tmx"
     ],
     "project": "infestation.tiled-project",
     "property.type": "string",
@@ -129,7 +156,9 @@
         "survival-04.tmx",
         "survival-03.tmx",
         "landing-bay.tmx",
-        "landing-bay-small.tmx"
+        "landing-bay-small.tmx",
+        "botanical-garden.tmx",
+        "laboratory.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 2,

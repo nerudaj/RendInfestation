@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="22" height="22" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="61">
+ <editorsettings>
+  <export target="../../assets/levels/laboratory.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="Core Tiles.tsx"/>
+ <tileset firstgid="79" source="Props.tsx"/>
+ <layer id="1" name="tiles" width="22" height="22">
+  <data encoding="csv">
+4,22,22,22,5,22,22,22,5,22,22,5,5,22,22,22,5,22,22,22,22,6,
+30,49,49,49,36,49,49,49,36,49,49,49,36,49,49,49,36,49,49,49,49,30,
+30,56,55,55,49,55,56,55,49,55,56,55,49,55,56,55,49,56,55,55,56,30,
+30,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,30,
+30,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,30,
+30,55,55,55,33,33,33,33,55,55,55,55,55,55,33,33,33,33,55,55,55,30,
+30,55,55,55,35,35,35,35,55,55,55,55,55,55,35,35,35,35,55,57,55,30,
+30,55,57,55,35,35,35,35,55,55,55,55,55,55,35,35,35,35,55,55,55,30,
+30,55,55,55,35,35,35,4,22,23,55,55,21,22,6,35,35,35,55,55,55,30,
+30,55,55,55,35,35,35,36,49,49,55,55,49,49,36,35,35,35,55,55,55,30,
+30,55,55,55,55,55,55,50,56,55,55,55,55,56,50,35,35,35,55,55,55,30,
+30,55,55,55,55,55,55,55,55,55,55,55,55,55,55,31,31,31,55,55,55,30,
+30,55,55,55,55,55,55,55,55,55,55,55,55,55,55,31,31,31,55,55,55,30,
+30,55,55,55,55,55,55,24,56,55,55,55,55,56,24,32,32,32,55,55,55,30,
+10,22,23,55,55,21,22,11,22,23,55,55,21,22,18,35,35,35,55,55,55,30,
+30,49,49,55,55,49,49,30,49,49,55,55,49,49,49,35,35,35,55,57,55,30,
+30,56,55,55,55,55,56,36,55,55,55,55,55,55,55,55,55,55,55,55,55,30,
+30,55,55,55,55,55,55,50,55,55,55,55,55,55,55,55,55,55,55,55,55,30,
+30,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,30,
+30,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,30,
+30,56,55,55,55,55,56,24,61,62,62,62,62,62,62,62,62,62,62,62,63,30,
+16,22,22,22,22,22,22,17,22,22,22,22,22,22,22,22,22,22,22,22,22,18
+</data>
+ </layer>
+ <objectgroup id="2" name="props">
+  <object id="1" gid="80" x="80" y="96" width="64" height="64"/>
+  <object id="2" gid="79" x="208" y="96" width="64" height="64"/>
+  <object id="3" gid="79" x="336" y="96" width="64" height="64"/>
+  <object id="4" gid="81" x="412.5" y="97.75" width="64" height="64"/>
+  <object id="5" gid="81" x="456.5" y="98.75" width="64" height="64"/>
+  <object id="6" gid="85" x="430.25" y="116" width="64" height="64"/>
+  <object id="8" gid="81" x="159.833" y="101.833" width="64" height="64"/>
+  <object id="9" gid="81" x="294" y="100.667" width="64" height="64"/>
+  <object id="10" gid="81" x="32.5" y="101.5" width="64" height="64"/>
+  <object id="11" gid="86" x="54.1818" y="114.545" width="64" height="64"/>
+  <object id="12" gid="86" x="182.727" y="115.273" width="64" height="64"/>
+  <object id="13" gid="86" x="317.333" y="114.061" width="64" height="64"/>
+  <object id="14" gid="88" x="290" y="124.182" width="64" height="64"/>
+  <object id="17" gid="81" x="160.5" y="546.5" width="64" height="64"/>
+  <object id="19" gid="79" x="464.667" y="544" width="64" height="64"/>
+  <object id="20" gid="81" x="513.333" y="556" width="64" height="64"/>
+  <object id="21" gid="90" x="515.333" y="578" width="64" height="64"/>
+  <object id="22" gid="86" x="537.333" y="572" width="64" height="64"/>
+  <object id="23" gid="82" x="32.6667" y="666.667" width="64" height="64"/>
+  <object id="24" gid="84" x="458" y="134" width="64" height="64"/>
+  <object id="25" gid="84" x="90" y="619" width="64" height="64"/>
+  <object id="26" gid="83" x="69" y="235" width="64" height="64"/>
+  <object id="27" gid="85" x="95" y="225" width="64" height="64"/>
+  <object id="28" gid="85" x="122" y="195" width="64" height="64"/>
+  <object id="29" gid="85" x="163" y="171" width="64" height="64"/>
+  <object id="30" gid="83" x="176" y="458" width="64" height="64"/>
+  <object id="31" gid="92" x="644" y="695" width="64" height="64"/>
+  <object id="32" gid="92" x="263" y="695" width="64" height="64"/>
+  <object id="33" gid="92" x="357" y="695" width="64" height="64"/>
+  <object id="34" gid="92" x="551" y="696" width="64" height="64"/>
+  <object id="35" gid="92" x="453" y="696" width="64" height="64"/>
+  <object id="36" gid="94" x="290.333" y="707.333" width="64" height="64"/>
+  <object id="37" gid="94" x="310.667" y="713" width="64" height="64"/>
+  <object id="38" gid="94" x="333" y="708.333" width="64" height="64"/>
+  <object id="39" gid="94" x="386.333" y="714.667" width="64" height="64"/>
+  <object id="40" gid="94" x="410.333" y="706.667" width="64" height="64"/>
+  <object id="41" gid="94" x="436.667" y="712.667" width="64" height="64"/>
+  <object id="42" gid="94" x="486" y="708" width="64" height="64"/>
+  <object id="43" gid="94" x="511.333" y="713.667" width="64" height="64"/>
+  <object id="44" gid="94" x="534.333" y="707.667" width="64" height="64"/>
+  <object id="45" gid="94" x="579" y="714.667" width="64" height="64"/>
+  <object id="46" gid="94" x="604.667" y="708" width="64" height="64"/>
+  <object id="47" gid="94" x="628.667" y="714.667" width="64" height="64"/>
+  <object id="48" gid="85" x="392" y="436" width="64" height="64"/>
+  <object id="49" gid="85" x="382.667" y="637.333" width="64" height="64"/>
+  <object id="50" gid="85" x="641.333" y="584" width="64" height="64"/>
+  <object id="51" gid="85" x="626.667" y="214.667" width="64" height="64"/>
+  <object id="52" gid="85" x="102.667" y="449.333" width="64" height="64"/>
+  <object id="53" gid="82" x="32" y="442.667" width="64" height="64"/>
+  <object id="54" gid="90" x="467" y="575" width="64" height="64"/>
+  <object id="55" gid="90" x="454" y="575.333" width="64" height="64"/>
+  <object id="56" gid="90" x="461.333" y="585" width="64" height="64"/>
+  <object id="57" gid="91" x="609.25" y="96.25" width="64" height="64">
+   <properties>
+    <property name="interactType" value="workbench"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="58" gid="91" x="31.75" y="546" width="64" height="64">
+   <properties>
+    <property name="interactType" value="workbench"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="59" gid="87" x="481.75" y="111.5" width="64" height="64">
+   <properties>
+    <property name="interactType" value="note"/>
+    <property name="interactValue" type="int" value="4"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="60" gid="87" x="185.25" y="559.75" width="64" height="64">
+   <properties>
+    <property name="interactType" value="note"/>
+    <property name="interactValue" type="int" value="5"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="3" name="decorations" width="22" height="22">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,41,0,0,0,41,0,0,0,41,0,0,0,41,0,0,0,40,0,0,0,
+0,0,66,0,51,0,0,0,51,0,0,0,51,0,0,0,51,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,45,0,0,
+0,0,45,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,65,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,44,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,71,0,0,69,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,44,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,44,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,65,0,0,0,
+0,0,69,0,0,0,0,0,40,0,0,0,73,74,75,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,44,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,45,0,0,
+0,0,0,45,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

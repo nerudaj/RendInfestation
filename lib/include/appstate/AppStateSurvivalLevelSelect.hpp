@@ -49,18 +49,18 @@ private:
             .levelName = StringId::SurvivalMap01_Name,
             .levelLockedString = StringId::SurvivalMap01_Locked,
             .fileId = "landing-bay-small.json",
-            .imageName = "landing-bay-thumbnail.png",
+            .imageName = "landing-bay-small-thumbnail.png",
         },
         LevelContext {
             .levelName = StringId::SurvivalMap02_Name,
             .levelLockedString = StringId::SurvivalMap02_Locked,
-            .fileId = "survival-03.json",
-            .imageName = "placeholder16_9.png",
+            .fileId = "botanical-garden.json",
+            .imageName = "botanical-garden-thumbnail.png",
         },
         LevelContext {
             .levelName = StringId::SurvivalMap03_Name,
             .levelLockedString = StringId::SurvivalMap03_Locked,
-            .fileId = "survival-04.json",
+            .fileId = "laboratory.json",
             .imageName = "placeholder16_9.png",
         },
     };
