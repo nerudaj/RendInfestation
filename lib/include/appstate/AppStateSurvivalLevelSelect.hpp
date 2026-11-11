@@ -61,7 +61,7 @@ private:
             .levelName = StringId::SurvivalMap03_Name,
             .levelLockedString = StringId::SurvivalMap03_Locked,
             .fileId = "laboratory.json",
-            .imageName = "placeholder16_9.png",
+            .imageName = "laboratory-thumbnail.png",
         },
     };
 
