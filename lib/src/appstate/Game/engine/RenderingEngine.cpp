@@ -271,8 +271,10 @@ void RenderingEngine::renderHudBackgroundAndHealth(
     const auto&& healthComponent =
         scene.actors.try_get<Health>(scene.playerEntity);
     const int health = std::clamp(
-        healthComponent ? healthComponent->value : 0, 0, scene.playerMaxHealth);
-    const auto twelfth = (12 * health) / scene.playerMaxHealth;
+        healthComponent ? healthComponent->value : 0,
+        0,
+        scene.playerInventory.playerMaxHealth);
+    const auto twelfth = (12 * health) / scene.playerInventory.playerMaxHealth;
     hudSprite.setTextureRect(
         hudClip.getFrame(std::to_underlying(Hud::Health1) + twelfth - 1));
     window.draw(hudSprite);
@@ -297,7 +299,7 @@ void RenderingEngine::renderHudReloadTimeAndModules(
 
     // Render used modules:
     const auto& activeWeaponConfig =
-        scene.loadout.weapons[weaponInventory.activeWeapon];
+        scene.playerInventory.loadout.weapons[weaponInventory.activeWeapon];
     for (auto&& [idx, module] :
          std::views::enumerate(activeWeaponConfig.modules))
     {
@@ -313,7 +315,7 @@ void RenderingEngine::renderHudReloadTimeAndModules(
 void RenderingEngine::renderHudReviveIcon(
     const sf::Vector2f& hudOrigin, dgm::Window& window)
 {
-    if (!scene.emergencyReviveActive) return;
+    if (!scene.playerInventory.emergencyReviveActive) return;
 
     auto&& iconClip = atlas.atlas.getClip(atlas.reviveIconLocation);
     hudSprite.setTextureRect(iconClip.getFrame(0));
@@ -454,7 +456,7 @@ void RenderingEngine::renderTouchControls(
     }
 
     // Fourth is swap
-    if (scene.loadout.weapons.size() > 1)
+    if (scene.playerInventory.loadout.weapons.size() > 1)
     {
         model.objects[3].touchArea.debugRender(
             window, sf::Color(128, 128, 128, 128));

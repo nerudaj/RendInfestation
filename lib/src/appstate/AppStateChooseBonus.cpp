@@ -133,41 +133,44 @@ AppStateChooseBonus::generatePickerSelection()
     draftPool.insert(WeaponModule::PassthruAmmo);
     draftPool.insert(WeaponModule::Push);
 
-    if (scene.unlockedModules.size() >= 3)
+    auto& unlockedModules = scene.playerInventory.unlockedModules;
+
+    if (unlockedModules.size() >= 3)
     {
         draftPool.insert(WeaponModule::CadenceBarrel);
         draftPool.insert(WeaponModule::SpreadBarrel_x4);
         draftPool.insert(WeaponModule::Splitter);
     }
 
-    if (scene.unlockedModules.size() >= 6)
+    if (unlockedModules.size() >= 6)
     {
         draftPool.insert(WeaponModule::ExplosiveAmmo);
         draftPool.insert(WeaponModule::Turret);
     }
 
     // Out-of-line progression
-    if (scene.unlockedModules.contains(WeaponModule::SpreadBarrel_x2))
+    if (unlockedModules.contains(WeaponModule::SpreadBarrel_x2))
         draftPool.insert(WeaponModule::SpreadBarrel_x4);
 
-    if (scene.unlockedModules.contains(WeaponModule::Spikes)
-        || scene.unlockedModules.contains(WeaponModule::BigBullet))
+    if (unlockedModules.contains(WeaponModule::Spikes)
+        || unlockedModules.contains(WeaponModule::BigBullet))
     {
         draftPool.insert(WeaponModule::ExplosiveAmmo);
     }
 
-    if (scene.unlockedModules.contains(WeaponModule::CadenceBarrel))
+    if (unlockedModules.contains(WeaponModule::CadenceBarrel))
     {
         draftPool.insert(WeaponModule::Turret);
     }
 
-    if (scene.unlockedModules.size() >= 3 && scene.loadout.weapons.size() == 1)
+    if (unlockedModules.size() >= 3
+        && scene.playerInventory.loadout.weapons.size() == 1)
     {
         draftPool.insert(WeaponModule::ExtraGun);
     }
 
     // Clear already unlocked modules
-    for (auto&& unlocked : scene.unlockedModules)
+    for (auto&& unlocked : unlockedModules)
     {
         if (draftPool.contains(unlocked))
         {
@@ -180,7 +183,7 @@ AppStateChooseBonus::generatePickerSelection()
     {
         for (auto&& goldModule : GOLD_MODULES)
         {
-            if (!scene.unlockedModules.contains(goldModule))
+            if (!unlockedModules.contains(goldModule))
             {
                 draftPool.insert(goldModule);
             }
@@ -197,7 +200,7 @@ AppStateChooseBonus::generatePickerSelection()
     }
 
     if (scene.actors.get<Health>(scene.playerEntity).value
-        < scene.playerMaxHealth / 2)
+        < scene.playerInventory.playerMaxHealth / 2)
     {
         sortablePool[1] = WeaponModule::ExtraHealth;
     }
@@ -210,20 +213,21 @@ void AppStateChooseBonus::onSubmit(WeaponModule module)
 {
     if (module == WeaponModule::ExtraGun)
     {
-        scene.loadout.weapons.push_back(WeaponConfig {});
+        scene.playerInventory.loadout.weapons.push_back(WeaponConfig {});
     }
     else if (module == WeaponModule::ExtraHealth)
     {
-        scene.playerMaxHealth += 10;
+        scene.playerInventory.playerMaxHealth += 10;
         scene.actors.get<Health>(scene.playerEntity) =
-            Health(scene.playerMaxHealth);
+            Health(scene.playerInventory.playerMaxHealth);
     }
     else
     {
-        scene.unlockedModules.insert(module);
-        if (scene.unlockedModules.size() <= 3)
+        scene.playerInventory.unlockedModules.insert(module);
+        if (scene.playerInventory.unlockedModules.size() <= 3)
         {
-            for (auto& modInWeapon : scene.loadout.weapons.front().modules)
+            for (auto& modInWeapon :
+                 scene.playerInventory.loadout.weapons.front().modules)
             {
                 if (modInWeapon == WeaponModule::None)
                 {

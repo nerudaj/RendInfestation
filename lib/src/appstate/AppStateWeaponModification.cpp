@@ -62,7 +62,8 @@ void AppStateWeaponModification::buildLayout()
 tgui::Container::Ptr
 AppStateWeaponModification::buildLoadoutPanel(size_t loadoutIdx)
 {
-    const bool locked = scene.loadout.weapons.size() <= loadoutIdx;
+    const bool locked =
+        scene.playerInventory.loadout.weapons.size() <= loadoutIdx;
 
     auto&& panel = tgui::Panel::create();
     panel->getRenderer()->setPadding({ 20.f, 20.f });
@@ -98,7 +99,8 @@ AppStateWeaponModification::buildLoadoutPanel(size_t loadoutIdx)
 
     for (auto idx : std::views::iota(0u, 3u))
     {
-        const auto module = scene.loadout.weapons[loadoutIdx].modules[idx];
+        const auto module =
+            scene.playerInventory.loadout.weapons[loadoutIdx].modules[idx];
         buttonHbox->add(buildButtonForSelectingModule(module, idx, loadoutIdx));
     }
 
@@ -167,13 +169,15 @@ void AppStateWeaponModification::onModSelected()
         std::ref(dic),
         std::cref(scene),
         std::ref(selectedModule),
-        scene.loadout.weapons[selectedLoadoutIdx].modules[selectedModuleIdx]);
+        scene.playerInventory.loadout.weapons[selectedLoadoutIdx]
+            .modules[selectedModuleIdx]);
 }
 
 void AppStateWeaponModification::onClearLoadout(size_t loadoutIdx)
 {
-    assert(scene.loadout.weapons.size() > loadoutIdx);
-    for (auto& module : scene.loadout.weapons[loadoutIdx].modules)
+    assert(scene.playerInventory.loadout.weapons.size() > loadoutIdx);
+    for (auto& module :
+         scene.playerInventory.loadout.weapons[loadoutIdx].modules)
         module = WeaponModule::None;
     dic.soundPlayer.playPovSound(SoundId::UiModUninstall);
     buildLayout();
@@ -189,8 +193,8 @@ void AppStateWeaponModification::restoreFocusImpl(const std::string&)
 {
     if (selectedModule)
     {
-        scene.loadout.weapons[selectedLoadoutIdx].modules[selectedModuleIdx] =
-            *selectedModule;
+        scene.playerInventory.loadout.weapons[selectedLoadoutIdx]
+            .modules[selectedModuleIdx] = *selectedModule;
         buildLayout();
     }
 }

@@ -236,14 +236,15 @@ void GameRulesEngine::operator()(const event::WaveEnded&)
 {
     if (shallGainEmergencyRevive())
     {
-        scene.emergencyReviveActive = true;
+        scene.playerInventory.emergencyReviveActive = true;
         postMessage(StringId::GotRevive, "updateLedger"_false);
     }
 
     auto&& health = scene.actors.try_get<Health>(scene.playerEntity);
     if (!health) return;
 
-    *health = Health(std::clamp(health->value + 10, 0, scene.playerMaxHealth));
+    *health = Health(std::clamp(
+        health->value + 10, 0, scene.playerInventory.playerMaxHealth));
 
     assert(scene.survivalGameDirector);
     scene.status.waveBeaten = scene.survivalGameDirector->getContext().wave;
@@ -406,7 +407,8 @@ void GameRulesEngine::updateHealth()
 
 void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
 {
-    if (previousWeaponCount == 1 && scene.loadout.weapons.size() == 2
+    if (previousWeaponCount == 1
+        && scene.playerInventory.loadout.weapons.size() == 2
         && saves.tryUnlockExtraWeapon() == UnlockStatus::Ok)
     {
         postMessage(StringId::ExtraWeaponUnlocked);
@@ -422,7 +424,7 @@ void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
     }
 
     const bool allLoadoutSlotsUsed = std::ranges::any_of(
-        scene.loadout.weapons,
+        scene.playerInventory.loadout.weapons,
         [](const WeaponConfig& weapon)
         {
             // true if all slots are used
@@ -444,8 +446,8 @@ void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
         const auto comboSet = combo | std::ranges::to<std::set>();
 
         return std::any_of(
-            scene.loadout.weapons.begin(),
-            scene.loadout.weapons.end(),
+            scene.playerInventory.loadout.weapons.begin(),
+            scene.playerInventory.loadout.weapons.end(),
             [&comboSet](const WeaponConfig& config)
             {
                 return std::all_of(
@@ -497,7 +499,7 @@ void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    if (scene.emergencyReviveActive
+    if (scene.playerInventory.emergencyReviveActive
         && saves.tryUnlockRevive() == UnlockStatus::Ok)
     {
         postMessage(StringId::StartingEmergencyReviveUnlocked);
@@ -690,5 +692,6 @@ bool GameRulesEngine::shallGainEmergencyRevive() const noexcept
 
     const auto wave = scene.survivalGameDirector->getContext().wave;
 
-    return wave != 0 && wave % 5 == 0 && !scene.emergencyReviveActive;
+    return wave != 0 && wave % 5 == 0
+           && !scene.playerInventory.emergencyReviveActive;
 }

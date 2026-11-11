@@ -61,13 +61,12 @@ void AppStateGame::update()
                     { app.pushState<AppStateNoteReader>(dic, e.noteId); },
                     [&](event::WaveEnded&)
                     {
-                        previousWeaponCount = scene.loadout.weapons.size();
+                        previousWeaponCount =
+                            scene.playerInventory.loadout.weapons.size();
                         app.pushState<AppStateChooseBonus>(dic, scene);
                     },
                     [&](auto&&) {} });
     janitor.cleanScene(scene);
-
-    ++scene.tick;
 
     if (scene.status.finished && AppState::hasFocus)
     {

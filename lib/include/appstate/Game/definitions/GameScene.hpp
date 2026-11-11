@@ -45,6 +45,14 @@ struct [[nodiscard]] EnemyTag final
 {
 };
 
+struct [[nodiscard]] PlayerInventory final
+{
+    WeaponLoadout loadout;
+    std::set<WeaponModule> unlockedModules = {};
+    int playerMaxHealth = BASE_PLAYER_HEALTH;
+    bool emergencyReviveActive = false;
+};
+
 struct [[nodiscard]] GameScene final
 {
     GameStatus status;
@@ -55,19 +63,13 @@ struct [[nodiscard]] GameScene final
     dgm::Mesh decorationsMesh;
     dgm::Mesh altLevelMesh;
     dgm::Rect levelBounds;
-    size_t tick = 0;
     std::vector<sf::Vector2f> enemySpawns;
-    sf::Time spawnTicker;
-    const sf::Time spawnDelay = sf::seconds(1.f);
     const std::vector<LightSource> lights;
-    WeaponLoadout loadout;
-    std::set<WeaponModule> unlockedModules = {};
     std::optional<SurvivalGameDirector> survivalGameDirector = std::nullopt;
     HudMessage hudMessage;
     std::optional<InteractionTriggerInventory> interactionTrigger =
         std::nullopt;
-    int playerMaxHealth = BASE_PLAYER_HEALTH;
-    bool emergencyReviveActive = false;
+    PlayerInventory playerInventory;
 
     // recomputed each frame, used for progressive cooldowns
     std::map<SkinType, unsigned> skinCounts = {};

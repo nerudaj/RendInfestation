@@ -163,14 +163,17 @@ GameScene GameSceneBuilder::createScene(
             sf::Vector2f(level.dataSize.componentWiseMul(level.voxelSize))),
         .enemySpawns = std::move(artifact.enemySpawns),
         .lights = std::move(artifact.lights),
-        .loadout = std::move(artifact.loadout),
-        .unlockedModules = std::move(artifact.unlockedModules),
         .survivalGameDirector =
             gameModeProperties.mode == GameMode::Survival
                 ? std::make_optional<SurvivalGameDirector>(
                       gameModeProperties.boons.wave4start ? 4 : 1)
                 : std::nullopt,
-        .emergencyReviveActive = gameModeProperties.boons.revive,
+        .playerInventory =
+            PlayerInventory {
+                .loadout = std::move(artifact.loadout),
+                .unlockedModules = std::move(artifact.unlockedModules),
+                .emergencyReviveActive = gameModeProperties.boons.revive,
+            },
     };
 }
 

@@ -46,7 +46,7 @@ private:
 
     bool isInUseModule(const WeaponModule module) const
     {
-        for (auto&& loadout : scene.loadout.weapons)
+        for (auto&& loadout : scene.playerInventory.loadout.weapons)
         {
             if (std::ranges::find(loadout.modules, module)
                 != loadout.modules.end())

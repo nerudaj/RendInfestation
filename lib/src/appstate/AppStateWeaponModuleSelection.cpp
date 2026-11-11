@@ -96,7 +96,7 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
     auto&& moduleList = tgui::GrowVerticalLayout::create();
     scrollList->add(moduleList);
 
-    for (auto&& module : scene.unlockedModules)
+    for (auto&& module : scene.playerInventory.unlockedModules)
     {
         if (module == WeaponModule::None) continue;
         moduleList->add(

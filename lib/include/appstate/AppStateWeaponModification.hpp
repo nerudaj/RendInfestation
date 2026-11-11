@@ -29,12 +29,12 @@ private:
 
     std::array<WeaponModule, 3>& getCurrentLoadout()
     {
-        return scene.loadout.weapons[currentWeaponIdx].modules;
+        return scene.playerInventory.loadout.weapons[currentWeaponIdx].modules;
     }
 
     const std::array<WeaponModule, 3>& getCurrentLoadout() const
     {
-        return scene.loadout.weapons[currentWeaponIdx].modules;
+        return scene.playerInventory.loadout.weapons[currentWeaponIdx].modules;
     }
 
     const tgui::Texture& getWeaponModuleTexture(const WeaponModule module) const

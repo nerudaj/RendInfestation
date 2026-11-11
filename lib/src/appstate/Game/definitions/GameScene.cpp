@@ -6,7 +6,7 @@ void GameScene::updatePlayerLoadout()
     auto& inventory = actors.get<WeaponInventory>(playerEntity);
 
     inventory.weapons =
-        loadout.weapons
+        playerInventory.loadout.weapons
         | uni::views::transform(
             [](const WeaponConfig& config)
             { return WeaponBuilder::createWeapon(EntityKind::Player, config); })
