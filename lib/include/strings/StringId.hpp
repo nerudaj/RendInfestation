@@ -15,6 +15,10 @@ enum class [[nodiscard]] StringId
     Loading,
     Clear,
     Restart,
+    AreYouSure,
+    Confirm,
+    Cancel,
+    DoYouWantToQuit,
 
     // Survival Level Select
     SurvivalSetupTitle,

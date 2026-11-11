@@ -17,6 +17,10 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { Loading, "Loading" },
     { Clear, "Clear" },
     { Restart, "Restart" },
+    { AreYouSure, "Are you sure?" },
+    { Confirm, "Yes" },
+    { Cancel, "No" },
+    { DoYouWantToQuit, "Do you really want to leave the game?" },
 
     // Survival Level Select
     { SurvivalSetupTitle, "Survival" },
@@ -192,6 +196,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
       "From: Scorpio Corporation Station \"Europa\"\n"
       "To: Scorpio Corporation Space Ship \"Killer Whale\"\n"
       "Contents:\n"
+      "\n"
       "  -DATA ENCRYPTED-\n"
       "  -LEVEL S CLEARANCE REQUIRED TO DECRYPT-" },
     { Note2Title, "Email" },
