@@ -415,12 +415,19 @@ void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
     }
 
     // This is evaluated before SurvivalSpawnerContext updates wave number
-    const bool hasBeatenWave4 =
-        scene.survivalGameDirector
-        && scene.survivalGameDirector->getContext().wave == 4;
-    if (hasBeatenWave4 && saves.tryUnlockWave4Start() == UnlockStatus::Ok)
+    if (scene.survivalGameDirector)
     {
-        postMessage(StringId::Wave4SkipUnlocked);
+        const auto wave = scene.survivalGameDirector->getContext().wave;
+        if (wave == 4 && saves.tryUnlockWave4Start() == UnlockStatus::Ok)
+        {
+            postMessage(StringId::Wave4SkipUnlocked);
+        }
+
+        if (wave == 11
+            && saves.tryUnlockSurvivalMap(mapIdx + 1) == UnlockStatus::Ok)
+        {
+            postMessage(StringId::NewMapUnlocked);
+        }
     }
 
     const bool allLoadoutSlotsUsed = std::ranges::any_of(

@@ -39,7 +39,8 @@ public:
               dic.input,
               dic.soundPlayer,
               dic.strings,
-              dic.saveManager)
+              dic.saveManager,
+              mapIdx)
         , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
         , particleEngine(scene)

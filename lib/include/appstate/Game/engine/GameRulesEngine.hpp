@@ -22,7 +22,8 @@ public:
         Input& input,
         SoundPlayer& player,
         const StringProvider<StringId>& strings,
-        SaveManager& saveManager) noexcept
+        SaveManager& saveManager,
+        const size_t mapIdx) noexcept
         : eventQueue(eventQueue)
         , scene(scene)
         , atlas(atlas)
@@ -30,6 +31,7 @@ public:
         , soundPlayer(player)
         , strings(strings)
         , saves(saveManager)
+        , mapIdx(mapIdx)
     {
     }
 
@@ -119,4 +121,5 @@ private:
     SoundPlayer& soundPlayer;
     const StringProvider<StringId>& strings;
     SaveManager& saves;
+    const size_t mapIdx;
 };
