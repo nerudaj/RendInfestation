@@ -17,5 +17,10 @@ const Playlist PLAYLIST = Playlist {
                    "04_Sofamusik.ogg",
                    "06_When_the_freaks_are_coming_home.ogg",
                    "07_Sounds_from_yesterday.ogg",
-                   "08_The_old_Technomachine.ogg" },
+                   "08_The_old_Technomachine.ogg",
+                   "warriorsong.ogg",
+                   "subterrain.ogg",
+                   "Thrust Sequence.ogg",
+                   "Of Far Different Nature - Le Flamand (CC-BY).ogg",
+    },
 };
