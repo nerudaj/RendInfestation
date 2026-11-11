@@ -213,7 +213,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
       "situation? Thanks.\n"
       "\n"
       "Best regards,\n"
-      "Vince Shaw, Logistics Manager" },
+      "Vince Shall, Logistics Manager" },
     { Note3Title, "Gardening log #856" },
     { Note3,
       "New fertilizers have been deployed a month ago to the control group. "
