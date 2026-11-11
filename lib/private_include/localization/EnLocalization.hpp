@@ -116,11 +116,11 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { WeaponModule_CadenceBarrel, "Cadence Barrel" },
     { WeaponModule_ExplosiveAmmo, "Explosive Ammo" },
     { WeaponModule_Ricochet, "Ricochet" },
-    { WeaponModule_PassthruAmmo, "Passthru Ammo" },
+    { WeaponModule_PassthruAmmo, "Phaser" },
     { WeaponModule_BigBullet, "Heavy rounds" },
     { WeaponModule_Spikes, "Spikes" },
     { WeaponModule_Splitter, "Splitter" },
-    { WeaponModule_Push, "Push" },
+    { WeaponModule_Push, "Kickback" },
     { WeaponModule_Turret, "Turret" },
     { WeaponModule_Zap, "Zapper" },
     { WeaponModule_ExtraHealth, "Extra health" },
@@ -263,6 +263,16 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { Note6,
       "fuck - have you heard? security just arrested JD for suspecting hes RU "
       "spy. fucking JD? this is nuts" },
+    { Note7Title, "Modular Gun Testing Log" },
+    { Note7,
+      "So far we conducted testing of the following combinations:\n"
+      " - Kickback, Heavy Rounds, Phaser\n"
+      " - Spikes, Explosive Ammo, Spread x2\n"
+      " - Spikes, Splitter, Spread x4\n"
+      " - Cadence, Spread x2, Ricochet\n"
+      " - Turret, Cadence, Kickback\n\n"
+      "Lastly we tried Spikes, Explosive Ammo and Phaser, but that was the "
+      "worst decision ever." },
 
     { Placeholder, "Placeholder" },
 };

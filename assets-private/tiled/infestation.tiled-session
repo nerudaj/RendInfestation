@@ -23,8 +23,8 @@
             "scale": 4,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 239.125,
-                "y": 324.25
+                "x": 352.125,
+                "y": 352.125
             }
         },
         "demo-01.tmx": {
@@ -56,8 +56,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 275.5,
-                "y": 306
+                "x": 319.5,
+                "y": 319.5
             }
         },
         "landing-bay.tmx": {

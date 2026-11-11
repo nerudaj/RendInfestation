@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="22" height="22" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="61">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="22" height="22" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="62">
  <editorsettings>
   <export target="../../assets/levels/laboratory.json" format="json"/>
  </editorsettings>
@@ -46,10 +46,7 @@
   <object id="13" gid="86" x="317.333" y="114.061" width="64" height="64"/>
   <object id="14" gid="88" x="290" y="124.182" width="64" height="64"/>
   <object id="17" gid="81" x="160.5" y="546.5" width="64" height="64"/>
-  <object id="19" gid="79" x="464.667" y="544" width="64" height="64"/>
   <object id="20" gid="81" x="513.333" y="556" width="64" height="64"/>
-  <object id="21" gid="90" x="515.333" y="578" width="64" height="64"/>
-  <object id="22" gid="86" x="537.333" y="572" width="64" height="64"/>
   <object id="23" gid="82" x="32.6667" y="666.667" width="64" height="64"/>
   <object id="24" gid="84" x="458" y="134" width="64" height="64"/>
   <object id="25" gid="84" x="90" y="619" width="64" height="64"/>
@@ -81,9 +78,6 @@
   <object id="51" gid="85" x="626.667" y="214.667" width="64" height="64"/>
   <object id="52" gid="85" x="102.667" y="449.333" width="64" height="64"/>
   <object id="53" gid="82" x="32" y="442.667" width="64" height="64"/>
-  <object id="54" gid="90" x="467" y="575" width="64" height="64"/>
-  <object id="55" gid="90" x="454" y="575.333" width="64" height="64"/>
-  <object id="56" gid="90" x="461.333" y="585" width="64" height="64"/>
   <object id="57" gid="91" x="609.25" y="96.25" width="64" height="64">
    <properties>
     <property name="interactType" value="workbench"/>
@@ -107,6 +101,13 @@
    <properties>
     <property name="interactType" value="note"/>
     <property name="interactValue" type="int" value="5"/>
+    <property name="interactable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="61" gid="87" x="537.25" y="568.75" width="64" height="64">
+   <properties>
+    <property name="interactType" value="note"/>
+    <property name="interactValue" type="int" value="6"/>
     <property name="interactable" type="bool" value="true"/>
    </properties>
   </object>
