@@ -50,24 +50,32 @@ void AppStateWeaponModuleSelection::draw()
 
 void AppStateWeaponModuleSelection::buildLayout()
 {
+    const auto&& options = ModalBuilderOptions {
+        .modalSize = { "80%", "80%" },
+        .titleBarColor = COLOR_MID_BLUE,
+        .bodyScrollable = false,
+        .bodyPadding = {},
+        .bodyPanelClass = "UntexturedWidget",
+        .navbarPanelClass = "BottomCutoutPanel",
+    };
+
     auto&& builder = ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer);
-    auto&& modal =
-        builder.openModal(StringId::SelectModule, { "80%", "80%" })
-            .withContent(buildModuleSelectionLayout(), "BottomCutoutPanel")
-            .withBottomButton(StringId::Back, [&] { onCancel(); })
-            .withBottomButton(
-                StringId::RemoveMod,
-                [&] { onRemoveMod(); },
-                WidgetOptions {
-                    .enabled = selectedModule != WeaponModule::None,
-                })
-            .withBottomButton(
-                StringId::Install,
-                [&] { onApply(); },
-                WidgetOptions {
-                    .id = "ApplyButton",
-                })
-            .build();
+    auto&& modal = builder.openModal(StringId::SelectModule, options)
+                       .withContent(buildModuleSelectionLayout())
+                       .withBottomButton(StringId::Back, [&] { onCancel(); })
+                       .withBottomButton(
+                           StringId::RemoveMod,
+                           [&] { onRemoveMod(); },
+                           WidgetOptions {
+                               .enabled = selectedModule != WeaponModule::None,
+                           })
+                       .withBottomButton(
+                           StringId::Install,
+                           [&] { onApply(); },
+                           WidgetOptions {
+                               .id = "ApplyButton",
+                           })
+                       .build();
 
     auto&& background = GuiBuilderHelper::createSemitransparentBlackPanel();
     dic.gui.add(background, "ModalBackground");

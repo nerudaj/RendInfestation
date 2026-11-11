@@ -1,4 +1,5 @@
 #include "appstate/AppStatePause.hpp"
+#include "appstate/AppStateAreYouSure.hpp"
 #include "appstate/AppStateOptions.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
@@ -72,12 +73,20 @@ void AppStatePause::onOptions()
 
 void AppStatePause::onBackToMenu()
 {
-    app.popState(Messaging::serialize<PopIfNotMenu>());
+    app.pushState<AppStateAreYouSure>(
+        dic,
+        StringId::DoYouWantToQuit,
+        "popOnConfirm"_false,
+        [&] { app.popState(Messaging::serialize<PopIfNotMenu>()); });
 }
 
 void AppStatePause::onExit()
 {
-    app.exit();
+    app.pushState<AppStateAreYouSure>(
+        dic,
+        StringId::DoYouWantToQuit,
+        "popOnConfirm"_false,
+        [&] { app.exit(); });
 }
 
 void AppStatePause::restoreFocusImpl(const std::string& message)

@@ -18,6 +18,8 @@ public:
 private:
     void buildLayout(int noteId);
 
+    tgui::Container::Ptr buildContentLayout(StringId stringId);
+
 private:
     DependencyContainer& dic;
 };

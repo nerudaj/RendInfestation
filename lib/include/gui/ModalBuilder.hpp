@@ -10,6 +10,16 @@
 #include <optional>
 #include <tuple>
 
+struct [[nodiscard]] ModalBuilderOptions final
+{
+    tgui::Layout2d modalSize = { "100%", "100%" };
+    tgui::Color titleBarColor = tgui::Color::Black;
+    bool bodyScrollable = false;
+    tgui::Padding bodyPadding = {};
+    std::optional<std::string> bodyPanelClass = std::nullopt;
+    std::optional<std::string> navbarPanelClass = std::nullopt;
+};
+
 namespace detail
 {
     struct [[nodiscard]] ModalBuilderDeps final
@@ -19,17 +29,20 @@ namespace detail
         GuiAudioInterface& soundPlayer;
     };
 
+    struct [[nodiscard]] ModalBuilderContext final
+    {
+        ModalBuilderDeps deps;
+        ModalBuilderOptions options;
+        tgui::ChildWindow::Ptr modal;
+        tgui::GrowHorizontalLayout::Ptr bottomNavbar;
+    };
+
     template<ScopedEnum StringId>
     class [[nodiscard]] ModalBuilderWithContent final
     {
     public:
-        ModalBuilderWithContent(
-            ModalBuilderDeps&& deps,
-            tgui::ChildWindow::Ptr&& modal,
-            tgui::GrowHorizontalLayout::Ptr&& bottomNavbar)
-            : deps(std::move(deps))
-            , modal(std::move(modal))
-            , bottomNavbar(std::move(bottomNavbar))
+        ModalBuilderWithContent(ModalBuilderContext&& context)
+            : context(std::move(context))
         {
         }
 
@@ -40,73 +53,83 @@ namespace detail
             WidgetOptions options = {})
         {
             auto&& wrapper = tgui::Group::create(
-                { deps.sizer.getBaseContainerHeight() * 4, "90%" });
+                { context.deps.sizer.getBaseContainerHeight() * 4, "90%" });
             wrapper->add(WidgetBuilder::createRowButton(
-                deps.strings.getString(label),
+                context.deps.strings.getString(label),
                 std::move(onClick),
-                deps.sizer,
-                deps.soundPlayer,
+                context.deps.sizer,
+                context.deps.soundPlayer,
                 options));
-            bottomNavbar->add(wrapper);
+            context.bottomNavbar->add(wrapper);
             return *this;
         }
 
         tgui::ChildWindow::Ptr build()
         {
-            return modal;
+            return context.modal;
         }
 
     private:
-        detail::ModalBuilderDeps deps;
-        tgui::ChildWindow::Ptr modal;
-        tgui::GrowHorizontalLayout::Ptr bottomNavbar;
+        ModalBuilderContext context;
     };
 
     template<ScopedEnum StringId>
     class [[nodiscard]] ModalBuilderWithOpenModal final
     {
     public:
-        ModalBuilderWithOpenModal(
-            ModalBuilderDeps&& deps, tgui::ChildWindow::Ptr&& modal)
-            : deps(std::move(deps)), modal(std::move(modal))
+        ModalBuilderWithOpenModal(ModalBuilderContext&& context)
+            : context(std::move(context))
         {
         }
 
     public:
-        ModalBuilderWithContent<StringId> withContent(
-            tgui::Container::Ptr content,
-            std::optional<std::string> bottonNavbarClassName = std::nullopt)
+        ModalBuilderWithContent<StringId>
+        withContent(tgui::Container::Ptr content)
         {
-            auto&& [body, bottomNavbar] =
-                buildLayout(content, bottonNavbarClassName);
+            auto&& [body, bottomNavbar] = buildLayout(content);
 
-            modal->add(body);
-            return ModalBuilderWithContent<StringId>(
-                std::move(deps), std::move(modal), std::move(bottomNavbar));
+            context.modal->add(body);
+            context.bottomNavbar = std::move(bottomNavbar);
+
+            return ModalBuilderWithContent<StringId>(std::move(context));
         }
 
     private:
-        std::tuple<tgui::Group::Ptr, tgui::GrowHorizontalLayout::Ptr>
-        buildLayout(
-            tgui::Container::Ptr content,
-            std::optional<std::string> bottonNavbarClassName = std::nullopt)
+        std::tuple<tgui::Container::Ptr, tgui::GrowHorizontalLayout::Ptr>
+        buildLayout(tgui::Container::Ptr content)
         {
             auto&& container = tgui::Group::create();
 
-            content->setSize(
-                { "100%", "100% - ModuleSelectionBottomNavbar.height" });
-            container->add(content);
+            auto&& body = [&]() -> tgui::Panel::Ptr
+            {
+                if (context.options.bodyScrollable)
+                {
+                    return WidgetBuilder::createContainer<
+                        tgui::ScrollablePanel>(
+                        { "100%", "100% - ModuleSelectionBottomNavbar.height" },
+                        WidgetOptions {
+                            .className = context.options.bodyPanelClass,
+                        });
+                }
+
+                return WidgetBuilder::createContainer<tgui::Panel>(
+                    { "100%", "100% - ModuleSelectionBottomNavbar.height" },
+                    WidgetOptions {
+                        .className = context.options.bodyPanelClass,
+                    });
+            }();
+            body->getRenderer()->setPadding(context.options.bodyPadding);
+            body->add(content);
 
             auto&& bottomNavbar = WidgetBuilder::createContainer<tgui::Panel>(
-                { "100%", deps.sizer.getBaseContainerHeight() * 1.5 },
+                { "100%", context.deps.sizer.getBaseContainerHeight() * 1.5 },
                 {
-                    .className = bottonNavbarClassName,
+                    .className = context.options.navbarPanelClass,
                 });
             TguiHelper::alignInParent(
                 bottomNavbar,
                 tgui::HorizontalAlignment::Left,
                 tgui::VerticalAlignment::Bottom);
-            container->add(bottomNavbar, "ModuleSelectionBottomNavbar");
 
             auto&& growLayout = tgui::GrowHorizontalLayout::create();
 
@@ -117,12 +140,14 @@ namespace detail
 
             bottomNavbar->add(growLayout);
 
+            container->add(body);
+            container->add(bottomNavbar, "ModuleSelectionBottomNavbar");
+
             return { container, growLayout };
         }
 
     private:
-        detail::ModalBuilderDeps deps;
-        tgui::ChildWindow::Ptr modal;
+        ModalBuilderContext context;
     };
 } // namespace detail
 
@@ -140,22 +165,26 @@ public:
 
 public:
     detail::ModalBuilderWithOpenModal<StringId>
-    openModal(StringId title, tgui::Layout2d size)
+    openModal(StringId title, const ModalBuilderOptions& options)
     {
         auto&& modal = tgui::ChildWindow::create(
             deps.strings.getString(title),
             tgui::ChildWindow::TitleButton::None);
 
-        modal->setSize(size);
+        modal->setSize(options.modalSize);
         modal->setTitleTextSize(deps.sizer.getBaseFontSize());
         TguiHelper::centerInParent(modal);
-        modal->getRenderer()->setTitleBarColor(COLOR_MID_BLUE);
+        modal->getRenderer()->setTitleBarColor(options.titleBarColor);
         modal->getRenderer()->setTitleBarHeight(
             static_cast<float>(deps.sizer.getBaseContainerHeight()));
         modal->getRenderer()->setTextSize(deps.sizer.getBaseFontSize());
 
         return detail::ModalBuilderWithOpenModal<StringId>(
-            std::move(deps), std::move(modal));
+            detail::ModalBuilderContext {
+                .deps = std::move(deps),
+                .options = options,
+                .modal = std::move(modal),
+            });
     }
 
 private:

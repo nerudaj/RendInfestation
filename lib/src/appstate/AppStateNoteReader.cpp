@@ -1,6 +1,7 @@
 #include "appstate/AppStateNoteReader.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
+#include "gui/GuiBuilderHelper.hpp"
 #include "gui/ModalBuilder.hpp"
 #include "gui/TguiHelper.hpp"
 
@@ -31,35 +32,40 @@ void AppStateNoteReader::draw()
 
 void AppStateNoteReader::buildLayout(int noteId)
 {
-    auto&& panel = WidgetBuilder::createContainer<tgui::ScrollablePanel>(
-        { "45%", "90%" },
-        WidgetOptions {
-            .className = "AllCornersPanelScrollable",
-        });
-    panel->getRenderer()->setPadding({ 20.f, 20.f });
-    panel->getRenderer()->setScrollbarWidth(100.f);
+    auto&& getLayoutSize = []()
+    {
+#ifdef ANDROID
+        return tgui::Layout2d { "60%", "90%" };
+#else
+        return tgui::Layout2d { "45%", "80%" };
+#endif
+    };
 
     auto&& getStringId = [](StringId first, int offset)
     { return static_cast<StringId>(std::to_underlying(first) + 2 * offset); };
 
-    auto&& getString = [&](StringId first, int offset)
-    { return dic.strings.getString(getStringId(first, offset)); };
-
-    auto&& label = WidgetBuilder::createTextLabel(
-        getString(StringId::Note1, noteId), dic.sizer);
-    label->setVerticalAlignment(tgui::VerticalAlignment::Top);
-
-    panel->add(label);
-
-    auto&& builder = ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer);
+    const auto&& options = GuiBuilderHelper::getCommonModalBuilderOptions(
+        getLayoutSize(), "scrollable"_true);
 
     dic.gui.rebuildWith(
-        builder
-            .openModal(
-                getStringId(StringId::Note1Title, noteId), { "45%", "90%" })
-            .withContent(panel, "BottomCutoutPanel")
+        ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer)
+            .openModal(getStringId(StringId::Note1Title, noteId), options)
+            .withContent(
+                buildContentLayout(getStringId(StringId::Note1, noteId)))
             .withBottomButton(
                 StringId::Back,
                 [&] { app.popState(Messaging::serialize<PopIfNotGame>()); })
             .build());
+}
+
+tgui::Container::Ptr AppStateNoteReader::buildContentLayout(StringId stringId)
+{
+    auto&& content = tgui::Group::create();
+
+    auto&& label = WidgetBuilder::createTextLabel(
+        dic.strings.getString(stringId), dic.sizer);
+    label->setVerticalAlignment(tgui::VerticalAlignment::Top);
+    content->add(label);
+
+    return content;
 }
