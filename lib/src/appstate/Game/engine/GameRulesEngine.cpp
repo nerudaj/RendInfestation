@@ -423,7 +423,7 @@ void GameRulesEngine::evaluateUnlocks(int previousWeaponCount)
             postMessage(StringId::Wave4SkipUnlocked);
         }
 
-        if (wave == 11
+        if (wave == 11 && mapIdx < (MAP_LIMIT - 1)
             && saves.tryUnlockSurvivalMap(mapIdx + 1) == UnlockStatus::Ok)
         {
             postMessage(StringId::NewMapUnlocked);

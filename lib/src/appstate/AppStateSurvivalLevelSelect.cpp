@@ -12,6 +12,7 @@ AppStateSurvivalLevelSelect::AppStateSurvivalLevelSelect(
     : dgm::AppState(app), dic(dic)
 {
     buildLayout();
+    assert(LEVELS.size() == MAP_LIMIT);
 }
 
 void AppStateSurvivalLevelSelect::input()

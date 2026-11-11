@@ -80,6 +80,8 @@ const sf::Time ZOOM_DURATION = sf::seconds(4.5);
 constexpr const float MAX_ZOOM_OUT_FACTOR = 1.5f;
 constexpr const size_t SHOW_DIRECTIONS_TO_ENEMIES_THRESHOLD = 3;
 
+constexpr const size_t MAP_LIMIT = 3;
+
 // Z-indices
 constexpr const int ZINDEX_FLOOR_DECOR = 0;
 constexpr const int ZINDEX_LITTLE = 5;
