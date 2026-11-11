@@ -53,11 +53,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1,
-            "selectedLayer": 1,
+            "scale": 0.75,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 319.5,
-                "y": 319.5
+                "x": 335.33333333333326,
+                "y": 272
             }
         },
         "landing-bay.tmx": {
