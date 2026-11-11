@@ -4,14 +4,17 @@
 #include "gui/Icon.hpp"
 
 AppStateSurvivalGameOver::AppStateSurvivalGameOver(
-    dgm::App& app, DependencyContainer& dic, const GameStatus& status) noexcept
-    : dgm::AppState(app), dic(dic), status(status)
+    dgm::App& app,
+    DependencyContainer& dic,
+    const GameStatus& status,
+    const size_t mapIdx) noexcept
+    : dgm::AppState(app), dic(dic), status(status), mapIdx(mapIdx)
 {
     buildLayout();
 
-    if (dic.saveManager.getBestScore() < status.score)
+    if (dic.saveManager.getBestScore(mapIdx) < status.score)
     {
-        dic.saveManager.updateBestScore(status.score);
+        dic.saveManager.updateBestScore(mapIdx, status.score);
     }
 
     // Write all unlocks etc
@@ -105,7 +108,7 @@ tgui::Container::Ptr AppStateSurvivalGameOver::buildBentoBoxContent()
 
 tgui::Container::Ptr AppStateSurvivalGameOver::buildGameSummaryLayout()
 {
-    const bool isNewBest = dic.saveManager.getBestScore() < status.score;
+    const bool isNewBest = dic.saveManager.getBestScore(mapIdx) < status.score;
     const auto scoreString = uni::format(
         "{} {}",
         dic.strings.getString(StringId::GameScore),
@@ -154,7 +157,7 @@ tgui::Container::Ptr AppStateSurvivalGameOver::buildGameSummaryLayout()
                 dic.sizer,
                 "justify"_true),
             WidgetBuilder::createTextLabel(
-                std::to_string(dic.saveManager.getBestScore()),
+                std::to_string(dic.saveManager.getBestScore(mapIdx)),
                 dic.sizer,
                 "justify"_true),
         })

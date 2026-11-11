@@ -206,6 +206,7 @@ void AppStateSurvivalLevelSelect::onMapSelected(size_t mapIdx)
 
     if (mapUnlocked)
     {
+        gameProps.mapIdx = mapIdx;
         gameProps.mapName = LEVELS.at(mapIdx).fileId;
     }
 }

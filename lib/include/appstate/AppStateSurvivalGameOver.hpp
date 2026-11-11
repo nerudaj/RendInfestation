@@ -11,7 +11,8 @@ public:
     AppStateSurvivalGameOver(
         dgm::App& app,
         DependencyContainer& dic,
-        const GameStatus& status) noexcept;
+        const GameStatus& status,
+        const size_t mapIdx) noexcept;
 
 public:
     void input() override;
@@ -30,4 +31,5 @@ private:
 private:
     DependencyContainer& dic;
     GameStatus status;
+    const size_t mapIdx;
 };

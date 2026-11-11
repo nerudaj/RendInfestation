@@ -3,7 +3,7 @@
 void to_json(nlohmann::json& j, const SaveManager& mgr)
 {
     j["version"] = mgr.version;
-    j["bestScore"] = mgr.bestScore;
+    j["bestScores"] = mgr.bestScores;
     j["wave4"] = mgr.wave4startUnlocked;
     j["extraWeapon"] = mgr.extraWeaponUnlocked;
     j["combos"] = mgr.unlockedWeaponCombos;
@@ -18,7 +18,8 @@ void from_json(const nlohmann::json& j, SaveManager& mgr)
 
     if (jsonVersion >= 1)
     {
-        j.at("bestScore").get_to(mgr.bestScore);
+        mgr.bestScores.resize(1);
+        j.at("bestScore").get_to(mgr.bestScores[0]);
     }
 
     if (jsonVersion >= 2)
@@ -37,10 +38,21 @@ void from_json(const nlohmann::json& j, SaveManager& mgr)
     {
         j.at("unlockedSurvivalMapCount").get_to(mgr.unlockedSurvivalMapCount);
     }
+
+    if (jsonVersion >= 5)
+    {
+        j.at("bestScores").get_to(mgr.bestScores);
+    }
 }
 
-void SaveManager::updateBestScore(int score)
+void SaveManager::updateBestScore(size_t mapIdx, int score)
 {
-    assert(bestScore < score);
-    bestScore = score;
+    assert(mapIdx < 3);
+    if (bestScores.size() <= mapIdx)
+    {
+        bestScores.resize(mapIdx + 1);
+    }
+
+    assert(bestScores[mapIdx] < score);
+    bestScores[mapIdx] = score;
 }

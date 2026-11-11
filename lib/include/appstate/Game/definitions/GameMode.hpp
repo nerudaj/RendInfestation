@@ -20,6 +20,7 @@ struct [[nodiscard]] GameBoons final
 struct [[nodiscard]] GameModeProperties final
 {
     GameMode mode;
+    size_t mapIdx = 0;
     std::string mapName;
     GameBoons boons;
 };

@@ -52,7 +52,8 @@ void AppStateLoading::update()
         FadeInOptions(FadeOptions { .duration = sf::seconds(1.f) }),
         dic,
         *textureAtlas,
-        *gameScene);
+        *gameScene,
+        gameProps.mapIdx);
 }
 
 void AppStateLoading::draw()

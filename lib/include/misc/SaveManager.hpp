@@ -17,11 +17,12 @@ public:
     friend void from_json(const nlohmann::json& j, SaveManager& mgr);
 
 public:
-    void updateBestScore(int score);
+    void updateBestScore(size_t mapIdx, int score);
 
-    [[nodiscard]] constexpr int getBestScore() const noexcept
+    [[nodiscard]] constexpr int getBestScore(size_t mapIdx) const noexcept
     {
-        return bestScore;
+        if (bestScores.size() <= mapIdx) return 0;
+        return bestScores[mapIdx];
     }
 
     [[nodiscard]] constexpr bool isWave4StartUnlocked() const noexcept
@@ -93,8 +94,8 @@ public:
     }
 
 private:
-    const static inline int version = 4;
-    int bestScore = 0;
+    const static inline int version = 5;
+    std::vector<int> bestScores = {};
     bool wave4startUnlocked = false;
     bool extraWeaponUnlocked = false;
     bool reviveUnlocked = false;

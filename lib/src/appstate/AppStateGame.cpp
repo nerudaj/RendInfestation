@@ -81,7 +81,8 @@ void AppStateGame::update()
                 .duration = sf::seconds(1.f),
             }),
             dic,
-            scene.status);
+            scene.status,
+            mapIdx);
     }
 }
 

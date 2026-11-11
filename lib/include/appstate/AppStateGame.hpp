@@ -25,7 +25,8 @@ public:
         dgm::App& app,
         DependencyContainer& dic,
         const GameTextureAtlas& atlas,
-        GameScene& scene)
+        GameScene& scene,
+        const size_t mapIdx)
         : dgm::AppState(app)
         , dic(dic)
         , atlas(atlas)
@@ -49,6 +50,7 @@ public:
               dic.settings,
               dic.touchController,
               dic.strings)
+        , mapIdx(mapIdx)
     {
         srand(static_cast<unsigned>(time(nullptr)));
         gameEvents.pushEvent<event::WaveEnded>();
@@ -83,4 +85,5 @@ private:
     RenderingEngine renderingEngine;
     Janitor janitor;
     int previousWeaponCount = 0;
+    const size_t mapIdx;
 };
