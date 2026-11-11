@@ -16,7 +16,7 @@ void from_json(const nlohmann::json& j, SaveManager& mgr)
     int jsonVersion = 0;
     j.at("version").get_to(jsonVersion);
 
-    if (jsonVersion >= 1)
+    if (jsonVersion >= 1 && jsonVersion < 5)
     {
         mgr.bestScores.resize(1);
         j.at("bestScore").get_to(mgr.bestScores[0]);
