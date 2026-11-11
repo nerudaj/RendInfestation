@@ -174,8 +174,7 @@ void AppStateSurvivalLevelSelect::buildMapDetailLayout(
     const bool mapUnlocked = dic.saveManager.isNthSurvivalMapUnlocked(mapIdx);
     if (mapUnlocked)
     {
-        auto&& heroImagePanel =
-            tgui::Panel::create({ "16 * height / 9", "80%" });
+        auto&& heroImagePanel = tgui::Panel::create({ "height", "80%" });
         TguiHelper::centerInParent(heroImagePanel);
         heroImagePanel->getRenderer()->setTextureBackground(
             dic.resmgr.get<tgui::Texture>(LEVELS.at(mapIdx).imageName));
