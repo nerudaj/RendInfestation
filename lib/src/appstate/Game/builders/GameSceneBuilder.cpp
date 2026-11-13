@@ -61,6 +61,7 @@ static inline bool isAbyssTile(int id)
 
 const int TRANSPARENT_TILE_ID = 28;
 const int WALL_LIGHT_TILE_ID = 38;
+const int WALL_LIGHT_TILE_ID2 = 50;
 const int DOOR_TILE_ID = 42;
 const int ENEMY_SPAWN_TILE_ID = 43;
 const int PLAYER_SPAWN_TILE_ID = 44;
@@ -224,7 +225,10 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
     {
         for (unsigned x = 0; x < level.dataSize.x; ++x, ++idx)
         {
-            if (level.meshLayer.data[idx] - 1 == WALL_LIGHT_TILE_ID)
+            const int tileValue = level.meshLayer.data[idx] - 1;
+            const int decorValue = level.decorLayer.data[idx] - 1;
+            if (tileValue == WALL_LIGHT_TILE_ID
+                || tileValue == WALL_LIGHT_TILE_ID2)
             {
                 const auto position =
                     sf::Vector2u { x, y }.componentWiseMul(level.voxelSize)
@@ -236,27 +240,30 @@ GameSceneBuilder::LevelCreationArtifact GameSceneBuilder::evaluateTileLayers(
                 });
             }
 
-            if (level.decorLayer.data[idx] - 1 == ENEMY_SPAWN_TILE_ID)
+            if (decorValue == ENEMY_SPAWN_TILE_ID)
             {
                 result.enemySpawns.push_back(tileCoordToWorld(x, y));
             }
-            else if (level.decorLayer.data[idx] - 1 == PLAYER_SPAWN_TILE_ID)
+            else if (decorValue == PLAYER_SPAWN_TILE_ID)
             {
                 result.playerSpawns.push_back(tileCoordToWorld(x, y));
             }
-            else if (
-                level.decorLayer.data[idx] - 1 == DOOR_TILE_ID
-                && level.decorLayer.data[idx + 1] - 1 == DOOR_TILE_ID
-                && level.decorLayer.data[idx + level.dataSize.x] - 1
-                       == DOOR_TILE_ID) // door horizontal
+            else if (decorValue == DOOR_TILE_ID)
             {
-                ActorBuilder::createDoor(
-                    actors,
-                    sf::Vector2f {
-                        sf::Vector2u { x * level.voxelSize.x,
-                                       y * level.voxelSize.y + 11 },
-                    },
-                    atlas);
+                const int decorValueRight = level.decorLayer.data[idx + 1] - 1;
+                const int decorValueBelow =
+                    level.decorLayer.data[idx + level.dataSize.x] - 1;
+                if (decorValueRight == DOOR_TILE_ID
+                    && decorValueBelow == DOOR_TILE_ID) // door horizontal
+                {
+                    ActorBuilder::createDoor(
+                        actors,
+                        sf::Vector2f {
+                            sf::Vector2u { x * level.voxelSize.x,
+                                           y * level.voxelSize.y + 11 },
+                        },
+                        atlas);
+                }
             }
         }
     }
