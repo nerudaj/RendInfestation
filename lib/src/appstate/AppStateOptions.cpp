@@ -1,4 +1,5 @@
 #include "appstate/AppStateOptions.hpp"
+#include "appstate/AppStateAreYouSure.hpp"
 #include "appstate/AppStateInputDetector.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "filesystem/AppStorage.hpp"
@@ -79,7 +80,7 @@ void AppStateOptions::buildLayout()
                                  [&](tgui::Container::Ptr content)
                                  { onAudioVideoTabSelected(content); })
                              .addTab(
-                                 StringId::InputOptionsTab,
+                                 StringId::GameplayOptionsTab,
                                  [&](tgui::Container::Ptr content)
                                  { onInputTabSelected(content); })
                              .addTab(
@@ -246,6 +247,25 @@ void AppStateOptions::onInputTabSelected(tgui::Container::Ptr content)
                     dic.settings.input.cameraFollowsCrosshair,
                     [&](bool val)
                     { dic.settings.input.cameraFollowsCrosshair = val; }))
+            .addSeparator()
+            .addOption(
+                StringId::EraseProgress,
+                WidgetBuilder::createButton(
+                    dic.strings.getString(StringId::Confirm),
+                    [&]
+                    {
+                        app.pushState<AppStateAreYouSure>(
+                            dic,
+                            StringId::EraseProgressAreYouSure,
+                            "popOnConfirm"_true,
+                            [&]
+                            {
+                                dic.saveManager = SaveManager();
+                                dic.saveProgress();
+                            });
+                    },
+                    dic.sizer,
+                    dic.soundPlayer))
             .build());
 
     updateScrollbarWidth();

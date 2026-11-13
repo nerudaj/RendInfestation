@@ -47,7 +47,7 @@ enum class [[nodiscard]] StringId
     // Options
     Apply,
     AudioVideoOptionsTab,
-    InputOptionsTab,
+    GameplayOptionsTab,
     BindingsOptionsTab,
     EnableFullscreen,
     SetResolution,
@@ -60,6 +60,8 @@ enum class [[nodiscard]] StringId
     CursorSpeed,
     ShowTouchControls,
     CameraFollowsCrosshair,
+    EraseProgress,
+    EraseProgressAreYouSure,
     ReleaseAllInputs,
     PressAKeyOrEscape,
     BindingHeadingAction,

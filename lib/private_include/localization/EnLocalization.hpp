@@ -51,7 +51,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     // Options
     { Apply, "Apply" },
     { AudioVideoOptionsTab, "Audio / Video" },
-    { InputOptionsTab, "Input" },
+    { GameplayOptionsTab, "Gameplay" },
     { BindingsOptionsTab, "Bindings" },
     { EnableFullscreen, "Fullscreen" },
     { SetResolution, "Resolution" },
@@ -64,6 +64,10 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { CursorSpeed, "Cursor speed" },
     { ShowTouchControls, "Show touch controls" },
     { CameraFollowsCrosshair, "Camera follows crosshair" },
+    { EraseProgress, "Erase all progress" },
+    { EraseProgressAreYouSure,
+      "Are you sure you want to erase all your progress (unlockables, best "
+      "scores, etc.)?" },
     { ReleaseAllInputs, "Release all inputs" },
 #ifdef ANDROID
     { PressAKeyOrEscape,
