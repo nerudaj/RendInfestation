@@ -53,13 +53,18 @@ namespace detail
             WidgetOptions options = {})
         {
             auto&& wrapper = tgui::Group::create(
-                { context.deps.sizer.getBaseContainerHeight() * 4, "90%" });
-            wrapper->add(WidgetBuilder::createRowButton(
+                { context.deps.sizer.getBaseContainerHeight() * 4, "100%" });
+
+            auto&& button = WidgetBuilder::createRowButton(
                 context.deps.strings.getString(label),
                 std::move(onClick),
                 context.deps.sizer,
                 context.deps.soundPlayer,
-                options));
+                options);
+
+            button->setHeight("80%");
+
+            wrapper->add(button);
             context.bottomNavbar->add(wrapper);
             return *this;
         }
@@ -104,16 +109,22 @@ namespace detail
             {
                 if (context.options.bodyScrollable)
                 {
-                    return WidgetBuilder::createContainer<
-                        tgui::ScrollablePanel>(
-                        { "100%", "100% - ModuleSelectionBottomNavbar.height" },
-                        WidgetOptions {
-                            .className = context.options.bodyPanelClass,
-                        });
+                    auto&& panel =
+                        WidgetBuilder::createContainer<tgui::ScrollablePanel>(
+                            { "100%",
+                              "100% - ModuleSelectionBottomNavbar.height" },
+                            context.deps.sizer,
+                            WidgetOptions {
+                                .className = context.options.bodyPanelClass,
+                            });
+                    panel->getRenderer()->setScrollbarWidth(
+                        context.deps.sizer.getBaseFontSize());
+                    return panel;
                 }
 
                 return WidgetBuilder::createContainer<tgui::Panel>(
                     { "100%", "100% - ModuleSelectionBottomNavbar.height" },
+                    context.deps.sizer,
                     WidgetOptions {
                         .className = context.options.bodyPanelClass,
                     });
@@ -123,6 +134,7 @@ namespace detail
 
             auto&& bottomNavbar = WidgetBuilder::createContainer<tgui::Panel>(
                 { "100%", context.deps.sizer.getBaseContainerHeight() * 1.5 },
+                context.deps.sizer,
                 {
                     .className = context.options.navbarPanelClass,
                 });

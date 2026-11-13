@@ -10,6 +10,7 @@
 
 const tgui::Color CONTENT_BGCOLOR = tgui::Color(255, 255, 255, 64);
 constexpr const char* TABS_ID = "Options_Tabs";
+constexpr const char* OPTIONS_PANEL_ID = "Options_Panel";
 
 std::string resolutionToString(const sf::Vector2u& vec)
 {
@@ -92,6 +93,7 @@ void AppStateOptions::buildLayout()
                              .setTabSelected(StringId::VideoOptionsTab)
                              .build(TabbedLayoutOptions {
                                  .tabsWidgetId = TABS_ID,
+                                 .contentWidgetId = OPTIONS_PANEL_ID,
                                  .contentIsScrollable = true,
                                  .contentClassName = "OptionsPanel",
                              }))
@@ -179,6 +181,8 @@ void AppStateOptions::onVideoTabSelected(tgui::Container::Ptr content)
                     dic.sizer))
 #endif
             .build());
+
+    updateScrollbarWidth();
 }
 
 void AppStateOptions::onAudioTabSelected(tgui::Container::Ptr content)
@@ -209,6 +213,8 @@ void AppStateOptions::onAudioTabSelected(tgui::Container::Ptr content)
                                        .high = 100.f,
                                        .step = 1.f }))
             .build());
+
+    updateScrollbarWidth();
 }
 
 void AppStateOptions::onInputTabSelected(tgui::Container::Ptr content)
@@ -254,6 +260,8 @@ void AppStateOptions::onInputTabSelected(tgui::Container::Ptr content)
                     [&](bool val)
                     { dic.settings.input.cameraFollowsCrosshair = val; }))
             .build());
+
+    updateScrollbarWidth();
 }
 
 template<class V, class T>
@@ -344,6 +352,21 @@ void AppStateOptions::onBindingsTabSelected(tgui::Container::Ptr content)
 
     content->removeAllWidgets();
     content->add(tableBuilder.build());
+
+    updateScrollbarWidth();
+}
+
+void AppStateOptions::updateScrollbarWidth()
+{
+    // HOTFIX: I need to figure out a better way to property set
+    auto&& panel = dic.gui.get<tgui::ScrollablePanel>(OPTIONS_PANEL_ID);
+
+    // is null on the first call because that one happens before the panel
+    // is attached to the gui through tabs initial page select
+    if (panel)
+    {
+        panel->getRenderer()->setScrollbarWidth(dic.sizer.getBaseFontSize());
+    }
 }
 
 void AppStateOptions::onBack()

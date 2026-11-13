@@ -31,6 +31,8 @@ private:
 
     void onBindingsTabSelected(tgui::Container::Ptr content);
 
+    void updateScrollbarWidth();
+
     void onBack();
 
     void onResolutionSelected(const sf::Vector2u& resolution);

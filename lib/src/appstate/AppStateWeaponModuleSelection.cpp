@@ -87,9 +87,11 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleSelectionLayout()
 {
     auto&& hbox = tgui::HorizontalLayout::create();
 
-    auto&& scrollList = WidgetBuilder::createContainer<tgui::ScrollablePanel>({
-        .className = "AllCornersPanelScrollable",
-    });
+    auto&& scrollList = WidgetBuilder::createContainer<tgui::ScrollablePanel>(
+        dic.sizer,
+        {
+            .className = "AllCornersPanelScrollable",
+        });
     scrollList->getRenderer()->setPadding({ 20.f, 20.f });
     hbox->add(scrollList);
 
@@ -113,6 +115,7 @@ tgui::Container::Ptr AppStateWeaponModuleSelection::buildModuleListEntryLayout(
 {
     auto&& row = WidgetBuilder::createContainer<tgui::Panel>(
         { "100%", dic.sizer.getBaseContainerHeight() },
+        dic.sizer,
         {
             .className = "UntexturedWidget",
         });
