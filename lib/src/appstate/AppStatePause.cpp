@@ -68,7 +68,7 @@ void AppStatePause::onResume()
 
 void AppStatePause::onOptions()
 {
-    app.pushState<AppStateOptions>(dic);
+    app.pushState<AppStateOptions>(dic, "invokedFromGame"_true);
 }
 
 void AppStatePause::onBackToMenu()

@@ -79,7 +79,7 @@ void AppStateMainMenu::onSurvival()
 
 void AppStateMainMenu::onOptions()
 {
-    app.pushState<AppStateOptions>(dic);
+    app.pushState<AppStateOptions>(dic, "invokedFromGame"_false);
 }
 
 void AppStateMainMenu::onExit()

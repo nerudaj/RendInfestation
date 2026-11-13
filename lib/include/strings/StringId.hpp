@@ -60,6 +60,7 @@ enum class [[nodiscard]] StringId
     CursorSpeed,
     ShowTouchControls,
     CameraFollowsCrosshair,
+    Erase,
     EraseProgress,
     EraseProgressAreYouSure,
     ReleaseAllInputs,

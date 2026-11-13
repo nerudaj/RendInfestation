@@ -9,7 +9,10 @@
 class [[nodiscard]] AppStateOptions final : public dgm::AppState
 {
 public:
-    AppStateOptions(dgm::App& app, DependencyContainer& dic) noexcept;
+    AppStateOptions(
+        dgm::App& app,
+        DependencyContainer& dic,
+        const bool invokedFromGame) noexcept;
 
 public:
     void input() override;
@@ -69,4 +72,5 @@ private:
 
 private:
     DependencyContainer& dic;
+    const bool invokedFromGame;
 };

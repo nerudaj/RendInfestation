@@ -64,6 +64,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { CursorSpeed, "Cursor speed" },
     { ShowTouchControls, "Show touch controls" },
     { CameraFollowsCrosshair, "Camera follows crosshair" },
+    { Erase, "Erase" },
     { EraseProgress, "Erase all progress" },
     { EraseProgressAreYouSure,
       "Are you sure you want to erase all your progress (unlockables, best "

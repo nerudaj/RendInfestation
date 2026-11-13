@@ -34,8 +34,10 @@ static std::string intValueFormatter(float val)
 }
 
 AppStateOptions::AppStateOptions(
-    dgm::App& app, DependencyContainer& dic) noexcept
-    : dgm::AppState(app), dic(dic)
+    dgm::App& app,
+    DependencyContainer& dic,
+    const bool invokedFromGame) noexcept
+    : dgm::AppState(app), dic(dic), invokedFromGame(invokedFromGame)
 {
     buildLayout();
 }
@@ -251,7 +253,7 @@ void AppStateOptions::onInputTabSelected(tgui::Container::Ptr content)
             .addOption(
                 StringId::EraseProgress,
                 WidgetBuilder::createButton(
-                    dic.strings.getString(StringId::Confirm),
+                    dic.strings.getString(StringId::Erase),
                     [&]
                     {
                         app.pushState<AppStateAreYouSure>(
@@ -265,7 +267,10 @@ void AppStateOptions::onInputTabSelected(tgui::Container::Ptr content)
                             });
                     },
                     dic.sizer,
-                    dic.soundPlayer))
+                    dic.soundPlayer,
+                    WidgetOptions {
+                        .enabled = !invokedFromGame,
+                    }))
             .build());
 
     updateScrollbarWidth();
