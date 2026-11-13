@@ -75,13 +75,9 @@ void AppStateOptions::buildLayout()
                 tgui::HorizontalAlignment::Left)
             .withContent(dic.guiBuilderFactory.createTabbedLayoutBuilder()
                              .addTab(
-                                 StringId::VideoOptionsTab,
+                                 StringId::AudioVideoOptionsTab,
                                  [&](tgui::Container::Ptr content)
-                                 { onVideoTabSelected(content); })
-                             .addTab(
-                                 StringId::AudioOptionsTab,
-                                 [&](tgui::Container::Ptr content)
-                                 { onAudioTabSelected(content); })
+                                 { onAudioVideoTabSelected(content); })
                              .addTab(
                                  StringId::InputOptionsTab,
                                  [&](tgui::Container::Ptr content)
@@ -90,7 +86,7 @@ void AppStateOptions::buildLayout()
                                  StringId::BindingsOptionsTab,
                                  [&](tgui::Container::Ptr content)
                                  { onBindingsTabSelected(content); })
-                             .setTabSelected(StringId::VideoOptionsTab)
+                             .setTabSelected(StringId::AudioVideoOptionsTab)
                              .build(TabbedLayoutOptions {
                                  .tabsWidgetId = TABS_ID,
                                  .contentWidgetId = OPTIONS_PANEL_ID,
@@ -107,7 +103,7 @@ void AppStateOptions::refresh()
     buildLayout();
 }
 
-void AppStateOptions::onVideoTabSelected(tgui::Container::Ptr content)
+void AppStateOptions::onAudioVideoTabSelected(tgui::Container::Ptr content)
 {
     content->removeAllWidgets();
     content->add(
@@ -180,16 +176,7 @@ void AppStateOptions::onVideoTabSelected(tgui::Container::Ptr content)
                     },
                     dic.sizer))
 #endif
-            .build());
-
-    updateScrollbarWidth();
-}
-
-void AppStateOptions::onAudioTabSelected(tgui::Container::Ptr content)
-{
-    content->removeAllWidgets();
-    content->add(
-        FormBuilder(dic.strings, dic.sizer)
+            .addSeparator()
             .addOption(
                 StringId::MusicVolume,
                 WidgetBuilder::createSlider(

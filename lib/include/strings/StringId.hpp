@@ -46,8 +46,7 @@ enum class [[nodiscard]] StringId
 
     // Options
     Apply,
-    VideoOptionsTab,
-    AudioOptionsTab,
+    AudioVideoOptionsTab,
     InputOptionsTab,
     BindingsOptionsTab,
     EnableFullscreen,

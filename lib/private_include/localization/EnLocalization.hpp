@@ -50,8 +50,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
 
     // Options
     { Apply, "Apply" },
-    { VideoOptionsTab, "Video" },
-    { AudioOptionsTab, "Audio" },
+    { AudioVideoOptionsTab, "Audio / Video" },
     { InputOptionsTab, "Input" },
     { BindingsOptionsTab, "Bindings" },
     { EnableFullscreen, "Fullscreen" },

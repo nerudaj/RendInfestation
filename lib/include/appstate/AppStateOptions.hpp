@@ -23,9 +23,7 @@ private:
     // resolution change
     void refresh();
 
-    void onVideoTabSelected(tgui::Container::Ptr content);
-
-    void onAudioTabSelected(tgui::Container::Ptr content);
+    void onAudioVideoTabSelected(tgui::Container::Ptr content);
 
     void onInputTabSelected(tgui::Container::Ptr content);
 
