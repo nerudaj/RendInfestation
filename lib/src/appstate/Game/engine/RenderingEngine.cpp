@@ -445,9 +445,11 @@ void RenderingEngine::renderTouchControls(
         model.objects[2].touchArea.getPosition() - cornerOffset);
     window.draw(hudSprite);
 
-    hudSprite.setScale({ 1.f, 1.f });
-
-    if (!renderAllTouchControls) return;
+    if (!renderAllTouchControls)
+    {
+        hudSprite.setScale({ 1.f, 1.f });
+        return;
+    }
 
     // First two objects are joysticks
     for (auto&& object : model.objects | uni::views::take(2))
