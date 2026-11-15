@@ -43,6 +43,7 @@ enum class [[nodiscard]] StringId
     SurvivalMap02_Locked,
     SurvivalMap03_Name,
     SurvivalMap03_Locked,
+    BestScore,
 
     // Options
     Apply,

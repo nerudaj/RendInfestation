@@ -47,6 +47,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { SurvivalMap03_Name, "Laboratories" },
     { SurvivalMap03_Locked,
       "You need to beat wave 12 of Botanical Sector to unlock this map." },
+    { BestScore, "Best score" },
 
     // Options
     { Apply, "Apply" },

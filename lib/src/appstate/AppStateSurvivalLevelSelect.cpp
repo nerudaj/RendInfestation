@@ -175,11 +175,27 @@ void AppStateSurvivalLevelSelect::buildMapDetailLayout(
     const bool mapUnlocked = dic.saveManager.isNthSurvivalMapUnlocked(mapIdx);
     if (mapUnlocked)
     {
-        auto&& heroImagePanel = tgui::Panel::create({ "height", "80%" });
-        TguiHelper::centerInParent(heroImagePanel);
+        auto vbox = tgui::Group::create();
+        imageGroup->add(vbox);
+
+        auto&& bestScoreLabelWrapper =
+            tgui::Group::create({ "100%", dic.sizer.getBaseContainerHeight() });
+        bestScoreLabelWrapper->add(WidgetBuilder::createTextLabel(
+            uni::format(
+                "{}: {}",
+                dic.strings.getString(StringId::BestScore),
+                dic.saveManager.getBestScore(mapIdx)),
+            dic.sizer,
+            "justify"_true));
+        vbox->add(bestScoreLabelWrapper, "BestScoreLabel");
+
+        auto&& heroImagePanel = tgui::Panel::create(
+            { "height", "(100% - BestScoreLabel.height) * 0.9" });
+        heroImagePanel->setPosition(
+            { "50% - width / 2", "BestScoreLabel.height" });
         heroImagePanel->getRenderer()->setTextureBackground(
             dic.resmgr.get<tgui::Texture>(LEVELS.at(mapIdx).imageName));
-        imageGroup->add(heroImagePanel);
+        vbox->add(heroImagePanel);
     }
     else
     {
