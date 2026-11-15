@@ -393,7 +393,6 @@ void GameRulesEngine::updateTriggers(const dgm::Time& time)
     for (auto&& [entity, inventory] :
          scene.actors.view<DelayedOnLeaveTriggerInventory>().each())
     {
-        // if (inventory.delay <= sf::Time::Zero) continue;
         inventory.delay -= time.getElapsed();
 
         if (inventory.delay <= sf::Time::Zero)
@@ -545,7 +544,7 @@ void GameRulesEngine::handleTriggerToActorCollision(
 {
     // Nobody except for the player can interact with stuff
     auto skin = scene.actors.try_get<Skin>(actorIdx);
-    if (!skin || skin->kind != EntityKind::Player) return;
+    if (!skin || skin->skinType != SkinType::PlayerDefault) return;
 
     if (auto&& inventory =
             scene.actors.try_get<DelayedOnLeaveTriggerInventory>(triggerIdx))
