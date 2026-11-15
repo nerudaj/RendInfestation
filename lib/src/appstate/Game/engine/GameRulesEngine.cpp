@@ -617,8 +617,8 @@ bool GameRulesEngine::shallGainEmergencyRevive() const noexcept
 
     const auto wave = scene.survivalGameDirector->getContext().wave;
 
-    return wave != 0 && wave % 5 == 0
-           && !scene.playerInventory.emergencyReviveActive;
+    // nobody is ever going to reach wave 40 :)
+    return wave == 5 || wave == 20 || wave == 40 || wave == 80;
 }
 
 sf::Vector2f GameRulesEngine::getIdealPlayerRespawnLocation() const
