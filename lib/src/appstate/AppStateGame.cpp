@@ -104,7 +104,18 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
             *message);
     }
 
-    gameRulesEngine.evaluateUnlocks(previousWeaponCount);
+    assert(
+        scene.survivalGameDirector,
+        "If this fails, you've probably decided to add back campaign without "
+        "refactoring hard-coded survival bits");
+    const int wave = scene.survivalGameDirector->getContext().wave;
+
+    boonUnlockEvaluator.evaluateUnlocks(
+        wave,
+        mapIdx,
+        scene.playerInventory,
+        [&](StringId msg) { gameRulesEngine.postMessage(msg); });
+
     sf::Mouse::setPosition(
         sf::Vector2i(app.window.getSize() / 2u),
         app.window.getSfmlWindowContext());

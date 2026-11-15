@@ -1,4 +1,4 @@
-#include "appstate/Game/SurvivalGameDirector.hpp"
+#include "appstate/Game/survival/SurvivalGameDirector.hpp"
 
 SurvivalGameDirector::SurvivalGameDirector(int startingWave)
     : context(createInitialContext())

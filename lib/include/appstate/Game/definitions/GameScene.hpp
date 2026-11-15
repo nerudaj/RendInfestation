@@ -1,6 +1,5 @@
 #pragma once
 
-#include "appstate/Game/SurvivalGameDirector.hpp"
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/definitions/CameraZoomHandler.hpp"
 #include "appstate/Game/definitions/Components.hpp"
@@ -9,6 +8,7 @@
 #include "appstate/Game/definitions/SurvivalSpawnerContext.hpp"
 #include "appstate/Game/definitions/WeaponLoadout.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
+#include "appstate/Game/survival/SurvivalGameDirector.hpp"
 #include <DGM/dgm.hpp>
 #include <array>
 #include <entt/entt.hpp>

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "appstate/Game/SurvivalGameDirector.hpp"
 #include "appstate/Game/Types.hpp"
 #include "appstate/Game/definitions/GameEvents.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
+#include "appstate/Game/survival/SurvivalGameDirector.hpp"
 #include "audio/SoundPlayer.hpp"
 #include "input/Input.hpp"
 #include "misc/EventQueue.hpp"
@@ -78,7 +78,7 @@ public:
 
     void updateHealth();
 
-    void evaluateUnlocks(int previousWeaponCount);
+    void postMessage(StringId messageId, bool updateLedger = true);
 
 private:
     void updateLifetimes(const dgm::Time& time);
@@ -101,8 +101,6 @@ private:
 
     void handleTriggerToActorCollision(
         entt::entity triggerIdx, entt::entity actorIdx);
-
-    void postMessage(StringId messageId, bool updateLedger = true);
 
     sf::Vector2f pickEnemySpawnPosition() const;
 

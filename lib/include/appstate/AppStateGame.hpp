@@ -11,6 +11,7 @@
 #include "appstate/Game/engine/ParticleEngine.hpp"
 #include "appstate/Game/engine/PhysicsEngine.hpp"
 #include "appstate/Game/engine/RenderingEngine.hpp"
+#include "appstate/Game/survival/SurvivalBoonUnlockEvaluator.hpp"
 #include "misc/DependencyContainer.hpp"
 #include "misc/EventQueue.hpp"
 #include "settings/AppSettings.hpp"
@@ -51,6 +52,7 @@ public:
               dic.settings,
               dic.touchController,
               dic.strings)
+        , boonUnlockEvaluator(dic.saveManager)
         , mapIdx(mapIdx)
     {
         srand(static_cast<unsigned>(time(nullptr)));
@@ -85,6 +87,7 @@ private:
     ParticleEngine particleEngine;
     RenderingEngine renderingEngine;
     Janitor janitor;
+    SurvivalBoonUnlockEvaluator boonUnlockEvaluator;
     int previousWeaponCount = 0;
     const size_t mapIdx;
 };

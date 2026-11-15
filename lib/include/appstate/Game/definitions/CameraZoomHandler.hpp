@@ -1,6 +1,6 @@
 #pragma once
 
-#include "appstate/Game/SurvivalGameDirector.hpp"
+#include "appstate/Game/survival/SurvivalGameDirector.hpp"
 #include <DGM/classes/Camera.hpp>
 #include <SFML/System/Time.hpp>
 #include <optional>
