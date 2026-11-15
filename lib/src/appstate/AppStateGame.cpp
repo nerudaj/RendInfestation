@@ -60,11 +60,7 @@ void AppStateGame::update()
                     [&](event::NoteOpened& e)
                     { app.pushState<AppStateNoteReader>(dic, e.noteId); },
                     [&](event::WaveEnded&)
-                    {
-                        previousWeaponCount =
-                            scene.playerInventory.loadout.weapons.size();
-                        app.pushState<AppStateChooseBonus>(dic, scene);
-                    },
+                    { app.pushState<AppStateChooseBonus>(dic, scene); },
                     [&](auto&&) {} });
     janitor.cleanScene(scene);
 

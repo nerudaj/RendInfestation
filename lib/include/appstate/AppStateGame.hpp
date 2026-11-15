@@ -88,6 +88,5 @@ private:
     RenderingEngine renderingEngine;
     Janitor janitor;
     SurvivalBoonUnlockEvaluator boonUnlockEvaluator;
-    int previousWeaponCount = 0;
     const size_t mapIdx;
 };
