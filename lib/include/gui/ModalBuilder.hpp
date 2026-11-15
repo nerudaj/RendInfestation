@@ -117,8 +117,7 @@ namespace detail
                             WidgetOptions {
                                 .className = context.options.bodyPanelClass,
                             });
-                    panel->getRenderer()->setScrollbarWidth(static_cast<float>(
-                        context.deps.sizer.getBaseFontSize()));
+
                     return panel;
                 }
 
