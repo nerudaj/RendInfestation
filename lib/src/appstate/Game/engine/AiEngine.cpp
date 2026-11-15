@@ -9,10 +9,29 @@ void AiEngine::update(const dgm::Time&)
     // throw their logic into some FSM
     // update input
 
-    for (auto&& [_, blackboard] : scene.actors.view<NpcBlackboard>().each())
+    for (auto&& [entity, blackboard] :
+         scene.actors.view<NpcBlackboard>().each())
     {
         blackboard.input.clearInputs();
+        updateBorrowedAttackTicket(blackboard);
+
         fsmsByKind.at(std::to_underlying(blackboard.kind)).tick(blackboard);
+    }
+}
+
+void AiEngine::updateBorrowedAttackTicket(NpcBlackboard& blackboard)
+{
+    assert(blackboard.ownerEntity != entt::null);
+    if (!scene.actors.any_of<EnemyTag>(blackboard.ownerEntity)) return;
+
+    if (!blackboard.hasBorrowedAttackTicket) return;
+
+    // When no longer playing attack animation, return attack ticket
+    auto&& skin = scene.actors.get<Skin>(blackboard.ownerEntity);
+    if (!skin.animation.getStateName().contains("attack"))
+    {
+        blackboard.hasBorrowedAttackTicket = false;
+        ++attackTickets;
     }
 }
 
@@ -25,6 +44,13 @@ void AiEngine::waitTillAttackFinishes(NpcBlackboard& blackboard)
 
 void AiEngine::attack(NpcBlackboard& blackboard)
 {
+    if (blackboard.kind != NpcKind::Turret)
+    {
+        assert(attackTickets > 0);
+        --attackTickets;
+        blackboard.hasBorrowedAttackTicket = true;
+    }
+
     blackboard.input.setShooting(true);
 }
 
@@ -201,6 +227,24 @@ bool AiEngine::isTargetValidAndVisibleAndInShootingRange(
            && isTargetInShootingRange(blackboard);
 }
 
+bool AiEngine::enemyOnly_isTargetEligibleForMeleeAttacking(
+    const NpcBlackboard& blackboard) const
+{
+    return isTargetInMeleeRange(blackboard) && attackTickets > 0;
+}
+
+bool AiEngine::enemyOnly_isTargetEligibleForRangedAttacking(
+    const NpcBlackboard& blackboard) const
+{
+    return isTargetValidAndVisibleAndInShootingRange(blackboard)
+           && scene.skinCounts[SkinType::Fireball] <= 2 && attackTickets > 0;
+}
+
+bool AiEngine::thereAreNoMoreAttackTickets(const NpcBlackboard&) const
+{
+    return attackTickets == 0;
+}
+
 // =====
 // UTILS
 // =====
@@ -279,7 +323,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForScuttlebug(AiEngine& self)
             .done()
         .withMainMachine()
             .withEntryState("Start")
-                .when(CONDITION(isTargetInMeleeRange))
+                .when(CONDITION(enemyOnly_isTargetEligibleForMeleeAttacking))
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisible))
                     .goToState("InvalidateWaypoint")
@@ -291,7 +335,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForScuttlebug(AiEngine& self)
                 .exec(ACTION(invalidateWaypoint))
                 .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
-                .when(CONDITION(isTargetInMeleeRange))
+                .when(CONDITION(enemyOnly_isTargetEligibleForMeleeAttacking))
                     .goToState("Attack")
                 .orWhen(NOT(isTargetVisible))
                     .goToState("Start")
@@ -301,7 +345,9 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForScuttlebug(AiEngine& self)
                 .exec(ACTION(generateWaypointInFrontOfTarget))
                 .andGoToState("Start")
             .withState("Attack")
-                .exec(ACTION(attack))
+                .when(CONDITION(thereAreNoMoreAttackTickets))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(attack))
                 .andGoToState("WaitUntilAttackFinishes")
             .withState("WaitUntilAttackFinishes")
                 .when(CONDITION(isOwnerIdleOrWalking))
@@ -325,7 +371,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForGreaterScuttlebug(AiEngine& self)
             .done()
         .withMainMachine()
             .withEntryState("Start")
-                .when(CONDITION(isTargetInMeleeRange))
+                .when(CONDITION(enemyOnly_isTargetEligibleForMeleeAttacking))
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisible))
                     .goToState("InvalidateWaypoint")
@@ -337,7 +383,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForGreaterScuttlebug(AiEngine& self)
                 .exec(ACTION(invalidateWaypoint))
                 .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
-                .when(CONDITION(isTargetInMeleeRange))
+                .when(CONDITION(enemyOnly_isTargetEligibleForMeleeAttacking))
                     .goToState("Attack")
                 .orWhen(NOT(isTargetVisible))
                     .goToState("Start")
@@ -347,7 +393,9 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForGreaterScuttlebug(AiEngine& self)
                 .exec(ACTION(generateWaypointBehindOfTarget))
                 .andGoToState("Start")
             .withState("Attack")
-                .exec(ACTION(attack))
+                .when(CONDITION(thereAreNoMoreAttackTickets))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(attack))
                 .andGoToState("WaitUntilAttackFinishes")
             .withState("WaitUntilAttackFinishes")
                 .when(CONDITION(isOwnerIdleOrWalking))
@@ -371,7 +419,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBighead(AiEngine& self)
             .done()
         .withMainMachine()
             .withEntryState("Start")
-                .when(CONDITION(isTargetInMeleeRange))
+                .when(CONDITION(enemyOnly_isTargetEligibleForMeleeAttacking))
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisible))
                     .goToState("InvalidateWaypoint")
@@ -383,7 +431,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBighead(AiEngine& self)
                 .exec(ACTION(invalidateWaypoint))
                 .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
-                .when(CONDITION(isTargetInMeleeRange))
+                .when(CONDITION(enemyOnly_isTargetEligibleForMeleeAttacking))
                     .goToState("Attack")
                 .orWhen(NOT(isTargetVisible))
                     .goToState("Start")
@@ -393,7 +441,9 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBighead(AiEngine& self)
                 .exec(ACTION(generateWaypointShortestPath))
                 .andGoToState("Start")
             .withState("Attack")
-                .exec(ACTION(attack))
+                .when(CONDITION(thereAreNoMoreAttackTickets))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(attack))
                 .andGoToState("WaitUntilAttackFinishes")
             .withState("WaitUntilAttackFinishes")
                 .when(CONDITION(isOwnerIdleOrWalking))
@@ -407,12 +457,6 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBighead(AiEngine& self)
 
 fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
 {
-    auto&& isTargetEligibleForAttacking = [&](const NpcBlackboard& bb)
-    {
-        return self.isTargetValidAndVisibleAndInShootingRange(bb)
-               && self.scene.skinCounts[SkinType::Fireball] <= 2;
-    };
-
     // clang-format off
     return fsm::Builder<NpcBlackboard>()
         .withErrorMachine()
@@ -423,7 +467,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
             .done()
         .withMainMachine()
             .withEntryState("Start")
-                .when(isTargetEligibleForAttacking)
+                .when(CONDITION(enemyOnly_isTargetEligibleForRangedAttacking))
                     .goToState("Attack")
                 .orWhen(CONDITION(isTargetVisibleOnAltMesh))
                     .goToState("InvalidateWaypoint")
@@ -435,7 +479,7 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
                 .exec(ACTION(invalidateWaypoint))
                 .andGoToState("MoveTowardsTarget")
             .withState("MoveTowardsTarget")
-                .when(isTargetEligibleForAttacking)
+                .when(CONDITION(enemyOnly_isTargetEligibleForRangedAttacking))
                     .goToState("Attack")
                 .orWhen(NOT(isTargetVisible))
                     .goToState("Start")
@@ -445,7 +489,9 @@ fsm::Fsm<NpcBlackboard> AiEngine::buildFsmForBeholder(AiEngine& self)
                 .exec(ACTION(generateWaypointForFlyingNpc))
                 .andGoToState("Start")
             .withState("Attack")
-                .exec(ACTION(attack))
+                .when(CONDITION(thereAreNoMoreAttackTickets))
+                    .goToState("Start")
+                .otherwiseExec(ACTION(attack))
                 .andGoToState("WaitUntilAttackFinishes")
             .withState("WaitUntilAttackFinishes")
                 .when(CONDITION(isOwnerIdleOrWalking))

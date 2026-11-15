@@ -13,6 +13,7 @@ struct [[nodiscard]] NpcBlackboard final : public fsm::BlackboardBase
     NpcKind kind = {};
     entt::entity targetEntity = entt::null;
     std::optional<sf::Vector2f> waypoint = std::nullopt;
+    bool hasBorrowedAttackTicket = false;
 };
 
 #ifndef ANDROID

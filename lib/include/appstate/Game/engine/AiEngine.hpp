@@ -36,7 +36,15 @@ public:
     }
 
 public:
+    void setAttackTicketCount(int newCount)
+    {
+        attackTickets = newCount;
+    }
+
     void update(const dgm::Time& time);
+
+private:
+    void updateBorrowedAttackTicket(NpcBlackboard& blackboard);
 
 private: // Actions
     void waitTillAttackFinishes(NpcBlackboard& blackboard);
@@ -93,6 +101,14 @@ private: // Predicates
     bool isTargetValidAndVisibleAndInShootingRange(
         const NpcBlackboard& blackboard) const;
 
+    bool enemyOnly_isTargetEligibleForMeleeAttacking(
+        const NpcBlackboard& blackboard) const;
+
+    bool enemyOnly_isTargetEligibleForRangedAttacking(
+        const NpcBlackboard& blackboard) const;
+
+    bool thereAreNoMoreAttackTickets(const NpcBlackboard&) const;
+
 private: // Utils
     sf::Vector2f getDirectionToTarget(const NpcBlackboard& blackboard) const;
 
@@ -127,4 +143,5 @@ private:
 
     std::array<fsm::Fsm<NpcBlackboard>, static_cast<size_t>(NpcKind::Max)>
         fsmsByKind;
+    int attackTickets = 4;
 };
