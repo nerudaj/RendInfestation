@@ -7,12 +7,13 @@ enum class [[nodiscard]] WeaponCombo
 {
     None,
     Random,
-    Sweeper,   // Push + Big + Passthru
-    Landmine,  // Spikes + Explosive + Shotgun x2
-    Fragshot,  // Spikes + Splitter + Shotgun x4
-    Painless,  // Cadence + Shotgun x2 + Bounce
-    WorstEver, // Spikes + Explosive + Passthru
-    Tower,     // Turret + Cadence + Push
+    Sweeper,     // Push + Big + Passthru
+    Landmine,    // Spikes + Explosive + Shotgun x2
+    Fragshot,    // Spikes + Splitter + Shotgun x4
+    Painless,    // Cadence + Shotgun x2 + Bounce
+    WorstEver,   // Spikes + Explosive + Passthru
+    Tower,       // Turret + Cadence + Push
+    Obliterator, // Automatic Shotgun + Shattering Ricochet + Pulse Rounds
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(
@@ -26,6 +27,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
         { WeaponCombo::Painless, "painless" },
         { WeaponCombo::WorstEver, "worst" },
         { WeaponCombo::Tower, "tower" },
+        { WeaponCombo::Obliterator, "obliterator" },
     });
 
 static inline StringId getWeaponComboName(const WeaponCombo combo)
@@ -50,6 +52,8 @@ static inline StringId getWeaponComboName(const WeaponCombo combo)
         return StringId::StartingWeapon_WorstEver;
     case Tower:
         return StringId::StartingWeapon_Tower;
+    case Obliterator:
+        return StringId::StartingWeapon_Obliterator;
     default:
         assert(false);
     }

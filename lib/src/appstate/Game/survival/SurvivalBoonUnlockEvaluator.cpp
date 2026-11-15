@@ -107,6 +107,13 @@ void SurvivalBoonUnlockEvaluator::evaluateUnlocks(
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
+    if (hasCombo({ AutomaticShotgun, ShatteringRicochet, PulseRounds })
+        && saves.tryUnlockWeaponCombo(WeaponCombo::Obliterator)
+               == UnlockStatus::Ok)
+    {
+        postMessage(StringId::NewWeaponComboUnlocked);
+    }
+
     if (playerInventory.emergencyReviveActive
         && saves.tryUnlockRevive() == UnlockStatus::Ok)
     {

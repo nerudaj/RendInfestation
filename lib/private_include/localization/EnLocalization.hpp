@@ -39,6 +39,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { StartingWeapon_Painless, "Painless" },
     { StartingWeapon_WorstEver, "The worst one" },
     { StartingWeapon_Tower, "Tower" },
+    { StartingWeapon_Obliterator, "The Obliterator" },
     { SurvivalMap01_Name, "Landing Bay" },
     { SurvivalMap01_Locked, "-- error locked level 01 --" },
     { SurvivalMap02_Name, "Botanical Sector" },

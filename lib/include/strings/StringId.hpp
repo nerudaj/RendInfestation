@@ -37,6 +37,7 @@ enum class [[nodiscard]] StringId
     StartingWeapon_Painless,
     StartingWeapon_WorstEver,
     StartingWeapon_Tower,
+    StartingWeapon_Obliterator,
     SurvivalMap01_Name,
     SurvivalMap01_Locked,
     SurvivalMap02_Name,
