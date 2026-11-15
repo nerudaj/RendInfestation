@@ -73,4 +73,5 @@ private:
 private:
     DependencyContainer& dic;
     const bool invokedFromGame;
+    const std::array<int, 4u> FPS_CAP_VALUES = std::array { 30, 60, 120, 0 };
 };

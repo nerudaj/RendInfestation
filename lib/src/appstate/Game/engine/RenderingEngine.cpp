@@ -19,13 +19,14 @@ RenderingEngine::RenderingEngine(
     , strings(strings)
     , resmgr(resmgr)
     , worldCamera(CameraFactory::createFullscreenCamera(
-          sf::Vector2f(settings.video.resolution), INTERNAL_GAME_RESOLUTION))
+          sf::Vector2f(settings.video.resolution.get()),
+          INTERNAL_GAME_RESOLUTION))
     , hudCamera(
           sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
           INTERNAL_GAME_RESOLUTION)
     , touchInputCamera(
           sf::FloatRect { { 0.f, 0.f }, { 1.f, 1.f } },
-          sf::Vector2f(settings.video.resolution))
+          sf::Vector2f(settings.video.resolution.get()))
     , viewportCollider({ 0.f, 0.f }, { 1.f, 1.f })
     , text(resmgr.get<sf::Font>(FONT_NAME))
     , hudSprite(atlas.atlas.getTexture())

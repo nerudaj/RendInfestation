@@ -50,6 +50,8 @@ enum class [[nodiscard]] StringId
     AudioVideoOptionsTab,
     GameplayOptionsTab,
     BindingsOptionsTab,
+    FpsCap,
+    FpsCapUnlimited,
     EnableFullscreen,
     SetResolution,
     SetUiScale,

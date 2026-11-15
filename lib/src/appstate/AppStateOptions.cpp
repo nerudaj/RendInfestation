@@ -108,9 +108,34 @@ void AppStateOptions::refresh()
 
 void AppStateOptions::onAudioVideoTabSelected(tgui::Container::Ptr content)
 {
+    const auto FPS_CAP_OPTIONS = std::vector<std::string> {
+        "30", "60", "120", dic.strings.getString(StringId::FpsCapUnlimited)
+    };
+    assert(FPS_CAP_OPTIONS.size() == FPS_CAP_VALUES.size());
+    auto&& fpsOptionItr = std::find(
+        FPS_CAP_VALUES.begin(),
+        FPS_CAP_VALUES.end(),
+        dic.settings.video.fpsLimit.get());
+    const size_t fpsOptionIdx =
+        fpsOptionItr == FPS_CAP_VALUES.end()
+            ? 3 // case when somebody tries to hack settings by hand
+            : std::distance(FPS_CAP_VALUES.begin(), fpsOptionItr);
+
     content->removeAllWidgets();
     content->add(
         FormBuilder(dic.strings, dic.sizer)
+            .addOption(
+                StringId::FpsCap,
+                WidgetBuilder::createListChoice(
+                    FPS_CAP_OPTIONS,
+                    fpsOptionIdx,
+                    [&, FPS_CAP_OPTIONS = FPS_CAP_OPTIONS](const size_t fpsIdx)
+                    {
+                        dic.settings.video.fpsLimit =
+                            FPS_CAP_VALUES[fpsIdx % FPS_CAP_VALUES.size()];
+                    },
+                    dic.sizer,
+                    dic.soundPlayer))
 #ifndef ANDROID
             .addOption(
                 StringId::EnableFullscreen,

@@ -54,6 +54,8 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { AudioVideoOptionsTab, "Audio / Video" },
     { GameplayOptionsTab, "Gameplay" },
     { BindingsOptionsTab, "Bindings" },
+    { FpsCap, "Set FPS limit" },
+    { FpsCapUnlimited, "Uncapped" },
     { EnableFullscreen, "Fullscreen" },
     { SetResolution, "Resolution" },
     { SetUiScale, "Set UI scale" },
@@ -249,7 +251,8 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
       "The subject sustained extensive soft-tissue injuries of undetermined "
       "origin. Both lower extremities show multiple deep lacerations and "
       "abrasions, with areas of skin avulsion and exposed underlying "
-      "tissue. The left shoulder and anterior chest exhibit burns consistent in "
+      "tissue. The left shoulder and anterior chest exhibit burns consistent "
+      "in "
       "appearance with thermal or electrical injury; a plasma discharge is one "
       "possible source. A single penetrating wound is present in the abdomen. "
       "The wound's shape is consistent with a narrow, tapered object, though "

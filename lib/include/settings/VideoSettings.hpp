@@ -1,10 +1,12 @@
 #pragma once
 
+#include "types/Observable.hpp"
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <nlohmann/json.hpp>
+#include <optional>
 
-struct [[nodiscard]] VideoSettings final
+struct [[nodiscard]] VideoSettingsStorageModel final
 {
     sf::Vector2u resolution =
 #ifdef ANDROID
@@ -22,6 +24,7 @@ struct [[nodiscard]] VideoSettings final
 #endif
     float uiScale = 1.f;
     bool renderColliders = false;
+    int fpsLimit = 3;
 };
 
 namespace sf
@@ -30,4 +33,18 @@ namespace sf
 }
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-    VideoSettings, resolution, fullscreen, uiScale, renderColliders);
+    VideoSettingsStorageModel,
+    resolution,
+    fullscreen,
+    uiScale,
+    renderColliders,
+    fpsLimit);
+
+struct [[nodiscard]] VideoSettings final
+{
+    UnsafeObservable<sf::Vector2u> resolution;
+    bool fullscreen;
+    Observable<float> uiScale;
+    bool renderColliders;
+    Observable<int> fpsLimit;
+};

@@ -49,6 +49,13 @@ DependencyContainer::DependencyContainer(
                   .uiScale = Observable<float>(
                       settingsSM.video.uiScale,
                       [&](float newScale) { sizer.setScale(newScale); }),
+                  .fpsLimit = Observable<int>(
+                      settingsSM.video.fpsLimit,
+                      [&](int newLimit)
+                      {
+                          window.getSfmlWindowContext().setFramerateLimit(
+                              newLimit);
+                      }),
               },
           .input = settingsSM.input,
           .bindings = settingsSM.bindings,
