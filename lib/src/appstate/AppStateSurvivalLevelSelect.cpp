@@ -76,7 +76,8 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildMapSelectLayout()
     auto&& levelSelectPanel = tgui::Panel::create();
     levelSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
     levelSelectPanel->add(WidgetBuilder::createCarousel(
-        LEVELS.size(),
+        // Hide bonus map until unlocked
+        dic.saveManager.isNthSurvivalMapUnlocked(3) ? LEVELS.size() : 3,
         [this](tgui::Container::Ptr parent, size_t page)
         {
             onMapSelected(page);

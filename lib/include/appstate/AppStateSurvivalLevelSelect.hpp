@@ -63,6 +63,14 @@ private:
             .fileId = "laboratory.json",
             .imageName = "laboratory-thumbnail.png",
         },
+        LevelContext {
+            .levelName = StringId::SurvivalMap04_Name,
+            // This shall be unused as the map shall only
+            // be visible after unlocking
+            .levelLockedString = StringId::Placeholder,
+            .fileId = "survival-02.json",
+            .imageName = "placeholder16_9.png",
+        },
     };
 
     DependencyContainer& dic;

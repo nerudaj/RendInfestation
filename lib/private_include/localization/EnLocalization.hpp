@@ -30,6 +30,8 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { BoonWave4, "Start at wave 4" },
     { BoonExtraWeapon, "Start with extra weapon" },
     { BoonEmergencyRevive, "Start with revive" },
+    { BoonGoldModules, "Extra late-game modules" },
+    { BoonHardMode, "Hard mode" },
     { StartingWeapon, "Starting weapon" },
     { StartingWeapon_None, "- None -" },
     { StartingWeapon_Random, "Random" },
@@ -48,6 +50,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { SurvivalMap03_Name, "Laboratories" },
     { SurvivalMap03_Locked,
       "You need to beat wave 12 of Botanical Sector to unlock this map." },
+    { SurvivalMap04_Name, "Bonus: Devlog map" },
     { BestScore, "Best score" },
 
     // Options
@@ -187,6 +190,9 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { GotRevive, "Gained emergency revive!" },
     { StartingEmergencyReviveUnlocked, "Revive unlocked!" },
     { Revived, "Revived!" },
+    { GoldModulesUnlocked,
+      "Extra weapon modules unlocked\nfor the next game!" },
+    { HardModeUnlocked, "Hard mode unlocked!" },
 
     // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },

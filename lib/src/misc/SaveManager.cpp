@@ -1,4 +1,5 @@
 #include "misc/SaveManager.hpp"
+#include "appstate/Game/definitions/Constants.hpp"
 
 void to_json(nlohmann::json& j, const SaveManager& mgr)
 {
@@ -8,7 +9,25 @@ void to_json(nlohmann::json& j, const SaveManager& mgr)
     j["extraWeapon"] = mgr.extraWeaponUnlocked;
     j["combos"] = mgr.unlockedWeaponCombos;
     j["revive"] = mgr.reviveUnlocked;
+    j["goldModules"] = mgr.goldModulesUnlocked;
+    j["hardMode"] = mgr.hardModeUnlocked;
     j["unlockedSurvivalMapCount"] = mgr.unlockedSurvivalMapCount;
+
+    if (!mgr.goldModulesUnlocked
+        && mgr.unlockedWeaponCombos.contains(WeaponCombo::Obliterator))
+    {
+        throw std::runtime_error(
+            "Corrupted save - obliterator cannot be unlocked before gold "
+            "modules");
+    }
+    else if (
+        mgr.unlockedSurvivalMapCount < 1
+        || mgr.unlockedSurvivalMapCount > MAP_LIMIT)
+    {
+        throw std::runtime_error(
+            "Corrupted save - incorrect number of unlocked maps: "
+            + std::to_string(mgr.unlockedSurvivalMapCount));
+    }
 }
 
 void from_json(const nlohmann::json& j, SaveManager& mgr)
@@ -43,11 +62,17 @@ void from_json(const nlohmann::json& j, SaveManager& mgr)
     {
         j.at("bestScores").get_to(mgr.bestScores);
     }
+
+    if (jsonVersion >= 6)
+    {
+        j.at("goldModules").get_to(mgr.goldModulesUnlocked);
+        j.at("hardMode").get_to(mgr.hardModeUnlocked);
+    }
 }
 
 void SaveManager::updateBestScore(size_t mapIdx, int score)
 {
-    assert(mapIdx < 3);
+    assert(mapIdx < MAP_LIMIT);
     if (bestScores.size() <= mapIdx)
     {
         bestScores.resize(mapIdx + 1);
@@ -55,4 +80,17 @@ void SaveManager::updateBestScore(size_t mapIdx, int score)
 
     assert(bestScores[mapIdx] < score);
     bestScores[mapIdx] = score;
+}
+
+UnlockStatus SaveManager::tryUnlockSurvivalMap(size_t idx)
+{
+    // If this fails then somehow we are playing map that shouldn't be
+    // unlocked yet
+    assert(idx <= unlockedSurvivalMapCount);
+    assert(idx != MAP_LIMIT);
+
+    if (idx < unlockedSurvivalMapCount) return UnlockStatus::AlreadyUnlocked;
+
+    ++unlockedSurvivalMapCount;
+    return UnlockStatus::Ok;
 }

@@ -28,6 +28,8 @@ enum class [[nodiscard]] StringId
     BoonWave4,
     BoonExtraWeapon,
     BoonEmergencyRevive,
+    BoonGoldModules,
+    BoonHardMode,
     StartingWeapon,
     StartingWeapon_None,
     StartingWeapon_Random,
@@ -44,6 +46,7 @@ enum class [[nodiscard]] StringId
     SurvivalMap02_Locked,
     SurvivalMap03_Name,
     SurvivalMap03_Locked,
+    SurvivalMap04_Name,
     BestScore,
 
     // Options
@@ -159,6 +162,8 @@ enum class [[nodiscard]] StringId
     GotRevive,
     StartingEmergencyReviveUnlocked,
     Revived,
+    GoldModulesUnlocked,
+    HardModeUnlocked,
 
     // Survival progression
     NewWeaponModuleUnlocked,

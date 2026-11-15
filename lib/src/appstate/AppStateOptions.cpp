@@ -402,7 +402,8 @@ void AppStateOptions::updateScrollbarWidth()
     // is attached to the gui through tabs initial page select
     if (panel)
     {
-        panel->getRenderer()->setScrollbarWidth(dic.sizer.getBaseFontSize());
+        panel->getRenderer()->setScrollbarWidth(
+            static_cast<float>(dic.sizer.getBaseFontSize()));
     }
 }
 

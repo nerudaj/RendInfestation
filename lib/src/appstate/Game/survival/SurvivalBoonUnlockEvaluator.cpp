@@ -8,7 +8,7 @@ SurvivalBoonUnlockEvaluator::SurvivalBoonUnlockEvaluator(
 }
 
 void SurvivalBoonUnlockEvaluator::evaluateUnlocks(
-    const int beatedWaveNum,
+    const int beatenWaveNum,
     const size_t mapIdx,
     const PlayerInventory& playerInventory,
     std::function<void(StringId)>&& postMessage)
@@ -19,15 +19,21 @@ void SurvivalBoonUnlockEvaluator::evaluateUnlocks(
         postMessage(StringId::ExtraWeaponUnlocked);
     }
 
-    if (beatedWaveNum == 4 && saves.tryUnlockWave4Start() == UnlockStatus::Ok)
+    if (beatenWaveNum == 4 && saves.tryUnlockWave4Start() == UnlockStatus::Ok)
     {
         postMessage(StringId::Wave4SkipUnlocked);
     }
 
-    if (beatedWaveNum == 11 && mapIdx < (MAP_LIMIT - 1)
+    if (beatenWaveNum == 12 && mapIdx < (MAP_LIMIT - 1)
         && saves.tryUnlockSurvivalMap(mapIdx + 1) == UnlockStatus::Ok)
     {
         postMessage(StringId::NewMapUnlocked);
+    }
+
+    if (beatenWaveNum == 12 && mapIdx == 3
+        && saves.tryUnlockHardMode() == UnlockStatus::Ok)
+    {
+        postMessage(StringId::HardModeUnlocked);
     }
 
     const bool allLoadoutSlotsUsed = std::ranges::any_of(
@@ -112,6 +118,16 @@ void SurvivalBoonUnlockEvaluator::evaluateUnlocks(
                == UnlockStatus::Ok)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
+    }
+
+    // Note: this unlocks when the player unlocks all base combos
+    // obliterator is from gold modules, so impossible to get at that stage
+    // but it makes for a great delimiter
+    if (saves.getUnlockedCombos().size()
+            == std::to_underlying(WeaponCombo::Obliterator)
+        && saves.tryUnlockGoldModules() == UnlockStatus::Ok)
+    {
+        postMessage(StringId::GoldModulesUnlocked);
     }
 
     if (playerInventory.emergencyReviveActive

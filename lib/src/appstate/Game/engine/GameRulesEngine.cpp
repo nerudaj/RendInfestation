@@ -81,6 +81,7 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     const auto unitDirection = dgm::Math::toUnit(lookDirection.get());
     for (auto&& _ : std::views::iota(0, weapon.numShots))
     {
+        std::ignore = _;
         const auto spread = rand() % (weapon.spread * 2) - weapon.spread;
 
         const auto direction =

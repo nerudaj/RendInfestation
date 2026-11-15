@@ -7,12 +7,13 @@ enum class [[nodiscard]] WeaponCombo
 {
     None,
     Random,
-    Sweeper,     // Push + Big + Passthru
-    Landmine,    // Spikes + Explosive + Shotgun x2
-    Fragshot,    // Spikes + Splitter + Shotgun x4
-    Painless,    // Cadence + Shotgun x2 + Bounce
-    WorstEver,   // Spikes + Explosive + Passthru
-    Tower,       // Turret + Cadence + Push
+    Sweeper,   // Push + Big + Passthru
+    Landmine,  // Spikes + Explosive + Shotgun x2
+    Fragshot,  // Spikes + Splitter + Shotgun x4
+    Painless,  // Cadence + Shotgun x2 + Bounce
+    WorstEver, // Spikes + Explosive + Passthru
+    Tower,     // Turret + Cadence + Push
+    // Note: below are combos only unlockable after unlocking gold modules
     Obliterator, // Automatic Shotgun + Shattering Ricochet + Pulse Rounds
 };
 
@@ -57,4 +58,6 @@ static inline StringId getWeaponComboName(const WeaponCombo combo)
     default:
         assert(false);
     }
+
+    return StringId::Placeholder;
 }

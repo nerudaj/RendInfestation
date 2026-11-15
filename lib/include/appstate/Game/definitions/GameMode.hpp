@@ -14,6 +14,8 @@ struct [[nodiscard]] GameBoons final
     bool wave4start = false;
     bool extraWeapon = false;
     bool revive = false;
+    bool hardMode = false;
+    bool allowGoldModules = false;
     WeaponCombo startingWeapon = WeaponCombo::None;
 };
 
