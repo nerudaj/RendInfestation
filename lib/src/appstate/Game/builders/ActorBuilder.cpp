@@ -420,6 +420,7 @@ void ActorBuilder::shatterProjectile(
 
     inventory.damage /= 2;
     inventory.traits = inventory.traits - ProjectileTraits::SplitOnHit;
+    inventory.traits = inventory.traits - ProjectileTraits::ShrapnellingBounce;
 
     auto collider = actors.get<Collider>(projectile);
     collider.options.disabled = true; // gets reenabled via TimedScript
