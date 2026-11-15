@@ -99,7 +99,11 @@ namespace event
         SkinType typeToSpawn;
     };
 
-    struct [[nodiscard]] PlayerDied final
+    struct [[nodiscard]] PlayerKilled final
+    {
+    };
+
+    struct [[nodiscard]] PlayerKilledForGood final
     {
     };
 } // namespace event
@@ -123,4 +127,5 @@ using GameEvent = std::variant<
     event::NoteOpened,
     event::WaveEnded,
     event::SurvivalSpawnerTimerHit,
-    event::PlayerDied>;
+    event::PlayerKilled,
+    event::PlayerKilledForGood>;

@@ -162,6 +162,7 @@ GameScene GameSceneBuilder::createScene(
         .levelBounds = dgm::Rect(
             { 0.f, 0.f },
             sf::Vector2f(level.dataSize.componentWiseMul(level.voxelSize))),
+        .playerSpawns = std::move(artifact.playerSpawns),
         .enemySpawns = std::move(artifact.enemySpawns),
         .lights = std::move(artifact.lights),
         .survivalGameDirector =

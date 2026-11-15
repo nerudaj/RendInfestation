@@ -5,6 +5,7 @@
 #include "appstate/Game/definitions/Components.hpp"
 #include "appstate/Game/definitions/Constants.hpp"
 #include "appstate/Game/definitions/LightSource.hpp"
+#include "appstate/Game/definitions/StatusEffect.hpp"
 #include "appstate/Game/definitions/SurvivalSpawnerContext.hpp"
 #include "appstate/Game/definitions/WeaponLoadout.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
@@ -63,6 +64,7 @@ struct [[nodiscard]] GameScene final
     dgm::Mesh decorationsMesh;
     dgm::Mesh altLevelMesh;
     dgm::Rect levelBounds;
+    std::vector<sf::Vector2f> playerSpawns;
     std::vector<sf::Vector2f> enemySpawns;
     const std::vector<LightSource> lights;
     std::optional<SurvivalGameDirector> survivalGameDirector = std::nullopt;

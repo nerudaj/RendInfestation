@@ -84,4 +84,17 @@ public:
         const sf::Vector2f& origin,
         const sf::Vector2f& direction,
         ParticleSystemKind kind);
+
+    template<class EffectType>
+    static void applyStatusEffect(
+        entt::registry& actors, entt::entity target, const sf::Time duration)
+    {
+        actors.emplace<EffectType>(target);
+
+        auto future = actors.create();
+        actors.emplace<TimedScript>(
+            future,
+            duration,
+            [target = target, &actors] { actors.erase<EffectType>(target); });
+    }
 };

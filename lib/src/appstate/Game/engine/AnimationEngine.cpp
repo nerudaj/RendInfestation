@@ -123,13 +123,11 @@ void AnimationEngine::operator()(const event::ActorDamaged& e)
     skin.animation.setState(HURT_ANIMATION_STATE, "looping"_false);
 }
 
-void AnimationEngine::operator()(const event::ObjectDestroyed& e)
+void AnimationEngine::operator()(const event::PlayerKilledForGood&)
 {
-    if (e.entity == scene.playerEntity)
-    {
-        auto& skin = scene.actors.get<Skin>(e.entity);
-        skin.animation.setState("death", "looping"_false);
-    }
+
+    auto& skin = scene.actors.get<Skin>(scene.playerEntity);
+    skin.animation.setState("death", "looping"_false);
 }
 
 void AnimationEngine::update(const dgm::Time& time)

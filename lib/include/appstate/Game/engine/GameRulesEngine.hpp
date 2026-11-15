@@ -65,7 +65,9 @@ public:
 
     void operator()(const event::WaveEnded& e);
 
-    void operator()(const event::PlayerDied& e);
+    void operator()(const event::PlayerKilled& e);
+
+    void operator()(const event::PlayerKilledForGood& e);
 
     void operator()(const auto&) {}
 
@@ -110,6 +112,8 @@ private:
         SoundChannel channel = SoundChannel::Enemy);
 
     bool shallGainEmergencyRevive() const noexcept;
+
+    [[nodiscard]] sf::Vector2f getIdealPlayerRespawnLocation() const;
 
 private:
     EventQueue<GameEvent>& eventQueue;

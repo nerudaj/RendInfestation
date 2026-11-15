@@ -50,6 +50,7 @@ void RenderingEngine::update(const dgm::Time& time)
     worldCamera.update(time);
     fpsCounter.update(time.getDeltaTime());
     timeElapsed += time.getDeltaTime();
+    blinker.update(time.getElapsed());
 
     updateCameraPosition(time);
 
@@ -496,6 +497,18 @@ std::vector<Face> RenderingEngine::getActorFaces() const
     for (auto&& [entity, collider, skin, zIndex] :
          scene.actors.view<Collider, Skin, ZIndex>().each())
     {
+        // Skip rendering player when invincible on odd blinker intervals
+        if (skin.skinType == SkinType::PlayerDefault
+            || skin.skinType == SkinType::PlayerLower) [[unlikely]]
+        {
+            if (scene.actors.any_of<StatusEffectInvincibility>(
+                    scene.playerEntity)
+                && !blinker.isOn())
+            {
+                continue;
+            }
+        }
+
         bool flipX = false;
         if (auto lookDirection = scene.actors.try_get<LookDirection>(entity))
         {

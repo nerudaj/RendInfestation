@@ -31,7 +31,7 @@ public:
 
     void operator()(const event::ActorDamaged& e);
 
-    void operator()(const event::ObjectDestroyed& e);
+    void operator()(const event::PlayerKilledForGood& e);
 
     void operator()(const auto&) {}
 

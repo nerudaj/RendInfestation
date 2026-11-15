@@ -81,6 +81,7 @@ constexpr const float MAX_ZOOM_OUT_FACTOR = 1.5f;
 constexpr const size_t SHOW_DIRECTIONS_TO_ENEMIES_THRESHOLD = 3;
 
 constexpr const size_t MAP_LIMIT = 3;
+const sf::Time RESPAWN_INVINCIBILITY_DURATION = sf::seconds(3);
 
 // Z-indices
 constexpr const int ZINDEX_FLOOR_DECOR = 0;

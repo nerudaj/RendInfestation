@@ -157,6 +157,7 @@ enum class [[nodiscard]] StringId
     NewMapUnlocked,
     GotRevive,
     StartingEmergencyReviveUnlocked,
+    Revived,
 
     // Survival progression
     NewWeaponModuleUnlocked,

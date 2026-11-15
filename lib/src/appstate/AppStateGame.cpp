@@ -100,10 +100,9 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
             *message);
     }
 
-    assert(
-        scene.survivalGameDirector,
-        "If this fails, you've probably decided to add back campaign without "
-        "refactoring hard-coded survival bits");
+    // "If this fails, you've probably decided to add back campaign without "
+    // "refactoring hard-coded survival bits"
+    assert(scene.survivalGameDirector, );
     const int wave = scene.survivalGameDirector->getContext().wave;
 
     boonUnlockEvaluator.evaluateUnlocks(

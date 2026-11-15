@@ -186,9 +186,12 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
     else if (
         skin && skin->skinType == SkinType::PlayerDefault
         && skin->kind == EntityKind::Player
-        && scene.playerEntityLower != entt::null)
+        && scene.playerEntityLower != entt::null
+        // There might be multiple "PlayerKilled" events in
+        // a single frame, so prevent double-killing of the player
+        && !scene.actors.any_of<StatusEffectInvincibility>(scene.playerEntity))
     {
-        eventQueue.pushEvent<event::PlayerDied>();
+        eventQueue.pushEvent<event::PlayerKilled>();
     }
 }
 
@@ -200,6 +203,8 @@ void GameRulesEngine::operator()(const event::SurvivalSpawnerTimerHit& e)
 
 void GameRulesEngine::operator()(const event::ActorDamaged& e)
 {
+    if (scene.actors.any_of<StatusEffectInvincibility>(e.entity)) return;
+
     auto&& health = scene.actors.try_get<Health>(e.entity);
     if (!health) return;
 
@@ -250,7 +255,28 @@ void GameRulesEngine::operator()(const event::WaveEnded&)
     scene.status.waveBeaten = scene.survivalGameDirector->getContext().wave;
 }
 
-void GameRulesEngine::operator()(const event::PlayerDied& e)
+void GameRulesEngine::operator()(const event::PlayerKilled&)
+{
+    if (!scene.playerInventory.emergencyReviveActive)
+    {
+        eventQueue.pushEvent<event::PlayerKilledForGood>();
+        return;
+    }
+
+    // Respawn at location
+    auto&& [collider, health] =
+        scene.actors.get<Collider, Health>(scene.playerEntity);
+    collider.setPosition(getIdealPlayerRespawnLocation());
+    health = Health(scene.playerInventory.playerMaxHealth);
+    scene.playerInventory.emergencyReviveActive = false;
+
+    ActorBuilder::applyStatusEffect<StatusEffectInvincibility>(
+        scene.actors, scene.playerEntity, RESPAWN_INVINCIBILITY_DURATION);
+
+    postMessage(StringId::Revived, "updateLedger"_false);
+}
+
+void GameRulesEngine::operator()(const event::PlayerKilledForGood&)
 {
     soundPlayer.playPovSound(SoundId::PlayerDeathScream);
     scene.status.finished = true;
@@ -593,4 +619,28 @@ bool GameRulesEngine::shallGainEmergencyRevive() const noexcept
 
     return wave != 0 && wave % 5 == 0
            && !scene.playerInventory.emergencyReviveActive;
+}
+
+sf::Vector2f GameRulesEngine::getIdealPlayerRespawnLocation() const
+{
+    auto&& minDistanceToEnemy = [&](const sf::Vector2f spawnPos) -> float
+    {
+        float min = std::numeric_limits<float>::infinity();
+        for (auto&& [entity, enemyCollider] :
+             scene.actors.view<Collider, EnemyTag>().each())
+        {
+            const auto distance =
+                (enemyCollider.getPosition() - spawnPos).length();
+            if (distance < min) min = distance;
+        }
+        return min;
+    };
+
+    auto&& minDistanceToEnemyPerSpawn =
+        scene.playerSpawns | std::views::transform(minDistanceToEnemy);
+    auto&& maxDistance = std::ranges::max_element(minDistanceToEnemyPerSpawn);
+    auto&& spawnIdx =
+        std::distance(std::begin(minDistanceToEnemyPerSpawn), maxDistance);
+
+    return scene.playerSpawns[spawnIdx];
 }

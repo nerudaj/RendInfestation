@@ -185,6 +185,7 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { NewMapUnlocked, "New map unlocked!" },
     { GotRevive, "Gained emergency revive!" },
     { StartingEmergencyReviveUnlocked, "Revive unlocked!" },
+    { Revived, "Revived!" },
 
     // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },

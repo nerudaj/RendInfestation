@@ -1,6 +1,7 @@
 #pragma once
 
 #include "appstate/Game/TextBoundsCache.hpp"
+#include "appstate/Game/definitions/Blinker.hpp"
 #include "appstate/Game/definitions/Face.hpp"
 #include "appstate/Game/definitions/GameScene.hpp"
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
@@ -120,4 +121,5 @@ private:
     sf::Vector2f cameraPosition = { 0.f, 0.f };
     TextBoundsCache textBounds;
     CameraZoomHandler zoomHandler;
+    Blinker blinker;
 };

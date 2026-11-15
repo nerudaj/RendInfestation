@@ -12,7 +12,7 @@ public:
 public:
     void evaluateUnlocks(
         const int beatedWaveNum,
-        const int mapIdx,
+        const size_t mapIdx,
         const PlayerInventory& playerInventory,
         std::function<void(StringId)>&& postMessage);
 
