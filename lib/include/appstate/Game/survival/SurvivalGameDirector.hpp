@@ -16,7 +16,7 @@
 class [[nodiscard]] SurvivalGameDirector final
 {
 public:
-    explicit SurvivalGameDirector(int startingWave);
+    explicit SurvivalGameDirector(int startingWave, const bool hardMode);
 
 public:
     void update(const sf::Time& time, EventQueue<GameEvent>& eventQueue);
@@ -36,7 +36,7 @@ private:
 
     SkinType getEnemyToSpawn() const;
 
-    static int getEnemyCountForWave(int wave);
+    int getEnemyCountForWave(int wave);
 
     sf::Time getEnemySpawnDelay(int wave);
 
@@ -44,4 +44,5 @@ private:
 
 private:
     SurvivalSpawnerContext context;
+    const bool hardMode = false;
 };

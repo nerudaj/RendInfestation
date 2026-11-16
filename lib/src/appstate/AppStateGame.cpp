@@ -117,6 +117,9 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
         scene.playerInventory,
         [&](StringId msg) { gameRulesEngine.postMessage(msg); });
 
+    // I don't care anymore about placement of this code:
+    if (wave > 14) aiEngine.setAttackTicketCount(HARD_ATTACK_TICKET_COUNT);
+
     sf::Mouse::setPosition(
         sf::Vector2i(app.window.getSize() / 2u),
         app.window.getSfmlWindowContext());

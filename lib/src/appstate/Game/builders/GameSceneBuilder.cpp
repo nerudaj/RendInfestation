@@ -168,7 +168,8 @@ GameScene GameSceneBuilder::createScene(
         .survivalGameDirector =
             gameModeProperties.mode == GameMode::Survival
                 ? std::make_optional<SurvivalGameDirector>(
-                      gameModeProperties.boons.wave4start ? 4 : 1)
+                      gameModeProperties.boons.wave4start ? 4 : 1,
+                      gameModeProperties.boons.hardMode)
                 : std::nullopt,
         .playerInventory =
             PlayerInventory {

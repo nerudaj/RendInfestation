@@ -1,7 +1,8 @@
 #include "appstate/Game/survival/SurvivalGameDirector.hpp"
 
-SurvivalGameDirector::SurvivalGameDirector(int startingWave)
-    : context(createInitialContext())
+SurvivalGameDirector::SurvivalGameDirector(
+    int startingWave, const bool hardMode)
+    : context(createInitialContext()), hardMode(hardMode)
 {
     // starting in WaitingForNextWave, which will increment the wave number
     context.wave = startingWave - 1;
@@ -108,15 +109,35 @@ SkinType SurvivalGameDirector::getEnemyToSpawn() const
 
 int SurvivalGameDirector::getEnemyCountForWave(int wave)
 {
-    if (wave <= 6) return wave * 10;
-    if (wave <= 13) return wave * 15;
+    if (hardMode)
+    {
+        if (wave <= 6)
+            return wave * 20;
+        else if (wave <= 12)
+            return wave * 30;
+        return wave * 40;
+    }
+
+    else if (wave <= 6)
+        return wave * 10;
+    else if (wave <= 12)
+        return wave * 15;
     return wave * 20;
 }
 
 sf::Time SurvivalGameDirector::getEnemySpawnDelay(int wave)
 {
-    if (wave <= 12) return SPAWNER_SPAWN_DELAY;
-    return SPAWNER_SPAWN_DELAY / 2.f;
+    if (hardMode)
+    {
+        if (wave <= 12) return SPAWNER_SPAWN_DELAY / 2.5f;
+        return SPAWNER_SPAWN_DELAY / 3.5f;
+    }
+
+    if (wave <= 12)
+        return SPAWNER_SPAWN_DELAY;
+    else if (wave <= 16)
+        return SPAWNER_SPAWN_DELAY / 2.f;
+    return SPAWNER_SPAWN_DELAY / 3.f;
 }
 
 void SurvivalGameDirector::setupWave()

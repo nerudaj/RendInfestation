@@ -64,6 +64,9 @@ public:
         srand(static_cast<unsigned>(time(nullptr)));
         gameEvents.pushEvent<event::WaveEnded>();
         dic.jukebox.changePlaylist(PLAYLIST.gameSongs);
+        aiEngine.setAttackTicketCount(
+            gameProps.boons.hardMode ? HARD_ATTACK_TICKET_COUNT
+                                     : EASY_ATTACK_TICKET_COUNT);
     }
 
     ~AppStateGame()

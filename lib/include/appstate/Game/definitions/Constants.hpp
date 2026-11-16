@@ -82,6 +82,8 @@ constexpr const size_t SHOW_DIRECTIONS_TO_ENEMIES_THRESHOLD = 3;
 
 constexpr const size_t MAP_LIMIT = 4;
 const sf::Time RESPAWN_INVINCIBILITY_DURATION = sf::seconds(3);
+constexpr const int EASY_ATTACK_TICKET_COUNT = 4;
+constexpr const int HARD_ATTACK_TICKET_COUNT = 8;
 
 // Z-indices
 constexpr const int ZINDEX_FLOOR_DECOR = 0;

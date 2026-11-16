@@ -145,6 +145,15 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
                     WidgetOptions {
                         .enabled = saveMgr.areGoldModulesUnlocked(),
                     }))
+            .addOption(
+                saveMgr.isHardModeUnlocked() ? StringId::BoonHardMode
+                                             : StringId::BoonLocked,
+                WidgetBuilder::createCheckbox(
+                    false,
+                    [&](bool value) { gameProps.boons.hardMode = value; },
+                    WidgetOptions {
+                        .enabled = saveMgr.isHardModeUnlocked(),
+                    }))
             .addGap()
             .addLabel(StringId::StartingWeapon)
             .addFullRowOption(WidgetBuilder::createListChoice(
