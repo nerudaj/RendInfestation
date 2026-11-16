@@ -36,6 +36,10 @@ public:
     }
 
 public:
+    void operator()(const event::ObjectDestroyed& e);
+
+    void operator()(const auto&) {}
+
     void setAttackTicketCount(int newCount)
     {
         attackTickets = newCount;

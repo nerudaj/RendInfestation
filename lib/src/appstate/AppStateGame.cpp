@@ -54,6 +54,7 @@ void AppStateGame::update()
         gameRulesEngine,
         animationEngine,
         physicsEngine,
+        aiEngine,
         janitor,
         overloads { [&](event::WorkbenchOpened&)
                     { app.pushState<AppStateWeaponModification>(dic, scene); },

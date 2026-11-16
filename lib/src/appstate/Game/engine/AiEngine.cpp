@@ -3,6 +3,12 @@
 #include <DGM/classes/Raycaster.hpp>
 #include <fsm/Builder.hpp>
 
+void AiEngine::operator()(const event::ObjectDestroyed& e)
+{
+    auto&& blackboard = scene.actors.try_get<NpcBlackboard>(e.entity);
+    if (blackboard && blackboard->hasBorrowedAttackTicket) ++attackTickets;
+}
+
 void AiEngine::update(const dgm::Time&)
 {
     // loop over all npcs (they have NpcInputs)
