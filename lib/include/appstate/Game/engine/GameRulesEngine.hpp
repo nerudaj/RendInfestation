@@ -6,12 +6,37 @@
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
 #include "appstate/Game/enums/WeaponModule.hpp"
 #include "appstate/Game/survival/SurvivalGameDirector.hpp"
+#include "appstate/Game/utility/AudioUtility.hpp"
 #include "audio/SoundPlayer.hpp"
 #include "input/Input.hpp"
 #include "misc/EventQueue.hpp"
 #include "misc/SaveManager.hpp"
 #include "strings/StringProvider.hpp"
 
+/*
+ * NOTE for future me
+ *
+ * All these engines should've been called "systems"
+ * because ecs stands for entity-component-system.
+ *
+ * I do have entities and components relatively
+ * well put together, but engines should've been systems and they should've been
+ * smaller.
+ *
+ * Maybe they could only have templated update methods
+ * to denote what is actually used? But I dunno how to handle events
+ * intelligently.
+ *
+ * Also - put all entites under "entites" folder and namespace instead of
+ * definitions.
+ *
+ * An extra thought - can I intermix ECS with event queue? If every single
+ * system participates in event handling then it could arbitrarily prolong
+ * runtime without added benefit. Shall event handlers be always logically
+ * separated from systems, even if they are implemented by the same classes (and
+ * should they be implemented by the same classes if those classes don't have
+ * internal state?)
+ */
 class [[nodiscard]] GameRulesEngine final
 {
 public:
@@ -20,7 +45,7 @@ public:
         GameScene& scene,
         const GameTextureAtlas& atlas,
         Input& input,
-        SoundPlayer& player,
+        AudioUtility& audio,
         const StringProvider<StringId>& strings,
         SaveManager& saveManager,
         const size_t mapIdx) noexcept
@@ -28,7 +53,7 @@ public:
         , scene(scene)
         , atlas(atlas)
         , input(input)
-        , soundPlayer(player)
+        , audio(audio)
         , strings(strings)
         , saves(saveManager)
         , mapIdx(mapIdx)
@@ -78,13 +103,9 @@ public:
 
     void updateTriggers(const dgm::Time& time);
 
-    void updateHealth();
-
     void postMessage(StringId messageId, bool updateLedger = true);
 
 private:
-    void updateLifetimes(const dgm::Time& time);
-
     void updateMessages(const dgm::Time& time);
 
     Weapon& getActiveWeapon(WeaponInventory& inventory) const
@@ -95,9 +116,6 @@ private:
     void handleProjectileToActorCollision(
         entt::entity projectileIdx, entt::entity actorIdx);
 
-    void createDamageMarkerForProjectile(
-        entt::entity projectile, ProjectileInventory* inventory);
-
     void handleDamageMarkerToActorCollision(
         entt::entity markerIdx, entt::entity actorIdx);
 
@@ -105,11 +123,6 @@ private:
         entt::entity triggerIdx, entt::entity actorIdx);
 
     sf::Vector2f pickEnemySpawnPosition() const;
-
-    void playAttenuated(
-        SoundId::IdType soundId,
-        const Collider& collider,
-        SoundChannel channel = SoundChannel::Enemy);
 
     bool shallGainEmergencyRevive() const noexcept;
 
@@ -120,7 +133,7 @@ private:
     GameScene& scene;
     const GameTextureAtlas& atlas;
     Input& input;
-    SoundPlayer& soundPlayer;
+    AudioUtility& audio;
     const StringProvider<StringId>& strings;
     SaveManager& saves;
     const size_t mapIdx;

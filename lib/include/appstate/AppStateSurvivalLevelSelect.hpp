@@ -69,7 +69,7 @@ private:
             // be visible after unlocking
             .levelLockedString = StringId::Placeholder,
             .fileId = "survival-02.json",
-            .imageName = "placeholder16_9.png",
+            .imageName = "devlog-map-thumbnail.png",
         },
     };
 

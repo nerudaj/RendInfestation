@@ -226,40 +226,6 @@ entt::entity ActorBuilder::createInteractionTrigger(
     return trigger;
 }
 
-void ActorBuilder::destroyProp(entt::registry& actors, entt::entity entity)
-{
-    auto& skin = actors.get<Skin>(entity);
-    if (skin.animation.getStateName() == "cactus-pot")
-    {
-        actors.remove<Health>(entity);
-
-        auto& collider = actors.get<Collider>(entity);
-        collider.options.semighost = SEMIGHOST_PROJECTILE;
-        skin.animation.setState("cactus-pot-destroyed", "looping"_true);
-
-        createParticleSystem(
-            actors,
-            collider.getPosition(),
-            sf::Vector2f { 1.f, 0.f },
-            ParticleSystemKind::CactusSpatter);
-    }
-    else if (skin.animation.getStateName() == "tree")
-    {
-        actors.remove<Health>(entity);
-
-        auto& collider = actors.get<Collider>(entity);
-        collider.options.nonblocking = true;
-        collider.options.disabled = true;
-        skin.animation.setState("tree-destroyed", "looping"_true);
-
-        createParticleSystem(
-            actors,
-            collider.getPosition(),
-            sf::Vector2f { 1.f, 0.f },
-            ParticleSystemKind::CactusSpatter);
-    }
-}
-
 entt::entity ActorBuilder::createProjectile(
     entt::registry& actors,
     const sf::Vector2f& origin,
@@ -408,61 +374,6 @@ entt::entity ActorBuilder::createTurret(
     actors.get<Skin>(entity).animation.setState("spawn", "looping"_false);
 
     return entity;
-}
-
-void ActorBuilder::shatterProjectile(
-    entt::registry& actors, entt::entity projectile)
-{
-    auto body = actors.get<PhysicsBody>(projectile);
-    auto skin = actors.get<Skin>(projectile);
-    skin.scale *= 0.5f;
-    auto inventory = actors.get<ProjectileInventory>(projectile);
-
-    inventory.damage /= 2;
-    inventory.traits = inventory.traits - ProjectileTraits::SplitOnHit;
-    inventory.traits = inventory.traits - ProjectileTraits::ShrapnellingBounce;
-
-    auto collider = actors.get<Collider>(projectile);
-    collider.options.disabled = true; // gets reenabled via TimedScript
-    auto&& newEntities = std::vector<entt::entity>();
-    body.forward = body.forward.rotatedBy(sf::degrees(45));
-
-    for (auto&& _ : std::views::iota(0u, 4u))
-    {
-        auto entity = actors.create();
-        actors.emplace<Collider>(entity, collider);
-
-        body.forward = body.forward.rotatedBy(sf::degrees(90));
-        actors.emplace<PhysicsBody>(entity, body);
-
-        actors.emplace<Lifetime>(entity, actors.get<Lifetime>(projectile));
-        actors.emplace<ZIndex>(entity, actors.get<ZIndex>(projectile));
-        actors.emplace<Skin>(entity, skin);
-        actors.emplace<ProjectileInventory>(entity, inventory);
-
-        if (auto interval = actors.try_get<Interval>(projectile))
-        {
-            actors.emplace<Interval>(entity, *interval);
-        }
-
-        newEntities.push_back(entity);
-    }
-
-    // Re-enable colliders after some time
-    auto future = actors.create();
-    actors.emplace<TimedScript>(
-        future,
-        sf::seconds(0.1f),
-        [entities = newEntities, &actors]
-        {
-            for (auto&& entity : entities)
-            {
-                auto&& collider = actors.try_get<Collider>(entity);
-                if (!collider) continue;
-
-                collider->options.disabled = false;
-            }
-        });
 }
 
 entt::entity ActorBuilder::createDamageMarker(

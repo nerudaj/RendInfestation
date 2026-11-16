@@ -7,11 +7,14 @@
 #include "appstate/Game/definitions/GameTextureAtlas.hpp"
 #include "appstate/Game/engine/AiEngine.hpp"
 #include "appstate/Game/engine/AnimationEngine.hpp"
+#include "appstate/Game/engine/EmptyHealthHandlerEngine.hpp"
 #include "appstate/Game/engine/GameRulesEngine.hpp"
+#include "appstate/Game/engine/LifetimeEngine.hpp"
 #include "appstate/Game/engine/ParticleEngine.hpp"
 #include "appstate/Game/engine/PhysicsEngine.hpp"
 #include "appstate/Game/engine/RenderingEngine.hpp"
 #include "appstate/Game/survival/SurvivalBoonUnlockEvaluator.hpp"
+#include "appstate/Game/utility/AudioUtility.hpp"
 #include "misc/DependencyContainer.hpp"
 #include "misc/EventQueue.hpp"
 #include "settings/AppSettings.hpp"
@@ -32,13 +35,14 @@ public:
         , dic(dic)
         , atlas(atlas)
         , scene(scene)
+        , audioUtility(scene, dic.soundPlayer)
         , aiEngine(scene)
         , gameRulesEngine(
               gameEvents,
               scene,
               atlas,
               dic.input,
-              dic.soundPlayer,
+              audioUtility,
               dic.strings,
               dic.saveManager,
               gameProps.mapIdx)
@@ -52,6 +56,8 @@ public:
               dic.settings,
               dic.touchController,
               dic.strings)
+        , lifetimeEngine(scene, gameEvents, atlas)
+        , healthHandlerEngine(scene, gameEvents, audioUtility)
         , boonUnlockEvaluator(dic.saveManager)
         , gameProps(gameProps)
     {
@@ -80,12 +86,15 @@ private:
     const GameTextureAtlas& atlas;
     GameScene& scene;
     EventQueue<GameEvent> gameEvents;
+    AudioUtility audioUtility;
     AiEngine aiEngine;
     GameRulesEngine gameRulesEngine;
     AnimationEngine animationEngine;
     PhysicsEngine physicsEngine;
     ParticleEngine particleEngine;
     RenderingEngine renderingEngine;
+    LifetimeEngine lifetimeEngine;
+    EmptyHealthHandlerEngine healthHandlerEngine;
     Janitor janitor;
     SurvivalBoonUnlockEvaluator boonUnlockEvaluator;
     const GameModeProperties gameProps;

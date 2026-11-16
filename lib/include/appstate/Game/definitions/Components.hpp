@@ -224,3 +224,13 @@ struct [[nodiscard]] WeaponInventory final
         activeWeapon = (activeWeapon + 1) % weapons.size();
     }
 };
+
+struct [[nodiscard]] EnemyTag final
+{
+};
+
+struct [[nodiscard]] TimedScript final
+{
+    sf::Time timer = {};
+    std::function<void()> callback;
+};

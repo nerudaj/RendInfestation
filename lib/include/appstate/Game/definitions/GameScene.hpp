@@ -17,12 +17,6 @@
 #include <set>
 #include <vector>
 
-struct [[nodiscard]] TimedScript final
-{
-    sf::Time timer = {};
-    std::function<void()> callback;
-};
-
 struct [[nodiscard]] HudMessage final
 {
     std::string text;
@@ -40,10 +34,6 @@ struct [[nodiscard]] GameStatus final
     int shotsFired = 0;
     int waveBeaten = 0;
     Ledger ledger = {};
-};
-
-struct [[nodiscard]] EnemyTag final
-{
 };
 
 struct [[nodiscard]] PlayerInventory final

@@ -7,6 +7,12 @@
 #include <SFML/System/Time.hpp>
 #include <optional>
 
+/*
+ * NOTE for future me
+ *
+ * This probably should've been an "engine" or a "system"
+ * in ECS terms.
+ */
 class [[nodiscard]] SurvivalGameDirector final
 {
 public:

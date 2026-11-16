@@ -289,6 +289,16 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
       " - Turret, Cadence, Kickback\n\n"
       "Lastly we tried Spikes, Explosive Ammo and Phaser, but that was the "
       "worst decision ever." },
+    { Note8Title, "Note from developer" },
+    { Note8,
+      "Hi, thanks for playing the game this long!\n"
+      "\n"
+      "There might be two modifiers left to unlock at this point. To obtain "
+      "the first of them, you need to unlock all starter weapon combos - look "
+      "for a hint in the Laboratories. To obtain the latter, just beat wave 12 "
+      "of this level.\n"
+      "\n"
+      "Happy hunting!" },
 
     { Placeholder, "Placeholder" },
 };

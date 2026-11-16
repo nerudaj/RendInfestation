@@ -2,6 +2,7 @@
 #include "appstate/Game/builders/ActorBuilder.hpp"
 #include "appstate/Game/builders/GameSceneBuilder.hpp"
 #include "appstate/Game/definitions/Constants.hpp"
+#include "appstate/Game/utility/EntityUtility.hpp"
 #include <algorithm>
 #include <limits>
 #include <print>
@@ -12,7 +13,8 @@ void GameRulesEngine::operator()(const event::ActorToMeshCollision& e)
     {
         if (!(inventory->traits & ProjectileTraits::Bouncy))
         {
-            createDamageMarkerForProjectile(e.entity, inventory);
+            EntityUtility::spawnDamageMarkerForProjectile(
+                scene.actors, e.entity, inventory);
             eventQueue.pushEvent<event::ProjectileDestroyed>(e.entity);
         }
     }
@@ -33,7 +35,7 @@ void GameRulesEngine::operator()(const event::ActorBounced& e)
 
     if (!inventory || !(inventory->traits & ProjectileTraits::Bouncy)) return;
 
-    playAttenuated(
+    audio.playAttenuated(
         SoundId::ProjectileBounce,
         scene.actors.get<Collider>(e.entity),
         SoundChannel::Ambient);
@@ -69,13 +71,13 @@ void GameRulesEngine::operator()(const event::ActorFiredWeapon& e)
     {
         const bool shootsBig =
             weapon.defaultProjectileInventory.traits & ProjectileTraits::Big;
-        soundPlayer.playPovSound(
+        audio.playPovSound(
             weapon.soundId,
             shootsBig ? SoundPostProcess::DropPitch : SoundPostProcess::None);
     }
     else
     {
-        playAttenuated(weapon.soundId, shooterCollider);
+        audio.playAttenuated(weapon.soundId, shooterCollider);
     }
 
     const auto unitDirection = dgm::Math::toUnit(lookDirection.get());
@@ -112,16 +114,20 @@ void GameRulesEngine::operator()(const event::ProjectileDestroyed& e)
 
     if (inventory.traits & ProjectileTraits::Explosive)
     {
-        playAttenuated(
+        audio.playAttenuated(
             SoundId::Explosion,
             scene.actors.get<Collider>(e.projectileEntity),
             SoundChannel::Ambient);
     }
 
-    if (inventory.traits & ProjectileTraits::SplitOnHit
-        || inventory.traits & ProjectileTraits::ShrapnellingBounce)
+    if (inventory.traits & ProjectileTraits::SplitOnHit)
     {
-        ActorBuilder::shatterProjectile(scene.actors, e.projectileEntity);
+        EntityUtility::shatterProjectile(scene.actors, e.projectileEntity);
+    }
+    else if (inventory.traits & ProjectileTraits::ShrapnellingBounce)
+    {
+        EntityUtility::shatterBounceProjectile(
+            scene.actors, e.projectileEntity);
     }
 
     eventQueue.pushEvent<event::ObjectDestroyed>(e.projectileEntity);
@@ -179,7 +185,7 @@ void GameRulesEngine::operator()(const event::ObjectDestroyed& e)
 
         if (health)
         {
-            playAttenuated(
+            audio.playAttenuated(
                 health->deathSound, scene.actors.get<Collider>(e.entity));
         }
     }
@@ -271,7 +277,7 @@ void GameRulesEngine::operator()(const event::PlayerKilled&)
     health = Health(scene.playerInventory.playerMaxHealth);
     scene.playerInventory.emergencyReviveActive = false;
 
-    ActorBuilder::applyStatusEffect<StatusEffectInvincibility>(
+    EntityUtility::applyStatusEffect<StatusEffectInvincibility>(
         scene.actors, scene.playerEntity, RESPAWN_INVINCIBILITY_DURATION);
 
     postMessage(StringId::Revived, "updateLedger"_false);
@@ -279,7 +285,7 @@ void GameRulesEngine::operator()(const event::PlayerKilled&)
 
 void GameRulesEngine::operator()(const event::PlayerKilledForGood&)
 {
-    soundPlayer.playPovSound(SoundId::PlayerDeathScream);
+    audio.playPovSound(SoundId::PlayerDeathScream);
     scene.status.finished = true;
     scene.actors.destroy(scene.playerEntityLower);
     scene.playerEntityLower = entt::null;
@@ -293,8 +299,6 @@ void GameRulesEngine::update(const dgm::Time& time)
         scene.survivalGameDirector->update(time.getElapsed(), eventQueue);
 
     updateEntitiesWithInput(time);
-
-    updateLifetimes(time);
 
     for (auto&& [entity, interval] : scene.actors.view<Interval>().each())
     {
@@ -314,8 +318,6 @@ void GameRulesEngine::update(const dgm::Time& time)
             eventQueue.pushEvent<event::ObjectDestroyed>(entity);
         }
     }
-
-    updateHealth();
 
     updateTriggers(time);
 
@@ -411,55 +413,6 @@ void GameRulesEngine::updateTriggers(const dgm::Time& time)
     }
 }
 
-void GameRulesEngine::updateHealth()
-{
-    for (auto&& [entity, health] : scene.actors.view<Health>().each())
-    {
-        if (health.value > 0) continue;
-
-        auto skin = scene.actors.try_get<Skin>(entity);
-        if (skin && skin->kind == EntityKind::Prop)
-        {
-            playAttenuated(
-                health.deathSound, scene.actors.get<Collider>(entity));
-            ActorBuilder::destroyProp(scene.actors, entity);
-        }
-        else
-        {
-            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
-        }
-    }
-}
-
-void GameRulesEngine::updateLifetimes(const dgm::Time& time)
-{
-    for (auto&& [entity, lifetime] : scene.actors.view<Lifetime>().each())
-    {
-        lifetime.get() -= time.getElapsed();
-        if (lifetime.get() > sf::Time::Zero) continue;
-
-        auto inventory = scene.actors.try_get<ProjectileInventory>(entity);
-        if (inventory && inventory->traits & ProjectileTraits::Turret)
-        {
-            ActorBuilder::createTurret(
-                scene.actors,
-                scene.actors.get<Collider>(entity).getPosition(),
-                atlas,
-                *inventory);
-            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
-        }
-        else if (inventory)
-        {
-            createDamageMarkerForProjectile(entity, inventory);
-            eventQueue.pushEvent<event::ProjectileDestroyed>(entity);
-        }
-        else
-        {
-            eventQueue.pushEvent<event::ObjectDestroyed>(entity);
-        }
-    }
-}
-
 void GameRulesEngine::updateMessages(const dgm::Time& time)
 {
     if (scene.hudMessage.displayTime > sf::Time::Zero)
@@ -491,40 +444,12 @@ void GameRulesEngine::handleProjectileToActorCollision(
         && inventory->traits & ProjectileTraits::Shrapnels;
     if (isPasshtruLandmine) return;
 
-    createDamageMarkerForProjectile(projectile, inventory);
+    EntityUtility::spawnDamageMarkerForProjectile(
+        scene.actors, projectile, inventory);
 
     if (inventory->traits & ProjectileTraits::Passthru) return;
 
     eventQueue.pushEvent<event::ProjectileDestroyed>(projectile);
-}
-
-void GameRulesEngine::createDamageMarkerForProjectile(
-    entt::entity projectile, ProjectileInventory* inventory)
-{
-    auto interval = scene.actors.try_get<Interval>(projectile);
-    if (interval && interval->timer > sf::Time::Zero) return;
-
-    const auto& skin = scene.actors.get<Skin>(projectile);
-    const auto& collider = scene.actors.get<Collider>(projectile);
-    const float scaleFactor =
-        (inventory->traits & ProjectileTraits::Big ? 2.f : 1.f) * skin.scale;
-
-    const float markerRadius =
-        inventory->traits & ProjectileTraits::Explosive ? BASE_EXPLOSION_RADIUS
-        : skin.skinType == SkinType::Fireball ? BASE_FIREBALL_BLAST_RADIUS
-                                              : collider.getRadius();
-
-    ActorBuilder::createDamageMarker(
-        scene.actors,
-        dgm::Math::toUnit(scene.actors.get<PhysicsBody>(projectile).forward),
-        collider.getPosition(),
-        markerRadius * scaleFactor,
-        *inventory);
-
-    if (interval)
-    {
-        interval->timer = interval->delay;
-    }
 }
 
 void GameRulesEngine::handleDamageMarkerToActorCollision(
@@ -600,20 +525,12 @@ sf::Vector2f GameRulesEngine::pickEnemySpawnPosition() const
     return filtered[rand() % filtered.size()];
 }
 
-void GameRulesEngine::playAttenuated(
-    SoundId::IdType soundId, const Collider& collider, SoundChannel channel)
-{
-    soundPlayer.playAttenuatedSound(
-        channel,
-        soundId,
-        (collider.getPosition()
-         - scene.actors.get<Collider>(scene.playerEntity).getPosition())
-            .length());
-}
-
 bool GameRulesEngine::shallGainEmergencyRevive() const noexcept
 {
-    if (!scene.survivalGameDirector) return false;
+    if (scene.playerInventory.emergencyReviveActive)
+        return false;
+    else if (!scene.survivalGameDirector)
+        return false;
 
     const auto wave = scene.survivalGameDirector->getContext().wave;
 

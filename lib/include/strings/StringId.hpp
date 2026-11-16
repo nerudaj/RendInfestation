@@ -191,6 +191,8 @@ enum class [[nodiscard]] StringId
     Note6,
     Note7Title,
     Note7,
+    Note8Title,
+    Note8,
 
     Placeholder,
     MaxId, // Make sure this one is always the last!
