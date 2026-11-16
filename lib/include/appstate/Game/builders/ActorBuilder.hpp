@@ -9,6 +9,15 @@
 #include "appstate/Game/enums/SkinType.hpp"
 #include "input/Input.hpp"
 
+/*
+ * NOTE for future me.
+ *
+ * This class should've been called ActorFactory instead of ActorBuilder.
+ * Same applies to all other "builders" under Game. These are not following the
+ * Builder pattern, they are mere factory functions wrapped in a namespace.
+ *
+ * I am not refactoring it late in development for the sake of refactorign.
+ */
 class [[nodiscard]] ActorBuilder final
 {
 public:
@@ -66,13 +75,6 @@ public:
         const sf::Vector2f& origin,
         const float radius,
         const ProjectileInventory& inventory);
-
-    static entt::entity createEffect(
-        entt::registry& actors,
-        const sf::Vector2f& origin,
-        const EffectType type,
-        const GameTextureAtlas& atlas,
-        const float scale);
 
     static entt::entity createDoor(
         entt::registry& actors,

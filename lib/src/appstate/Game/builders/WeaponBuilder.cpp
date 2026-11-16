@@ -183,6 +183,8 @@ WeaponBuilder::createWeaponModuleTransformer(WeaponModule module)
             return props;
         };
     }
+
+    return std::identity {};
 }
 
 Weapon WeaponBuilder::createWeapon(EntityKind ownerKind, WeaponConfig config)
@@ -278,7 +280,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
                     .originator = EntityKind::Npc,
                 },
         };
-    case BounceBall:
+    /*case BounceBall:
         return Weapon {
             .soundId = SoundId::BigheadRangedAttack,
             .cooldownBase = sf::seconds(1.5f),
@@ -292,7 +294,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
                     .traits = ProjectileTraits::Bouncy,
                     .originator = EntityKind::Npc,
                 },
-        };
+        };*/
     case Fireball:
         return Weapon {
             .soundId = SoundId::BehemothAttack,
@@ -308,4 +310,7 @@ Weapon WeaponBuilder::createEnemyWeapon(int damage, EnemyWeaponKind weaponKind)
                 },
         };
     }
+
+    assert(false);
+    return Weapon {};
 }

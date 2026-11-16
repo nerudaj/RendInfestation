@@ -111,22 +111,6 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
             .value());
 
     skins.emplace(
-        SkinType::Explosion,
-        atlas
-            .addSpritesheet(
-                resmgr.get<sf::Texture>("explosion_1.png"),
-                resmgr.get<dgm::AnimationStates>("explosion_1.png.anim"))
-            .value());
-
-    skins.emplace(
-        SkinType::BigBullet,
-        atlas
-            .addSpritesheet(
-                resmgr.get<sf::Texture>("bullet.png"),
-                resmgr.get<dgm::AnimationStates>("bullet.png.anim"))
-            .value());
-
-    skins.emplace(
         SkinType::SmallBullet,
         atlas
             .addSpritesheet(
@@ -154,14 +138,6 @@ GameTextureAtlas GameTextureAtlasBuilder::createTextureAtlas(
             .addSpritesheet(
                 resmgr.get<sf::Texture>("projectile_laser.png"),
                 resmgr.get<dgm::AnimationStates>("projectile_laser.png.anim"))
-            .value());
-
-    skins.emplace(
-        SkinType::PinkFireball,
-        atlas
-            .addSpritesheet(
-                resmgr.get<sf::Texture>("pink_fireball.png"),
-                resmgr.get<dgm::AnimationStates>("pink_fireball.png.anim"))
             .value());
 
     skins.emplace(

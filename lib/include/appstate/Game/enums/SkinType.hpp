@@ -15,11 +15,9 @@ enum class [[nodiscard]] SkinType : unsigned char
 
     // Projectiles
     SmallBullet,
-    BigBullet,
     Landmine,
     Hyperbeam,
     Spikes,
-    PinkFireball,
     Fireball,
     Rocket,
     Freeze,
@@ -27,9 +25,6 @@ enum class [[nodiscard]] SkinType : unsigned char
 
     // Props
     Prop,
-
-    // Effects
-    Explosion,
 
     // Door
     DoorHorizontal,

@@ -59,9 +59,9 @@ const std::map<SkinType, EnemyConfig> ENEMY_CONFIGS = {
             .spriteOriginOffsetFromCollider = sf::Vector2f { 0.f, -10.f },
             .weapons = { WeaponBuilder::createEnemyWeapon(
                              static_cast<int>(BASE_MELEE_DAMAGE * 2.f),
-                             EnemyWeaponKind::Headbutt),
+                             EnemyWeaponKind::Headbutt)/*,
                          WeaponBuilder::createEnemyWeapon(
-                             BASE_RANGED_DAMAGE, EnemyWeaponKind::BounceBall) },
+                             BASE_RANGED_DAMAGE, EnemyWeaponKind::BounceBall)*/ },
             .npcKind = NpcKind::Bighead,
         },
     },
