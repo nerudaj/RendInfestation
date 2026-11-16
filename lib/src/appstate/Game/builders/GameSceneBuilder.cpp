@@ -343,6 +343,12 @@ void GameSceneBuilder::updateLoadoutWithStartingWeapon(
                                      WeaponModule::CadenceBarrel,
                                      WeaponModule::Push };
     }
+    else if (startingWeapon == WeaponCombo::Obliterator)
+    {
+        artifact.unlockedModules = { WeaponModule::AutomaticShotgun,
+                                     WeaponModule::ShatteringRicochet,
+                                     WeaponModule::PulseRounds };
+    }
 
     assert(artifact.unlockedModules.size() == 3u);
     std::ranges::copy(
