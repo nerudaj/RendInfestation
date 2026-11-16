@@ -42,22 +42,22 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 351.5,
-                "y": 351
+                "x": 351.66666666666663,
+                "y": 292.6666666666667
             }
         },
         "landing-bay-small.tmx": {
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1,
+            "scale": 16,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 222.5,
-                "y": 359
+                "x": 323.65625,
+                "y": 51.9375
             }
         },
         "landing-bay.tmx": {
@@ -94,8 +94,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 245.5,
-                "y": 233
+                "x": 319.5,
+                "y": 335.5
             }
         },
         "survival-03-tmx.tmx": {

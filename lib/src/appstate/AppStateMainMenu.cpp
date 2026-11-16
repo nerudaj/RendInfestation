@@ -48,7 +48,9 @@ void AppStateMainMenu::buildLayout()
         builderFactory.createDefaultLayoutBuilder()
             .withBackgroundImage(
                 dic.resmgr.get<tgui::Texture>("main_screen.png"))
-            .withTitle(StringId::GameTitle, HeadingLevel::H1)
+            .withNoTitle()
+            /*.withTexturedTitle(
+                dic.resmgr.get<tgui::Texture>("main_menu_logo.png"))*/
             .withContent(
                 builderFactory.createButtonListBuilder()
                     .addButton(StringId::SurvivalButton, [&] { onSurvival(); })
