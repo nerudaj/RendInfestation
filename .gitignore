@@ -11,3 +11,4 @@ bin-android/app/.cxx
 bin-android/app/build
 bin-android/.idea
 bin-android/.gradle
+assets-private/tiled/infestation.tiled-session
