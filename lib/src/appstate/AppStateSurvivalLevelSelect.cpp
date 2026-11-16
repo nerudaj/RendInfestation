@@ -135,6 +135,16 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
                     WidgetOptions {
                         .enabled = saveMgr.isReviveUnlocked(),
                     }))
+            .addOption(
+                saveMgr.areGoldModulesUnlocked() ? StringId::BoonGoldModules
+                                                 : StringId::BoonLocked,
+                WidgetBuilder::createCheckbox(
+                    false,
+                    [&](bool value)
+                    { gameProps.boons.allowGoldModules = value; },
+                    WidgetOptions {
+                        .enabled = saveMgr.areGoldModulesUnlocked(),
+                    }))
             .addGap()
             .addLabel(StringId::StartingWeapon)
             .addFullRowOption(WidgetBuilder::createListChoice(

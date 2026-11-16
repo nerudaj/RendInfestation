@@ -53,7 +53,7 @@ void AppStateLoading::update()
         dic,
         *textureAtlas,
         *gameScene,
-        gameProps.mapIdx);
+        gameProps);
 }
 
 void AppStateLoading::draw()

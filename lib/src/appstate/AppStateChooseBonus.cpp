@@ -71,23 +71,23 @@ void AppStateChooseBonus::buildLayout()
         dic.sizer,
         "justify"_true));
 
-    auto modulesToPick = generatePickerSelection();
-
     auto&& hbox = tgui::HorizontalLayout::create({ "100%", "85%" });
     TguiHelper::alignInParent(
         hbox, tgui::HorizontalAlignment::Left, tgui::VerticalAlignment::Bottom);
     content->add(hbox);
 
     auto&& leftBox = SelectablePanelComponent::buildLayout(dic);
-    leftBox->add(createPickerBox(modulesToPick.first));
-    leftBox->onClick([&, module = modulesToPick.first] { onSubmit(module); });
+    leftBox->add(createPickerBox(generatedModules.first));
+    leftBox->onClick([&, module = generatedModules.first]
+                     { onSubmit(module); });
     hbox->add(leftBox);
 
     hbox->addSpace(0.02f);
 
     auto rightBox = SelectablePanelComponent::buildLayout(dic);
-    rightBox->add(createPickerBox(modulesToPick.second));
-    rightBox->onClick([&, module = modulesToPick.second] { onSubmit(module); });
+    rightBox->add(createPickerBox(generatedModules.second));
+    rightBox->onClick([&, module = generatedModules.second]
+                      { onSubmit(module); });
     hbox->add(rightBox);
 
     dic.gui.rebuildWith(content);
@@ -121,7 +121,7 @@ tgui::Container::Ptr AppStateChooseBonus::createPickerBox(WeaponModule module)
 }
 
 std::pair<WeaponModule, WeaponModule>
-AppStateChooseBonus::generatePickerSelection()
+AppStateChooseBonus::generatePickerSelection(const bool allowGoldModules)
 {
     std::set<WeaponModule> draftPool;
 
@@ -179,7 +179,7 @@ AppStateChooseBonus::generatePickerSelection()
     }
 
     // If draft pool is small enough, we can try the gold modules
-    if (draftPool.size() <= 2)
+    if (draftPool.size() <= 2 && allowGoldModules)
     {
         for (auto&& goldModule : GOLD_MODULES)
         {

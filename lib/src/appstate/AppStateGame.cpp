@@ -61,7 +61,10 @@ void AppStateGame::update()
                     [&](event::NoteOpened& e)
                     { app.pushState<AppStateNoteReader>(dic, e.noteId); },
                     [&](event::WaveEnded&)
-                    { app.pushState<AppStateChooseBonus>(dic, scene); },
+                    {
+                        app.pushState<AppStateChooseBonus>(
+                            dic, scene, gameProps.boons.allowGoldModules);
+                    },
                     [&](auto&&) {} });
     janitor.cleanScene(scene);
 
@@ -79,7 +82,7 @@ void AppStateGame::update()
             }),
             dic,
             scene.status,
-            mapIdx);
+            gameProps.mapIdx);
     }
 }
 
@@ -108,7 +111,7 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
 
     boonUnlockEvaluator.evaluateUnlocks(
         wave,
-        mapIdx,
+        gameProps.mapIdx,
         scene.playerInventory,
         [&](StringId msg) { gameRulesEngine.postMessage(msg); });
 

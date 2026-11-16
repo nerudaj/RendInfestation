@@ -27,7 +27,7 @@ public:
         DependencyContainer& dic,
         const GameTextureAtlas& atlas,
         GameScene& scene,
-        const size_t mapIdx)
+        const GameModeProperties& gameProps)
         : dgm::AppState(app)
         , dic(dic)
         , atlas(atlas)
@@ -41,7 +41,7 @@ public:
               dic.soundPlayer,
               dic.strings,
               dic.saveManager,
-              mapIdx)
+              gameProps.mapIdx)
         , animationEngine(scene, gameEvents, atlas)
         , physicsEngine(scene, gameEvents)
         , particleEngine(scene)
@@ -53,7 +53,7 @@ public:
               dic.touchController,
               dic.strings)
         , boonUnlockEvaluator(dic.saveManager)
-        , mapIdx(mapIdx)
+        , gameProps(gameProps)
     {
         srand(static_cast<unsigned>(time(nullptr)));
         gameEvents.pushEvent<event::WaveEnded>();
@@ -88,5 +88,5 @@ private:
     RenderingEngine renderingEngine;
     Janitor janitor;
     SurvivalBoonUnlockEvaluator boonUnlockEvaluator;
-    const size_t mapIdx;
+    const GameModeProperties gameProps;
 };
