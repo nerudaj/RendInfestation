@@ -1,5 +1,7 @@
 #include "appstate/AppStateSurvivalGameOver.hpp"
+#include "appstate/AppStateUnlocksSummary.hpp"
 #include "appstate/CommonHandler.hpp"
+#include "appstate/Game/utility/TimeFormatter.hpp"
 #include "appstate/Messaging.hpp"
 #include "gui/Icon.hpp"
 
@@ -19,6 +21,11 @@ AppStateSurvivalGameOver::AppStateSurvivalGameOver(
 
     // Write all unlocks etc
     dic.saveProgress();
+
+    if (!status.ledger.empty())
+    {
+        app.pushState<AppStateUnlocksSummary>(dic, status.ledger);
+    }
 }
 
 void AppStateSurvivalGameOver::input()
@@ -44,139 +51,106 @@ void AppStateSurvivalGameOver::buildLayout()
 {
     auto& builderFactory = dic.guiBuilderFactory;
 
-    dic.gui.rebuildWith(builderFactory.createSimpleLayoutBuilder()
-                            .withNoBackground()
-                            .withPlainTitle(
-                                StringId::GameOver,
-                                HeadingLevel::H1,
-                                tgui::HorizontalAlignment::Left)
-                            .withContent(buildBentoBoxContent())
-                            .withNoBottomButtons()
-                            .build());
-}
-
-tgui::Container::Ptr AppStateSurvivalGameOver::buildBentoBoxContent()
-{
-    auto&& vbox = tgui::VerticalLayout::create();
-
-    // 2 rows
-    // 1: map icon, game summary
-    // 2: unlockables summary, two vertical buttons Restart, Back to Menu
-
-    auto&& firstRowHbox = tgui::HorizontalLayout::create();
-    vbox->add(firstRowHbox);
-
-    auto&& mapIconPanel = tgui::Panel::create();
-    firstRowHbox->add(mapIconPanel);
-
-    firstRowHbox->addSpace(0.05f);
-
-    auto&& gameSummaryPanel = tgui::ScrollablePanel::create();
-    firstRowHbox->add(gameSummaryPanel, 2.f);
-    gameSummaryPanel->add(buildGameSummaryLayout());
-
-    vbox->addSpace(0.05f);
-
-    auto&& secondRowHbow = tgui::HorizontalLayout::create();
-    vbox->add(secondRowHbow);
-
-    auto&& ledgerPanel = tgui::ScrollablePanel::create();
-    ledgerPanel->add(buildLedgerSummaryLayout());
-    secondRowHbow->add(ledgerPanel, 2.f);
-
-    secondRowHbow->addSpace(0.05f);
-
-    auto&& buttonVbox = tgui::VerticalLayout::create();
-    secondRowHbow->add(buttonVbox);
-
-    buttonVbox->add(WidgetBuilder::createButton(
-        dic.strings.getString(StringId::Restart),
-        [&] { onRestart(); },
-        dic.sizer,
-        dic.soundPlayer));
-
-    buttonVbox->addSpace(0.05f);
-
-    buttonVbox->add(WidgetBuilder::createButton(
-        dic.strings.getString(StringId::BackToMenu),
-        [&] { onBackToMenu(); },
-        dic.sizer,
-        dic.soundPlayer));
-
-    return vbox;
+    dic.gui.rebuildWith(
+        builderFactory.createSimpleLayoutBuilder()
+            .withNoBackground()
+            .withPlainTitle(
+                StringId::GameOver,
+                HeadingLevel::H1,
+                tgui::HorizontalAlignment::Left)
+            .withContent(buildGameSummaryLayout())
+            .withBottomLeftButton(StringId::BackToMenu, [&] { onBackToMenu(); })
+            .withBottomRightButton(StringId::Restart, [&] { onRestart(); })
+            .build());
 }
 
 tgui::Container::Ptr AppStateSurvivalGameOver::buildGameSummaryLayout()
 {
+    auto&& getLayoutSize = []() -> tgui::Layout2d
+    {
+#ifdef ANDROID
+        return tgui::Layout2d { "80%", "100%" };
+#else
+        return tgui::Layout2d { "60%", "80%" };
+#endif
+    };
+
+    auto&& panel = WidgetBuilder::createContainer<tgui::Panel>(
+        getLayoutSize(), dic.sizer, WidgetOptions {});
+    panel->getRenderer()->setPadding({ 20.f, 20.f });
+    TguiHelper::centerInParent(panel);
+
     const bool isNewBest = dic.saveManager.getBestScore(mapIdx) < status.score;
     const auto scoreString = uni::format(
         "{} {}",
         dic.strings.getString(StringId::GameScore),
         isNewBest ? dic.strings.getString(StringId::NewBestScore) : "");
 
-    return dic.guiBuilderFactory.createTableBuilder()
-        .withNoHeading()
-        .addRow({
-            WidgetBuilder::createTextLabel(
-                scoreString, dic.sizer, "justify"_true),
-            WidgetBuilder::createTextLabel(
-                std::to_string(status.score), dic.sizer, "justify"_true),
-        })
-        .addRow({
-            WidgetBuilder::createTextLabel(
-                dic.strings.getString(StringId::EnemiesRouted),
-                dic.sizer,
-                "justify"_true),
-            WidgetBuilder::createTextLabel(
-                std::to_string(status.enemiesKilled),
-                dic.sizer,
-                "justify"_true),
-        })
-        .addRow({
-            WidgetBuilder::createTextLabel(
-                dic.strings.getString(StringId::ShotsFired),
-                dic.sizer,
-                "justify"_true),
-            WidgetBuilder::createTextLabel(
-                std::to_string(status.shotsFired), dic.sizer, "justify"_true),
-        })
-        .addRow({
-            WidgetBuilder::createTextLabel(
-                dic.strings.getString(StringId::WavesBeaten),
-                dic.sizer,
-                "justify"_true),
-            WidgetBuilder::createTextLabel(
-                std::to_string(status.waveBeaten), dic.sizer, "justify"_true),
-        })
-        .addSeparator()
-        .addRow({
-            WidgetBuilder::createTextLabel(
-                dic.strings.getString(
-                    isNewBest ? StringId::PreviousBestScore
-                              : StringId::CurrentBestScore),
-                dic.sizer,
-                "justify"_true),
-            WidgetBuilder::createTextLabel(
-                std::to_string(dic.saveManager.getBestScore(mapIdx)),
-                dic.sizer,
-                "justify"_true),
-        })
-        .build();
-}
+    panel->add(
+        dic.guiBuilderFactory.createTableBuilder()
+            .withNoHeading()
+            .addRow({
+                WidgetBuilder::createTextLabel(
+                    scoreString, dic.sizer, "justify"_true),
+                WidgetBuilder::createTextLabel(
+                    std::to_string(status.score), dic.sizer, "justify"_true),
+            })
+            .addRow({
+                WidgetBuilder::createTextLabel(
+                    dic.strings.getString(StringId::GameDuration),
+                    dic.sizer,
+                    "justify"_true),
+                WidgetBuilder::createTextLabel(
+                    TimeFormatter::toMMSS(status.gameDuration),
+                    dic.sizer,
+                    "justify"_true),
+            })
+            .addRow({
+                WidgetBuilder::createTextLabel(
+                    dic.strings.getString(StringId::EnemiesRouted),
+                    dic.sizer,
+                    "justify"_true),
+                WidgetBuilder::createTextLabel(
+                    std::to_string(status.enemiesKilled),
+                    dic.sizer,
+                    "justify"_true),
+            })
+            .addRow({
+                WidgetBuilder::createTextLabel(
+                    dic.strings.getString(StringId::ShotsFired),
+                    dic.sizer,
+                    "justify"_true),
+                WidgetBuilder::createTextLabel(
+                    std::to_string(status.shotsFired),
+                    dic.sizer,
+                    "justify"_true),
+            })
+            .addRow({
+                WidgetBuilder::createTextLabel(
+                    dic.strings.getString(StringId::WavesBeaten),
+                    dic.sizer,
+                    "justify"_true),
+                WidgetBuilder::createTextLabel(
+                    std::to_string(status.waveBeaten),
+                    dic.sizer,
+                    "justify"_true),
+            })
+            .addSeparator()
+            .addRow({
+                WidgetBuilder::createTextLabel(
+                    dic.strings.getString(
+                        isNewBest ? StringId::PreviousBestScore
+                                  : StringId::CurrentBestScore),
+                    dic.sizer,
+                    "justify"_true),
+                WidgetBuilder::createTextLabel(
+                    std::to_string(dic.saveManager.getBestScore(mapIdx)),
+                    dic.sizer,
+                    "justify"_true),
+            })
+            .build());
 
-tgui::Container::Ptr AppStateSurvivalGameOver::buildLedgerSummaryLayout()
-{
-    if (status.ledger.empty()) return tgui::Group::create();
-
-    auto builder = dic.guiBuilderFactory.createTableBuilder().withNoHeading();
-
-    for (auto&& line : status.ledger)
-    {
-        builder.addRow({ WidgetBuilder::createTextLabel(
-            dic.strings.getString(line), dic.sizer, "justify"_true) });
-    }
-
-    return builder.build();
+    return panel;
 }
 
 void AppStateSurvivalGameOver::onRestart()

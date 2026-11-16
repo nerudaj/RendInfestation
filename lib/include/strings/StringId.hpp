@@ -164,17 +164,19 @@ enum class [[nodiscard]] StringId
     Revived,
     GoldModulesUnlocked,
     HardModeUnlocked,
-
-    // Survival progression
     NewWeaponModuleUnlocked,
+
+    // Game over
     GameOver,
     GameScore,
+    GameDuration,
     EnemiesRouted,
     ShotsFired,
     WavesBeaten,
     NewBestScore,
     PreviousBestScore,
     CurrentBestScore,
+    StuffUnlocked,
 
     // Notes
     Note1Title,

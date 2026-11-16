@@ -43,6 +43,8 @@ void AppStateGame::input()
 
 void AppStateGame::update()
 {
+    scene.status.gameDuration += app.time.getElapsed();
+
     aiEngine.update(app.time);
     lifetimeEngine.update(app.time);
     healthHandlerEngine.update(app.time);

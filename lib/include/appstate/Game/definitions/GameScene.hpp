@@ -33,6 +33,7 @@ struct [[nodiscard]] GameStatus final
     int enemiesKilled = 0;
     int shotsFired = 0;
     int waveBeaten = 0;
+    sf::Time gameDuration = sf::Time::Zero;
     Ledger ledger = {};
 };
 

@@ -193,17 +193,19 @@ const std::map<StringId, StringViewType> EN_LOCALIZATION = {
     { GoldModulesUnlocked,
       "Extra weapon modules unlocked\nfor the next game!" },
     { HardModeUnlocked, "Hard mode unlocked!" },
-
-    // Survival progression
     { NewWeaponModuleUnlocked, "New weapon module unlocked!" },
+
+    // Game over
     { GameOver, "Game Over" },
     { GameScore, "Your score" },
+    { GameDuration, "Game duration" },
     { EnemiesRouted, "Enemies routed" },
     { ShotsFired, "Shots fired" },
     { WavesBeaten, "Waves beaten" },
     { NewBestScore, "(new best!)" },
     { PreviousBestScore, "Previous best score" },
     { CurrentBestScore, "Current best score" },
+    { StuffUnlocked, "You unlocked something!" },
 
     // Note
     { Note1Title, "Cargo manifest" },

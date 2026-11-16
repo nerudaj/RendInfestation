@@ -4,6 +4,7 @@
 #include "gui/ModalBuilder.hpp"
 
 constexpr const char* MODAL_ID = "AreYouSureModal";
+constexpr const char* BACKGROUND_ID = "ModalBackground";
 
 AppStateAreYouSure::AppStateAreYouSure(
     dgm::App& app,
@@ -27,7 +28,7 @@ AppStateAreYouSure::~AppStateAreYouSure()
     auto&& modal = dic.gui.get<tgui::ChildWindow>(MODAL_ID);
     modal->close();
     dic.gui.remove(modal);
-    dic.gui.remove(dic.gui.get<tgui::Panel>("ModalBackground"));
+    dic.gui.remove(dic.gui.get<tgui::Panel>(BACKGROUND_ID));
 }
 
 void AppStateAreYouSure::input()
@@ -78,7 +79,7 @@ void AppStateAreYouSure::buildLayout(
             .build();
 
     auto&& background = GuiBuilderHelper::createSemitransparentBlackPanel();
-    dic.gui.add(background, "ModalBackground");
+    dic.gui.add(background, BACKGROUND_ID);
     background->onClick([] {});
     dic.gui.add(modal, MODAL_ID);
 }
