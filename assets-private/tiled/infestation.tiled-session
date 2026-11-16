@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "laboratory.tmx",
+    "activeFile": "landing-bay-small.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -20,11 +20,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.5,
+            "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 219,
-                "y": 86
+                "x": 326.5,
+                "y": 325
             }
         },
         "demo-01.tmx": {
@@ -45,27 +45,27 @@
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 376.5,
-                "y": 428
+                "x": 351.5,
+                "y": 351
             }
         },
         "landing-bay-small.tmx": {
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.75,
-            "selectedLayer": 2,
+            "scale": 1,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 335.33333333333326,
-                "y": 272
+                "x": 222.5,
+                "y": 359
             }
         },
         "landing-bay.tmx": {
             "scale": 0.8827083333333333,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 479.7734245928723,
-                "y": 479.7734245928723
+                "x": 479.77342459287235,
+                "y": 479.20698607505307
             }
         },
         "ordering_test.tmx": {
@@ -94,8 +94,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 319.5,
-                "y": 335.5
+                "x": 245.5,
+                "y": 233
             }
         },
         "survival-03-tmx.tmx": {
@@ -138,9 +138,6 @@
         "Props.tsx",
         "survival-01.tmx",
         "survival-02.tmx",
-        "survival-04.tmx",
-        "survival-03.tmx",
-        "landing-bay.tmx",
         "landing-bay-small.tmx",
         "botanical-garden.tmx",
         "laboratory.tmx"
@@ -153,12 +150,12 @@
         "Props.tsx",
         "survival-01.tmx",
         "survival-02.tmx",
-        "survival-04.tmx",
-        "survival-03.tmx",
-        "landing-bay.tmx",
-        "landing-bay-small.tmx",
+        "laboratory.tmx",
         "botanical-garden.tmx",
-        "laboratory.tmx"
+        "landing-bay-small.tmx",
+        "landing-bay.tmx",
+        "survival-03.tmx",
+        "survival-04.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 2,
