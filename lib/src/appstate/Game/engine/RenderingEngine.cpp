@@ -2,6 +2,7 @@
 #include "appstate/Game/definitions/Constants.hpp"
 #include "appstate/Game/enums/Hud.hpp"
 #include "gui/Icon.hpp"
+#include "misc/Finally.hpp"
 #include "rendering/CameraFactory.hpp"
 #include <cmath>
 
@@ -431,6 +432,8 @@ void RenderingEngine::renderHudNavigationArrows(dgm::Window& window)
 void RenderingEngine::renderTouchControls(
     dgm::Window& window, const bool renderAllTouchControls)
 {
+    auto&& finally = Finally([this] { hudSprite.setScale({ 1.f, 1.f }); });
+
     auto& model = touchController.getTouchModel();
     dgm::Circle thumb({ 0.f, 0.f }, 16.f);
     const auto buttonRadius = model.objects[2].touchArea.getRadius() * 0.8f;
@@ -445,11 +448,7 @@ void RenderingEngine::renderTouchControls(
         model.objects[2].touchArea.getPosition() - cornerOffset);
     window.draw(hudSprite);
 
-    if (!renderAllTouchControls)
-    {
-        hudSprite.setScale({ 1.f, 1.f });
-        return;
-    }
+    if (!renderAllTouchControls) return;
 
     // First two objects are joysticks
     for (auto&& object : model.objects | uni::views::take(2))
@@ -480,8 +479,6 @@ void RenderingEngine::renderTouchControls(
             model.objects[4].touchArea.getPosition() - cornerOffset);
         window.draw(hudSprite);
     }
-
-    hudSprite.setScale({ 1.f, 1.f });
 }
 
 sf::Angle
