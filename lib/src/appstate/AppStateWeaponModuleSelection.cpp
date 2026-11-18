@@ -1,7 +1,6 @@
 #include "appstate/AppStateWeaponModuleSelection.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "gui/GuiBuilderHelper.hpp"
-#include "gui/ModalBuilder.hpp"
 
 AppStateWeaponModuleSelection::AppStateWeaponModuleSelection(
     dgm::App& app,
@@ -59,7 +58,7 @@ void AppStateWeaponModuleSelection::buildLayout()
         .navbarPanelClass = "BottomCutoutPanel",
     };
 
-    auto&& builder = ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer);
+    auto&& builder = dic.guiBuilderFactory.createModalBuilder();
     auto&& modal = builder.openModal(StringId::SelectModule, options)
                        .withContent(buildModuleSelectionLayout())
                        .withBottomButton(StringId::Back, [&] { onCancel(); })

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui/ModalBuilder.hpp"
+#include "gui/builders/ModalBuilder.hpp"
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 

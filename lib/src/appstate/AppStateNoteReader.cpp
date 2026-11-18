@@ -2,7 +2,6 @@
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
 #include "gui/GuiBuilderHelper.hpp"
-#include "gui/ModalBuilder.hpp"
 #include "gui/TguiHelper.hpp"
 
 AppStateNoteReader::AppStateNoteReader(
@@ -48,7 +47,7 @@ void AppStateNoteReader::buildLayout(int noteId)
         getLayoutSize(), "scrollable"_true);
 
     dic.gui.rebuildWith(
-        ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer)
+        dic.guiBuilderFactory.createModalBuilder()
             .openModal(getStringId(StringId::Note1Title, noteId), options)
             .withContent(
                 buildContentLayout(getStringId(StringId::Note1, noteId)))

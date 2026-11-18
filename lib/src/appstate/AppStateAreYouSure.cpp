@@ -1,7 +1,6 @@
 #include "appstate/AppStateAreYouSure.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "gui/GuiBuilderHelper.hpp"
-#include "gui/ModalBuilder.hpp"
 
 constexpr const char* MODAL_ID = "AreYouSureModal";
 constexpr const char* BACKGROUND_ID = "ModalBackground";
@@ -63,7 +62,7 @@ void AppStateAreYouSure::buildLayout(
     };
 
     auto&& modal =
-        ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer)
+        dic.guiBuilderFactory.createModalBuilder()
             .openModal(
                 StringId::AreYouSure,
                 GuiBuilderHelper::getCommonModalBuilderOptions(getLayoutSize()))

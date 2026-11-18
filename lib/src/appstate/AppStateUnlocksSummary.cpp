@@ -1,7 +1,6 @@
 #include "appstate/AppStateUnlocksSummary.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "gui/GuiBuilderHelper.hpp"
-#include "gui/ModalBuilder.hpp"
 
 constexpr const char* MODAL_ID = "AreYouSureModal";
 constexpr const char* BACKGROUND_ID = "ModalBackground";
@@ -46,7 +45,7 @@ void AppStateUnlocksSummary::buildLayout(const Ledger& ledger)
     };
 
     auto&& modal =
-        ModalBuilder(dic.strings, dic.sizer, dic.soundPlayer)
+        dic.guiBuilderFactory.createModalBuilder()
             .openModal(
                 StringId::StuffUnlocked,
                 GuiBuilderHelper::getCommonModalBuilderOptions(getLayoutSize()))
