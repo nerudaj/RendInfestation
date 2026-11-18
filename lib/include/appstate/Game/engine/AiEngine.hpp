@@ -10,7 +10,7 @@
 #include <map>
 
 #ifdef _DEBUG
-#define FSM_LOGGING_ENABLED 1
+// #define FSM_LOGGING_ENABLED 0
 #endif
 
 class [[nodiscard]] AiEngine final
@@ -34,6 +34,10 @@ public:
             fsm.setLogger(logger);
 #endif
     }
+
+    AiEngine(AiEngine&&) =
+        delete; // builders capture this pointer which breaks after move :(
+    AiEngine(const AiEngine&) = delete;
 
 public:
     void operator()(const event::ObjectDestroyed& e);

@@ -24,7 +24,7 @@ public:
         const TouchController& touchController,
         const StringProvider<StringId>& strings) noexcept;
 
-    RenderingEngine(RenderingEngine&&) = delete;
+    RenderingEngine(RenderingEngine&&) = default;
     RenderingEngine(const RenderingEngine&) = delete;
 
 public:

@@ -60,7 +60,7 @@ public:
     {
     }
 
-    GameRulesEngine(GameRulesEngine&&) = delete;
+    GameRulesEngine(GameRulesEngine&&) = default;
     GameRulesEngine(const GameRulesEngine&) = delete;
 
 public:

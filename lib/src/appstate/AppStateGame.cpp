@@ -45,20 +45,13 @@ void AppStateGame::update()
 {
     scene.status.gameDuration += app.time.getElapsed();
 
+    systemExecutor.update(app.time);
+
     aiEngine.update(app.time);
-    lifetimeEngine.update(app.time);
-    healthHandlerEngine.update(app.time);
-    gameRulesEngine.update(app.time);
-    animationEngine.update(app.time);
-    physicsEngine.update(app.time);
-    particleEngine.update(app.time);
-    renderingEngine.update(app.time);
 
     gameEvents.processEvents(
-        gameRulesEngine,
-        animationEngine,
-        physicsEngine,
         aiEngine,
+        systemExecutor,
         janitor,
         overloads { [&](event::WorkbenchOpened&)
                     { app.pushState<AppStateWeaponModification>(dic, scene); },
@@ -92,7 +85,7 @@ void AppStateGame::update()
 
 void AppStateGame::draw()
 {
-    renderingEngine.draw(app.window);
+    systemExecutor.get<RenderingEngine>().draw(app.window);
 }
 
 void AppStateGame::restoreFocusImpl(const std::string& msg)
@@ -117,7 +110,8 @@ void AppStateGame::restoreFocusImpl(const std::string& msg)
         wave,
         gameProps.mapIdx,
         scene.playerInventory,
-        [&](StringId msg) { gameRulesEngine.postMessage(msg); });
+        [&](StringId msg)
+        { systemExecutor.get<GameRulesEngine>().postMessage(msg); });
 
     // I don't care anymore about placement of this code:
     if (wave > 14) aiEngine.setAttackTicketCount(HARD_ATTACK_TICKET_COUNT);

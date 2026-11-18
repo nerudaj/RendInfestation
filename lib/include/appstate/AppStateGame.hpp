@@ -15,6 +15,7 @@
 #include "appstate/Game/engine/RenderingEngine.hpp"
 #include "appstate/Game/survival/SurvivalBoonUnlockEvaluator.hpp"
 #include "appstate/Game/utility/AudioUtility.hpp"
+#include "ecs/SystemExecutor.hpp"
 #include "misc/DependencyContainer.hpp"
 #include "misc/EventQueue.hpp"
 #include "settings/AppSettings.hpp"
@@ -36,28 +37,29 @@ public:
         , atlas(atlas)
         , scene(scene)
         , audioUtility(scene, dic.soundPlayer)
+        , systemExecutor(
+              GameRulesEngine(
+                  gameEvents,
+                  scene,
+                  atlas,
+                  dic.input,
+                  audioUtility,
+                  dic.strings,
+                  dic.saveManager,
+                  gameProps.mapIdx),
+              AnimationEngine(scene, gameEvents, atlas),
+              PhysicsEngine(scene, gameEvents),
+              ParticleEngine(scene),
+              LifetimeEngine(scene, gameEvents, atlas),
+              EmptyHealthHandlerEngine(scene, gameEvents, audioUtility),
+              RenderingEngine(
+                  dic.resmgr,
+                  scene,
+                  atlas,
+                  dic.settings,
+                  dic.touchController,
+                  dic.strings))
         , aiEngine(scene)
-        , gameRulesEngine(
-              gameEvents,
-              scene,
-              atlas,
-              dic.input,
-              audioUtility,
-              dic.strings,
-              dic.saveManager,
-              gameProps.mapIdx)
-        , animationEngine(scene, gameEvents, atlas)
-        , physicsEngine(scene, gameEvents)
-        , particleEngine(scene)
-        , renderingEngine(
-              dic.resmgr,
-              scene,
-              atlas,
-              dic.settings,
-              dic.touchController,
-              dic.strings)
-        , lifetimeEngine(scene, gameEvents, atlas)
-        , healthHandlerEngine(scene, gameEvents, audioUtility)
         , boonUnlockEvaluator(dic.saveManager)
         , gameProps(gameProps)
     {
@@ -90,14 +92,16 @@ private:
     GameScene& scene;
     EventQueue<GameEvent> gameEvents;
     AudioUtility audioUtility;
+    ecs::SystemExecutor<
+        GameRulesEngine,
+        AnimationEngine,
+        PhysicsEngine,
+        ParticleEngine,
+        LifetimeEngine,
+        EmptyHealthHandlerEngine,
+        RenderingEngine>
+        systemExecutor;
     AiEngine aiEngine;
-    GameRulesEngine gameRulesEngine;
-    AnimationEngine animationEngine;
-    PhysicsEngine physicsEngine;
-    ParticleEngine particleEngine;
-    RenderingEngine renderingEngine;
-    LifetimeEngine lifetimeEngine;
-    EmptyHealthHandlerEngine healthHandlerEngine;
     Janitor janitor;
     SurvivalBoonUnlockEvaluator boonUnlockEvaluator;
     const GameModeProperties gameProps;
