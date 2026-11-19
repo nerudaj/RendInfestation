@@ -3,18 +3,19 @@ cmake_minimum_required ( VERSION 3.26 )
 include ( "cmake/vars.cmake" )
 include ( "cmake/cpp-init.cmake" )
 
-bootstrap_cpm()
 get_version_from_git (
     PROJECT_VERSION_VARIABLE GIT_PROJECT_VERSION
     FULL_VERSION_VARIABLE FULL_PROJECT_VERSION
 )
 
+project ( ${THE_PROJECT_NAME} VERSION ${GIT_PROJECT_VERSION} )
+
+include ( "cmake/CPM_0.43.2.cmake" )
+
 option ( BUILD_ANDROID "Build for Android platform" OFF )
 option ( ENABLE_LINTER "Enable clang-tidy" OFF )
 option ( BUILD_TESTS "Build unit testing target" ON )
 option ( USE_NSIS "Use NSIS for packaging" OFF )
-
-project ( ${THE_PROJECT_NAME} VERSION ${GIT_PROJECT_VERSION} )
 
 set ( OUTPUT_FILE_NAME "${THE_PROJECT_NAME}-v${CMAKE_PROJECT_VERSION}" )
 

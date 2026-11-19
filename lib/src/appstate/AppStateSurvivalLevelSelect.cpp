@@ -3,6 +3,8 @@
 #include "appstate/AppStateLoading.hpp"
 #include "appstate/CommonHandler.hpp"
 #include "appstate/Messaging.hpp"
+#include "gui/TguiHelper.hpp"
+#include "gui/builders/WidgetBuilder.hpp"
 #include "strings/StringId.hpp"
 
 constexpr const char* PLAY_BUTTON_ID = "PlayButton";
@@ -102,7 +104,8 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
             })
         | std::ranges::to<std::vector>();
 
-    auto&& boonSelectPanel = tgui::ScrollablePanel::create();
+    auto&& boonSelectPanel =
+        WidgetBuilder::createContainer<tgui::ScrollablePanel>(dic.sizer);
     boonSelectPanel->getRenderer()->setPadding({ 20.f, 20.f });
 
     boonSelectPanel->add(
@@ -154,7 +157,7 @@ tgui::Container::Ptr AppStateSurvivalLevelSelect::buildBoonSelectLayout()
                     WidgetOptions {
                         .enabled = saveMgr.isHardModeUnlocked(),
                     }))
-            .addGap()
+            //.addGap()
             .addLabel(StringId::StartingWeapon)
             .addFullRowOption(WidgetBuilder::createListChoice(
                 unlockedCombosLabels,
