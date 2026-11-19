@@ -105,6 +105,7 @@ void AnimationEngine::operator()(const event::ActorStopped& e)
     }
 
     if (skin.kind == EntityKind::Player
+        && skin.skinType == SkinType::PlayerDefault
         && scene.playerEntityLower != entt::null)
     {
         auto&& lowerSkin = scene.actors.get<Skin>(scene.playerEntityLower);
