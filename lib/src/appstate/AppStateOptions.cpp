@@ -118,8 +118,18 @@ void AppStateOptions::onAudioVideoTabSelected(tgui::Container::Ptr content)
         dic.settings.video.fpsLimit.get());
     const size_t fpsOptionIdx =
         fpsOptionItr == FPS_CAP_VALUES.end()
-            ? 3 // case when somebody tries to hack settings by hand
+            ? 3u // case when somebody tries to hack settings by hand
             : std::distance(FPS_CAP_VALUES.begin(), fpsOptionItr);
+
+    const auto RESOLUTION_OPTIONS = getResolutionStrings();
+    auto&& resolutionOptionItr = std::find(
+        RESOLUTION_OPTIONS.begin(),
+        RESOLUTION_OPTIONS.end(),
+        resolutionToString(dic.settings.video.resolution));
+    selectedResolutionIdx =
+        resolutionOptionItr == RESOLUTION_OPTIONS.end()
+            ? 0u
+            : std::distance(RESOLUTION_OPTIONS.begin(), resolutionOptionItr);
 
     content->removeAllWidgets();
     content->add(
@@ -148,17 +158,26 @@ void AppStateOptions::onAudioVideoTabSelected(tgui::Container::Ptr content)
                         app.window.getSfmlWindowContext().setMouseCursorVisible(
                             false);
                     }))
-            .addOption(
+            .addOptionWithSubmit(
                 StringId::SetResolution,
-                WidgetBuilder::createDropdown(
-                    getResolutionStrings(),
-                    resolutionToString(dic.settings.video.resolution),
-                    [&](size_t idx)
+                WidgetBuilder::createListChoice(
+                    RESOLUTION_OPTIONS,
+                    selectedResolutionIdx,
+                    [&](const size_t idx) { selectedResolutionIdx = idx; },
+                    dic.sizer,
+                    dic.soundPlayer),
+                WidgetBuilder::createRowButton(
+                    dic.strings.getString(StringId::Apply),
+                    [&]
                     {
-                        onResolutionSelected(
-                            sf::VideoMode::getFullscreenModes()[idx].size);
+                        const auto resolution =
+                            sf::VideoMode::getFullscreenModes()
+                                [selectedResolutionIdx]
+                                    .size;
+                        onResolutionSelected(resolution);
                     },
-                    dic.sizer))
+                    dic.sizer,
+                    dic.soundPlayer))
 #endif
             .addOptionWithSubmit(
                 StringId::SetUiScale,
