@@ -1,4 +1,5 @@
 #include "appstate/Game/survival/SurvivalBoonUnlockEvaluator.hpp"
+#include "appstate/Game/definitions/WeaponComboCompositions.hpp"
 #include <array>
 
 SurvivalBoonUnlockEvaluator::SurvivalBoonUnlockEvaluator(
@@ -73,47 +74,47 @@ void SurvivalBoonUnlockEvaluator::evaluateUnlocks(
     };
 
     using enum WeaponModule;
-    if (hasCombo({ Push, BigBullet, PassthruAmmo })
+    if (hasCombo(COMBO_SWEEPER)
         && saves.tryUnlockWeaponCombo(WeaponCombo::Sweeper) == UnlockStatus::Ok)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    if (hasCombo({ Spikes, ExplosiveAmmo, SpreadBarrel_x2 })
+    if (hasCombo(COMBO_LANDMINE)
         && saves.tryUnlockWeaponCombo(WeaponCombo::Landmine)
                == UnlockStatus::Ok)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    if (hasCombo({ Spikes, Splitter, SpreadBarrel_x4 })
+    if (hasCombo(COMBO_FRAGSHOT)
         && saves.tryUnlockWeaponCombo(WeaponCombo::Fragshot)
                == UnlockStatus::Ok)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    if (hasCombo({ CadenceBarrel, Ricochet, SpreadBarrel_x2 })
+    if (hasCombo(COMBO_PAINLESS)
         && saves.tryUnlockWeaponCombo(WeaponCombo::Painless)
                == UnlockStatus::Ok)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    if (hasCombo({ Spikes, ExplosiveAmmo, PassthruAmmo })
+    if (hasCombo(COMBO_WORST_EVER)
         && saves.tryUnlockWeaponCombo(WeaponCombo::WorstEver)
                == UnlockStatus::Ok)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    if (hasCombo({ Turret, CadenceBarrel, Push })
+    if (hasCombo(COMBO_TOWER)
         && saves.tryUnlockWeaponCombo(WeaponCombo::Tower) == UnlockStatus::Ok)
     {
         postMessage(StringId::NewWeaponComboUnlocked);
     }
 
-    if (hasCombo({ AutomaticShotgun, ShatteringRicochet, PulseRounds })
+    if (hasCombo(COMBO_OBLITERATOR)
         && saves.tryUnlockWeaponCombo(WeaponCombo::Obliterator)
                == UnlockStatus::Ok)
     {

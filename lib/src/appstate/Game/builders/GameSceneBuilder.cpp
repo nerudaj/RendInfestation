@@ -1,6 +1,8 @@
 #include "appstate/Game/builders/GameSceneBuilder.hpp"
 #include "appstate/Game/builders/ActorBuilder.hpp"
 #include "appstate/Game/builders/WeaponBuilder.hpp"
+#include "appstate/Game/definitions/WeaponComboCompositions.hpp"
+#include "misc/Compatibility.hpp"
 #include <random>
 
 struct [[nodiscard]] ObjectProperties final
@@ -306,49 +308,37 @@ void GameSceneBuilder::updateLoadoutWithStartingWeapon(
             std::mt19937 { std::random_device {}() });
 
         artifact.unlockedModules =
-            allModules | std::views::take(3) | std::ranges::to<std::set>();
+            allModules | std::views::take(3) | uni::ranges::to<std::set>();
     }
     else if (startingWeapon == WeaponCombo::Sweeper)
     {
-        artifact.unlockedModules = { WeaponModule::Push,
-                                     WeaponModule::BigBullet,
-                                     WeaponModule::PassthruAmmo };
+        artifact.unlockedModules = COMBO_SWEEPER | uni::ranges::to<std::set>();
     }
     else if (startingWeapon == WeaponCombo::Landmine)
     {
-        artifact.unlockedModules = { WeaponModule::Spikes,
-                                     WeaponModule::ExplosiveAmmo,
-                                     WeaponModule::SpreadBarrel_x2 };
+        artifact.unlockedModules = COMBO_LANDMINE | uni::ranges::to<std::set>();
     }
     else if (startingWeapon == WeaponCombo::Fragshot)
     {
-        artifact.unlockedModules = { WeaponModule::Spikes,
-                                     WeaponModule::Splitter,
-                                     WeaponModule::SpreadBarrel_x4 };
+        artifact.unlockedModules = COMBO_FRAGSHOT | uni::ranges::to<std::set>();
     }
     else if (startingWeapon == WeaponCombo::Painless)
     {
-        artifact.unlockedModules = { WeaponModule::CadenceBarrel,
-                                     WeaponModule::SpreadBarrel_x2,
-                                     WeaponModule::Ricochet };
+        artifact.unlockedModules = COMBO_PAINLESS | uni::ranges::to<std::set>();
     }
     else if (startingWeapon == WeaponCombo::WorstEver)
     {
-        artifact.unlockedModules = { WeaponModule::Spikes,
-                                     WeaponModule::ExplosiveAmmo,
-                                     WeaponModule::PassthruAmmo };
+        artifact.unlockedModules =
+            COMBO_WORST_EVER | uni::ranges::to<std::set>();
     }
     else if (startingWeapon == WeaponCombo::Tower)
     {
-        artifact.unlockedModules = { WeaponModule::Turret,
-                                     WeaponModule::CadenceBarrel,
-                                     WeaponModule::Push };
+        artifact.unlockedModules = COMBO_TOWER | uni::ranges::to<std::set>();
     }
     else if (startingWeapon == WeaponCombo::Obliterator)
     {
-        artifact.unlockedModules = { WeaponModule::AutomaticShotgun,
-                                     WeaponModule::ShatteringRicochet,
-                                     WeaponModule::PulseRounds };
+        artifact.unlockedModules =
+            COMBO_OBLITERATOR | uni::ranges::to<std::set>();
     }
 
     assert(artifact.unlockedModules.size() == 3u);
