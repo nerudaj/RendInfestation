@@ -59,7 +59,7 @@ void AppStateSurvivalGameOver::buildLayout()
                 HeadingLevel::H1,
                 tgui::HorizontalAlignment::Left)
             .withContent(buildGameSummaryLayout())
-            .withBottomLeftButton(StringId::BackToMenu, [&] { onBackToMenu(); })
+            .withBottomLeftButton(StringId::MainMenu, [&] { onBackToMenu(); })
             .withBottomRightButton(StringId::Restart, [&] { onRestart(); })
             .build());
 }
